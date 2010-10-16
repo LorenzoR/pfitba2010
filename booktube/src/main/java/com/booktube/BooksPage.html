@@ -1,0 +1,29 @@
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<head>
+<title>Books</title>
+</head>
+<body>
+<wicket:extend>
+<div wicket:id="books">
+
+	<h2>Book List</h2>
+	
+	<div wicket:id="bookList"  style="border: 1px black solid; margin-bottom: 5px; padding-left: 2px;">
+		<h3 wicket:id="title">Title goes here</h3>
+		by <strong wicket:id="author">Author goes here</strong>
+		<br />
+		Publish Date: <span wicket:id="publishDate">Date goes here</span>
+		<p>
+			<a href="#" wicket:id="detailsLink">Ver</a> | 
+			<a href="#" wicket:id="deleteLink">Eliminar</a> | 
+			<a href="#" wicket:id="editLink">Editar</a>
+		</p>
+	</div>
+
+<div wicket:id="navigator"></div>  
+
+</div>
+</wicket:extend>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+	<!-- Services Beans -->
+	<bean id="userService" class="com.booktube.service.UserServiceImpl">
+		<property name="itemDao" ref="userDao" />
+	</bean>
+	
+	<bean id="bookService" class="com.booktube.service.BookServiceImpl">
+		<property name="itemDao" ref="bookDao" />
+	</bean>
+
+	<!-- DAOs -->
+	<bean id="userDao" class="com.booktube.persistence.hibernate.UserDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="bookDao" class="com.booktube.persistence.hibernate.BookDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<!-- Wicket Application -->
+	<bean id="wicketApplication" class="com.booktube.WicketApplication">
+		<!-- <constructor-arg> <bean class="com.mysticcoders.mysticpasteste.PastebinConfig"> 
+			<property name="someProp" value="${some.value}"/> </bean> </constructor-arg> 
+			<property name="configurationType" value="${wicket.configuration.type}" /> 
+			<property name="someService" ref="someServiceBean" /> -->
+	</bean>
+
+	<!-- Database Beans -->
+	<!-- HSQLDB -->
+	<!-- 
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="org.hsqldb.jdbcDriver" />
+		<property name="url" value="jdbc:hsqldb:mem:mysticpaste-test" />
+		<property name="username" value="sa" />
+		<property name="password" value="" />
+	</bean>
+	 -->
+
+	<!-- Database Beans -->
+	<!-- MySQL -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost/booktubeMySQL" />
+		<property name="username" value="booktube" />
+		<property name="password" value="booktube" />
+	</bean>
+
+	<!-- Hibernate session factory -->
+	<!-- 
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.HSQLDialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="use_outer_join">true</prop>
+
+				<prop key="hibernate.cache.use_second_level_cache">true</prop>
+				<prop key="hibernate.cache.use_query_cache">true</prop>
+				<prop key="hibernate.cache.provider_class">org.hibernate.cache.HashtableCacheProvider</prop>
+
+				<prop key="hibernate.connection.pool_size">10</prop>
+				<prop key="hibernate.jdbc.batch_size">1000</prop>
+				<prop key="hibernate.bytecode.use_reflection_optimizer">true</prop>
+
+			</props>
+		</property>
+		 -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="use_outer_join">true</prop>
+
+				<prop key="hibernate.cache.use_second_level_cache">true</prop>
+				<prop key="hibernate.cache.use_query_cache">true</prop>
+				<prop key="hibernate.cache.provider_class">org.hibernate.cache.HashtableCacheProvider</prop>
+
+				<prop key="hibernate.connection.pool_size">10</prop>
+				<prop key="hibernate.jdbc.batch_size">1000</prop>
+				<prop key="hibernate.bytecode.use_reflection_optimizer">true</prop>
+
+			</props>
+		</property>
+		<property name="annotatedClasses">
+			<list>
+				<value>com.booktube.model.User</value>
+				<value>com.booktube.model.Book</value>
+				<value>com.booktube.model.Comment</value>
+			</list>
+
+		</property>
+
+		<property name="schemaUpdate" value="true" />
+	</bean>
+
+	<!-- Tell Spring it should use @Transactional annotations -->
+	<tx:annotation-driven />
+
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+</beans>
