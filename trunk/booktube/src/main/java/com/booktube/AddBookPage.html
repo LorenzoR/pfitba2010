@@ -1,0 +1,22 @@
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<head>
+<title>Books</title>
+</head>
+<body>
+<wicket:extend>
+<div wicket:id="books">
+
+	<h2>New Book</h2>
+	
+	<form wicket:id="form">
+		<p><select wicket:id="usernameList"></select></p>
+		<p><input type="text" wicket:id="title" value=""/></p>
+		<p><textarea wicket:id="textArea" cols="120" rows="50"></textarea></p>
+		<input type="button" wicket:id="save" value="Add Book"/>
+	</form>
+
+</div>
+</wicket:extend>
+</body>
+</html>

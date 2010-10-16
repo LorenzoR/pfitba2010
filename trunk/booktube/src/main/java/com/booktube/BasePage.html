@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="keywords" content="">
+<meta name="description" content="">
+<title>BookTube</title>
+<link rel="stylesheet" type="text/css" href="reset-fonts-grids.css">
+<link rel="stylesheet" type="text/css" href="base.css">
+</head>
+<body>
+<div id="doc4" class="yui-t7">
+	<div id="hd">
+		<h1><a href="#" wicket:id="title">BookTube</a></h1>
+		<div style="float:left">
+			<a href="#" wicket:id="showBooks">Leer</a> |
+			<a href="#" wicket:id="addBook">Compartir</a> | 
+			<a href="#" wicket:id="showWriters">Escritores</a> |
+			<a href="#" wicket:id="contact">Contáctenos</a>
+		</div>
+		<div style="text-align:right;">
+		<form wicket:id="login">
+			<p>
+				User: <input type="text" wicket:id="username" value=""/>
+				Pass: <input type="password" wicket:id="password" value=""/>
+				<input type="submit" value="Login" wicket:id="button1" />
+			</p>
+		</form>
+		| <a href="#" wicket:id="registerPage">Registrate</a>
+		</div>
+	</div>
+	<hr />
+	<div id="bd">
+		<div id="yui-main">
+			<div class="yui-b">
+				<wicket:child />
+			</div>
+		</div>
+		<div class="yui-b">
+			<!-- PUT SECONDARY COLUMN CODE HERE -->
+		</div>
+	</div>
+	<hr />
+	<div id="ft">
+		<span wicket:id="footer"></span>
+	</div>
+</div>
+</body>
+</html>
