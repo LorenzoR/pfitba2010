@@ -61,7 +61,8 @@ public class Book implements Serializable {
 
 	@CollectionOfElements
 	@JoinTable(name="BOOK_TAG", joinColumns = @JoinColumn(name = "BOOK_ID"))
-	@Column(name = "TAG") 
+	@Column(name = "TAG")
+	@OrderBy(clause="TAG")
 	private Set<String> tags;
 
 	@Basic

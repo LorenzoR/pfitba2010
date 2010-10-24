@@ -1,9 +1,8 @@
 package com.booktube.persistence;
 
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
-import com.booktube.model.Book;
 import com.booktube.model.User;
 
 public interface UserDao {
@@ -12,5 +11,7 @@ public interface UserDao {
     public User getUser(String username);
     public void update(User user);
     public void insert(User user);
-    public void delete(Integer id);
+    public void delete(User user);
+    public int getCount();
+    public Iterator<User> iterator(int first, int count);
 }

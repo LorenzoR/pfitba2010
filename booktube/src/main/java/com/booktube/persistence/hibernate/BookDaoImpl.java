@@ -1,6 +1,7 @@
 package com.booktube.persistence.hibernate;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -8,6 +9,7 @@ import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.mortbay.jetty.security.SSORealm;
 
@@ -106,5 +108,16 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 		*/
 		return (List<Book>) getSession().getNamedQuery("book.getByTitle")
 		.setString("title", '%' + title + '%').list();
+	}
+	
+	public int getCount() {
+		Criteria criteria = getSession().createCriteria(Book.class);
+		criteria.setProjection(Projections.rowCount());
+		return ((Number) criteria.uniqueResult()).intValue();
+	}
+
+	public Iterator<Book> iterator(int first, int count) {
+		return (Iterator<Book>) getSession().createCriteria(Book.class)
+				.setFirstResult(first).setMaxResults(count).list().iterator();
 	}
 }

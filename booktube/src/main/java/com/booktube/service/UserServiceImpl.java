@@ -1,5 +1,6 @@
 package com.booktube.service;
 
+import java.util.Iterator;
 import java.util.List;
 
 import com.booktube.model.User;
@@ -20,8 +21,8 @@ public class UserServiceImpl implements UserService {
     	itemDao.update(user);
     }
 
-    public void deleteUser(Integer id) {
-    	itemDao.delete(id);
+    public void deleteUser(User user) {
+    	itemDao.delete(user);
     }
 
     public User getUser(Integer id) {
@@ -43,4 +44,12 @@ public class UserServiceImpl implements UserService {
     public void setItemDao(UserDao itemDao) {
         this.itemDao = itemDao;
     }
+    
+    public int getCount() {
+    	return itemDao.getCount();
+    }
+
+	public Iterator<User> iterator(int first, int count) {
+		return itemDao.iterator(first, count);
+	}
 }

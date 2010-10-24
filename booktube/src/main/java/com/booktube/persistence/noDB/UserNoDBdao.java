@@ -15,10 +15,10 @@ public class UserNoDBdao implements UserDao {
     private static Map usersMap;
     static {
     	users = new ArrayList<User>();
-    	users.add(new User(new Integer(1), "autor10", "Nombre1", "Apellido1") );
-    	users.add(new User(new Integer(2), "autor20", "Nombre2", "Apellido2") );
-    	users.add(new User(new Integer(3), "autor30", "Nombre3", "Apellido3") );
-    	users.add(new User(new Integer(9), "autor90", "Nombre4", "Apellido4") );
+    	users.add(new User(new Integer(1), "autor10", "password", "Nombre1", "Apellido1") );
+    	users.add(new User(new Integer(2), "autor20", "password", "Nombre2", "Apellido2") );
+    	users.add(new User(new Integer(3), "autor30", "password", "Nombre3", "Apellido3") );
+    	users.add(new User(new Integer(9), "autor90", "password", "Nombre4", "Apellido4") );
     	usersMap = new HashMap();
         Iterator<User> iter = users.iterator();
         while( iter.hasNext() ) {
@@ -83,6 +83,18 @@ public class UserNoDBdao implements UserDao {
                 break;
             }
         }
+		
+	}
+	public int getCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	public Iterator iterator(int first, int count) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public void delete(User user) {
+		// TODO Auto-generated method stub
 		
 	}
 }
