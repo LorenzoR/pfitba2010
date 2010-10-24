@@ -1,4 +1,4 @@
-package com.booktube;
+package com.booktube.pages;
 
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;

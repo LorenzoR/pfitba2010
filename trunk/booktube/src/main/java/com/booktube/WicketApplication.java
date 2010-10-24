@@ -3,6 +3,9 @@ package com.booktube;
 import javax.servlet.ServletContext;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.Request;
+import org.apache.wicket.Response;
+import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.target.coding.BookmarkablePageRequestTargetUrlCodingStrategy;
 import org.apache.wicket.request.target.coding.HybridUrlCodingStrategy;
@@ -17,6 +20,13 @@ import org.hibernate.cfg.Configuration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import com.booktube.pages.AddBookPage;
+import com.booktube.pages.BooksPage;
+import com.booktube.pages.EditBookPage;
+import com.booktube.pages.HomePage;
+import com.booktube.pages.RegisterPage;
+import com.booktube.pages.ShowBookPage;
+import com.booktube.pages.WritersPage;
 import com.booktube.service.BookServiceImpl;
 import com.booktube.service.BookService;
 import com.booktube.service.UserService;
@@ -30,11 +40,11 @@ import com.booktube.service.UserServiceImpl;
  */
 public class WicketApplication extends WebApplication {
 
-	//private BookService bookService = new BookServiceImpl();
-	
-	/*@SpringBean
-	static
-    UserService userService;*/
+	// private BookService bookService = new BookServiceImpl();
+
+	/*
+	 * @SpringBean static UserService userService;
+	 */
 
 	// public static final SessionFactory SESSION_FACTORY = new Configuration()
 	// .configure().buildSessionFactory();
@@ -56,6 +66,7 @@ public class WicketApplication extends WebApplication {
 		mount(new QueryStringUrlCodingStrategy("editBook", EditBookPage.class));
 		mount(new QueryStringUrlCodingStrategy("showBook", ShowBookPage.class));
 		mount(new QueryStringUrlCodingStrategy("addBook", AddBookPage.class));
+		mount(new QueryStringUrlCodingStrategy("register", RegisterPage.class));
 		// mount(new IndexedParamUrlCodingStrategy("editBook",
 		// EditBookPage.class));
 		// mount(new IndexedHybridUrlCodingStrategy("editBook",
@@ -112,13 +123,18 @@ public class WicketApplication extends WebApplication {
 	}
 
 	public BookService getBookService() {
-		//return bookService;
+		// return bookService;
 		return null;
 	}
 
 	public static UserService getUserService() {
-		//return userService;
+		// return userService;
 		return null;
+	}
+
+	@Override
+	public Session newSession(Request request, Response response) {
+		return new WiaSession(request);
 	}
 
 }

@@ -15,13 +15,19 @@
 		<br />
 		Publish Date: <span wicket:id="publishDate">Date goes here</span>
 		<p>
+			<b>Tags:</b> 
+			<span wicket:id="tagList">
+				#<span wicket:id="tagName"></span>&nbsp;
+			</span>
+		</p>
+		<p>
 			<a href="#" wicket:id="detailsLink">Ver</a> | 
 			<a href="#" wicket:id="deleteLink">Eliminar</a> | 
 			<a href="#" wicket:id="editLink">Editar</a>
 		</p>
 	</div>
 
-<div wicket:id="navigator"></div>  
+<div wicket:id="footerPaginator"></div>  
 
 </div>
 </wicket:extend>

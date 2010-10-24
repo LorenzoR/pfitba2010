@@ -1,9 +1,9 @@
 package com.booktube.persistence;
 
+import java.util.Iterator;
 import java.util.List;
 
 import com.booktube.model.Book;
-import com.booktube.model.Comment;
 
 public interface BookDao {
     public List<Book> getAllBooks();
@@ -12,4 +12,6 @@ public interface BookDao {
     public void insert(Book book);
     public void delete(Book book);
 	public List<Book> findBookByTitle(String title);
+	public int getCount();
+    public Iterator<Book> iterator(int first, int count);
 }

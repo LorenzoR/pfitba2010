@@ -1,5 +1,6 @@
 package com.booktube.service;
 
+import java.util.Iterator;
 import java.util.List;
 
 import com.booktube.model.Book;
@@ -45,5 +46,13 @@ public class BookServiceImpl implements BookService {
 
 	public List<Book> findBookByTitle(String title) {
 		return itemDao.findBookByTitle(title);
+	}
+	
+	public int getCount() {
+    	return itemDao.getCount();
+    }
+
+	public Iterator<Book> iterator(int first, int count) {
+		return itemDao.iterator(first, count);
 	}
 }

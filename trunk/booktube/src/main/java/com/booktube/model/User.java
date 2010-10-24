@@ -14,7 +14,9 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "USER")
-@NamedQueries({@NamedQuery(name = "user.username", query = "from User u where u.username like :username")})
+@NamedQueries({
+		@NamedQuery(name = "user.username", query = "from User u where u.username like :username"),
+		@NamedQuery(name = "user.id", query = "from User u where u.id = :id") })
 public class User implements Serializable {
 
 	/**
@@ -23,56 +25,64 @@ public class User implements Serializable {
 	private static final long serialVersionUID = -4919668836983053594L;
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "USER_ID")
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "USER_ID")
 	private Integer id;
-	
+
 	@Basic
-    @Column(name = "USERNAME")
+	@Column(name = "USERNAME")
 	private String username;
-	
+
 	@Basic
-    @Column(name = "FIRSTNAME")
+	@Column(name = "PASSWORD")
+	private String password;
+
+	@Basic
+	@Column(name = "FIRSTNAME")
 	private String firstname;
-	
+
 	@Basic
-    @Column(name = "LASTNAME")
+	@Column(name = "LASTNAME")
 	private String lastname;
-	
+
 	public User() {
-		
+
 	}
-	
-	public User(Integer id, String username, String firstname, String lastname) {
+
+	public User(Integer id, String username, String password, String firstname,
+			String lastname) {
 		this.username = username;
+		this.password = password;
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.id = id;
 	}
-	
-	public User(String username, String firstname, String lastname) {
+
+	public User(String username, String password, String firstname,
+			String lastname) {
 		this.username = username;
+		this.password = password;
 		this.firstname = firstname;
 		this.lastname = lastname;
-		//this.id = new Integer(1);
+		// this.id = new Integer(1);
 	}
-	
+
 	public Integer getId() {
 		return id;
 	}
-	
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	
+
 	public String getUsername() {
 		return username;
 	}
-	
+
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	
+
 	public String getFirstname() {
 		return firstname;
 	}
@@ -124,7 +134,13 @@ public class User implements Serializable {
 			return false;
 		return true;
 	}
-	
-	
-	
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
 }

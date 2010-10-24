@@ -3,6 +3,8 @@ package com.booktube;
 import junit.framework.TestCase;
 import org.apache.wicket.util.tester.WicketTester;
 
+import com.booktube.pages.HomePage;
+
 /**
  * Simple test using the WicketTester
  */
