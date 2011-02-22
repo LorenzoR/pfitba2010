@@ -23,7 +23,7 @@ import com.booktube.model.Book;
 import com.booktube.service.BookService;
 import com.booktube.service.UserService;
 
-public class BooksPage extends BasePage {
+public class BooksByTag extends BasePage {
 
 	@SpringBean
 	BookService bookService;
@@ -33,22 +33,24 @@ public class BooksPage extends BasePage {
 
 	public static final int BOOKS_PER_PAGE = 5;
 
-	public BooksPage() {
+	public BooksByTag(final PageParameters parameters) {
 
+		String tag = parameters.getString("tag");
+		
 		final WebMarkupContainer parent = new WebMarkupContainer("books");
 		parent.setOutputMarkupId(true);
 		add(parent);
 		
-		DataView<Book> dataView = bookList("bookList");
+		DataView<Book> dataView = bookList("bookList", tag);
 		
 		parent.add(dataView);
 		parent.add(new PagingNavigator("footerPaginator", dataView));
-		
+
 	}
 
-	private DataView<Book> bookList(String label) {
+	private DataView<Book> bookList(String label, String tag) {
 		
-		IDataProvider<Book> dataProvider = new BookProvider();
+		IDataProvider<Book> dataProvider = new BookProvider(tag);
 
 		DataView<Book> dataView = new DataView<Book>("bookList", dataProvider, BOOKS_PER_PAGE) {
 
@@ -67,12 +69,9 @@ public class BooksPage extends BasePage {
 						String tag = (String) item.getModelObject();
 						final PageParameters parameters = new PageParameters();
 						parameters.put("tag", tag);
-						
-						//item.add(new Label("tagName", tag));
 						BookmarkablePageLink<Object> bpl = new BookmarkablePageLink<Object>("tagLink", BooksByTag.class, parameters);
 						bpl.add(new Label("tagName", tag));
 						item.add(bpl);
-						//item.add(new BookmarkablePageLink<Object>("tagLink", BooksByTag.class, parameters));
 					}
 				});
 
@@ -97,7 +96,7 @@ public class BooksPage extends BasePage {
 						bookService.deleteBook(book);
 						System.out.println("Book " + bookId + " deleted.");
 
-						setResponsePage(BooksPage.this);
+						setResponsePage(BooksByTag.this);
 					}
 
 				});
@@ -110,13 +109,26 @@ public class BooksPage extends BasePage {
 	class BookProvider implements IDataProvider<Book> {
 
 		private static final long serialVersionUID = 6050730502992812477L;
-
+		private String tag;
+		private Integer size;
+		
+		public BookProvider(String tag) {
+			this.tag = tag;
+		}
+		
 		public Iterator<Book> iterator(int first, int count) {
-			return bookService.iterator(first, count);
+			List<Book> books = bookService.findBookByTag(tag);
+			this.size = books.size();
+			return books.iterator();
 		}
 
 		public int size() {
-			return bookService.getCount();
+			if ( size == null ) {
+				return bookService.findBookByTag(tag).size();
+			}
+			else {
+				return size;
+			}	
 		}
 
 		public IModel<Book> model(Book book) {

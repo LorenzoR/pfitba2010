@@ -12,6 +12,7 @@ public interface BookDao {
     public void insert(Book book);
     public void delete(Book book);
 	public List<Book> findBookByTitle(String title);
+	public List<Book> findBookByTag(String tag);
 	public int getCount();
     public Iterator<Book> iterator(int first, int count);
 }

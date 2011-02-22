@@ -131,4 +131,9 @@ public class BookNoDBdao implements BookDao {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public List<Book> findBookByTag(String tag) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

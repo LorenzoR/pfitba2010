@@ -48,6 +48,10 @@ public class BookServiceImpl implements BookService {
 		return itemDao.findBookByTitle(title);
 	}
 	
+	public List<Book> findBookByTag(String tag) {
+		return itemDao.findBookByTag(tag);
+	}
+	
 	public int getCount() {
     	return itemDao.getCount();
     }

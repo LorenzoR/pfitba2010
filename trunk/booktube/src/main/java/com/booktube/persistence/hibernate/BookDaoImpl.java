@@ -6,9 +6,11 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.mortbay.jetty.security.SSORealm;
@@ -57,30 +59,29 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 		 */
 		// return null;
 	}
-	
+
 	public void update(Book book) {
 		/* Parece que anda */
 		getSession().merge(book);
 		getSession().flush();
 		/* Actualiza el libro y agrega muchos comentarios */
-		//getSession().saveOrUpdate(book);
-		//getSession().flush();
+		// getSession().saveOrUpdate(book);
+		// getSession().flush();
 		/* No actualiza el libro y agrega un solo comentario */
-		//getSession().saveOrUpdate(book);
-		
-		/*if (book.getId() != null) { // it is an update
-			getSession().merge(book);
-			} else { // you are saving a new one
-			getSession().saveOrUpdate(book);
-			}
-		*///getSession().save(book);
-		//getSession().flush();
-		//getSession().evict(book);
-		/*Session session = SESSION_FACTORY.openSession();
-		session.update(book);
-		session.beginTransaction().commit();
-		session.disconnect();
-		*/
+		// getSession().saveOrUpdate(book);
+
+		/*
+		 * if (book.getId() != null) { // it is an update
+		 * getSession().merge(book); } else { // you are saving a new one
+		 * getSession().saveOrUpdate(book); }
+		 */// getSession().save(book);
+			// getSession().flush();
+			// getSession().evict(book);
+		/*
+		 * Session session = SESSION_FACTORY.openSession();
+		 * session.update(book); session.beginTransaction().commit();
+		 * session.disconnect();
+		 */
 	}
 
 	public void insert(Book book) {
@@ -103,17 +104,34 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 	}
 
 	public List<Book> findBookByTitle(String title) {
-		/*return (List<Book>) getSession().getNamedQuery("book.getByTitle")
-		.setString("title", title);
-		*/
+		/*
+		 * return (List<Book>) getSession().getNamedQuery("book.getByTitle")
+		 * .setString("title", title);
+		 */
 		return (List<Book>) getSession().getNamedQuery("book.getByTitle")
-		.setString("title", '%' + title + '%').list();
+				.setString("title", '%' + title + '%').list();
 	}
-	
+
+	public List<Book> findBookByTag(String tag) {
+
+		return (List<Book>) getSession().createQuery("from Book book "
+			    + "where :x in elements(book.tags)")
+			    .setString("x", tag).list();
+	}
+
 	public int getCount() {
 		Criteria criteria = getSession().createCriteria(Book.class);
 		criteria.setProjection(Projections.rowCount());
 		return ((Number) criteria.uniqueResult()).intValue();
+	}
+	
+	public int getCountByTag(String tag) {
+		Query criteria = getSession().createQuery("from Book book "
+			    + "where :x in elements(book.tags)")
+			    .setString("x", tag);
+		return criteria.list().size();
+		
+		
 	}
 
 	public Iterator<Book> iterator(int first, int count) {
