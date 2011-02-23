@@ -44,7 +44,7 @@ public abstract class BasePage extends WebPage {
 		add(new BookmarkablePageLink<String>("addBook", AddBookPage.class));
 		add(new BookmarkablePageLink<String>("showBooks", BooksPage.class));
 		add(new BookmarkablePageLink<String>("showWriters", WritersPage.class));
-		add(new BookmarkablePageLink<String>("contact", DataViewPage.class));
+		add(new BookmarkablePageLink<String>("contact", Contact.class));
 		BookmarkablePageLink<String> registerLink = new BookmarkablePageLink<String>(
 				"registerPage", RegisterPage.class);
 		add(registerLink);

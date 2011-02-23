@@ -33,7 +33,7 @@ public class Comment implements Serializable {
 	@Column(name = "COMMENT_ID")
 	private Integer id;
 	
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
 	private User user;
 	
 	@ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.LAZY)

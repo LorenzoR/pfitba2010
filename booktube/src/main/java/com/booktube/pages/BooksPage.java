@@ -44,6 +44,10 @@ public class BooksPage extends BasePage {
 		parent.add(dataView);
 		parent.add(new PagingNavigator("footerPaginator", dataView));
 		
+		final PageParameters parameters = new PageParameters();
+		parameters.put("type", "all");
+		parent.add(new BookmarkablePageLink("testLink", ShowAllBooks.class, parameters));
+		
 	}
 
 	private DataView<Book> bookList(String label) {
@@ -79,7 +83,10 @@ public class BooksPage extends BasePage {
 				final PageParameters parameters = new PageParameters();
 				parameters.put("book", book.getId().toString());
 				item.add(new Label("title", book.getTitle()));
-				item.add(new Label("author", book.getAuthor().getUsername()));
+				parameters.put("author", book.getAuthor().getId().toString());
+				BookmarkablePageLink<Object> bpl = new BookmarkablePageLink<Object>("authorLink", BooksByAuthor.class, parameters);
+				bpl.add(new Label("authorName", book.getAuthor().getUsername()));
+				item.add(bpl);
 				item.add(new Label("publishDate", book.getPublishDate()
 						.toString()));
 				item.add(new BookmarkablePageLink<Object>("editLink",

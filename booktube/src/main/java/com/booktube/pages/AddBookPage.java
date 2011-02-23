@@ -54,10 +54,22 @@ public class AddBookPage extends BasePage {
 		final TextArea editor = new TextArea("textArea");
 		editor.setOutputMarkupId(true);
 		
-		final DropDownChoice ddc = new DropDownChoice("usernameList", new Model(users.get(0)), users, new ChoiceRenderer("username", "id"));
+		final DropDownChoice ddc;
 		
 		ValueMap myParameters = new ValueMap();
-		myParameters.put("usernameList", users.get(0)); 
+		
+		if ( users.size() != 0 ) {
+			ddc = new DropDownChoice("usernameList", new Model(users.get(0)), users, new ChoiceRenderer("username", "id"));
+			myParameters.put("usernameList", users.get(0)); 
+		}
+		else {
+			//final DropDownChoice ddc = new DropDownChoice("usernameList", new Model(users.get(0)), users, new ChoiceRenderer("username", "id"));
+			ddc = new DropDownChoice("usernameList", users, new ChoiceRenderer("username", "id"));
+		}
+			
+		
+		
+		
 		form.setModel(new CompoundPropertyModel(myParameters)); 
 		form.add(ddc);
 		

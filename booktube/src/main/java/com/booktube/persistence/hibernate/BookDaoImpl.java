@@ -119,6 +119,12 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 			    .setString("x", tag).list();
 	}
 
+	public List<Book> findBookByAuthor(Integer authorId) {
+		System.out.println("authorID es " + authorId);
+		return (List<Book>) getSession().getNamedQuery("book.getByAuthor")
+		.setInteger("authorId", authorId).list();
+	}
+	
 	public int getCount() {
 		Criteria criteria = getSession().createCriteria(Book.class);
 		criteria.setProjection(Projections.rowCount());
@@ -138,4 +144,5 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 		return (Iterator<Book>) getSession().createCriteria(Book.class)
 				.setFirstResult(first).setMaxResults(count).list().iterator();
 	}
+
 }
