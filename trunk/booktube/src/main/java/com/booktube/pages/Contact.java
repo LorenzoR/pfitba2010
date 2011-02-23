@@ -15,12 +15,12 @@ import com.booktube.model.User;
 import com.booktube.service.UserService;
 
 
-public class WritersPage extends BasePage {
+public class Contact extends BasePage {
 
 	@SpringBean
     UserService userService;
 	
-	public WritersPage() {
+	public Contact() {
 
 		//User user = new User("username", "firstname", "lastname");
 		//userService.insertUser(user);
@@ -58,7 +58,7 @@ public class WritersPage extends BasePage {
 						userService.deleteUser(user);
 						System.out.println("User " + userId + " deleted.");
 
-						setResponsePage(WritersPage.this);
+						setResponsePage(Contact.this);
 					}
 
 				});

@@ -28,9 +28,10 @@ import org.hibernate.annotations.OrderBy;
 
 @Entity
 @Table(name = "BOOK")
-@NamedQueries({@NamedQuery(name = "book.id", query = "from Book b where b.id = :id"),
-    @NamedQuery(name = "book.getByTitle",
-            query = "from Book b where b.title LIKE :title")})
+@NamedQueries({
+		@NamedQuery(name = "book.id", query = "from Book b where b.id = :id"),
+		@NamedQuery(name = "book.getByTitle", query = "from Book b where b.title LIKE :title"),
+		@NamedQuery(name = "book.getByAuthor", query = "from Book b where b.author = :authorId") })
 public class Book implements Serializable {
 
 	private static final long serialVersionUID = 2241291507547593474L;
@@ -45,7 +46,7 @@ public class Book implements Serializable {
 	private String title;
 
 	@Basic
-	@Column(name = "TEXT", columnDefinition="LONGTEXT")
+	@Column(name = "TEXT", columnDefinition = "LONGTEXT")
 	private String text;
 
 	@Basic
@@ -60,9 +61,9 @@ public class Book implements Serializable {
 	private Date publishDate;
 
 	@CollectionOfElements
-	@JoinTable(name="BOOK_TAG", joinColumns = @JoinColumn(name = "BOOK_ID"))
+	@JoinTable(name = "BOOK_TAG", joinColumns = @JoinColumn(name = "BOOK_ID"))
 	@Column(name = "TAG")
-	@OrderBy(clause="TAG")
+	@OrderBy(clause = "TAG")
 	private Set<String> tags;
 
 	@Basic
@@ -76,10 +77,17 @@ public class Book implements Serializable {
 	/* @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent") */
 	/* @OneToMany */
 	@OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@OrderBy(clause="DATE ASC")
-	/*@JoinTable(name = "BOOK_COMMENT", joinColumns = { @JoinColumn(name = "BOOK_ID") }, inverseJoinColumns = { @JoinColumn(name = "COMMENT_ID") })
-	*/private Set<Comment> comments;
+	@OrderBy(clause = "DATE ASC")
+	private Set<Comment> comments;
+	/*
+	 * @JoinTable(name = "BOOK_COMMENT", joinColumns = { @JoinColumn(name =
+	 * "BOOK_ID") }, inverseJoinColumns = { @JoinColumn(name = "COMMENT_ID") })
+	 */
 
+	@Basic
+	@Column(name = "HITS")
+	private Integer hits;
+	
 	public Book() {
 	}
 
@@ -95,7 +103,7 @@ public class Book implements Serializable {
 		this.title = title;
 		this.text = text;
 		this.author = author;
-		//this.id = new Integer(1);
+		// this.id = new Integer(1);
 		this.publishDate = Calendar.getInstance().getTime();
 
 	}

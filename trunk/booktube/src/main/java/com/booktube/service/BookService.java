@@ -13,6 +13,7 @@ public interface BookService {
     public void insertBook(Book book);
     public List<Book> findBookByTitle(String title);
     public List<Book> findBookByTag(String tag);
+    public List<Book> findBookByAuthor(Integer authorId);
     public int getCount();
     public Iterator<Book> iterator(int first, int count);
 }

@@ -23,7 +23,7 @@ import com.booktube.model.Book;
 import com.booktube.service.BookService;
 import com.booktube.service.UserService;
 
-public class BooksByTag extends BasePage {
+public class BooksByAuthor extends BasePage {
 
 	@SpringBean
 	BookService bookService;
@@ -33,24 +33,24 @@ public class BooksByTag extends BasePage {
 
 	public static final int BOOKS_PER_PAGE = 5;
 
-	public BooksByTag(final PageParameters parameters) {
+	public BooksByAuthor(final PageParameters parameters) {
 
-		String tag = parameters.getString("tag");
+		Integer authorId = parameters.getAsInteger("author");
 		
 		final WebMarkupContainer parent = new WebMarkupContainer("books");
 		parent.setOutputMarkupId(true);
 		add(parent);
 		
-		DataView<Book> dataView = bookList("bookList", tag);
+		DataView<Book> dataView = bookList("bookList", authorId);
 		
 		parent.add(dataView);
 		parent.add(new PagingNavigator("footerPaginator", dataView));
 
 	}
 
-	private DataView<Book> bookList(String label, String tag) {
+	private DataView<Book> bookList(String label, Integer authorId) {
 		
-		IDataProvider<Book> dataProvider = new BookProvider(tag);
+		IDataProvider<Book> dataProvider = new BookProvider(authorId);
 
 		DataView<Book> dataView = new DataView<Book>("bookList", dataProvider, BOOKS_PER_PAGE) {
 
@@ -99,7 +99,7 @@ public class BooksByTag extends BasePage {
 						bookService.deleteBook(book);
 						System.out.println("Book " + bookId + " deleted.");
 
-						setResponsePage(BooksByTag.this);
+						setResponsePage(BooksByAuthor.this);
 					}
 
 				});
@@ -112,22 +112,22 @@ public class BooksByTag extends BasePage {
 	class BookProvider implements IDataProvider<Book> {
 
 		private static final long serialVersionUID = 6050730502992812477L;
-		private String tag;
+		private Integer authorId;
 		private Integer size;
 		
-		public BookProvider(String tag) {
-			this.tag = tag;
+		public BookProvider(Integer authorId) {
+			this.authorId = authorId;
 		}
 		
 		public Iterator<Book> iterator(int first, int count) {
-			List<Book> books = bookService.findBookByTag(tag);
+			List<Book> books = bookService.findBookByAuthor(authorId);
 			this.size = books.size();
 			return books.iterator();
 		}
 
 		public int size() {
 			if ( size == null ) {
-				return bookService.findBookByTag(tag).size();
+				return bookService.findBookByAuthor(authorId).size();
 			}
 			else {
 				return size;
