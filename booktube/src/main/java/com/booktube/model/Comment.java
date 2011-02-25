@@ -18,6 +18,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 
 @Entity
 @Table(name = "COMMENT")
@@ -34,10 +37,13 @@ public class Comment implements Serializable {
 	private Integer id;
 	
 	@ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name="USER_ID", updatable = false)
+	@OnDelete(action=OnDeleteAction.CASCADE)
 	private User user;
 	
 	@ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name="BOOK_ID", updatable = false)
+	@OnDelete(action=OnDeleteAction.CASCADE)
 	private Book book;
 	
 	@Basic

@@ -1,5 +1,6 @@
 package com.booktube.pages;
 
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
@@ -37,12 +38,17 @@ public abstract class BasePage extends WebPage {
 		// add(group);
 		// group.setVisible(false);
 
+		final PageParameters parameters = new PageParameters();
+		parameters.put("type", "all");
+		
+		
 		add(new Label("footer",
 				"Ayuda | Acerca de | Contacto | Términos y Condiciones"));
 
 		add(new BookmarkablePageLink<String>("title", HomePage.class));
 		add(new BookmarkablePageLink<String>("addBook", AddBookPage.class));
-		add(new BookmarkablePageLink<String>("showBooks", BooksPage.class));
+		//add(new BookmarkablePageLink<String>("showBooks", BooksPage2.class));
+		add(new BookmarkablePageLink<String>("showBooks", BooksPage.class, parameters));
 		add(new BookmarkablePageLink<String>("showWriters", WritersPage.class));
 		add(new BookmarkablePageLink<String>("contact", Contact.class));
 		BookmarkablePageLink<String> registerLink = new BookmarkablePageLink<String>(
