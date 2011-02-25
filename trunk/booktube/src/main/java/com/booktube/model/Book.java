@@ -24,6 +24,8 @@ import javax.persistence.TemporalType;
 import javax.persistence.JoinColumn;
 
 import org.hibernate.annotations.CollectionOfElements;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.OrderBy;
 
 @Entity
@@ -53,7 +55,9 @@ public class Book implements Serializable {
 	@Column(name = "RATING")
 	private Double rating;
 
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name="USER_ID", updatable = false)
+	@OnDelete(action=OnDeleteAction.CASCADE)
 	private User author;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -77,6 +81,7 @@ public class Book implements Serializable {
 	/* @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent") */
 	/* @OneToMany */
 	@OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OnDelete(action=OnDeleteAction.CASCADE)
 	@OrderBy(clause = "DATE ASC")
 	private Set<Comment> comments;
 	/*
@@ -200,6 +205,14 @@ public class Book implements Serializable {
 
 	public String getSubCategory() {
 		return subCategory;
+	}
+
+	public void setHits(Integer hits) {
+		this.hits = hits;
+	}
+
+	public Integer getHits() {
+		return hits;
 	}
 
 }

@@ -87,7 +87,7 @@ public class BooksByTag extends BasePage {
 				item.add(new BookmarkablePageLink<Object>("editLink",
 						EditBookPage.class, parameters));
 				item.add(new BookmarkablePageLink<Object>("detailsLink",
-						ShowBookPage.class, parameters));
+						BooksPage3.class, parameters));
 				item.add(new Link<Book>("deleteLink", item.getModel()) {
 					private static final long serialVersionUID = -7155146615720218460L;
 

@@ -128,7 +128,7 @@ public class EditBookPage extends BasePage {
 
 				/* Previous page */
 				//setResponsePage(backPage);
-				setResponsePage(BooksPage.class);
+				setResponsePage(BooksPage2.class);
 				
 			}
 		});
@@ -262,7 +262,7 @@ public class EditBookPage extends BasePage {
 
 				/* Previous page */
 				//setResponsePage(backPage);
-				setResponsePage(BooksPage.class);
+				setResponsePage(BooksPage2.class);
 				
 			}
 		});
