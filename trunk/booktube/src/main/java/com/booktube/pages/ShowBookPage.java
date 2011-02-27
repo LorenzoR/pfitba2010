@@ -29,7 +29,7 @@ import com.booktube.model.User;
 import com.booktube.service.BookService;
 import com.booktube.service.UserService;
 
-public class BooksPage3 extends BasePage {
+public class ShowBookPage extends BasePage {
 
 	@SpringBean
 	BookService bookService;
@@ -71,7 +71,7 @@ public class BooksPage3 extends BasePage {
 	 * }
 	 */
 
-	public BooksPage3(final PageParameters parameters) {
+	public ShowBookPage(final PageParameters parameters) {
 
 		// this.backPage = backPage;
 

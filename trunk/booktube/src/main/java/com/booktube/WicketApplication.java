@@ -21,11 +21,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.booktube.pages.AddBookPage;
-import com.booktube.pages.BooksPage2;
 import com.booktube.pages.EditBookPage;
 import com.booktube.pages.HomePage;
 import com.booktube.pages.RegisterPage;
-import com.booktube.pages.BooksPage3;
+import com.booktube.pages.ShowBookPage;
 import com.booktube.pages.WritersPage;
 import com.booktube.service.BookServiceImpl;
 import com.booktube.service.BookService;
@@ -61,10 +60,9 @@ public class WicketApplication extends WebApplication {
 		getMarkupSettings().setStripWicketTags(true);
 		// mountBookmarkablePage("books", BooksPage.class);
 		mount(new QueryStringUrlCodingStrategy("booktube", HomePage.class));
-		mount(new QueryStringUrlCodingStrategy("books", BooksPage2.class));
 		mount(new QueryStringUrlCodingStrategy("writers", WritersPage.class));
 		mount(new QueryStringUrlCodingStrategy("editBook", EditBookPage.class));
-		mount(new QueryStringUrlCodingStrategy("showBook", BooksPage3.class));
+		mount(new QueryStringUrlCodingStrategy("showBook", ShowBookPage.class));
 		mount(new QueryStringUrlCodingStrategy("addBook", AddBookPage.class));
 		mount(new QueryStringUrlCodingStrategy("register", RegisterPage.class));
 		// mount(new IndexedParamUrlCodingStrategy("editBook",

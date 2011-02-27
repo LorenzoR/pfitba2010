@@ -42,11 +42,15 @@ public class BooksPage extends BasePage {
 		String type = parameters.getString("type");
 		List<Book> books = null;
 
-		if (type.equals("tag")) {
+		if (type == null) {
+			books = bookService.getAllBooks();
+		} else if (type.equals("tag")) {
 			books = bookService.findBookByTag(parameters.getString("tag"));
 		} else if (type.equals("author")) {
 			books = bookService.findBookByAuthor(Integer.valueOf(parameters
 					.getString("author")));
+		} else if (type.equals("title")) {
+			books = bookService.findBookByTitle(parameters.getString("title"));
 		} else {
 			books = bookService.getAllBooks();
 		}
@@ -105,7 +109,7 @@ public class BooksPage extends BasePage {
 				item.add(new BookmarkablePageLink<Object>("editLink",
 						EditBookPage.class, parameters));
 				item.add(new BookmarkablePageLink<Object>("detailsLink",
-						BooksPage3.class, parameters));
+						ShowBookPage.class, parameters));
 				item.add(new Link<Book>("deleteLink", item.getModel()) {
 					private static final long serialVersionUID = -7155146615720218460L;
 
