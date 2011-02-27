@@ -2,6 +2,21 @@
 <html
 	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
 <head>
+<style>
+	div.wicket-aa {
+        font-family: "Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana;
+        font-size: 12px;
+        background-color: white;
+        border-width: 1px;
+        border-color: #cccccc;
+        border-style: solid;
+        padding: 2px;
+        margin: 1px 0 0 0;
+        text-align:left;
+    }
+    div.wicket-aa ul { list-style:none; padding: 2px; margin:0; }
+    div.wicket-aa ul li.selected { background-color: #FFFF00; padding: 2px; margin:0; }
+</style>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -32,6 +47,17 @@
 		<a href="#" wicket:id="logoutLink">Logout</a>
 		
 		</div>
+		<form wicket:id="searchBook">
+		Buscar Libro: <input type="text" wicket:id="bookTitle" value="" size="30"> &nbsp;
+		<input type="submit" wicket:id="find" value="Buscar"/>
+		<br/>
+		<span wicket:id="group">
+	    	<input wicket:id="author" type="radio"/> Autor
+	    	<input wicket:id="title" type="radio"/> Titulo
+	    	<input wicket:id="rating" type="radio"/> Rating
+	    	<input wicket:id="tag" type="radio"/> Tag
+	  	</span>
+		</form>
 	</div>
 	<hr />
 	<div id="bd">

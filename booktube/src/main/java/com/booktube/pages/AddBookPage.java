@@ -1,6 +1,5 @@
 package com.booktube.pages;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -37,14 +36,14 @@ public class AddBookPage extends BasePage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 		
-		Form form = addBookForm(parent);
+		Form<?> form = addBookForm(parent);
 		
 		parent.add(form);
 		
 	}
 	
-	private Form addBookForm(final WebMarkupContainer parent) {
-		Form form = new Form("form");
+	private Form<?> addBookForm(final WebMarkupContainer parent) {
+		Form<?> form = new Form("form");
 
 		final TextField titleField = new TextField("title", new Model(""));
 		//titleField.setOutputMarkupId(true);
