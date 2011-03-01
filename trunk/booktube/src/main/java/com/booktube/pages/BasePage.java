@@ -17,9 +17,7 @@ import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
 
@@ -108,6 +106,18 @@ public abstract class BasePage extends WebPage {
 
 		final Form<Object> form = new Form<Object>(label);
 
+		final RadioGroup<String> radioGroup = new RadioGroup<String>("group", new Model<String>(""));
+		radioGroup.setOutputMarkupId(true);
+		
+		Radio<String> radio = new Radio<String>("author", new Model<String>("author"));
+	
+		
+		radioGroup.add(new Radio<String>("author", new Model<String>("author")));
+		radioGroup.add(new Radio<String>("title", new Model<String>("title")));
+		radioGroup.add(new Radio<String>("rating", new Model<String>("rating")));
+		radioGroup.add(new Radio<String>("tag", new Model<String>("tag")));
+		form.add(radioGroup);
+		
 		final AutoCompleteTextField<String> bookTitle = new AutoCompleteTextField<String>(
 				"bookTitle", new Model<String>("")) {
 
@@ -119,10 +129,26 @@ public abstract class BasePage extends WebPage {
 					List<String> emptyList = Collections.emptyList();
 					return emptyList.iterator();
 				}
-
+				
+				System.out.println("RadioGroupValue: " + radioGroup.getModelObject() );
+				
+				List<Book> books = null;
+				
 				List<String> choices = new ArrayList<String>(10);
 
-				List<Book> books = bookService.getAllBooks();
+				if ( radioGroup.getValue().equals("author") ) {
+					books = null;
+				}
+				else if ( radioGroup.getValue().equals("rating") ) {
+					books = null;
+				}
+				else if ( radioGroup.getValue().equals("tag") ) {
+					books = null;
+				}
+				else {
+					books = bookService.getAllBooks();
+				}
+				
 
 				for (final Book book : books) {
 					final String title = book.getTitle();
@@ -140,13 +166,6 @@ public abstract class BasePage extends WebPage {
 		};
 
 		form.add(bookTitle);
-
-		final RadioGroup<String> radioGroup = new RadioGroup<String>("group", new Model<String>(""));
-		radioGroup.add(new Radio<String>("author", new Model<String>("author")));
-		radioGroup.add(new Radio<String>("title", new Model<String>("title")));
-		radioGroup.add(new Radio<String>("rating", new Model<String>("rating")));
-		radioGroup.add(new Radio<String>("tag", new Model<String>("tag")));
-		form.add(radioGroup);
 		
 		form.add(new Button("find", new Model<String>("")) {
 

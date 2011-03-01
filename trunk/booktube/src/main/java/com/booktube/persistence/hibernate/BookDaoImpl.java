@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
 import org.hibernate.FlushMode;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -114,30 +115,31 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 
 	public List<Book> findBookByTag(String tag) {
 
-		return (List<Book>) getSession().createQuery("from Book book "
-			    + "where :x in elements(book.tags)")
-			    .setString("x", tag).list();
+		return (List<Book>) getSession()
+				.createQuery(
+						"from Book book " + "where :x in elements(book.tags)")
+				.setString("x", tag).list();
 	}
 
-	public List<Book> findBookByAuthor(Integer authorId) {
-		System.out.println("authorID es " + authorId);
-		return (List<Book>) getSession().getNamedQuery("book.getByAuthor")
-		.setInteger("authorId", authorId).list();
+	public List<Book> findBookByAuthor(String author) {
+		return (List<Book>) getSession().createCriteria(Book.class)
+				.createCriteria("author")
+				.add(Restrictions.eq("username", author)).list();
+
 	}
-	
+
 	public int getCount() {
 		Criteria criteria = getSession().createCriteria(Book.class);
 		criteria.setProjection(Projections.rowCount());
 		return ((Number) criteria.uniqueResult()).intValue();
 	}
-	
+
 	public int getCountByTag(String tag) {
-		Query criteria = getSession().createQuery("from Book book "
-			    + "where :x in elements(book.tags)")
-			    .setString("x", tag);
+		Query criteria = getSession().createQuery(
+				"from Book book " + "where :x in elements(book.tags)")
+				.setString("x", tag);
 		return criteria.list().size();
-		
-		
+
 	}
 
 	public Iterator<Book> iterator(int first, int count) {

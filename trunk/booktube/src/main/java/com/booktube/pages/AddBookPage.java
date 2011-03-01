@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
@@ -15,6 +16,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.value.ValueMap;
 
+import com.booktube.WiaSession;
 import com.booktube.model.Book;
 import com.booktube.model.User;
 import com.booktube.service.BookService;
@@ -30,15 +32,31 @@ public class AddBookPage extends BasePage {
 	
 	private List<User> users = userService.getAllUsers();
 	
+	private User user;
+	
 	public AddBookPage() {
 
 		final WebMarkupContainer parent = new WebMarkupContainer("books");
 		parent.setOutputMarkupId(true);
 		add(parent);
 		
-		Form<?> form = addBookForm(parent);
+		user = WiaSession.get().getLoggedInUser();
 		
+		Label registerMessage = new Label("registerMessage", "Debe registrarse para poder publicar.");
+		parent.add(registerMessage);
+		
+		Form<?> form = addBookForm(parent);
 		parent.add(form);
+		
+		if ( user == null ) {
+			registerMessage.setVisible(true);
+			form.setVisible(false);
+		}
+		else {
+			form.setVisible(true);
+			registerMessage.setVisible(false);
+		}
+		
 		
 	}
 	

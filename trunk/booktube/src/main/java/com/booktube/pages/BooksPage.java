@@ -47,8 +47,8 @@ public class BooksPage extends BasePage {
 		} else if (type.equals("tag")) {
 			books = bookService.findBookByTag(parameters.getString("tag"));
 		} else if (type.equals("author")) {
-			books = bookService.findBookByAuthor(Integer.valueOf(parameters
-					.getString("author")));
+			books = bookService.findBookByAuthor(parameters
+					.getString("author"));
 		} else if (type.equals("title")) {
 			books = bookService.findBookByTitle(parameters.getString("title"));
 		} else {
@@ -85,20 +85,19 @@ public class BooksPage extends BasePage {
 						final PageParameters parameters = new PageParameters();
 						parameters.put("tag", tag);
 						parameters.put("type", "tag");
-						// item.add(new Label("tagName", tag));
+
 						BookmarkablePageLink<Object> bpl = new BookmarkablePageLink<Object>(
 								"tagLink", BooksPage.class, parameters);
 						bpl.add(new Label("tagName", tag));
 						item.add(bpl);
-						// item.add(new BookmarkablePageLink<Object>("tagLink",
-						// BooksByTag.class, parameters));
+
 					}
 				});
 
 				final PageParameters parameters = new PageParameters();
 				parameters.put("book", book.getId().toString());
 				item.add(new Label("title", book.getTitle()));
-				parameters.put("author", book.getAuthor().getId().toString());
+				parameters.put("author", book.getAuthor().getUsername());
 				parameters.put("type", "author");
 				BookmarkablePageLink<Object> bpl = new BookmarkablePageLink<Object>(
 						"authorLink", BooksPage.class, parameters);
