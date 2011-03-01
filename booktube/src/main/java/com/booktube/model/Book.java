@@ -32,8 +32,7 @@ import org.hibernate.annotations.OrderBy;
 @Table(name = "BOOK")
 @NamedQueries({
 		@NamedQuery(name = "book.id", query = "from Book b where b.id = :id"),
-		@NamedQuery(name = "book.getByTitle", query = "from Book b where b.title LIKE :title"),
-		@NamedQuery(name = "book.getByAuthor", query = "from Book b where b.author = :authorId") })
+		@NamedQuery(name = "book.getByTitle", query = "from Book b where b.title LIKE :title")})
 public class Book implements Serializable {
 
 	private static final long serialVersionUID = 2241291507547593474L;

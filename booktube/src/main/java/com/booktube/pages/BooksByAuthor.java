@@ -35,22 +35,22 @@ public class BooksByAuthor extends BasePage {
 
 	public BooksByAuthor(final PageParameters parameters) {
 
-		Integer authorId = parameters.getAsInteger("author");
+		String author = parameters.getString("author");
 		
 		final WebMarkupContainer parent = new WebMarkupContainer("books");
 		parent.setOutputMarkupId(true);
 		add(parent);
 		
-		DataView<Book> dataView = bookList("bookList", authorId);
+		DataView<Book> dataView = bookList("bookList", author);
 		
 		parent.add(dataView);
 		parent.add(new PagingNavigator("footerPaginator", dataView));
 
 	}
 
-	private DataView<Book> bookList(String label, Integer authorId) {
+	private DataView<Book> bookList(String label, String author) {
 		
-		IDataProvider<Book> dataProvider = new BookProvider(authorId);
+		IDataProvider<Book> dataProvider = new BookProvider(author);
 
 		DataView<Book> dataView = new DataView<Book>("bookList", dataProvider, BOOKS_PER_PAGE) {
 
@@ -112,22 +112,22 @@ public class BooksByAuthor extends BasePage {
 	class BookProvider implements IDataProvider<Book> {
 
 		private static final long serialVersionUID = 6050730502992812477L;
-		private Integer authorId;
+		private String author;
 		private Integer size;
 		
-		public BookProvider(Integer authorId) {
-			this.authorId = authorId;
+		public BookProvider(String author) {
+			this.author = author;
 		}
 		
 		public Iterator<Book> iterator(int first, int count) {
-			List<Book> books = bookService.findBookByAuthor(authorId);
+			List<Book> books = bookService.findBookByAuthor(author);
 			this.size = books.size();
 			return books.iterator();
 		}
 
 		public int size() {
 			if ( size == null ) {
-				return bookService.findBookByAuthor(authorId).size();
+				return bookService.findBookByAuthor(author).size();
 			}
 			else {
 				return size;

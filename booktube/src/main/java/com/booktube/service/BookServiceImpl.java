@@ -52,8 +52,8 @@ public class BookServiceImpl implements BookService {
 		return itemDao.findBookByTag(tag);
 	}
 	
-	public List<Book> findBookByAuthor(Integer authorId) {
-		return itemDao.findBookByAuthor(authorId);
+	public List<Book> findBookByAuthor(String author) {
+		return itemDao.findBookByAuthor(author);
 	}
 	
 	public int getCount() {
