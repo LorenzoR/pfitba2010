@@ -120,14 +120,14 @@ public class BooksByTag extends BasePage {
 		}
 		
 		public Iterator<Book> iterator(int first, int count) {
-			List<Book> books = bookService.findBookByTag(tag);
+			List<Book> books = bookService.findBookByTag(tag, first, count);
 			this.size = books.size();
 			return books.iterator();
 		}
 
 		public int size() {
 			if ( size == null ) {
-				return bookService.findBookByTag(tag).size();
+				return bookService.findBookByTag(tag, 0, Integer.MAX_VALUE).size();
 			}
 			else {
 				return size;

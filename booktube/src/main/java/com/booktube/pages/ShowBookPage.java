@@ -23,6 +23,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.value.ValueMap;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import com.booktube.WiaSession;
 import com.booktube.model.Book;
 import com.booktube.model.Comment;
 import com.booktube.model.User;
@@ -41,40 +42,11 @@ public class ShowBookPage extends BasePage {
 	// private final Page backPage;
 	private List<User> users = userService.getAllUsers();
 
-	/*
-	 * public ShowBookPage(Page backPage) { // this(backPage, new Book());
-	 * this(backPage, new PageParameters()); }
-	 */
-
-	/*
-	 * public ShowBookPage(final Page backPage, final PageParameters parameters)
-	 * {
-	 * 
-	 * // this.backPage = backPage;
-	 * 
-	 * Integer bookId = parameters.getAsInteger("book");
-	 * 
-	 * final Book book = bookService.getBook(bookId);
-	 * 
-	 * final WebMarkupContainer parent = new WebMarkupContainer("bookDetails");
-	 * parent.setOutputMarkupId(true); add(parent);
-	 * 
-	 * // add(new Label("bookId", book.getId().toString())); parent.add(new
-	 * Label("title", book.getTitle())); parent.add(new Label("author",
-	 * book.getAuthor().getUsername())); parent.add(new MultiLineLabel("text",
-	 * book.getText())); parent.add(new Label("publishDate",
-	 * book.getPublishDate().toString()));
-	 * 
-	 * parent.add(new Link("goBack") { public void onClick() {
-	 * setResponsePage(backPage); } });
-	 * 
-	 * }
-	 */
+	User user;
 
 	public ShowBookPage(final PageParameters parameters) {
 
-		// this.backPage = backPage;
-
+		user = WiaSession.get().getLoggedInUser();
 		Integer bookId = parameters.getAsInteger("book");
 
 		final Book book = bookService.getBook(bookId);
@@ -99,7 +71,19 @@ public class ShowBookPage extends BasePage {
 
 		parent.add(commentList("comments", comments));
 
-		parent.add(addCommentForm(parent, book, comments));
+		Form<Object> commentForm = commentForm(parent, book, comments);
+		
+		parent.add(commentForm);
+		
+		Label registerMessage = new Label("registerMessage", "Debe registrarse para poder enviar comentarios.");
+		parent.add(registerMessage);
+		
+		if ( user == null ) {
+			commentForm.setVisible(false);
+		}
+		else {
+			registerMessage.setVisible(false);
+		}
 
 	}
 
@@ -123,22 +107,17 @@ public class ShowBookPage extends BasePage {
 
 	}
 
-	private Form addCommentForm(final WebMarkupContainer parent,
+	private Form<Object> commentForm(final WebMarkupContainer parent,
 			final Book book, final List<Comment> comments) {
 
-		Form form = new Form("form");
+		Form<Object> form = new Form<Object>("form");
 
-		final TextArea editor = new TextArea("textArea");
+		final TextArea<Object> editor = new TextArea<Object>("textArea");
 		editor.setOutputMarkupId(true);
-
-		final DropDownChoice ddc = new DropDownChoice("usernameList",
-				new Model(users.get(0)), users, new ChoiceRenderer("username",
-						"id"));
 
 		ValueMap myParameters = new ValueMap();
 		myParameters.put("usernameList", users.get(0));
 		form.setModel(new CompoundPropertyModel(myParameters));
-		form.add(ddc);
 
 		form.add(editor);
 		form.add(new AjaxSubmitLink("save") {
@@ -153,13 +132,13 @@ public class ShowBookPage extends BasePage {
 				// target.focusComponent(editor);
 				// System.out.println("ACA 1");
 				String text = editor.getDefaultModelObjectAsString();
-				String username = ddc.getDefaultModelObjectAsString();
+				//String username = user.getUsername();
 
 				// User user =
 				// WicketApplication.instance().getUserService().getUser(username);
 				// Book book = new Book(title, text, user);
 
-				User user = userService.getUser(username);
+				//User user = userService.getUser(username);
 				// User user = new User("usuario", "nombre", "apellido");
 				System.out.println("user es " + user);
 				// Comment comment = new Comment(user, book, text);
@@ -172,7 +151,7 @@ public class ShowBookPage extends BasePage {
 				/* Insert comment */
 				// WicketApplication.instance().getBookService().insertBook(book);
 				System.out.println("Comment inserted.");
-				System.out.println("Author: " + username);
+				System.out.println("Author: " + user.getUsername());
 				System.out.println("Comment: " + text);
 
 				comments.add(comment);

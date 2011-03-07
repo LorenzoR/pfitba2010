@@ -117,7 +117,7 @@ public class BookNoDBdao implements BookDao {
 		
 	}
 
-	public List<Book> findBookByTitle(String title) {
+	public List<Book> findBookByTitle(String title, int first, int count) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -132,12 +132,12 @@ public class BookNoDBdao implements BookDao {
 		return null;
 	}
 
-	public List<Book> findBookByTag(String tag) {
+	public List<Book> findBookByTag(String tag, int first, int count) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public List<Book> findBookByAuthor(Integer authorId) {
+	public List<Book> findBookByAuthor(String author, int first, int count) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -145,5 +145,10 @@ public class BookNoDBdao implements BookDao {
 	public List<Book> findBookByAuthor(String author) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public int getCount(String type, String parameter) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }
