@@ -44,20 +44,20 @@ public class BookServiceImpl implements BookService {
         this.itemDao = itemDao;
     }
 
-	public List<Book> findBookByTitle(String title) {
-		return itemDao.findBookByTitle(title);
+	public List<Book> findBookByTitle(String title, int first, int count) {
+		return itemDao.findBookByTitle(title, first, count);
 	}
 	
-	public List<Book> findBookByTag(String tag) {
-		return itemDao.findBookByTag(tag);
+	public List<Book> findBookByTag(String tag, int first, int count) {
+		return itemDao.findBookByTag(tag, first, count);
 	}
 	
-	public List<Book> findBookByAuthor(String author) {
-		return itemDao.findBookByAuthor(author);
+	public List<Book> findBookByAuthor(String author, int first, int count) {
+		return itemDao.findBookByAuthor(author, first, count);
 	}
 	
-	public int getCount() {
-    	return itemDao.getCount();
+	public int getCount(String type, String parameter) {
+    	return itemDao.getCount(type, parameter);
     }
 
 	public Iterator<Book> iterator(int first, int count) {

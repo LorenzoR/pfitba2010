@@ -120,14 +120,14 @@ public class BooksByAuthor extends BasePage {
 		}
 		
 		public Iterator<Book> iterator(int first, int count) {
-			List<Book> books = bookService.findBookByAuthor(author);
+			List<Book> books = bookService.findBookByAuthor(author, first, count);
 			this.size = books.size();
 			return books.iterator();
 		}
 
 		public int size() {
 			if ( size == null ) {
-				return bookService.findBookByAuthor(author).size();
+				return bookService.findBookByAuthor(author, 0, Integer.MAX_VALUE).size();
 			}
 			else {
 				return size;

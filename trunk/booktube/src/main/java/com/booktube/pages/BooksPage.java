@@ -45,12 +45,12 @@ public class BooksPage extends BasePage {
 		if (type == null) {
 			books = bookService.getAllBooks();
 		} else if (type.equals("tag")) {
-			books = bookService.findBookByTag(parameters.getString("tag"));
+			books = bookService.findBookByTag(parameters.getString("tag"), 0, Integer.MAX_VALUE);
 		} else if (type.equals("author")) {
 			books = bookService.findBookByAuthor(parameters
-					.getString("author"));
+					.getString("author"), 0, Integer.MAX_VALUE);
 		} else if (type.equals("title")) {
-			books = bookService.findBookByTitle(parameters.getString("title"));
+			books = bookService.findBookByTitle(parameters.getString("title"), 0, Integer.MAX_VALUE);
 		} else {
 			books = bookService.getAllBooks();
 		}
@@ -142,8 +142,8 @@ public class BooksPage extends BasePage {
 
 		public Iterator<Book> iterator(int first, int count) {
 			// return bookService.iterator(first, count);
-			// return books.iterator(first, count);
 			return books.iterator();
+			//return bookService.findBookByAuthor("eapoe", first, count).iterator();
 		}
 
 		public int size() {

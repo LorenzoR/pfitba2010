@@ -38,97 +38,99 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 		List<Book> books = (List<Book>) getSession().createCriteria(Book.class)
 				.list();
 		return books;
-		/*
-		 * Session session = SESSION_FACTORY.openSession(); Criteria crit =
-		 * session.createCriteria(Book.class);
-		 * session.beginTransaction().commit(); List<Book> list = crit.list();
-		 * System.out.println("Desconecto"); session.disconnect(); if
-		 * (list.isEmpty()) return null; return list;
-		 */
-		// return null;
 	}
 
 	public Book getBook(Integer id) {
 		return (Book) getSession().getNamedQuery("book.id")
 				.setInteger("id", id).setMaxResults(1).uniqueResult();
-		/*
-		 * Session session = SESSION_FACTORY.openSession(); Criteria crit =
-		 * session.createCriteria(Book.class); crit.add(Restrictions.eq("id",
-		 * id)); session.beginTransaction().commit(); List<Book> list =
-		 * crit.list(); session.disconnect(); if (list.isEmpty()) return null;
-		 * else return list.get(0);
-		 */
-		// return null;
 	}
 
 	public void update(Book book) {
-		/* Parece que anda */
 		getSession().merge(book);
 		getSession().flush();
-		/* Actualiza el libro y agrega muchos comentarios */
-		// getSession().saveOrUpdate(book);
-		// getSession().flush();
-		/* No actualiza el libro y agrega un solo comentario */
-		// getSession().saveOrUpdate(book);
-
-		/*
-		 * if (book.getId() != null) { // it is an update
-		 * getSession().merge(book); } else { // you are saving a new one
-		 * getSession().saveOrUpdate(book); }
-		 */// getSession().save(book);
-			// getSession().flush();
-			// getSession().evict(book);
-		/*
-		 * Session session = SESSION_FACTORY.openSession();
-		 * session.update(book); session.beginTransaction().commit();
-		 * session.disconnect();
-		 */
 	}
 
 	public void insert(Book book) {
 		getSession().save(book);
-		/*
-		 * Session session = SESSION_FACTORY.openSession(); session.save(book);
-		 * session.beginTransaction().commit(); session.disconnect(); //
-		 * logger.info("user added: " + newUser.getEmail());
-		 */
 	}
 
 	public void delete(Book book) {
 		getSession().delete(book);
 		getSession().flush();
-		/*
-		 * Session session = SESSION_FACTORY.openSession();
-		 * session.delete(getBook(id)); session.beginTransaction().commit();
-		 * session.disconnect();
-		 */
 	}
 
-	public List<Book> findBookByTitle(String title) {
+	public List<Book> findBookByTitle(String title, int first, int count) {
+
 		/*
 		 * return (List<Book>) getSession().getNamedQuery("book.getByTitle")
-		 * .setString("title", title);
+		 * .setString("title", '%' + title + '%').setFirstResult(first)
+		 * .setMaxResults(count).list();
 		 */
-		return (List<Book>) getSession().getNamedQuery("book.getByTitle")
-				.setString("title", '%' + title + '%').list();
+		return (List<Book>) getSession().createCriteria(Book.class)
+				.add(Restrictions.ilike("title", '%' + title + '%'))
+				.setFirstResult(first).setMaxResults(count).list();
 	}
 
-	public List<Book> findBookByTag(String tag) {
+	public List<Book> findBookByTag(String tag, int first, int count) {
 
-		return (List<Book>) getSession()
-				.createQuery(
-						"from Book book " + "where :x in elements(book.tags)")
-				.setString("x", tag).list();
+		/*return (List<Book>) getSession()
+				.createCriteria(Book.class)
+				.add(Restrictions
+						//.sqlRestriction("INNER JOIN BOOK, BOOK_TAG on BOOK.book_id = BOOK_TAG.book_id WHERE BOOK_TAG.tag LIKE '"+tag+"';"))
+				.sqlRestriction("NATURAL JOIN `book_tag` WHERE `book_tag`.tag LIKE '%s tag2 %s';"))
+						.list();*/
+		/*
+		 * return (List<Book>) getSession().createCriteria(Book.class)
+		 * .createCriteria("tags") .add(Restrictions.ilike("tags", tag))
+		 * .list();
+		 */
+		int resultados = ((Long)getSession().createQuery("select count(*) from Book").uniqueResult()).intValue();
+		  
+		int result = ((Long) getSession() .createQuery( "select count(*) from Book book " +
+		  "where :x in elements(book.tags)") .setString("x",
+				  tag).uniqueResult()).intValue();
+		
+		System.out.println("************RESULTADOS: " + resultados);
+		
+		System.out.println("------------RESULTADOS2: " + result);
+		
+		return (List<Book>) getSession() .createQuery( "from Book book " +
+		  "where :x in elements(book.tags)") .setString("x",
+		  tag).setFirstResult(first).setMaxResults(count) .list();
+		 
 	}
 
-	public List<Book> findBookByAuthor(String author) {
+	public List<Book> findBookByAuthor(String author, int first, int count) {
 		return (List<Book>) getSession().createCriteria(Book.class)
 				.createCriteria("author")
-				.add(Restrictions.eq("username", author)).list();
+				.add(Restrictions.eq("username", author)).setFirstResult(first)
+				.setMaxResults(count).list();
 
 	}
 
-	public int getCount() {
+	public int getCount(String type, String parameter) {
+		// Criteria criteria = null;
+		// Query query = null;
+		// Integer resultado = getSession().getNamedQuery("book.getByTitle")
+		// .setString("title", '%' + parameter + '%').
+
+		/*
+		 * if (type.equals("tag")) { query = getSession().createQuery(
+		 * "from Book book " + "where :x in elements(book.tags)")
+		 * .setString("x", parameter); } else if (type.equals("title")) { query
+		 * = getSession().getNamedQuery("book.getByTitle").setString( "title",
+		 * '%' + parameter + '%'); } else if (type.equals("author")) { criteria
+		 * = getSession().createCriteria(Book.class) .createCriteria("author")
+		 * .add(Restrictions.eq("username", parameter)); } else { criteria =
+		 * getSession().createCriteria(Book.class); }
+		 * 
+		 * 
+		 * 
+		 * Number number = ((Number) query.uniqueResult()).intValue();
+		 * 
+		 * criteria.setProjection(Projections.rowCount()); return ((Number)
+		 * criteria.uniqueResult()).intValue();
+		 */
 		Criteria criteria = getSession().createCriteria(Book.class);
 		criteria.setProjection(Projections.rowCount());
 		return ((Number) criteria.uniqueResult()).intValue();

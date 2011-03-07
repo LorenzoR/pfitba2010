@@ -11,9 +11,9 @@ public interface BookDao {
     public void update(Book book);
     public void insert(Book book);
     public void delete(Book book);
-	public List<Book> findBookByTitle(String title);
-	public List<Book> findBookByTag(String tag);
-	public List<Book> findBookByAuthor(String author);
-	public int getCount();
+	public List<Book> findBookByTitle(String title, int first, int count);
+	public List<Book> findBookByTag(String tag, int first, int count);
+	public List<Book> findBookByAuthor(String author, int first, int count);
+	public int getCount(String type, String parameter);
     public Iterator<Book> iterator(int first, int count);
 }

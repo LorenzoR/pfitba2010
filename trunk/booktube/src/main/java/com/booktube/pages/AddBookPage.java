@@ -64,8 +64,7 @@ public class AddBookPage extends BasePage {
 		Form<?> form = new Form("form");
 
 		final TextField titleField = new TextField("title", new Model(""));
-		//titleField.setOutputMarkupId(true);
-		//titleField.setMarkupId(getId());
+
 		form.add(titleField);
 		
 		final TextArea editor = new TextArea("textArea");
@@ -75,20 +74,8 @@ public class AddBookPage extends BasePage {
 		
 		ValueMap myParameters = new ValueMap();
 		
-		if ( users.size() != 0 ) {
-			ddc = new DropDownChoice("usernameList", new Model(users.get(0)), users, new ChoiceRenderer("username", "id"));
-			myParameters.put("usernameList", users.get(0)); 
-		}
-		else {
-			//final DropDownChoice ddc = new DropDownChoice("usernameList", new Model(users.get(0)), users, new ChoiceRenderer("username", "id"));
-			ddc = new DropDownChoice("usernameList", users, new ChoiceRenderer("username", "id"));
-		}
-			
-		
-		
-		
 		form.setModel(new CompoundPropertyModel(myParameters)); 
-		form.add(ddc);
+
 		
 		form.add(editor);
 		form.add(new AjaxSubmitLink("save") {
@@ -101,10 +88,10 @@ public class AddBookPage extends BasePage {
 				//target.focusComponent(editor);
 				//System.out.println("ACA 1");
 				String text = editor.getDefaultModelObjectAsString();
-				String username = ddc.getDefaultModelObjectAsString();
+				String username = user.getUsername();
 				String title = titleField.getDefaultModelObjectAsString();
 				
-				User user = userService.getUser(username);
+				//User user = userService.getUser(username);
 				Book book = new Book(title, text, user);
 				
 				/* Insert book */
