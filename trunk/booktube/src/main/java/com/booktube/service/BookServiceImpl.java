@@ -16,10 +16,6 @@ public class BookServiceImpl implements BookService {
         //this.dao = new BookDaoImpl();
     }
 
-    public List<Book> getAllBooks() {
-        return itemDao.getAllBooks();
-    }
-
     public void updateBook(Book book) {
         itemDao.update(book);
     }
@@ -44,6 +40,10 @@ public class BookServiceImpl implements BookService {
         this.itemDao = itemDao;
     }
 
+    public List<Book> getAllBooks(int first, int count) {
+        return itemDao.getAllBooks(first, count);
+    }
+    
 	public List<Book> findBookByTitle(String title, int first, int count) {
 		return itemDao.findBookByTitle(title, first, count);
 	}
