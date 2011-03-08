@@ -151,4 +151,9 @@ public class BookNoDBdao implements BookDao {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	public List<Book> getAllBooks(int first, int count) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

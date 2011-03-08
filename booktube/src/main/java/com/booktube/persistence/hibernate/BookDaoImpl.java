@@ -34,9 +34,9 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 		super(Book.class);
 	}
 
-	public List<Book> getAllBooks() {
+	public List<Book> getAllBooks(int first, int count) {
 		List<Book> books = (List<Book>) getSession().createCriteria(Book.class)
-				.list();
+				.setFirstResult(first).setMaxResults(count).list();
 		return books;
 	}
 
@@ -73,31 +73,12 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 
 	public List<Book> findBookByTag(String tag, int first, int count) {
 
-		/*return (List<Book>) getSession()
-				.createCriteria(Book.class)
-				.add(Restrictions
-						//.sqlRestriction("INNER JOIN BOOK, BOOK_TAG on BOOK.book_id = BOOK_TAG.book_id WHERE BOOK_TAG.tag LIKE '"+tag+"';"))
-				.sqlRestriction("NATURAL JOIN `book_tag` WHERE `book_tag`.tag LIKE '%s tag2 %s';"))
-						.list();*/
-		/*
-		 * return (List<Book>) getSession().createCriteria(Book.class)
-		 * .createCriteria("tags") .add(Restrictions.ilike("tags", tag))
-		 * .list();
-		 */
-		int resultados = ((Long)getSession().createQuery("select count(*) from Book").uniqueResult()).intValue();
-		  
-		int result = ((Long) getSession() .createQuery( "select count(*) from Book book " +
-		  "where :x in elements(book.tags)") .setString("x",
-				  tag).uniqueResult()).intValue();
-		
-		System.out.println("************RESULTADOS: " + resultados);
-		
-		System.out.println("------------RESULTADOS2: " + result);
-		
-		return (List<Book>) getSession() .createQuery( "from Book book " +
-		  "where :x in elements(book.tags)") .setString("x",
-		  tag).setFirstResult(first).setMaxResults(count) .list();
-		 
+		return (List<Book>) getSession()
+				.createQuery(
+						"from Book book " + "where :x in elements(book.tags)")
+				.setString("x", tag).setFirstResult(first).setMaxResults(count)
+				.list();
+
 	}
 
 	public List<Book> findBookByAuthor(String author, int first, int count) {
@@ -109,31 +90,31 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 	}
 
 	public int getCount(String type, String parameter) {
-		// Criteria criteria = null;
-		// Query query = null;
-		// Integer resultado = getSession().getNamedQuery("book.getByTitle")
-		// .setString("title", '%' + parameter + '%').
 
-		/*
-		 * if (type.equals("tag")) { query = getSession().createQuery(
-		 * "from Book book " + "where :x in elements(book.tags)")
-		 * .setString("x", parameter); } else if (type.equals("title")) { query
-		 * = getSession().getNamedQuery("book.getByTitle").setString( "title",
-		 * '%' + parameter + '%'); } else if (type.equals("author")) { criteria
-		 * = getSession().createCriteria(Book.class) .createCriteria("author")
-		 * .add(Restrictions.eq("username", parameter)); } else { criteria =
-		 * getSession().createCriteria(Book.class); }
-		 * 
-		 * 
-		 * 
-		 * Number number = ((Number) query.uniqueResult()).intValue();
-		 * 
-		 * criteria.setProjection(Projections.rowCount()); return ((Number)
-		 * criteria.uniqueResult()).intValue();
-		 */
-		Criteria criteria = getSession().createCriteria(Book.class);
-		criteria.setProjection(Projections.rowCount());
-		return ((Number) criteria.uniqueResult()).intValue();
+		if (type.equals("tag")) {
+			return ((Long) getSession()
+					.createQuery(
+							"select count(*) from Book book "
+									+ "where :x in elements(book.tags)")
+					.setString("x", parameter).uniqueResult()).intValue();
+		} else if (type.equals("title")) {
+			return ((Long) getSession()
+					.createQuery(
+							"select count(*) from Book where "
+									+ "Book.title LIKE :title")
+					.setString("title", parameter).uniqueResult()).intValue();
+		} else if (type.equals("author")) {
+			Criteria criteria = getSession().createCriteria(Book.class)
+					.createCriteria("author")
+					.add(Restrictions.eq("username", parameter));
+			criteria.setProjection(Projections.rowCount());
+			return ((Number) criteria.uniqueResult()).intValue();
+		} else {
+			Criteria criteria = getSession().createCriteria(Book.class);
+			criteria.setProjection(Projections.rowCount());
+			return ((Number) criteria.uniqueResult()).intValue();
+		}
+
 	}
 
 	public int getCountByTag(String tag) {

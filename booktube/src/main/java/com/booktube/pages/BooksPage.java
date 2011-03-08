@@ -33,6 +33,8 @@ public class BooksPage extends BasePage {
 
 	public static final int BOOKS_PER_PAGE = 5;
 
+	public String type;
+
 	public BooksPage(final PageParameters parameters) {
 
 		final WebMarkupContainer parent = new WebMarkupContainer("books");
@@ -40,31 +42,25 @@ public class BooksPage extends BasePage {
 		add(parent);
 
 		String type = parameters.getString("type");
+		String parameter = null;
 		List<Book> books = null;
 
-		if (type == null) {
-			books = bookService.getAllBooks();
-		} else if (type.equals("tag")) {
-			books = bookService.findBookByTag(parameters.getString("tag"), 0, Integer.MAX_VALUE);
-		} else if (type.equals("author")) {
-			books = bookService.findBookByAuthor(parameters
-					.getString("author"), 0, Integer.MAX_VALUE);
-		} else if (type.equals("title")) {
-			books = bookService.findBookByTitle(parameters.getString("title"), 0, Integer.MAX_VALUE);
-		} else {
-			books = bookService.getAllBooks();
+		if (type != null) {
+			parameter = parameters.getString(type);
 		}
+		
+		this.type = type;
 
-		DataView<Book> dataView = bookList("bookList", books);
+		DataView<Book> dataView = bookList("bookList", type, parameter);
 
 		parent.add(dataView);
 		parent.add(new PagingNavigator("footerPaginator", dataView));
 
 	}
 
-	private DataView<Book> bookList(String label, List<Book> books) {
+	private DataView<Book> bookList(String label, String type, String parameter) {
 
-		IDataProvider<Book> dataProvider = new BookProvider(books);
+		IDataProvider<Book> dataProvider = new BookProvider(type, parameter);
 
 		DataView<Book> dataView = new DataView<Book>("bookList", dataProvider,
 				BOOKS_PER_PAGE) {
@@ -135,21 +131,48 @@ public class BooksPage extends BasePage {
 		private static final long serialVersionUID = 6050730502992812477L;
 		private List<Book> books;
 		private Integer size;
-
-		public BookProvider(List<Book> books) {
-			this.books = books;
+		private String type;
+		private String parameter;
+		
+		public BookProvider(String type, String parameter) {
+			this.type = type;
+			this.parameter = parameter;
+			this.size = null;
 		}
 
 		public Iterator<Book> iterator(int first, int count) {
+			System.out.println("-----------======== aca");
+			if (type == null) {
+				this.books = bookService.getAllBooks(first, count);
+				//books = bookService.getAllBooks();
+			} else if (type.equals("tag")) {
+				this.books =  bookService.findBookByTag(parameter, first, count);
+				//books = bookService.findBookByTag(parameters.getString("tag"),
+				//		0, Integer.MAX_VALUE);
+			} else if (type.equals("author")) {
+				this.books =  bookService.findBookByAuthor(parameter, first, count);
+				//books = bookService.findBookByAuthor(
+				//		parameters.getString("author"), 0, Integer.MAX_VALUE);
+			} else if (type.equals("title")) {
+				this.books =  bookService.findBookByTitle(parameter, first, count);
+				//books = bookService.findBookByTitle(
+				//		parameters.getString("title"), 0, Integer.MAX_VALUE);
+			} else {
+				this.books =  bookService.getAllBooks(first, count);
+				//books = bookService.getAllBooks();
+			}
+
+			return this.books.iterator();
 			// return bookService.iterator(first, count);
-			return books.iterator();
-			//return bookService.findBookByAuthor("eapoe", first, count).iterator();
+			// return books.iterator();
+			// return bookService.findBookByAuthor("eapoe", first,
+			// count).iterator();
 		}
 
 		public int size() {
 			// return bookService.getCount();
 			if (size == null) {
-				return books.size();
+				return bookService.getCount(type, parameter);
 			} else {
 				return size;
 			}

@@ -146,7 +146,7 @@ public abstract class BasePage extends WebPage {
 					books = null;
 				}
 				else {
-					books = bookService.getAllBooks();
+					books = bookService.getAllBooks(0, Integer.MAX_VALUE);
 				}
 				
 
