@@ -99,6 +99,7 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
 				<value>com.booktube.model.User</value>
 				<value>com.booktube.model.Book</value>
 				<value>com.booktube.model.Comment</value>
+				<value>com.booktube.model.Rating</value>
 			</list>
 
 		</property>

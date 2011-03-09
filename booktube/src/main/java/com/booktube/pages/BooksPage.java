@@ -48,7 +48,7 @@ public class BooksPage extends BasePage {
 		if (type != null) {
 			parameter = parameters.getString(type);
 		}
-		
+
 		this.type = type;
 
 		DataView<Book> dataView = bookList("bookList", type, parameter);
@@ -92,13 +92,18 @@ public class BooksPage extends BasePage {
 
 				final PageParameters parameters = new PageParameters();
 				parameters.put("book", book.getId().toString());
-				item.add(new Label("title", book.getTitle()));
+				// item.add(new Label("title", book.getTitle()));
+				BookmarkablePageLink<Object> bplTitle = new BookmarkablePageLink<Object>(
+						"viewLink", ShowBookPage.class, parameters);
+				bplTitle.add(new Label("title", book.getTitle()));
+				item.add(bplTitle);
 				parameters.put("author", book.getAuthor().getUsername());
 				parameters.put("type", "author");
-				BookmarkablePageLink<Object> bpl = new BookmarkablePageLink<Object>(
+				BookmarkablePageLink<Object> bplAuthor = new BookmarkablePageLink<Object>(
 						"authorLink", BooksPage.class, parameters);
-				bpl.add(new Label("authorName", book.getAuthor().getUsername()));
-				item.add(bpl);
+				bplAuthor.add(new Label("authorName", book.getAuthor()
+						.getUsername()));
+				item.add(bplAuthor);
 				item.add(new Label("publishDate", book.getPublishDate()
 						.toString()));
 				item.add(new BookmarkablePageLink<Object>("editLink",
@@ -133,7 +138,7 @@ public class BooksPage extends BasePage {
 		private Integer size;
 		private String type;
 		private String parameter;
-		
+
 		public BookProvider(String type, String parameter) {
 			this.type = type;
 			this.parameter = parameter;
@@ -141,25 +146,28 @@ public class BooksPage extends BasePage {
 		}
 
 		public Iterator<Book> iterator(int first, int count) {
-			System.out.println("-----------======== aca");
+
 			if (type == null) {
 				this.books = bookService.getAllBooks(first, count);
-				//books = bookService.getAllBooks();
+				// books = bookService.getAllBooks();
 			} else if (type.equals("tag")) {
-				this.books =  bookService.findBookByTag(parameter, first, count);
-				//books = bookService.findBookByTag(parameters.getString("tag"),
-				//		0, Integer.MAX_VALUE);
+				this.books = bookService.findBookByTag(parameter, first, count);
+				// books =
+				// bookService.findBookByTag(parameters.getString("tag"),
+				// 0, Integer.MAX_VALUE);
 			} else if (type.equals("author")) {
-				this.books =  bookService.findBookByAuthor(parameter, first, count);
-				//books = bookService.findBookByAuthor(
-				//		parameters.getString("author"), 0, Integer.MAX_VALUE);
+				this.books = bookService.findBookByAuthor(parameter, first,
+						count);
+				// books = bookService.findBookByAuthor(
+				// parameters.getString("author"), 0, Integer.MAX_VALUE);
 			} else if (type.equals("title")) {
-				this.books =  bookService.findBookByTitle(parameter, first, count);
-				//books = bookService.findBookByTitle(
-				//		parameters.getString("title"), 0, Integer.MAX_VALUE);
+				this.books = bookService.findBookByTitle(parameter, first,
+						count);
+				// books = bookService.findBookByTitle(
+				// parameters.getString("title"), 0, Integer.MAX_VALUE);
 			} else {
-				this.books =  bookService.getAllBooks(first, count);
-				//books = bookService.getAllBooks();
+				this.books = bookService.getAllBooks(first, count);
+				// books = bookService.getAllBooks();
 			}
 
 			return this.books.iterator();
@@ -172,10 +180,9 @@ public class BooksPage extends BasePage {
 		public int size() {
 			// return bookService.getCount();
 			if (size == null) {
-				return bookService.getCount(type, parameter);
-			} else {
-				return size;
+				size = bookService.getCount(type, parameter);
 			}
+			return size;
 		}
 
 		public IModel<Book> model(Book book) {

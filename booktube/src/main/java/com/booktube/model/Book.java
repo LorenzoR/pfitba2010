@@ -18,6 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -50,9 +51,13 @@ public class Book implements Serializable {
 	@Column(name = "TEXT", columnDefinition = "LONGTEXT")
 	private String text;
 
-	@Basic
+	/*@Basic
 	@Column(name = "RATING")
-	private Double rating;
+	*/
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "RATING_ID")
+	@OnDelete(action=OnDeleteAction.CASCADE)
+	private Rating rating;
 
 	@ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name="USER_ID", updatable = false)
@@ -101,14 +106,15 @@ public class Book implements Serializable {
 		this.text = text;
 		this.author = author;
 		this.publishDate = Calendar.getInstance().getTime();
+		this.rating = new Rating();
 	}
 
 	public Book(String title, String text, User author) {
 		this.title = title;
 		this.text = text;
 		this.author = author;
-		// this.id = new Integer(1);
 		this.publishDate = Calendar.getInstance().getTime();
+		this.rating = new Rating();
 
 	}
 
@@ -136,11 +142,11 @@ public class Book implements Serializable {
 		this.text = text;
 	}
 
-	public Double getRating() {
+	public Rating getRating() {
 		return rating;
 	}
 
-	public void setRating(Double rating) {
+	public void setRating(Rating rating) {
 		this.rating = rating;
 	}
 
