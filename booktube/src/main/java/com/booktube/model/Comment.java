@@ -47,7 +47,7 @@ public class Comment implements Serializable {
 	private Book book;
 	
 	@Basic
-	@Column(name = "TEXT")
+	@Column(name = "TEXT", columnDefinition = "LONGTEXT")
 	private String text;
 	
 	@Temporal(TemporalType.TIMESTAMP)

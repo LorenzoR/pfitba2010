@@ -9,9 +9,18 @@
 
 	<h2>Contact Us</h2>
 	
-	<div wicket:id="writerList"  style="border: 1px black solid; margin-bottom: 5px; padding-left: 2px;">
+	<form wicket:id="form">
+		<p>
+			<select wicket:id="ddc">
+  				<option value="optionValue">OptionValue</option>
+			</select></p>
+		<br/>
+		Text: 
+		<p><textarea wicket:id="textArea" cols="60" rows="15"></textarea></p>
+		<input type="button" wicket:id="save" value="Send"/>
+	</form>
 
-	</div>
+	<span wicket:id="registerMessage">Register message</span>
 
 </div>
 

@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -17,6 +19,7 @@ import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
@@ -44,6 +47,8 @@ public abstract class BasePage extends WebPage {
 		} else {
 			add(new Label("welcome"));
 		}
+		
+		
 		// Label welcomeLabel = new Label("welcome");
 		// add(welcomeLabel);
 		// welcomeLabel.set
@@ -219,9 +224,19 @@ public abstract class BasePage extends WebPage {
 		final PasswordTextField password = new PasswordTextField("password",
 				new Model<String>(""));
 
+		/*final Label loginMsg = new Label("loginMsg", "Nombre de usuario o password incorrecto");
+		loginMsg.setVisible(false);
+		form.add(loginMsg);*/
+		
+		// Add a FeedbackPanel for displaying our messages
+        final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
+        feedbackPanel.setOutputMarkupId(true);
+        form.add(feedbackPanel);
+		
+		
 		form.add(username);
 		form.add(password);
-
+		
 		form.add(new Button("button1", new Model<String>("")) {
 			private static final long serialVersionUID = 6743737357599494567L;
 
@@ -238,10 +253,13 @@ public abstract class BasePage extends WebPage {
 
 				User user = userService.getUser(userString);
 
-				if (user.getPassword().equals(passwordString)) {
+				if (user != null && user.getPassword().equals(passwordString)) {
 					WiaSession.get().logInUser(user);
 				} else {
+					/* TERMINAR MENSAJE DE LOGIN INCORRECTO */
 					System.out.println("Login failed!");
+					info("aaaaaaaaaaaa");
+					//loginMsg.setVisible(true);
 				}
 
 				if (!continueToOriginalDestination()) {
