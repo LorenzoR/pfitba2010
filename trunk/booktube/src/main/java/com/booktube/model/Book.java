@@ -44,11 +44,11 @@ public class Book implements Serializable {
 	private Integer id;
 
 	@Basic
-	@Column(name = "TITLE")
+	@Column(name = "TITLE", nullable = false)
 	private String title;
 
 	@Basic
-	@Column(name = "TEXT", columnDefinition = "LONGTEXT")
+	@Column(name = "TEXT", nullable = false, columnDefinition = "LONGTEXT")
 	private String text;
 
 	/*@Basic
@@ -65,7 +65,7 @@ public class Book implements Serializable {
 	private User author;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "PUBLISH_DATE")
+	@Column(name = "PUBLISH_DATE", nullable = false)
 	private Date publishDate;
 
 	@CollectionOfElements
@@ -75,7 +75,7 @@ public class Book implements Serializable {
 	private Set<String> tags;
 
 	@Basic
-	@Column(name = "CATEGORY")
+	@Column(name = "CATEGORY", nullable = false)
 	private String category;
 
 	@Basic
@@ -95,7 +95,7 @@ public class Book implements Serializable {
 
 	@Basic
 	@Column(name = "HITS")
-	private Integer hits;
+	private Long hits;
 	
 	public Book() {
 	}
@@ -212,11 +212,11 @@ public class Book implements Serializable {
 		return subCategory;
 	}
 
-	public void setHits(Integer hits) {
+	public void setHits(Long hits) {
 		this.hits = hits;
 	}
 
-	public Integer getHits() {
+	public Long getHits() {
 		return hits;
 	}
 

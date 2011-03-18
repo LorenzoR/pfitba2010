@@ -18,6 +18,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -31,6 +33,8 @@ import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "MESSAGE")
+@NamedQueries({
+		@NamedQuery(name = "message.id", query = "from Message m where m.id = :id")})
 public class Message implements Serializable {
 
 	@Id
@@ -47,9 +51,14 @@ public class Message implements Serializable {
 	@JoinTable(name = "MSG_RCV", joinColumns = { @JoinColumn(name = "MESSAGE_ID") }, inverseJoinColumns = { @JoinColumn(name = "USER_ID") })
 	private Set<User> receiver;
 
-	@Basic
+	/*@Basic
 	@Column(name = "REPLY_TO")
 	private Integer replyTo;
+	*/
+	
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "ANSWER", joinColumns = { @JoinColumn(name = "MESSAGE_ID") })
+	private Set<Message> answer;
 	
 	@Basic
 	@Column(name = "IS_READ")
@@ -66,6 +75,10 @@ public class Message implements Serializable {
 	@Basic
 	@Column(name = "TEXT", columnDefinition = "LONGTEXT")
 	private String text;
+	
+	public Message () {
+		
+	}
 	
 	public Message (String subject, String text, User sender, User receiver) {
 		this.subject = subject;
@@ -84,14 +97,6 @@ public class Message implements Serializable {
 		this.receiver = receiver;
 		this.date = Calendar.getInstance().getTime();
 		this.isRead = false;
-	}
-	
-	public Integer getReplyTo() {
-		return replyTo;
-	}
-
-	public void setReplyTo(Integer replyTo) {
-		this.replyTo = replyTo;
 	}
 
 	public Integer getId() {
@@ -153,6 +158,14 @@ public class Message implements Serializable {
 
 	public Boolean isRead() {
 		return isRead;
+	}
+
+	public void setAnswer(Set<Message> answer) {
+		this.answer = answer;
+	}
+
+	public Set<Message> getAnswer() {
+		return answer;
 	}
 
 }

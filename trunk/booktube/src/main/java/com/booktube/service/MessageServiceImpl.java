@@ -38,11 +38,25 @@ public class MessageServiceImpl implements MessageService {
 	}
 
 	public List<Message> getAllMessagesTo(User receiver, int first, int count) {
-		return itemDao.getAllMessagesFrom(receiver, first, count);
+		return itemDao.getAllMessagesTo(receiver, first, count);
 	}
 	
 	public List<Message> getAllMessagesFrom(User sender, int first, int count) {
 		return itemDao.getAllMessagesFrom(sender, first, count);
 	}
+	
+	public List<Message> getReplyes(Message message) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public int countMessagesFrom(User sender) {
+		return itemDao.countMessagesFrom(sender);
+	}
+
+	public int countMessagesTo(User receiver) {
+		return itemDao.countMessagesTo(receiver);
+	}
+
 
 }
