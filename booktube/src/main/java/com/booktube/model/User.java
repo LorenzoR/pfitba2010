@@ -30,19 +30,19 @@ public class User implements Serializable {
 	private Integer id;
 
 	@Basic
-	@Column(name = "USERNAME")
+	@Column(name = "USERNAME", nullable = false, unique = true)
 	private String username;
 
 	@Basic
-	@Column(name = "PASSWORD")
+	@Column(name = "PASSWORD", nullable = false)
 	private String password;
 
 	@Basic
-	@Column(name = "FIRSTNAME")
+	@Column(name = "FIRSTNAME", nullable = false)
 	private String firstname;
 
 	@Basic
-	@Column(name = "LASTNAME")
+	@Column(name = "LASTNAME", nullable = false)
 	private String lastname;
 
 	public User() {

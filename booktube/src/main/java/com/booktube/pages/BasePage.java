@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import org.apache.wicket.PageParameters;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -47,8 +47,125 @@ public abstract class BasePage extends WebPage {
 		} else {
 			add(new Label("welcome"));
 		}
+
+		String[][] quoteArray = {
+				{
+						"The difficulty of literature is not to write, but to write what you mean",
+						"Robert Louis Stevenson" },
+				{ "Just don't take any class where you have to read BEOWULF.",
+						"Woody Allen" },
+				{ "Books are humanity in print.", "Barbara W. Tuchman" },
+
+				{
+						"Literature adds to reality, it does not simply describe it. It enriches the necessary competencies that daily life requires and provides; and in this respect, it irrigates the deserts that our lives have already become.",
+						"C.S. Lewis" },
+
+				{
+						"Books are the carriers of civilization. Without books, history is silent, literature dumb, science crippled, thought and speculation at a standstill.",
+						"Barbara W. Tuchman" },
+
+				{
+						"What is wonderful about great literature is that it transforms the man who reads it towards the condition of the man who wrote.",
+						"E. M. Forster" },
+
+				{ "Every man's memory is his private literature.",
+						"Aldous Huxley" },
+
+				{
+						"The decline of literature indicates the decline of a nation.",
+						"Johann Wolfgang von Goethe" },
+
+				{
+						"The difficulty of literature is not to write, but to write what you mean; not to affect your reader, but to affect him precisely as you wish.",
+						"Robert Louis Stevenson" },
+
+				{
+						"The difference between literature and journalism is that journalism is unreadable and literature is not read.",
+						"Oscar Wilde" },
+
+				{
+						"Literature adds to reality, it does not simply describe it. It enriches the necessary competencies that daily life requires and provides; and in this respect, it irrigates the deserts that our lives have already become.",
+						"C. S. Lewis" },
+
+				{
+						"Even in literature and art, no man who bothers about originality will ever be original: whereas if you simply try to tell the truth (without caring twopence how often it has been told before) you will, nine times out of ten, become original without ever having noticed it.",
+						"C. S. Lewis" },
+
+				{
+						"Literature is my Utopia. Here I am not disenfranchised. No barrier of the senses shuts me out from the sweet, gracious discourses of my book friends. They talk to me without embarrassment or awkwardness.",
+						"Helen Keller" },
+
+				{
+						"All modern American literature comes from one book by Mark Twain called Huckleberry Finn.",
+						"Ernest Hemingway" },
+
+				{
+						"We know too much, and are convinced of too little. Our literature is a substitute for religion, and so is our religion.",
+						"T. S. Eliot" },
+
+				{
+						"I am an Anglo-Catholic in religion, a classicist in literature and a royalist in politics.",
+						"T. S. Eliot" },
+
+				{
+						"Our high respect for a well read person is praise enough for literature.",
+						"T. S. Eliot" },
+
+				{
+						"The reason that fiction is more interesting than any other form of literature, to those who really like to study people, is that in fiction the author can really tell the truth without humiliating himself.",
+						"Jim Rohn" },
+
+				{
+						"The decline of literature indicates the decline of a nation.",
+						"Johann Wolfgang von Goethe" },
+
+				{
+						"He knew everything about literature except how to enjoy it.",
+						"Joseph Heller" },
+
+				{
+						"The atmosphere of orthodoxy is always damaging to prose, and above all it is completely ruinous to the novel, the most anarchical of all forms of literature.",
+						"George Orwell" },
+
+				{ "Every man's memory is his private literature.",
+						"Aldous Huxley" },
+
+				{
+						"If literature isn't everything, it's not worth a single hour of someone's trouble.",
+						"Jean-Paul Sartre" },
+
+				{
+						"It is the nature of the artist to mind excessively what is said about him. Literature is strewn with the wreckage of men who have minded beyond reason the opinions of others.",
+						"Virginia Woolf" },
+
+				{
+						"This is not writing at all. Indeed, I could say that Shakespeare surpasses literature altogether, if I knew what I meant.",
+						"Virginia Woolf" },
+
+				{
+						"Literature is strewn with the wreckage of men who have minded beyond reason the opinions of others.",
+						"Virginia Woolf" },
+
+				{
+						"The greatest advances of civilization, whether in architecture or painting, in science and literature, in industry or agriculture, have never come from centralized government.",
+						"Milton Friedman" },
+
+				{
+						"I hold that a writer who does not passionately believe in the perfectibility of man has no dedication nor any membership in literature.",
+						"John Steinbeck" },
+
+				{
+						"Develop an interest in life as you see it; the people, things, literature, music - the world is so rich, simply throbbing with rich treasures, beautiful souls and interesting people. Forget yourself.",
+						"Henry Miller" } };
+
+		Random generator = new Random(System.currentTimeMillis());
+
+		int randomNumber = generator.nextInt(quoteArray.length);
 		
-		
+		Label quote = new Label("randomQuote", "\" " + quoteArray[randomNumber][0] + " \" "
+				+ quoteArray[randomNumber][1]);
+		add(quote);
+
 		// Label welcomeLabel = new Label("welcome");
 		// add(welcomeLabel);
 		// welcomeLabel.set
@@ -68,7 +185,7 @@ public abstract class BasePage extends WebPage {
 		add(new BookmarkablePageLink<String>("showBooks", BooksPage.class,
 				parameters));
 		add(new BookmarkablePageLink<String>("showWriters", WritersPage.class));
-		add(new BookmarkablePageLink<String>("contact", Contact.class));
+		add(new BookmarkablePageLink<String>("contact", NewContact.class));
 		BookmarkablePageLink<String> registerLink = new BookmarkablePageLink<String>(
 				"registerPage", RegisterPage.class);
 		add(registerLink);
@@ -111,18 +228,18 @@ public abstract class BasePage extends WebPage {
 
 		final Form<Object> form = new Form<Object>(label);
 
-		final RadioGroup<String> radioGroup = new RadioGroup<String>("group", new Model<String>(""));
+		final RadioGroup<String> radioGroup = new RadioGroup<String>("group",
+				new Model<String>(""));
 		radioGroup.setOutputMarkupId(true);
-		
-		Radio<String> radio = new Radio<String>("author", new Model<String>("author"));
-	
-		
-		radioGroup.add(new Radio<String>("author", new Model<String>("author")));
+
+		radioGroup
+				.add(new Radio<String>("author", new Model<String>("author")));
 		radioGroup.add(new Radio<String>("title", new Model<String>("title")));
-		radioGroup.add(new Radio<String>("rating", new Model<String>("rating")));
+		radioGroup
+				.add(new Radio<String>("rating", new Model<String>("rating")));
 		radioGroup.add(new Radio<String>("tag", new Model<String>("tag")));
 		form.add(radioGroup);
-		
+
 		final AutoCompleteTextField<String> bookTitle = new AutoCompleteTextField<String>(
 				"bookTitle", new Model<String>("")) {
 
@@ -134,26 +251,23 @@ public abstract class BasePage extends WebPage {
 					List<String> emptyList = Collections.emptyList();
 					return emptyList.iterator();
 				}
-				
-				System.out.println("RadioGroupValue: " + radioGroup.getModelObject() );
-				
+
+				System.out.println("RadioGroupValue: "
+						+ radioGroup.getModelObject());
+
 				List<Book> books = null;
-				
+
 				List<String> choices = new ArrayList<String>(10);
 
-				if ( radioGroup.getValue().equals("author") ) {
+				if (radioGroup.getValue().equals("author")) {
 					books = null;
-				}
-				else if ( radioGroup.getValue().equals("rating") ) {
+				} else if (radioGroup.getValue().equals("rating")) {
 					books = null;
-				}
-				else if ( radioGroup.getValue().equals("tag") ) {
+				} else if (radioGroup.getValue().equals("tag")) {
 					books = null;
-				}
-				else {
+				} else {
 					books = bookService.getAllBooks(0, Integer.MAX_VALUE);
 				}
-				
 
 				for (final Book book : books) {
 					final String title = book.getTitle();
@@ -171,7 +285,7 @@ public abstract class BasePage extends WebPage {
 		};
 
 		form.add(bookTitle);
-		
+
 		form.add(new Button("find", new Model<String>("")) {
 
 			private static final long serialVersionUID = 7667432284192053894L;
@@ -186,28 +300,26 @@ public abstract class BasePage extends WebPage {
 				System.out.println("Book Title: " + bookTitleString);
 
 				System.out.println("Radio Button: " + radioGroup.getValue());
-				
+
 				if (!continueToOriginalDestination()) {
 					final PageParameters parameters = new PageParameters();
-					
-					if ( radioGroup.getValue().equals("author") ) {
+
+					if (radioGroup.getValue().equals("author")) {
 						parameters.put("type", "author");
 						parameters.put("author", bookTitleString);
-					}
-					else if ( radioGroup.getValue().equals("rating") ) {
+					} else if (radioGroup.getValue().equals("rating")) {
 						parameters.put("type", "rating");
 						parameters.put("rating", bookTitleString);
-					}
-					else if ( radioGroup.getValue().equals("tag") ) {
+					} else if (radioGroup.getValue().equals("tag")) {
 						parameters.put("type", "tag");
 						parameters.put("tag", bookTitleString);
-					}
-					else {
-						System.out.println("Radio Button: " + radioGroup.getValue());
+					} else {
+						System.out.println("Radio Button: "
+								+ radioGroup.getValue());
 						parameters.put("type", "title");
 						parameters.put("title", bookTitleString);
 					}
-					
+
 					setResponsePage(BooksPage.class, parameters);
 				}
 
@@ -224,19 +336,20 @@ public abstract class BasePage extends WebPage {
 		final PasswordTextField password = new PasswordTextField("password",
 				new Model<String>(""));
 
-		/*final Label loginMsg = new Label("loginMsg", "Nombre de usuario o password incorrecto");
-		loginMsg.setVisible(false);
-		form.add(loginMsg);*/
-		
+		/*
+		 * final Label loginMsg = new Label("loginMsg",
+		 * "Nombre de usuario o password incorrecto");
+		 * loginMsg.setVisible(false); form.add(loginMsg);
+		 */
+
 		// Add a FeedbackPanel for displaying our messages
-        final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
-        feedbackPanel.setOutputMarkupId(true);
-        form.add(feedbackPanel);
-		
-		
+		final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
+		feedbackPanel.setOutputMarkupId(true);
+		form.add(feedbackPanel);
+
 		form.add(username);
 		form.add(password);
-		
+
 		form.add(new Button("button1", new Model<String>("")) {
 			private static final long serialVersionUID = 6743737357599494567L;
 
@@ -259,7 +372,7 @@ public abstract class BasePage extends WebPage {
 					/* TERMINAR MENSAJE DE LOGIN INCORRECTO */
 					System.out.println("Login failed!");
 					info("aaaaaaaaaaaa");
-					//loginMsg.setVisible(true);
+					// loginMsg.setVisible(true);
 				}
 
 				if (!continueToOriginalDestination()) {

@@ -1,0 +1,44 @@
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<head>
+<title>Books</title>
+</head>
+<body>
+<wicket:extend>
+<div wicket:id="books">
+
+	<h2>Messages Sent</h2>
+	
+	<div wicket:id="messageFromList"  style="border: 1px black solid; margin-bottom: 5px; padding-left: 2px;">
+		<p>Date: <span wicket:id="date">Date goes here</span></p>
+		<p>Subject: <span wicket:id="subject">Subject goes here</span></p>
+		<p>Message: <span wicket:id="text">Message goes here</span></p>
+		Answer:
+		<div wicket:id="answers"  style="border: 1px black solid; margin-bottom: 5px; padding-left: 2px;"> 
+			<p>Date: <span wicket:id="date">Date goes here</span></p>
+			<p>Subject: <span wicket:id="subject">Subject goes here</span></p>
+			<p>Message: <span wicket:id="text">Message goes here</span></p>
+		</div>
+	</div>
+	
+	<hr/>
+	
+	<h2>Messages Received</h2>
+	
+	<div wicket:id="messageToList"  style="border: 1px black solid; margin-bottom: 5px; padding-left: 2px;">
+		<p>Date: <span wicket:id="date">Date goes here</span></p>
+		<p>Subject: <span wicket:id="subject">Subject goes here</span></p>
+		<p>Message: <span wicket:id="text">Message goes here</span></p>
+		Answer:
+		<div wicket:id="answers"  style="border: 1px black solid; margin-bottom: 5px; padding-left: 2px;"> 
+			<p>Date: <span wicket:id="date">Date goes here</span></p>
+			<p>Subject: <span wicket:id="subject">Subject goes here</span></p>
+			<p>Message: <span wicket:id="text">Message goes here</span></p>
+		</div>
+	</div>
+
+</div>
+
+</wicket:extend>
+</body>
+</html>

@@ -2,6 +2,8 @@ package com.booktube.persistence.hibernate;
 
 import java.util.List;
 
+import org.hibernate.criterion.Restrictions;
+
 import com.booktube.model.Book;
 import com.booktube.model.Message;
 import com.booktube.model.User;
@@ -34,13 +36,27 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements Mes
 	}
 
 	public List<Message> getAllMessagesFrom(User sender, int first, int count) {
-		// TODO Auto-generated method stub
-		return null;
+		return (List<Message>) getSession().createCriteria(Message.class)
+		.add(Restrictions.eq("sender", sender))
+		.setFirstResult(first).setMaxResults(count).list();
 	}
 
 	public List<Message> getAllMessagesTo(User receiver, int first, int count) {
+		return (List<Message>) getSession()
+		.createQuery(
+				"from Message message " + "where :x in elements(message.receiver)")
+				.setEntity("x", receiver).setFirstResult(first).setMaxResults(count)
+		.list();
+	}
+
+	public int countMessagesFrom(User sender) {
 		// TODO Auto-generated method stub
-		return null;
+		return 0;
+	}
+
+	public int countMessagesTo(User receiver) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

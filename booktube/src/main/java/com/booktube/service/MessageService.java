@@ -12,4 +12,7 @@ public interface MessageService {
     public void insertMessage(Message message);
     public List<Message> getAllMessagesFrom(User sender, int first, int count);
     public List<Message> getAllMessagesTo(User receiver, int first, int count);
+    public List<Message> getReplyes(Message message);
+    public int countMessagesFrom(User sender);
+    public int countMessagesTo(User receiver);
 }
