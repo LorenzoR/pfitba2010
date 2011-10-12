@@ -7,7 +7,7 @@
 <wicket:extend>
 <div wicket:id="bookDetails" style="margin-bottom: 1px; padding-left: 2px;">
 	<h2 wicket:id="title"></h2>
-	Author: <span wicket:id="author">Author goes here</span>
+	Author: <span wicket:id="author.username">Author goes here</span>
 	<br />
 	Text: <span wicket:id="text">Text goes here</span>
 	Publish Date: <span wicket:id="publishDate">Date goes here</span>
@@ -27,9 +27,9 @@
 	<h2>Comments</h2>
 	
 	<div wicket:id="comments"  style="margin-bottom: 5px; padding-left: 2px;">
-		Sent by <b><span wicket:id="author">Author goes here</span></b>
+		Sent by <b><span wicket:id="user.username">Author goes here</span></b>
 		on <b><span wicket:id="date">Date goes here</span></b>
-		<span wicket:id="comment">Comment goes here</span>
+		<span wicket:id="text">Comment goes here</span>
 		<hr />
 	</div>
 

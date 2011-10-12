@@ -68,7 +68,7 @@ public class AutoCompletePage extends BasePage
                 List<String> choices = new ArrayList<String>(10);
 
                 //Locale[] locales = Locale.getAvailableLocales();
-                List<User> locales = userService.getAllUsers();
+                List<User> locales = userService.getAllUsers(0, Integer.MAX_VALUE);
                 
                 for (final User user : locales)
                 {

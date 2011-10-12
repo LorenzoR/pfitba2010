@@ -13,6 +13,7 @@ import com.booktube.model.Book;
 import com.booktube.model.Comment;
 import com.booktube.model.User;
 import com.booktube.persistence.BookDao;
+import com.booktube.service.BookService.SearchType;
 import com.booktube.service.UserServiceImpl;
 
 public class BookNoDBdao implements BookDao {
@@ -21,12 +22,12 @@ public class BookNoDBdao implements BookDao {
     //private static UserNoDBdao userDao = new UserNoDBdao();
     //private static List<User> authors = userDao.getAllUsers();
     private static UserServiceImpl userServiceImpl = new UserServiceImpl();
-    private static List<User> authors = userServiceImpl.getAllUsers();
+    private static List<User> authors = userServiceImpl.getAllUsers(0, Integer.MAX_VALUE);
     
     static {
         books = new ArrayList<Book>();
-        books.add(new Book(new Integer(1), "bookTitle1", "sasasasasaasa", authors.get(0)));
-        books.add(new Book(new Integer(2), "bookTitle2", "lalalalalal", authors.get(1)));
+        books.add(new Book(new Long(1), "bookTitle1", "sasasasasaasa", authors.get(0)));
+        books.add(new Book(new Long(2), "bookTitle2", "lalalalalal", authors.get(1)));
         
         Set<Comment> comments = new HashSet<Comment>();
         comments.add(new Comment(authors.get(0), books.get(0), "este es el comentario 1"));
@@ -78,7 +79,7 @@ public class BookNoDBdao implements BookDao {
     }
 
     public void insert(Book book) {
-        int lastId = 0;
+    	Long lastId = (long) 0;
         Iterator<Book> iter = books.iterator();
         while (iter.hasNext()) {
             Book temp = (Book)iter.next();
@@ -89,12 +90,12 @@ public class BookNoDBdao implements BookDao {
         User user = userServiceImpl.getUser(book.getAuthor().getId());
         book.setAuthor(user);
         //book.setAuthor((User)authors.get(book.getAuthor().getId().intValue()));
-        book.setId(new Integer(lastId + 1));
+        book.setId(new Long(lastId + 1));
         books.add(book);
     }
 
     public void delete(Book book) {
-    	Integer id = book.getId();
+    	Long id = book.getId();
         for (int i = 0; i < books.size(); i++) {
             Book tempBook = (Book)books.get(i);
             if (tempBook.getId().equals(id)) {
@@ -153,6 +154,16 @@ public class BookNoDBdao implements BookDao {
 	}
 
 	public List<Book> getAllBooks(int first, int count) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public int getCount(SearchType type, String parameter) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public Book getBook(Long id) {
 		// TODO Auto-generated method stub
 		return null;
 	}

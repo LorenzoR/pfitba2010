@@ -30,8 +30,6 @@ public class AddBookPage extends BasePage {
 	@SpringBean
 	BookService bookService;
 	
-	private List<User> users = userService.getAllUsers();
-	
 	private User user;
 	
 	public AddBookPage() {
@@ -67,6 +65,10 @@ public class AddBookPage extends BasePage {
 
 		form.add(titleField);
 		
+		final TextField tagField = new TextField("tag", new Model(""));
+
+		form.add(tagField);
+		
 		final TextArea editor = new TextArea("textArea");
 		editor.setOutputMarkupId(true);
 		
@@ -90,9 +92,21 @@ public class AddBookPage extends BasePage {
 				String text = editor.getDefaultModelObjectAsString();
 				String username = user.getUsername();
 				String title = titleField.getDefaultModelObjectAsString();
+				String tagString = tagField.getDefaultModelObjectAsString();
+				String tags[] = tagString.split(" ");
+				System.out.println("Tags: " + tags);
 				
 				//User user = userService.getUser(username);
 				Book book = new Book(title, text, user);
+				
+				for ( String tag : tags ) {
+					System.out.println("Tag: " + tag);
+					book.addTag(tag);
+				}
+				
+				
+				book.setCategory("categoria");
+				book.setSubCategory("subcategoria");
 				
 				/* Insert book */
 				bookService.insertBook(book);
@@ -100,6 +114,8 @@ public class AddBookPage extends BasePage {
 				System.out.println("Title: " + title);
 				System.out.println("Author: " + username);
 				System.out.println("Text: " + text);
+				System.out.println("Category: " + book.getCategory());
+				System.out.println("SubCategory: " + book.getSubCategory());
 				
 				/* Clear values */
 				editor.setModel(new Model(""));

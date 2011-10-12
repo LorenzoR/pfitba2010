@@ -24,6 +24,7 @@ import com.booktube.model.Book;
 import com.booktube.model.Comment;
 import com.booktube.model.User;
 import com.booktube.persistence.BookDao;
+import com.booktube.service.BookService.SearchType;
 
 public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 
@@ -40,9 +41,9 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 		return books;
 	}
 
-	public Book getBook(Integer id) {
+	public Book getBook(Long id) {
 		return (Book) getSession().getNamedQuery("book.id")
-				.setInteger("id", id).setMaxResults(1).uniqueResult();
+				.setLong("id", id).setMaxResults(1).uniqueResult();
 	}
 
 	public void update(Book book) {
@@ -52,9 +53,11 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 
 	public void insert(Book book) {
 		getSession().save(book);
+		getSession().flush();
 	}
 
 	public void delete(Book book) {
+		System.out.println("Borro libro " + book);
 		getSession().delete(book);
 		getSession().flush();
 	}
@@ -89,28 +92,30 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 
 	}
 
-	public int getCount(String type, String parameter) {
-
-		if (type.equals("tag")) {
+	public int getCount(SearchType type, String parameter) {
+		Criteria criteria;
+		
+		switch (type) {
+		case TAG:
 			return ((Long) getSession()
 					.createQuery(
 							"select count(*) from Book book "
 									+ "where :x in elements(book.tags)")
 					.setString("x", parameter).uniqueResult()).intValue();
-		} else if (type.equals("title")) {
+		case TITLE:
 			return ((Long) getSession()
 					.createQuery(
 							"select count(*) from Book where "
 									+ "Book.title LIKE :title")
 					.setString("title", parameter).uniqueResult()).intValue();
-		} else if (type.equals("author")) {
-			Criteria criteria = getSession().createCriteria(Book.class)
+		case AUTHOR:
+			criteria = getSession().createCriteria(Book.class)
 					.createCriteria("author")
 					.add(Restrictions.eq("username", parameter));
 			criteria.setProjection(Projections.rowCount());
 			return ((Number) criteria.uniqueResult()).intValue();
-		} else {
-			Criteria criteria = getSession().createCriteria(Book.class);
+		default:
+			criteria = getSession().createCriteria(Book.class);
 			criteria.setProjection(Projections.rowCount());
 			return ((Number) criteria.uniqueResult()).intValue();
 		}

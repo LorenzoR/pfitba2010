@@ -1,11 +1,18 @@
 package com.booktube.pages;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.wicket.IPageMap;
+import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
 
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
@@ -161,8 +168,9 @@ public abstract class BasePage extends WebPage {
 		Random generator = new Random(System.currentTimeMillis());
 
 		int randomNumber = generator.nextInt(quoteArray.length);
-		
-		Label quote = new Label("randomQuote", "\" " + quoteArray[randomNumber][0] + " \" "
+
+		Label quote = new Label("randomQuote", "\" "
+				+ quoteArray[randomNumber][0] + " \" "
 				+ quoteArray[randomNumber][1]);
 		add(quote);
 
@@ -174,16 +182,17 @@ public abstract class BasePage extends WebPage {
 		// add(group);
 		// group.setVisible(false);
 
-		final PageParameters parameters = new PageParameters();
-		parameters.put("type", "all");
-
 		add(new Label("footer",
 				"Ayuda | Acerca de | Contacto | Términos y Condiciones"));
 
 		add(new BookmarkablePageLink<String>("title", HomePage.class));
 		add(new BookmarkablePageLink<String>("addBook", AddBookPage.class));
-		add(new BookmarkablePageLink<String>("showBooks", BooksPage.class,
-				parameters));
+		// add(new BookmarkablePageLink<String>("showBooksa", BooksPage.class));
+		add(new Link("showBooks") {
+			public void onClick() {
+				setResponsePage(BooksPage.class);
+			}
+		});
 		add(new BookmarkablePageLink<String>("showWriters", WritersPage.class));
 		add(new BookmarkablePageLink<String>("contact", NewContact.class));
 		BookmarkablePageLink<String> registerLink = new BookmarkablePageLink<String>(
@@ -356,8 +365,8 @@ public abstract class BasePage extends WebPage {
 			@Override
 			public void onSubmit() {
 				String userString = username.getDefaultModelObjectAsString();
-				String passwordString = password
-						.getDefaultModelObjectAsString();
+				String passwordString = User.hash(
+						password.getDefaultModelObjectAsString(), "SHA-1");
 
 				username.setModel(new Model<String>(""));
 
@@ -385,6 +394,55 @@ public abstract class BasePage extends WebPage {
 		});
 
 		return form;
+	}
+
+	// must declare hash map because meta data must be serializable
+	private MetaDataKey<HashMap<String, PageIdVersion>> lastPageIdVersionKey = new MetaDataKey<HashMap<String, PageIdVersion>>() {
+	};
+
+	@Override
+	protected void onBeforeRender() {
+		storeCurrentPage();
+		super.onBeforeRender();
+	}
+
+	private void storeCurrentPage() {
+		PageIdVersion pageIdVersion = new PageIdVersion();
+		pageIdVersion.id = getNumericId();
+		pageIdVersion.version = getVersions() - 1;
+
+		IPageMap pageMap = getPageMap();
+		HashMap<String, PageIdVersion> lastPageMap = getSession().getMetaData(
+				lastPageIdVersionKey);
+		if (lastPageMap == null) {
+			lastPageMap = new HashMap<String, PageIdVersion>();
+			getSession().setMetaData(lastPageIdVersionKey, lastPageMap);
+		}
+		PageIdVersion current = lastPageMap.get(pageMap.getName());
+
+		if (current != null) {
+			if (current.equals(pageIdVersion)) {
+				// refresh of current page
+				return;
+			}
+			pageIdVersion.last = current;
+			current.last = null;
+		}
+		lastPageMap.put(pageMap.getName(), pageIdVersion);
+	}
+
+	public void goToLastPage() {
+		HashMap<String, PageIdVersion> lastPageMap = getSession().getMetaData(
+				lastPageIdVersionKey);
+		PageIdVersion pageIdVersion = lastPageMap.get(getPageMap().getName()).last;
+		Page page = getPageMap().get(pageIdVersion.id, pageIdVersion.version);
+		setResponsePage(page);
+	}
+
+	class PageIdVersion {
+		public int id;
+		public int version;
+		public PageIdVersion last;
 	}
 
 }

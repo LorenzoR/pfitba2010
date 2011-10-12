@@ -11,7 +11,7 @@ import com.booktube.persistence.hibernate.BookDaoImpl;
 
 public class BookServiceImpl implements BookService {
     private BookDao itemDao;
-
+    
     public BookServiceImpl() {
         //this.dao = new BookDaoImpl();
     }
@@ -24,7 +24,7 @@ public class BookServiceImpl implements BookService {
         itemDao.delete(book);
     }
 
-    public Book getBook(Integer id) {
+    public Book getBook(Long id) {
         return itemDao.getBook(id);
     }
 
@@ -56,7 +56,7 @@ public class BookServiceImpl implements BookService {
 		return itemDao.findBookByAuthor(author, first, count);
 	}
 	
-	public int getCount(String type, String parameter) {
+	public int getCount(SearchType type, String parameter) {
     	return itemDao.getCount(type, parameter);
     }
 
