@@ -93,7 +93,7 @@ public class NewContact extends BasePage {
 		editor.setOutputMarkupId(true);
 
 		
-		List<User> personsList = userService.getAllUsers();
+		List<User> personsList = userService.getAllUsers(0, Integer.MAX_VALUE);
 
 		final CheckGroup group = new CheckGroup("group", new ArrayList());
 

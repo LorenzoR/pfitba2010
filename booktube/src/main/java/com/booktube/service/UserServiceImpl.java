@@ -13,8 +13,8 @@ public class UserServiceImpl implements UserService {
         //this.dao = new UserMySQLDBdao();
     }
 
-    public List<User> getAllUsers() {
-        return itemDao.getAllUsers();
+    public List<User> getAllUsers(int first, int count) {
+        return itemDao.getAllUsers(first, count);
     }
 
     public void updateUser(User user) {
@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
     	itemDao.delete(user);
     }
 
-    public User getUser(Integer id) {
+    public User getUser(Long id) {
         return itemDao.getUser(id);
     }
     

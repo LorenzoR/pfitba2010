@@ -1,9 +1,11 @@
 package com.booktube.pages;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -21,6 +23,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import com.booktube.model.Book;
 import com.booktube.service.BookService;
+import com.booktube.service.BookService.SearchType;
 import com.booktube.service.UserService;
 
 public class BooksPage extends BasePage {
@@ -33,23 +36,33 @@ public class BooksPage extends BasePage {
 
 	public static final int BOOKS_PER_PAGE = 5;
 
-	public String type;
+	public Page backPage;
 
 	public BooksPage(final PageParameters parameters) {
+
+		this.backPage = this;
 
 		final WebMarkupContainer parent = new WebMarkupContainer("books");
 		parent.setOutputMarkupId(true);
 		add(parent);
 
-		String type = parameters.getString("type");
+		String typeString = parameters.getString("type");
 		String parameter = null;
-		List<Book> books = null;
+		SearchType type = SearchType.ALL;
 
-		if (type != null) {
-			parameter = parameters.getString(type);
+		if (typeString != null) {
+
+			parameter = parameters.getString(typeString);
+
+			if (typeString.equals("tag")) {
+				type = SearchType.TAG;
+			} else if (typeString.equals("title")) {
+				type = SearchType.TITLE;
+			} else if (typeString.equals("author")) {
+				type = SearchType.AUTHOR;
+			}
+
 		}
-
-		this.type = type;
 
 		DataView<Book> dataView = bookList("bookList", type, parameter);
 
@@ -58,7 +71,8 @@ public class BooksPage extends BasePage {
 
 	}
 
-	private DataView<Book> bookList(String label, String type, String parameter) {
+	private DataView<Book> bookList(String label, SearchType type,
+			String parameter) {
 
 		IDataProvider<Book> dataProvider = new BookProvider(type, parameter);
 
@@ -68,9 +82,13 @@ public class BooksPage extends BasePage {
 			private static final long serialVersionUID = -869452866439034394L;
 
 			protected void populateItem(Item<Book> item) {
-				Book book = (Book) item.getModelObject();
-
-				List<String> tagList = new ArrayList<String>(book.getTags());
+				final Book book = (Book) item.getModelObject();
+				List<String> tagList = null;
+				
+				if ( book.getTags() != null ) {
+					tagList = new ArrayList<String>(book.getTags());
+				}
+				
 
 				item.add(new PropertyListView<Object>("tagList", tagList) {
 
@@ -93,10 +111,22 @@ public class BooksPage extends BasePage {
 				final PageParameters parameters = new PageParameters();
 				parameters.put("book", book.getId().toString());
 				// item.add(new Label("title", book.getTitle()));
-				BookmarkablePageLink<Object> bplTitle = new BookmarkablePageLink<Object>(
-						"viewLink", ShowBookPage.class, parameters);
-				bplTitle.add(new Label("title", book.getTitle()));
-				item.add(bplTitle);
+				// BookmarkablePageLink<Object> bplTitle = new
+				// BookmarkablePageLink<Object>(
+				// "viewLink", ShowBookPage.class, parameters);
+
+				Link<Object> titleLink = new Link("viewLink") {
+					public void onClick() {
+						setResponsePage(new ShowBookPage(book.getId(),
+								BooksPage.this));
+					}
+				};
+
+				titleLink.add(new Label("title", book.getTitle()));
+
+				// bplTitle.add(new Label("title", book.getTitle()));
+				// item.add(bplTitle);
+				item.add(titleLink);
 				parameters.put("author", book.getAuthor().getUsername());
 				parameters.put("type", "author");
 				BookmarkablePageLink<Object> bplAuthor = new BookmarkablePageLink<Object>(
@@ -106,19 +136,34 @@ public class BooksPage extends BasePage {
 				item.add(bplAuthor);
 				item.add(new Label("publishDate", book.getPublishDate()
 						.toString()));
-				item.add(new BookmarkablePageLink<Object>("editLink",
-						EditBookPage.class, parameters));
-				item.add(new BookmarkablePageLink<Object>("detailsLink",
-						ShowBookPage.class, parameters));
+				item.add(new Link("editLink", item.getModel()) {
+					public void onClick() {
+						setResponsePage(new EditBookPage(book.getId(),
+								BooksPage.this));
+					}
+
+				});
+				item.add(new Link("detailsLink") {
+					public void onClick() {
+						setResponsePage(new ShowBookPage(book.getId(),
+								BooksPage.this));
+					}
+
+				});
 				item.add(new Link<Book>("deleteLink", item.getModel()) {
 					private static final long serialVersionUID = -7155146615720218460L;
 
 					public void onClick() {
 
 						Book book = (Book) getModelObject();
-						Integer bookId = book.getId();
+						Long bookId = book.getId();
 
-						bookService.deleteBook(book);
+						Book bookDelete = bookService.getBook(bookId);
+						
+						System.out.println("BOOk es : " + bookDelete);
+						
+						//bookService.deleteBook(book);
+						bookService.deleteBook(bookDelete);
 						System.out.println("Book " + bookId + " deleted.");
 
 						setResponsePage(BooksPage.this);
@@ -135,41 +180,51 @@ public class BooksPage extends BasePage {
 
 		private static final long serialVersionUID = 6050730502992812477L;
 		private List<Book> books;
-		private Integer size;
-		private String type;
+		private SearchType type;
 		private String parameter;
 
-		public BookProvider(String type, String parameter) {
+		public BookProvider(SearchType type, String parameter) {
 			this.type = type;
 			this.parameter = parameter;
-			this.size = null;
 		}
 
 		public Iterator<Book> iterator(int first, int count) {
 
-			if (type == null) {
+			switch (type) {
+			case ALL:
 				this.books = bookService.getAllBooks(first, count);
-				// books = bookService.getAllBooks();
-			} else if (type.equals("tag")) {
+				break;
+			case TAG:
 				this.books = bookService.findBookByTag(parameter, first, count);
-				// books =
-				// bookService.findBookByTag(parameters.getString("tag"),
-				// 0, Integer.MAX_VALUE);
-			} else if (type.equals("author")) {
-				this.books = bookService.findBookByAuthor(parameter, first,
-						count);
-				// books = bookService.findBookByAuthor(
-				// parameters.getString("author"), 0, Integer.MAX_VALUE);
-			} else if (type.equals("title")) {
+				break;
+			case TITLE:
 				this.books = bookService.findBookByTitle(parameter, first,
 						count);
-				// books = bookService.findBookByTitle(
-				// parameters.getString("title"), 0, Integer.MAX_VALUE);
-			} else {
+				break;
+			case AUTHOR:
+				this.books = bookService.findBookByAuthor(parameter, first,
+						count);
+				break;
+			default:
 				this.books = bookService.getAllBooks(first, count);
-				// books = bookService.getAllBooks();
 			}
-
+			/*
+			 * if (type == null) { this.books = bookService.getAllBooks(first,
+			 * count); // books = bookService.getAllBooks(); } else if
+			 * (type.equals("tag")) { this.books =
+			 * bookService.findBookByTag(parameter, first, count); // books = //
+			 * bookService.findBookByTag(parameters.getString("tag"), // 0,
+			 * Integer.MAX_VALUE); } else if (type.equals("author")) {
+			 * this.books = bookService.findBookByAuthor(parameter, first,
+			 * count); // books = bookService.findBookByAuthor( //
+			 * parameters.getString("author"), 0, Integer.MAX_VALUE); } else if
+			 * (type.equals("title")) { this.books =
+			 * bookService.findBookByTitle(parameter, first, count); // books =
+			 * bookService.findBookByTitle( // parameters.getString("title"), 0,
+			 * Integer.MAX_VALUE); } else { this.books =
+			 * bookService.getAllBooks(first, count); // books =
+			 * bookService.getAllBooks(); }
+			 */
 			return this.books.iterator();
 			// return bookService.iterator(first, count);
 			// return books.iterator();
@@ -178,11 +233,20 @@ public class BooksPage extends BasePage {
 		}
 
 		public int size() {
-			// return bookService.getCount();
-			if (size == null) {
-				size = bookService.getCount(type, parameter);
-			}
-			return size;
+//			// return bookService.getCount();
+//			if (size == null) {
+//				/*
+//				 * if (type == null) { size =
+//				 * bookService.getCount(SearchType.ALL, parameter); } else if
+//				 * (type.equals("tag")) { size =
+//				 * bookService.getCount(SearchType.TAG, parameter); } else {
+//				 * size = bookService.getCount(SearchType.ALL, parameter); }
+//				 */
+//				size = bookService.getCount(type, parameter);
+//				// size = 20;
+//			}
+//			return size;
+			return bookService.getCount(type, parameter);
 		}
 
 		public IModel<Book> model(Book book) {

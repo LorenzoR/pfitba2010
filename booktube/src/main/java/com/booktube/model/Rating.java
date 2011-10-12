@@ -28,7 +28,7 @@ public class Rating implements IClusterable, Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "RATING_ID")
-	private Integer id;
+	private Long id;
 
 	@Basic
 	@Column(name = "NR_OF_VOTES")
@@ -46,7 +46,7 @@ public class Rating implements IClusterable, Serializable {
 		
 	}
 	
-	public Rating (Integer id, Integer sumOfRatings, Integer nrOfVotes, Double rating) {
+	public Rating (Long id, Integer sumOfRatings, Integer nrOfVotes, Double rating) {
 		this.id = id;
 		this.sumOfRatings = sumOfRatings;
 		this.nrOfVotes = nrOfVotes;
@@ -122,12 +122,59 @@ public class Rating implements IClusterable, Serializable {
 		return sumOfRatings;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result
+				+ ((nrOfVotes == null) ? 0 : nrOfVotes.hashCode());
+		result = prime * result + ((rating == null) ? 0 : rating.hashCode());
+		result = prime * result
+				+ ((sumOfRatings == null) ? 0 : sumOfRatings.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Rating other = (Rating) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (nrOfVotes == null) {
+			if (other.nrOfVotes != null)
+				return false;
+		} else if (!nrOfVotes.equals(other.nrOfVotes))
+			return false;
+		if (rating == null) {
+			if (other.rating != null)
+				return false;
+		} else if (!rating.equals(other.rating))
+			return false;
+		if (sumOfRatings == null) {
+			if (other.sumOfRatings != null)
+				return false;
+		} else if (!sumOfRatings.equals(other.sumOfRatings))
+			return false;
+		return true;
+	}
+	
+	
 
 }

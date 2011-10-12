@@ -81,7 +81,8 @@ public class RegisterPage extends BasePage {
 				String password = passwordField1
 						.getDefaultModelObjectAsString();
 
-				User user = new User(username, password, firstname, lastname);
+			
+				User user = new User(username, password, firstname, lastname, User.Level.USER);
 
 				/* Insert user */
 				userService.insertUser(user);

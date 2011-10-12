@@ -1,10 +1,15 @@
 package com.booktube.model;
 
 import java.io.Serializable;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,22 +17,22 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import javax.persistence.EnumType.*;
+
 @Entity
 @Table(name = "USER")
 @NamedQueries({
 		@NamedQuery(name = "user.username", query = "from User u where u.username like :username"),
 		@NamedQuery(name = "user.id", query = "from User u where u.id = :id") })
 public class User implements Serializable {
+	
+	public enum Level { ADMIN, USER }
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4919668836983053594L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "USER_ID")
-	private Integer id;
+	private Long id;
 
 	@Basic
 	@Column(name = "USERNAME", nullable = false, unique = true)
@@ -45,33 +50,38 @@ public class User implements Serializable {
 	@Column(name = "LASTNAME", nullable = false)
 	private String lastname;
 
+	@Enumerated(EnumType.ORDINAL)
+	@Column(name = "LEVEL", nullable = false)
+	private Level level;
+	
 	public User() {
 
 	}
 
-	public User(Integer id, String username, String password, String firstname,
-			String lastname) {
+	public User(Long id, String username, String password, String firstname,
+			String lastname, Level level) {
 		this.username = username;
-		this.password = password;
+		this.password = hash(password, "SHA-1");
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.id = id;
+		this.level = level;
 	}
 
 	public User(String username, String password, String firstname,
-			String lastname) {
+			String lastname, Level level) {
 		this.username = username;
-		this.password = password;
+		this.password = hash(password, "SHA-1");
 		this.firstname = firstname;
 		this.lastname = lastname;
-		// this.id = new Integer(1);
+		this.level = level;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -143,4 +153,32 @@ public class User implements Serializable {
 		return password;
 	}
 
+	public void setLevel(Level level) {
+		this.level = level;
+	}
+
+	public Level getLevel() {
+		return level;
+	}
+
+	public static String hash(String s, String hashFunction) {
+		MessageDigest m;
+		String shaM = s;
+		try {
+			m = MessageDigest.getInstance(hashFunction);
+			m.update(s.getBytes(),0,s.length());
+			shaM = new BigInteger(1,m.digest()).toString(16);
+			if ( shaM.length() < 40 ) {
+				shaM = '0' + shaM;
+			}
+		    System.out.println("MD5: " + shaM);
+		    
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return shaM;
+	}
+	
 }

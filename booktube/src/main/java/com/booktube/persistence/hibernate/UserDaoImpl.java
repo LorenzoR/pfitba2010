@@ -24,17 +24,17 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 		super(User.class);
 	}
 
-	public List<User> getAllUsers() {
+	public List<User> getAllUsers(int first, int count) {
 		List<User> users = (List<User>) getSession().createCriteria(User.class)
-				.list();
+				.setFirstResult(first).setMaxResults(count).list();
 
 		return users;
 
 	}
 
-	public User getUser(Integer id) {
+	public User getUser(Long id) {
 		return (User) getSession().getNamedQuery("user.id")
-				.setInteger("id", id).setMaxResults(1).uniqueResult();
+				.setLong("id", id).setMaxResults(1).uniqueResult();
 	}
 
 	public User getUser(String username) {

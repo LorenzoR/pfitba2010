@@ -9,6 +9,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.extensions.rating.RatingPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.form.Form;
@@ -41,26 +42,27 @@ public class ShowBookPage extends BasePage {
 
 	/** backwards nav page */
 	// private final Page backPage;
-	private List<User> users = userService.getAllUsers();
 	
 	private User user;
 
-	public ShowBookPage(final PageParameters parameters) {
+	public ShowBookPage(Long bookId, final WebPage backPage) {
 
 		user = WiaSession.get().getLoggedInUser();
-		Integer bookId = parameters.getAsInteger("book");
 
 		final Book book = bookService.getBook(bookId);
-
+		
 		final WebMarkupContainer parent = new WebMarkupContainer("bookDetails");
 		parent.setOutputMarkupId(true);
 		add(parent);
 
+		
+		CompoundPropertyModel<Book> model = new CompoundPropertyModel<Book>(book);
+		parent.setDefaultModel(model);
 		// add(new Label("bookId", book.getId().toString()));
-		parent.add(new Label("title", book.getTitle()));
-		parent.add(new Label("author", book.getAuthor().getUsername()));
-		parent.add(new MultiLineLabel("text", book.getText()));
-		parent.add(new Label("publishDate", book.getPublishDate().toString()));
+		parent.add(new Label("title"));
+		parent.add(new Label("author.username"));
+		parent.add(new MultiLineLabel("text"));
+		parent.add(new Label("publishDate"));
 
 		final Rating rating1 = book.getRating();
 		
@@ -117,9 +119,11 @@ public class ShowBookPage extends BasePage {
 				// comment.getUser().getUsername()));
 				// item.add(new Label("author", "este es el autor!!"));
 				// item.add(new MultiLineLabel("comment", comment.getText()));
-				item.add(new Label("author", comment.getUser().getUsername()));
-				item.add(new MultiLineLabel("comment", comment.getText()));
-				item.add(new Label("date", comment.getDate().toString()));
+				CompoundPropertyModel<Comment> model = new CompoundPropertyModel<Comment>(comment);
+				item.setDefaultModel(model);
+				item.add(new Label("user.username"));
+				item.add(new MultiLineLabel("text"));
+				item.add(new Label("date"));
 			}
 		};
 
@@ -132,12 +136,8 @@ public class ShowBookPage extends BasePage {
 
 		Form<Object> form = new Form<Object>("form");
 
-		final TextArea<Object> editor = new TextArea<Object>("textArea");
+		final TextArea<Object> editor = new TextArea<Object>("textArea", new Model());
 		editor.setOutputMarkupId(true);
-
-		ValueMap myParameters = new ValueMap();
-		myParameters.put("usernameList", users.get(0));
-		form.setModel(new CompoundPropertyModel(myParameters));
 
 		form.add(editor);
 		form.add(new AjaxSubmitLink("save") {

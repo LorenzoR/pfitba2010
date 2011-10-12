@@ -15,10 +15,10 @@ public class UserNoDBdao implements UserDao {
     private static Map usersMap;
     static {
     	users = new ArrayList<User>();
-    	users.add(new User(new Integer(1), "autor10", "password", "Nombre1", "Apellido1") );
-    	users.add(new User(new Integer(2), "autor20", "password", "Nombre2", "Apellido2") );
-    	users.add(new User(new Integer(3), "autor30", "password", "Nombre3", "Apellido3") );
-    	users.add(new User(new Integer(9), "autor90", "password", "Nombre4", "Apellido4") );
+    	users.add(new User(new Long(1), "autor10", "password", "Nombre1", "Apellido1", User.Level.USER) );
+    	users.add(new User(new Long(2), "autor20", "password", "Nombre2", "Apellido2", User.Level.USER) );
+    	users.add(new User(new Long(3), "autor30", "password", "Nombre3", "Apellido3", User.Level.USER) );
+    	users.add(new User(new Long(9), "autor90", "password", "Nombre4", "Apellido4", User.Level.USER) );
     	usersMap = new HashMap();
         Iterator<User> iter = users.iterator();
         while( iter.hasNext() ) {
@@ -62,7 +62,7 @@ public class UserNoDBdao implements UserDao {
 		
 	}
 	public void insert(User user) {
-		int lastId = 0;
+		Long lastId = (long) 0;
         Iterator<User> iter = users.iterator();
         while (iter.hasNext()) { 
         	user = (User)iter.next();
@@ -71,7 +71,7 @@ public class UserNoDBdao implements UserDao {
             }
         }
         
-        user.setId(new Integer(lastId + 1));
+        user.setId(new Long(lastId + 1));
         users.add(user);
 		
 	}
@@ -96,5 +96,13 @@ public class UserNoDBdao implements UserDao {
 	public void delete(User user) {
 		// TODO Auto-generated method stub
 		
+	}
+	public List<User> getAllUsers(int first, int count) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public User getUser(Long id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

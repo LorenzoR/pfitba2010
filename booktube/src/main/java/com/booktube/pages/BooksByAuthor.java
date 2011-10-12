@@ -94,7 +94,7 @@ public class BooksByAuthor extends BasePage {
 					public void onClick() {
 
 						Book book = (Book) getModelObject();
-						Integer bookId = book.getId();
+						Long bookId = book.getId();
 
 						bookService.deleteBook(book);
 						System.out.println("Book " + bookId + " deleted.");
