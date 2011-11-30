@@ -86,7 +86,7 @@ public class Book implements Serializable {
 	@Column(name = "TAG")
 	@OrderBy(clause = "TAG")
 	*/
-	@Transient
+	@ElementCollection
 	private Set<String> tags;
 	
 	
