@@ -105,9 +105,9 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 		case TITLE:
 			return ((Long) getSession()
 					.createQuery(
-							"select count(*) from Book where "
-									+ "Book.title LIKE :title")
-					.setString("title", parameter).uniqueResult()).intValue();
+							"select count(*) from Book book where "
+									+ "book.title LIKE :title")
+					.setString("title", "%"+parameter+"%").uniqueResult()).intValue();
 		case AUTHOR:
 			criteria = getSession().createCriteria(Book.class)
 					.createCriteria("author")
