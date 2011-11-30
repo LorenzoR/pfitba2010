@@ -76,6 +76,8 @@ public class WicketApplication extends WebApplication {
 
 		org.apache.wicket.util.lang.Objects
 				.setObjectStreamFactory(new IObjectStreamFactory.DefaultObjectStreamFactory());
+		
+
 
 	}
 
@@ -83,6 +85,7 @@ public class WicketApplication extends WebApplication {
 	 * Constructor
 	 */
 	public WicketApplication() {
+		super();
 	}
 
 	private SpringComponentInjector springComponentInjector;

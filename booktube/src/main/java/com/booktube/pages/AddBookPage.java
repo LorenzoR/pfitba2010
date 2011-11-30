@@ -94,7 +94,7 @@ public class AddBookPage extends BasePage {
 				String title = titleField.getDefaultModelObjectAsString();
 				String tagString = tagField.getDefaultModelObjectAsString();
 				String tags[] = tagString.split(" ");
-				System.out.println("Tags: " + tags);
+				System.out.println("Tags: " + tags.toString());
 				
 				//User user = userService.getUser(username);
 				Book book = new Book(title, text, user);
