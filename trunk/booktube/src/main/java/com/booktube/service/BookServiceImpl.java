@@ -63,4 +63,8 @@ public class BookServiceImpl implements BookService {
 	public Iterator<Book> iterator(int first, int count) {
 		return itemDao.iterator(first, count);
 	}
+	
+	 public List<String> getAllTags() {
+		 return itemDao.getAllTags();
+	 }
 }

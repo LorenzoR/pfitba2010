@@ -1,6 +1,7 @@
 package com.booktube.pages;
 
 import java.util.List;
+import java.util.Set;
 
 import org.apache.wicket.AccessStackPageMap;
 import org.apache.wicket.AccessStackPageMap.Access;
@@ -220,6 +221,12 @@ public class EditBookPage extends BasePage {
 		// titleField.setMarkupId(getId());
 		form.add(titleField);
 
+		final TextField<Book> tagsField = new TextField<Book>("tags",
+				new Model(book.getTags().toString().substring(1, book.getTags().toString().length() - 1)));
+		// titleField.setOutputMarkupId(true);
+		// titleField.setMarkupId(getId());
+		form.add(tagsField);
+		
 		final TextArea<String> editor = new TextArea<String>("text", new Model(
 				book.getText()));
 		editor.setOutputMarkupId(true);

@@ -5,7 +5,7 @@
 </head>
 <body>
 <wicket:extend>
-<div wicket:id="books">
+<div wicket:id="writers">
 
 	<h2>Writers List</h2>
 	
@@ -17,10 +17,11 @@
 		<p>
 			<a href="#">Detalles</a> | 
 			<a href="#" wicket:id="deleteLink">Eliminar</a> | 
-			<a href="#">Editar</a>
+			<a href="#" wicket:id="editLink">Editar</a>
 		</p>
 	</div>
 
+	<div wicket:id="footerPaginator"></div>  
 </div>
 
 </wicket:extend>

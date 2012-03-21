@@ -8,12 +8,16 @@ import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.FlushMode;
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.CriteriaQuery;
 import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 import org.mortbay.jetty.security.SSORealm;
 
 //import org.apache.commons.logging.Log;
@@ -42,8 +46,8 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 	}
 
 	public Book getBook(Long id) {
-		return (Book) getSession().getNamedQuery("book.id")
-				.setLong("id", id).setMaxResults(1).uniqueResult();
+		return (Book) getSession().getNamedQuery("book.id").setLong("id", id)
+				.setMaxResults(1).uniqueResult();
 	}
 
 	public void update(Book book) {
@@ -94,7 +98,7 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 
 	public int getCount(SearchType type, String parameter) {
 		Criteria criteria;
-		
+
 		switch (type) {
 		case TAG:
 			return ((Long) getSession()
@@ -107,7 +111,8 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 					.createQuery(
 							"select count(*) from Book book where "
 									+ "book.title LIKE :title")
-					.setString("title", "%"+parameter+"%").uniqueResult()).intValue();
+					.setString("title", "%" + parameter + "%").uniqueResult())
+					.intValue();
 		case AUTHOR:
 			criteria = getSession().createCriteria(Book.class)
 					.createCriteria("author")
@@ -133,6 +138,46 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 	public Iterator<Book> iterator(int first, int count) {
 		return (Iterator<Book>) getSession().createCriteria(Book.class)
 				.setFirstResult(first).setMaxResults(count).list().iterator();
+	}
+
+	public List<String> getAllTags() {
+
+		SQLQuery query = getSession().createSQLQuery("SELECT tags FROM book_tags ORDER BY tags");
+		
+		return query.list();
+		
+		// Criteria crit =
+		// getSession().createCriteria(Book.class).setFirstResult(0).setMaxResults(100);
+
+		/*CriteriaQuery <String> q = getSession().createQuery(Book.class);
+		  Root<Book> c = q.from(Book.class);
+		  q.select(c.get("currency")).distinct(true);
+		*/
+		/*Criteria crit = getSession().createCriteria(Book.class)
+				.setFirstResult(0).setMaxResults(99);
+
+		ProjectionList proList = Projections.projectionList();
+		//proList.add(Projections.property("tags"), "tags");
+		//proList.add( Projections.rowCount() );
+		//proList.add( Projections.property("category"));
+		proList.add( Projections.property("comments"));
+		crit.setProjection(proList);
+		crit.setResultTransformer(Transformers.aliasToBean(Book.class));
+		
+		System.out.println("Criteria es " + crit);
+
+		System.out.println("LISTA: " + crit.list().toString());
+
+
+
+		return crit.list();
+*/
+		/*
+		 * List<String> tags = (List<String>) getSession()
+		 * .createCriteria(Book.class) .setProjection(
+		 * Projections.distinct(Projections.projectionList().add(
+		 * Projections.property("tags"), "tags"))).list(); return tags;
+		 */
 	}
 
 }
