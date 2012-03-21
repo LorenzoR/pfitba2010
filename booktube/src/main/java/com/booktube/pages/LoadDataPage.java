@@ -32,6 +32,7 @@ public class LoadDataPage extends BasePage {
 		}
 		else {
 			addUsers();
+			addBooks();
 			label = "Cargue datos";
 		}
 		
@@ -50,7 +51,11 @@ public class LoadDataPage extends BasePage {
 	}
 	
 	public void addBooks() {
+		System.out.println("Adding books");
 		Book book = new Book("titulo", "textoooooooooooooo", this.user);
+		
+		book.setCategory("category");
+		book.setSubCategory("subcategory");
 		
 		book.addComment(this.user, "comentario1");
 		book.addComment(this.user, "comentario2");

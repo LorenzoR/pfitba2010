@@ -19,4 +19,5 @@ public interface BookService {
     public List<Book> findBookByAuthor(String author, int first, int count);
     public int getCount(SearchType type, String parameter);
     public Iterator<Book> iterator(int first, int count);
+    public List<String> getAllTags();
 }

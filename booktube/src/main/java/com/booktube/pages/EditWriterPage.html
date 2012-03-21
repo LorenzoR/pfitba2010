@@ -1,0 +1,17 @@
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<head>
+<title>Edit Writer</title>
+</head>
+<body>
+<wicket:extend>
+<h3>Edit Writer <span wicket:id="writerId"></span></h3>
+<form wicket:id="editWriterForm">
+	<p>Username: <input type="text" wicket:id="username" value=""/></p>
+	<p>Name: <input type="text" wicket:id="firstname" value=""/></p>
+	<p>Lastname: <input type="text" wicket:id="lastname" value=""/></p>
+	<input type="button" wicket:id="save" value="Edit Book"/>
+</form>
+</wicket:extend>
+</body>
+</html>

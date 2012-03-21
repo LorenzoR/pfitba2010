@@ -87,6 +87,7 @@ public class Book implements Serializable {
 	@OrderBy(clause = "TAG")
 	*/
 	@ElementCollection
+	@OrderBy(clause = "TAGS ASC")
 	private Set<String> tags;
 	
 	

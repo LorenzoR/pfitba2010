@@ -15,6 +15,8 @@ import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
 
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -45,8 +47,13 @@ public abstract class BasePage extends WebPage {
 	@SpringBean
 	BookService bookService;
 
+	private final int TITLE_SELECTED = 1;
+	private final int AUTHOR_SELECTED = 2;
+	private final int RATING_SELECTED = 3;
+	private final int TAG_SELECTED = 4;
+	
 	public BasePage() {
-
+		
 		// WebMarkupContainer group = new WebMarkupContainer("loginContainer");
 		if (WiaSession.get().isAuthenticated()) {
 			add(new Label("welcome", "Bienvenido "
@@ -183,7 +190,7 @@ public abstract class BasePage extends WebPage {
 		// group.setVisible(false);
 
 		add(new Label("footer",
-				"Ayuda | Acerca de | Contacto | Términos y Condiciones"));
+				"Ayuda | Acerca de | Contacto | TÃ©rminos y Condiciones"));
 
 		add(new BookmarkablePageLink<String>("title", HomePage.class));
 		add(new BookmarkablePageLink<String>("addBook", AddBookPage.class));
@@ -234,20 +241,61 @@ public abstract class BasePage extends WebPage {
 
 	}
 
+	private int selectedRadio;
+	
 	private Form<Object> searchBookForm(String label) {
 
 		final Form<Object> form = new Form<Object>(label);
 
+		selectedRadio = AUTHOR_SELECTED;
+		
 		final RadioGroup<String> radioGroup = new RadioGroup<String>("group",
 				new Model<String>(""));
 		radioGroup.setOutputMarkupId(true);
 
-		radioGroup
-				.add(new Radio<String>("author", new Model<String>("author")));
-		radioGroup.add(new Radio<String>("title", new Model<String>("title")));
+		radioGroup.add(new Radio<String>("author", new Model<String>("author")).add(new AjaxEventBehavior("onclick") {
+			protected void onEvent(AjaxRequestTarget target) { 
+		           // add your favorite component. 
+		    	 System.out.println("CLICK EN AUTHOR!!!");
+		    	 selectedRadio = AUTHOR_SELECTED;
+		    	 System.out.println("selectedRadio es " + selectedRadio);
+		      } 
+		}));
+		
+		radioGroup.add(new Radio<String>("rating", new Model<String>("rating")).add(new AjaxEventBehavior("onclick") {
+			protected void onEvent(AjaxRequestTarget target) { 
+		           // add your favorite component. 
+		    	 System.out.println("CLICK EN RATING!!!");
+		    	 selectedRadio = RATING_SELECTED;
+		    	 System.out.println("selectedRadio es " + selectedRadio);
+		      } 
+		}));
+		
+		radioGroup.add(new Radio<String>("title", new Model<String>("title")).add(new AjaxEventBehavior("onclick") {
+			protected void onEvent(AjaxRequestTarget target) { 
+		           // add your favorite component. 
+		    	 System.out.println("CLICK EN TITLE!!!");
+		    	 selectedRadio = TITLE_SELECTED;
+		    	 System.out.println("selectedRadio es " + selectedRadio);
+		      } 
+		}));
+		
+		radioGroup.add(new Radio<String>("tag", new Model<String>("tag")).add(new AjaxEventBehavior("onclick") {
+			protected void onEvent(AjaxRequestTarget target) { 
+		           // add your favorite component. 
+		    	 System.out.println("CLICK EN TAG!!!");
+		    	 selectedRadio = TAG_SELECTED;
+		    	 System.out.println("selectedRadio es " + selectedRadio);
+		      } 
+		}));
+		
+		//radioGroup.add(author.add(event));
+		
+		/*radioGroup.add(new Radio<String>("title", new Model<String>("title")));
 		radioGroup
 				.add(new Radio<String>("rating", new Model<String>("rating")));
 		radioGroup.add(new Radio<String>("tag", new Model<String>("tag")));
+		*/
 		form.add(radioGroup);
 
 		final AutoCompleteTextField<String> bookTitle = new AutoCompleteTextField<String>(
@@ -264,12 +312,10 @@ public abstract class BasePage extends WebPage {
 
 				System.out.println("RadioGroupValue: "
 						+ radioGroup.getModelObject());
-
-				List<Book> books = null;
-
+				
 				List<String> choices = new ArrayList<String>(10);
 
-				if (radioGroup.getValue().equals("author")) {
+				/*if (radioGroup.getValue().equals("author")) {
 					books = null;
 				} else if (radioGroup.getValue().equals("rating")) {
 					books = null;
@@ -277,18 +323,59 @@ public abstract class BasePage extends WebPage {
 					books = null;
 				} else {
 					books = bookService.getAllBooks(0, Integer.MAX_VALUE);
-				}
+				}*/
+				
+				//List<User> usersTest = new ArrayList<User>();
+				//usersTest.add(new User("test1", "test1", "test1", "test1"));
+				
+				if ( selectedRadio == AUTHOR_SELECTED ) {
+					System.out.println("AUTHOR SELECTED!");
+					System.out.println("selectedRadio es " + selectedRadio);
+					List<User> users = userService.getAllUsers(0, Integer.MAX_VALUE);
+					
+					for (final User user : users) {
+						final String title = user.getUsername();
 
-				for (final Book book : books) {
-					final String title = book.getTitle();
-
-					if (title.toUpperCase().startsWith(input.toUpperCase())) {
-						choices.add(title);
-						if (choices.size() == 10) {
-							break;
+						if (title.toUpperCase().startsWith(input.toUpperCase())) {
+							choices.add(title);
+							if (choices.size() == 10) {
+								break;
+							}
 						}
 					}
 				}
+				else if ( selectedRadio == TAG_SELECTED ) {
+					List<String> tags = bookService.getAllTags();
+					
+					for (final String tag : tags) {
+
+						if (tag.toUpperCase().startsWith(input.toUpperCase())) {
+							choices.add(tag);
+							if (choices.size() == 10) {
+								break;
+							}
+						}
+					}
+					
+				}
+				else {
+					System.out.println("OTRA COSA SELECTED!");
+					System.out.println("selectedRadio es " + selectedRadio);
+					List<Book> books = bookService.getAllBooks(0, Integer.MAX_VALUE);
+					
+					for (final Book book : books) {
+						final String title = book.getTitle();
+
+						if (title.toUpperCase().startsWith(input.toUpperCase())) {
+							choices.add(title);
+							if (choices.size() == 10) {
+								break;
+							}
+						}
+					}
+				}
+
+				
 
 				return choices.iterator();
 			}

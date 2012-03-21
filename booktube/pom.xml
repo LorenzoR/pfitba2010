@@ -23,6 +23,11 @@
 			<id>jboss</id>
 			<url>http://repository.jboss.org/maven2</url>
 		</repository>
+		<repository>
+	        <id>thirdparty-releases</id>
+	        <name>JBoss Thirdparty Releases</name>
+	        <url>https://repository.jboss.org/nexus/content/repositories/thirdparty-releases</url>
+      </repository>
 	</repositories>
 
 	<dependencies>
@@ -132,7 +137,7 @@
 		<dependency>
 			<groupId>javax.transaction</groupId>
 			<artifactId>jta</artifactId>
-			<version>1.0.1B</version>
+			<version>1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-dbcp</groupId>

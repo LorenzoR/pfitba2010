@@ -9,6 +9,9 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
+import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
@@ -16,13 +19,17 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import com.booktube.model.Book;
 import com.booktube.model.User;
+import com.booktube.pages.BooksPage.BookProvider;
 import com.booktube.service.UserService;
+import com.booktube.service.BookService.SearchType;
 
 
 public class WritersPage extends BasePage {
 
 	@SpringBean
     UserService userService;
+	
+	public static final int WRITERS_PER_PAGE = 5;
 	
 	public WritersPage() {
 
@@ -31,20 +38,27 @@ public class WritersPage extends BasePage {
 		//WicketApplication.instance().getUserService().insertUser(user);
 		//List<User> users = WicketApplication.instance().getUserService()
 		List<User> users = userService.getAllUsers(0, Integer.MAX_VALUE);
-		final WebMarkupContainer parent = new WebMarkupContainer("books");
+		final WebMarkupContainer parent = new WebMarkupContainer("writers");
 		parent.setOutputMarkupId(true);
 		add(parent);
 
-		parent.add(listWriters("writerList", users));
+		//parent.add(listWriters("writerList", users));
+		DataView<User> dataView = writerList("writerList");
+
+		parent.add(dataView);
+		parent.add(new PagingNavigator("footerPaginator", dataView));
 
 	}
 
-	PropertyListView<Object> listWriters(String label, List<User> users) {
+	private DataView<User> writerList(String label) {
 
-		PropertyListView<Object> writersPLV = new PropertyListView<Object>(label, users) {
-
-			protected void populateItem(ListItem<Object> item) {
-				User user = (User) item.getModelObject();
+		IDataProvider<User> dataProvider = new WriterProvider();
+		
+		DataView<User> dataView = new DataView<User>("writerList", dataProvider,
+				WRITERS_PER_PAGE) {
+			
+			protected void populateItem(Item<User> item) {
+				final User user = (User) item.getModelObject();
 				CompoundPropertyModel<User> model = new CompoundPropertyModel<User>(user);
 				item.setDefaultModel(model);
 				final PageParameters parameters = new PageParameters();
@@ -53,7 +67,14 @@ public class WritersPage extends BasePage {
 				item.add(new Label("username"));
 				item.add(new Label("firstname"));
 				item.add(new Label("lastname"));
-				item.add(new Link<Object>("deleteLink", item.getModel()) {
+				item.add(new Link("editLink", item.getModel()) {
+					public void onClick() {
+						setResponsePage(new EditWriterPage(user.getId(),
+								WritersPage.this));
+					}
+
+				});
+				item.add(new Link<User>("deleteLink", item.getModel()) {
 					private static final long serialVersionUID = -7155146615720218460L;
 
 					public void onClick() {
@@ -69,75 +90,38 @@ public class WritersPage extends BasePage {
 
 				});
 			}
+			
 		};
-		
-		return writersPLV;
-
+	
+		return dataView;
 	}
 	
-	/*class WriterProvider implements IDataProvider<User> {
+	class WriterProvider implements IDataProvider<User> {
 
-		private static final long serialVersionUID = 6050730502992812477L;
-		private List<User> writers;
-		private Integer size;
-		private String type;
-		private String parameter;
+		private List<User> users;
 
-		public UserProvider(String type, String parameter) {
-			this.type = type;
-			this.parameter = parameter;
-			this.size = null;
+		public WriterProvider() {
 		}
 
 		public Iterator<User> iterator(int first, int count) {
 
-			if (type == null) {
-				this.writers = userService.getAllUsers(first, count);
-				// books = bookService.getAllBooks();
-			} else if (type.equals("tag")) {
-				this.books = bookService.findBookByTag(parameter, first, count);
-				// books =
-				// bookService.findBookByTag(parameters.getString("tag"),
-				// 0, Integer.MAX_VALUE);
-			} else if (type.equals("author")) {
-				this.books = bookService.findBookByAuthor(parameter, first,
-						count);
-				// books = bookService.findBookByAuthor(
-				// parameters.getString("author"), 0, Integer.MAX_VALUE);
-			} else if (type.equals("title")) {
-				this.books = bookService.findBookByTitle(parameter, first,
-						count);
-				// books = bookService.findBookByTitle(
-				// parameters.getString("title"), 0, Integer.MAX_VALUE);
-			} else {
-				this.books = bookService.getAllBooks(first, count);
-				// books = bookService.getAllBooks();
-			}
-
-			return this.books.iterator();
-			// return bookService.iterator(first, count);
-			// return books.iterator();
-			// return bookService.findBookByAuthor("eapoe", first,
-			// count).iterator();
+			this.users = userService.getAllUsers(first, count);
+			
+			return this.users.iterator();
 		}
 
 		public int size() {
-			// return bookService.getCount();
-			if (size == null) {
-				size = bookService.getCount(type, parameter);
-			}
-			return size;
+			return userService.getCount();
 		}
 
-		public IModel<Book> model(Book book) {
-			return new CompoundPropertyModel<Book>(book);
+		public IModel<User> model(User user) {
+			return new CompoundPropertyModel<User>(user);
 		}
 
 		public void detach() {
 			// TODO Auto-generated method stub
 
 		}
-	}*/
-
+	}
 
 }
