@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.PageParameters;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -46,13 +46,13 @@ public class BooksPage extends BasePage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
-		String typeString = parameters.getString("type");
+		String typeString = parameters.get("type").toString();
 		String parameter = null;
 		SearchType type = SearchType.ALL;
 
 		if (typeString != null) {
 
-			parameter = parameters.getString(typeString);
+			parameter = parameters.get(typeString).toString();
 
 			if (typeString.equals("tag")) {
 				type = SearchType.TAG;
@@ -97,8 +97,8 @@ public class BooksPage extends BasePage {
 					protected void populateItem(ListItem<Object> item) {
 						String tag = (String) item.getModelObject();
 						final PageParameters parameters = new PageParameters();
-						parameters.put("tag", tag);
-						parameters.put("type", "tag");
+						parameters.set("tag", tag);
+						parameters.set("type", "tag");
 
 						BookmarkablePageLink<Object> bpl = new BookmarkablePageLink<Object>(
 								"tagLink", BooksPage.class, parameters);
@@ -109,7 +109,7 @@ public class BooksPage extends BasePage {
 				});
 
 				final PageParameters parameters = new PageParameters();
-				parameters.put("book", book.getId().toString());
+				parameters.set("book", book.getId().toString());
 				// item.add(new Label("title", book.getTitle()));
 				// BookmarkablePageLink<Object> bplTitle = new
 				// BookmarkablePageLink<Object>(
@@ -127,8 +127,8 @@ public class BooksPage extends BasePage {
 				// bplTitle.add(new Label("title", book.getTitle()));
 				// item.add(bplTitle);
 				item.add(titleLink);
-				parameters.put("author", book.getAuthor().getUsername());
-				parameters.put("type", "author");
+				parameters.set("author", book.getAuthor().getUsername());
+				parameters.set("type", "author");
 				BookmarkablePageLink<Object> bplAuthor = new BookmarkablePageLink<Object>(
 						"authorLink", BooksPage.class, parameters);
 				bplAuthor.add(new Label("authorName", book.getAuthor()

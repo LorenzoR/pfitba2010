@@ -124,6 +124,12 @@ public class AddBookPage extends BasePage {
 				setResponsePage(HomePage.class);
 				
 			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form) {
+				// TODO Auto-generated method stub
+				
+			}
 		});
 		
 		return form;

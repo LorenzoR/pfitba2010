@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.wicket.PageParameters;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -35,7 +35,7 @@ public class BooksByTag extends BasePage {
 
 	public BooksByTag(final PageParameters parameters) {
 
-		String tag = parameters.getString("tag");
+		String tag = parameters.get("tag").toString();
 		
 		final WebMarkupContainer parent = new WebMarkupContainer("books");
 		parent.setOutputMarkupId(true);
@@ -68,7 +68,7 @@ public class BooksByTag extends BasePage {
 					protected void populateItem(ListItem<Object> item) {
 						String tag = (String) item.getModelObject();
 						final PageParameters parameters = new PageParameters();
-						parameters.put("tag", tag);
+						parameters.set("tag", tag);
 						BookmarkablePageLink<Object> bpl = new BookmarkablePageLink<Object>("tagLink", BooksByTag.class, parameters);
 						bpl.add(new Label("tagName", tag));
 						item.add(bpl);
@@ -76,9 +76,9 @@ public class BooksByTag extends BasePage {
 				});
 
 				final PageParameters parameters = new PageParameters();
-				parameters.put("book", book.getId().toString());
+				parameters.set("book", book.getId().toString());
 				item.add(new Label("title", book.getTitle()));
-				parameters.put("author", book.getAuthor().getId().toString());
+				parameters.set("author", book.getAuthor().getId().toString());
 				BookmarkablePageLink<Object> bpl = new BookmarkablePageLink<Object>("authorLink", BooksByAuthor.class, parameters);
 				bpl.add(new Label("authorName", book.getAuthor().getUsername()));
 				item.add(bpl);

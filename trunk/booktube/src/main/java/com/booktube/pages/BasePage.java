@@ -10,10 +10,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import org.apache.wicket.IPageMap;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
-import org.apache.wicket.PageParameters;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -29,9 +28,12 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
+import org.wicketstuff.facebook.FacebookSdk;
+import org.wicketstuff.facebook.plugins.LikeButton;
 
 import com.booktube.WiaSession;
 import com.booktube.model.Book;
@@ -51,9 +53,9 @@ public abstract class BasePage extends WebPage {
 	private final int AUTHOR_SELECTED = 2;
 	private final int RATING_SELECTED = 3;
 	private final int TAG_SELECTED = 4;
-	
+
 	public BasePage() {
-		
+
 		// WebMarkupContainer group = new WebMarkupContainer("loginContainer");
 		if (WiaSession.get().isAuthenticated()) {
 			add(new Label("welcome", "Bienvenido "
@@ -189,17 +191,22 @@ public abstract class BasePage extends WebPage {
 		// add(group);
 		// group.setVisible(false);
 
+		add(new FacebookSdk("fbRoot"));
+
+		final IModel<String> url = Model.of("http://localhost:8080");
+		add(new LikeButton("likeButton", url));
+
 		add(new Label("footer",
 				"Ayuda | Acerca de | Contacto | Términos y Condiciones"));
 
 		add(new BookmarkablePageLink<String>("title", HomePage.class));
 		add(new BookmarkablePageLink<String>("addBook", AddBookPage.class));
-		// add(new BookmarkablePageLink<String>("showBooksa", BooksPage.class));
-		add(new Link("showBooks") {
+		add(new BookmarkablePageLink<String>("showBooks", BooksPage.class));
+		/*add(new Link("showBooks") {
 			public void onClick() {
 				setResponsePage(BooksPage.class);
 			}
-		});
+		});*/
 		add(new BookmarkablePageLink<String>("showWriters", WritersPage.class));
 		add(new BookmarkablePageLink<String>("contact", NewContact.class));
 		add(new BookmarkablePageLink<String>("loadDataLink", LoadDataPage.class));
@@ -242,60 +249,65 @@ public abstract class BasePage extends WebPage {
 	}
 
 	private int selectedRadio;
-	
+
 	private Form<Object> searchBookForm(String label) {
 
 		final Form<Object> form = new Form<Object>(label);
 
 		selectedRadio = AUTHOR_SELECTED;
-		
+
 		final RadioGroup<String> radioGroup = new RadioGroup<String>("group",
 				new Model<String>(""));
 		radioGroup.setOutputMarkupId(true);
 
-		radioGroup.add(new Radio<String>("author", new Model<String>("author")).add(new AjaxEventBehavior("onclick") {
-			protected void onEvent(AjaxRequestTarget target) { 
-		           // add your favorite component. 
-		    	 System.out.println("CLICK EN AUTHOR!!!");
-		    	 selectedRadio = AUTHOR_SELECTED;
-		    	 System.out.println("selectedRadio es " + selectedRadio);
-		      } 
-		}));
-		
-		radioGroup.add(new Radio<String>("rating", new Model<String>("rating")).add(new AjaxEventBehavior("onclick") {
-			protected void onEvent(AjaxRequestTarget target) { 
-		           // add your favorite component. 
-		    	 System.out.println("CLICK EN RATING!!!");
-		    	 selectedRadio = RATING_SELECTED;
-		    	 System.out.println("selectedRadio es " + selectedRadio);
-		      } 
-		}));
-		
-		radioGroup.add(new Radio<String>("title", new Model<String>("title")).add(new AjaxEventBehavior("onclick") {
-			protected void onEvent(AjaxRequestTarget target) { 
-		           // add your favorite component. 
-		    	 System.out.println("CLICK EN TITLE!!!");
-		    	 selectedRadio = TITLE_SELECTED;
-		    	 System.out.println("selectedRadio es " + selectedRadio);
-		      } 
-		}));
-		
-		radioGroup.add(new Radio<String>("tag", new Model<String>("tag")).add(new AjaxEventBehavior("onclick") {
-			protected void onEvent(AjaxRequestTarget target) { 
-		           // add your favorite component. 
-		    	 System.out.println("CLICK EN TAG!!!");
-		    	 selectedRadio = TAG_SELECTED;
-		    	 System.out.println("selectedRadio es " + selectedRadio);
-		      } 
-		}));
-		
-		//radioGroup.add(author.add(event));
-		
-		/*radioGroup.add(new Radio<String>("title", new Model<String>("title")));
-		radioGroup
-				.add(new Radio<String>("rating", new Model<String>("rating")));
-		radioGroup.add(new Radio<String>("tag", new Model<String>("tag")));
-		*/
+		radioGroup.add(new Radio<String>("author", new Model<String>("author"))
+				.add(new AjaxEventBehavior("onclick") {
+					protected void onEvent(AjaxRequestTarget target) {
+						// add your favorite component.
+						System.out.println("CLICK EN AUTHOR!!!");
+						selectedRadio = AUTHOR_SELECTED;
+						System.out.println("selectedRadio es " + selectedRadio);
+					}
+				}));
+
+		radioGroup.add(new Radio<String>("rating", new Model<String>("rating"))
+				.add(new AjaxEventBehavior("onclick") {
+					protected void onEvent(AjaxRequestTarget target) {
+						// add your favorite component.
+						System.out.println("CLICK EN RATING!!!");
+						selectedRadio = RATING_SELECTED;
+						System.out.println("selectedRadio es " + selectedRadio);
+					}
+				}));
+
+		radioGroup.add(new Radio<String>("title", new Model<String>("title"))
+				.add(new AjaxEventBehavior("onclick") {
+					protected void onEvent(AjaxRequestTarget target) {
+						// add your favorite component.
+						System.out.println("CLICK EN TITLE!!!");
+						selectedRadio = TITLE_SELECTED;
+						System.out.println("selectedRadio es " + selectedRadio);
+					}
+				}));
+
+		radioGroup.add(new Radio<String>("tag", new Model<String>("tag"))
+				.add(new AjaxEventBehavior("onclick") {
+					protected void onEvent(AjaxRequestTarget target) {
+						// add your favorite component.
+						System.out.println("CLICK EN TAG!!!");
+						selectedRadio = TAG_SELECTED;
+						System.out.println("selectedRadio es " + selectedRadio);
+					}
+				}));
+
+		// radioGroup.add(author.add(event));
+
+		/*
+		 * radioGroup.add(new Radio<String>("title", new
+		 * Model<String>("title"))); radioGroup .add(new Radio<String>("rating",
+		 * new Model<String>("rating"))); radioGroup.add(new
+		 * Radio<String>("tag", new Model<String>("tag")));
+		 */
 		form.add(radioGroup);
 
 		final AutoCompleteTextField<String> bookTitle = new AutoCompleteTextField<String>(
@@ -312,27 +324,26 @@ public abstract class BasePage extends WebPage {
 
 				System.out.println("RadioGroupValue: "
 						+ radioGroup.getModelObject());
-				
+
 				List<String> choices = new ArrayList<String>(10);
 
-				/*if (radioGroup.getValue().equals("author")) {
-					books = null;
-				} else if (radioGroup.getValue().equals("rating")) {
-					books = null;
-				} else if (radioGroup.getValue().equals("tag")) {
-					books = null;
-				} else {
-					books = bookService.getAllBooks(0, Integer.MAX_VALUE);
-				}*/
-				
-				//List<User> usersTest = new ArrayList<User>();
-				//usersTest.add(new User("test1", "test1", "test1", "test1"));
-				
-				if ( selectedRadio == AUTHOR_SELECTED ) {
+				/*
+				 * if (radioGroup.getValue().equals("author")) { books = null; }
+				 * else if (radioGroup.getValue().equals("rating")) { books =
+				 * null; } else if (radioGroup.getValue().equals("tag")) { books
+				 * = null; } else { books = bookService.getAllBooks(0,
+				 * Integer.MAX_VALUE); }
+				 */
+
+				// List<User> usersTest = new ArrayList<User>();
+				// usersTest.add(new User("test1", "test1", "test1", "test1"));
+
+				if (selectedRadio == AUTHOR_SELECTED) {
 					System.out.println("AUTHOR SELECTED!");
 					System.out.println("selectedRadio es " + selectedRadio);
-					List<User> users = userService.getAllUsers(0, Integer.MAX_VALUE);
-					
+					List<User> users = userService.getAllUsers(0,
+							Integer.MAX_VALUE);
+
 					for (final User user : users) {
 						final String title = user.getUsername();
 
@@ -343,10 +354,9 @@ public abstract class BasePage extends WebPage {
 							}
 						}
 					}
-				}
-				else if ( selectedRadio == TAG_SELECTED ) {
+				} else if (selectedRadio == TAG_SELECTED) {
 					List<String> tags = bookService.getAllTags();
-					
+
 					for (final String tag : tags) {
 
 						if (tag.toUpperCase().startsWith(input.toUpperCase())) {
@@ -356,13 +366,13 @@ public abstract class BasePage extends WebPage {
 							}
 						}
 					}
-					
-				}
-				else {
+
+				} else {
 					System.out.println("OTRA COSA SELECTED!");
 					System.out.println("selectedRadio es " + selectedRadio);
-					List<Book> books = bookService.getAllBooks(0, Integer.MAX_VALUE);
-					
+					List<Book> books = bookService.getAllBooks(0,
+							Integer.MAX_VALUE);
+
 					for (final Book book : books) {
 						final String title = book.getTitle();
 
@@ -374,8 +384,6 @@ public abstract class BasePage extends WebPage {
 						}
 					}
 				}
-
-				
 
 				return choices.iterator();
 			}
@@ -402,19 +410,19 @@ public abstract class BasePage extends WebPage {
 					final PageParameters parameters = new PageParameters();
 
 					if (radioGroup.getValue().equals("author")) {
-						parameters.put("type", "author");
-						parameters.put("author", bookTitleString);
+						parameters.set("type", "author");
+						parameters.set("author", bookTitleString);
 					} else if (radioGroup.getValue().equals("rating")) {
-						parameters.put("type", "rating");
-						parameters.put("rating", bookTitleString);
+						parameters.set("type", "rating");
+						parameters.set("rating", bookTitleString);
 					} else if (radioGroup.getValue().equals("tag")) {
-						parameters.put("type", "tag");
-						parameters.put("tag", bookTitleString);
+						parameters.set("type", "tag");
+						parameters.set("tag", bookTitleString);
 					} else {
 						System.out.println("Radio Button: "
 								+ radioGroup.getValue());
-						parameters.put("type", "title");
-						parameters.put("title", bookTitleString);
+						parameters.set("type", "title");
+						parameters.set("title", bookTitleString);
 					}
 
 					setResponsePage(BooksPage.class, parameters);
@@ -490,11 +498,11 @@ public abstract class BasePage extends WebPage {
 
 	@Override
 	protected void onBeforeRender() {
-		storeCurrentPage();
+		//storeCurrentPage();
 		super.onBeforeRender();
 	}
 
-	private void storeCurrentPage() {
+	/*private void storeCurrentPage() {
 		PageIdVersion pageIdVersion = new PageIdVersion();
 		pageIdVersion.id = getNumericId();
 		pageIdVersion.version = getVersions() - 1;
@@ -517,8 +525,8 @@ public abstract class BasePage extends WebPage {
 			current.last = null;
 		}
 		lastPageMap.put(pageMap.getName(), pageIdVersion);
-	}
-
+	}*/
+/*
 	public void goToLastPage() {
 		HashMap<String, PageIdVersion> lastPageMap = getSession().getMetaData(
 				lastPageIdVersionKey);
@@ -526,7 +534,7 @@ public abstract class BasePage extends WebPage {
 		Page page = getPageMap().get(pageIdVersion.id, pageIdVersion.version);
 		setResponsePage(page);
 	}
-
+*/
 	class PageIdVersion {
 		public int id;
 		public int version;

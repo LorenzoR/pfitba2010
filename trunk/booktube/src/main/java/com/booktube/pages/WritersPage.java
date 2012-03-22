@@ -3,7 +3,7 @@ package com.booktube.pages;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.wicket.PageParameters;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
@@ -62,7 +62,7 @@ public class WritersPage extends BasePage {
 				CompoundPropertyModel<User> model = new CompoundPropertyModel<User>(user);
 				item.setDefaultModel(model);
 				final PageParameters parameters = new PageParameters();
-				parameters.put("user", user.getId());
+				parameters.set("user", user.getId());
 				item.add(new Label("id"));
 				item.add(new Label("username"));
 				item.add(new Label("firstname"));

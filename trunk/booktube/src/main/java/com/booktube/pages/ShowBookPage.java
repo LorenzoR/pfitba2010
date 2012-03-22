@@ -3,8 +3,9 @@ package com.booktube.pages;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.ResourceReference;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.extensions.rating.RatingPanel;
@@ -23,6 +24,8 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.value.ValueMap;
+import org.wicketstuff.facebook.plugins.Comments;
+import org.wicketstuff.twitter.TweetButton;
 
 import com.booktube.WiaSession;
 import com.booktube.model.Book;
@@ -106,6 +109,19 @@ public class ShowBookPage extends BasePage {
 		} else {
 			registerMessage.setVisible(false);
 		}
+		
+		final Model<String> url = Model.of("http://wicketstuff.org/");
+		final Comments facebookComments = new Comments("facebookComments", url);
+		parent.add(facebookComments);
+		
+		
+		final IModel<String> twitterUrl = Model.of("https://github.com/tfreier/wicketstuff-core/tree/master/jdk-1.5-parent/twitter-parent");
+		final IModel<String> via = Model.of("tfreier");
+		final IModel<String> text = Model.of("just testing #twitter widgets for #wicket.");
+
+		final TweetButton tweetButton = new TweetButton("tweetButton", twitterUrl, text, via);
+	
+		parent.add(tweetButton);
 
 	}
 
@@ -182,6 +198,12 @@ public class ShowBookPage extends BasePage {
 				target.addComponent(parent);
 
 			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form) {
+				// TODO Auto-generated method stub
+				
+			}
 		});
 
 		return form;
@@ -191,13 +213,13 @@ public class ShowBookPage extends BasePage {
 	/**
 	 * Star image for no selected star
 	 */
-	public static final ResourceReference WICKETSTAR0 = new ResourceReference(
+	public static final ResourceReference WICKETSTAR0 = new PackageResourceReference(
 			ShowBookPage.class, "WicketStar0.png");
 
 	/**
 	 * Star image for selected star
 	 */
-	public static final ResourceReference WICKETSTAR1 = new ResourceReference(
+	public static final ResourceReference WICKETSTAR1 = new PackageResourceReference(
 			ShowBookPage.class, "WicketStar1.png");
 
 	/** For serialization. */

@@ -2,7 +2,7 @@ package com.booktube;
 
 import java.util.Locale;
 
-import org.apache.wicket.Request;
+import org.apache.wicket.request.Request;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebSession;
 

@@ -3,11 +3,8 @@ package com.booktube.pages;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.wicket.AccessStackPageMap;
-import org.apache.wicket.AccessStackPageMap.Access;
 import org.apache.wicket.Page;
-import org.apache.wicket.PageMap;
-import org.apache.wicket.PageParameters;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.WebPage;
@@ -57,7 +54,7 @@ public class EditBookPage extends BasePage {
 		add(editBookForm(book));
 
 		//setResponsePage(backPage);
-		goToLastPage();
+		//goToLastPage();
 	}
 
 	/*
@@ -277,6 +274,12 @@ public class EditBookPage extends BasePage {
 				// setResponsePage(backPage);
 				setResponsePage(BooksPage.class);
 
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form) {
+				// TODO Auto-generated method stub
+				
 			}
 		});
 
