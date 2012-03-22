@@ -3,24 +3,22 @@ package com.booktube;
 import javax.servlet.ServletContext;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.Request;
-import org.apache.wicket.Response;
+import org.apache.wicket.request.Request;
+import org.apache.wicket.request.Response;
+
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.request.target.coding.BookmarkablePageRequestTargetUrlCodingStrategy;
-import org.apache.wicket.request.target.coding.HybridUrlCodingStrategy;
-import org.apache.wicket.request.target.coding.IndexedHybridUrlCodingStrategy;
-import org.apache.wicket.request.target.coding.IndexedParamUrlCodingStrategy;
-import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
+
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
-import org.apache.wicket.util.io.IObjectStreamFactory;
+
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.booktube.pages.AddBookPage;
+import com.booktube.pages.BooksPage;
 import com.booktube.pages.EditBookPage;
 import com.booktube.pages.HomePage;
 import com.booktube.pages.RegisterPage;
@@ -30,6 +28,9 @@ import com.booktube.service.BookServiceImpl;
 import com.booktube.service.BookService;
 import com.booktube.service.UserService;
 import com.booktube.service.UserServiceImpl;
+
+import org.apache.wicket.serialize.ISerializer;
+import org.apache.wicket.util.lang.Objects;
 
 /**
  * Application object for your web application. If you want to run this
@@ -55,16 +56,22 @@ public class WicketApplication extends WebApplication {
 		if (springComponentInjector == null) {
 			this.springComponentInjector = new SpringComponentInjector(this);
 		}
-		addComponentInstantiationListener(springComponentInjector);
+		getComponentInstantiationListeners().add(springComponentInjector);
 
 		getMarkupSettings().setStripWicketTags(true);
 		// mountBookmarkablePage("books", BooksPage.class);
-		mount(new QueryStringUrlCodingStrategy("booktube", HomePage.class));
-		mount(new QueryStringUrlCodingStrategy("writers", WritersPage.class));
-		mount(new QueryStringUrlCodingStrategy("editBook", EditBookPage.class));
+		mountPage("books", BooksPage.class);
+		mountPage("booktube", HomePage.class);
+		mountPage("writers", WritersPage.class);
+		mountPage("editBook", EditBookPage.class);
+		mountPage("addBook", AddBookPage.class);
+		mountPage("register", RegisterPage.class);
+//		mount(new QueryStringUrlCodingStrategy("booktube", HomePage.class));
+//		mount(new QueryStringUrlCodingStrategy("writers", WritersPage.class));
+//		mount(new QueryStringUrlCodingStrategy("editBook", EditBookPage.class));
+//		mount(new QueryStringUrlCodingStrategy("addBook", AddBookPage.class));
+//		mount(new QueryStringUrlCodingStrategy("register", RegisterPage.class));
 		//mount(new QueryStringUrlCodingStrategy("showBook", ShowBookPage.class));
-		mount(new QueryStringUrlCodingStrategy("addBook", AddBookPage.class));
-		mount(new QueryStringUrlCodingStrategy("register", RegisterPage.class));
 		// mount(new IndexedParamUrlCodingStrategy("editBook",
 		// EditBookPage.class));
 		// mount(new IndexedHybridUrlCodingStrategy("editBook",
@@ -74,9 +81,11 @@ public class WicketApplication extends WebApplication {
 		applicationContext = WebApplicationContextUtils
 				.getWebApplicationContext(servletContext);
 
-		org.apache.wicket.util.lang.Objects
+		/*org.apache.wicket.util.lang.Objects
 				.setObjectStreamFactory(new IObjectStreamFactory.DefaultObjectStreamFactory());
 		
+		Objects.setObjectStreamFactory(new WicketObjectStreamFactory());
+		*/
 
 
 	}

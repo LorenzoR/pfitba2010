@@ -48,7 +48,7 @@ public class DataViewPage extends WebPage {
 		}
 
 		public IModel<User> model(Object object) {
-			return new CompoundPropertyModel<User>(object);
+			return new CompoundPropertyModel<User>((IModel<User>) object);
 		}
 
 		public void detach() {

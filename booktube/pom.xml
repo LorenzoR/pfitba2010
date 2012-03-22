@@ -24,19 +24,42 @@
 			<url>http://repository.jboss.org/maven2</url>
 		</repository>
 		<repository>
-	        <id>thirdparty-releases</id>
-	        <name>JBoss Thirdparty Releases</name>
-	        <url>https://repository.jboss.org/nexus/content/repositories/thirdparty-releases</url>
-      </repository>
+			<id>thirdparty-releases</id>
+			<name>JBoss Thirdparty Releases</name>
+			<url>https://repository.jboss.org/nexus/content/repositories/thirdparty-releases</url>
+		</repository>
+
+		<repository>
+			<id>wicketstuff-core-releases</id>
+			<url>https://oss.sonatype.org/content/repositories/releases</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+
+		<repository>
+			<id>wicketstuff-core-snapshots</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+
 	</repositories>
 
 	<dependencies>
 		<!-- WICKET DEPENDENCIES -->
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket</artifactId>
+			<artifactId>wicket-core</artifactId>
 			<version>${wicket.version}</version>
 		</dependency>
+
+		<!-- <dependency> -->
+		<!-- <groupId>org.apache.wicket</groupId> -->
+		<!-- <artifactId>wicket</artifactId> -->
+		<!-- <version>${wicket.version}</version> -->
+		<!-- </dependency> -->
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-extensions</artifactId>
@@ -64,7 +87,7 @@
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.6.1</version>
 		</dependency>
-		
+
 		<!-- LOGGING DEPENDENCIES - LOG4J -->
 		<dependency>
 			<groupId>log4j</groupId>
@@ -182,6 +205,21 @@
 					<artifactId>slf4j-api</artifactId>
 				</exclusion>
 			</exclusions>
+
+		</dependency>
+
+		<!-- Facebook -->
+		<dependency>
+			<groupId>org.wicketstuff</groupId>
+			<artifactId>wicket-facebook</artifactId>
+			<version>1.5-SNAPSHOT</version>
+		</dependency>
+
+		<!-- Twitter -->
+		<dependency>
+			<groupId>org.wicketstuff</groupId>
+			<artifactId>wicketstuff-twitter</artifactId>
+			<version>1.5-SNAPSHOT</version>
 		</dependency>
 
 	</dependencies>
@@ -264,7 +302,7 @@
 		</plugins>
 	</build>
 	<properties>
-		<wicket.version>1.4.0</wicket.version>
+		<wicket.version>1.5.5</wicket.version>
 		<jetty.version>6.1.4</jetty.version>
 		<spring.version>2.5.5</spring.version>
 		<hibernate.version>3.4.0.GA</hibernate.version>
@@ -281,7 +319,7 @@
 		<easymock.version>2.4</easymock.version>
 		<resteasy.version>1.0.2.GA</resteasy.version>
 		<jashi.version>1.0-SNAPSHOT</jashi.version>
-		
+
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 </project>
