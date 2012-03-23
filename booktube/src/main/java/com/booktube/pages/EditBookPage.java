@@ -1,10 +1,9 @@
 package com.booktube.pages;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.wicket.Page;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.WebPage;
@@ -14,12 +13,9 @@ import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.collections.ArrayListStack;
-import org.apache.wicket.util.value.ValueMap;
-
 import com.booktube.model.Book;
 import com.booktube.model.User;
 import com.booktube.service.BookService;
@@ -32,13 +28,13 @@ public class EditBookPage extends BasePage {
 
 	@SpringBean
 	UserService userService;
-	/** backwards nav page */
-	// private final Page backPage;
 
 	private List<User> users = userService.getAllUsers(0, Integer.MAX_VALUE);
 
-	public EditBookPage(Long bookId, final WebPage backPage) {
+	public EditBookPage(PageParameters pageParameters) {
 
+		Long bookId = pageParameters.get("book").toLong();
+		int currentPage = pageParameters.get("currentPage").toInt();
 		// this.backPage = backPage;
 		//Integer bookId = book.getId();
 
@@ -51,7 +47,7 @@ public class EditBookPage extends BasePage {
 
 		add(new Label("bookId", book.getId().toString()));
 
-		add(editBookForm(book));
+		add(editBookForm(book, currentPage));
 
 		//setResponsePage(backPage);
 		//goToLastPage();
@@ -209,7 +205,7 @@ public class EditBookPage extends BasePage {
 	 * }
 	 */
 
-	private Form editBookForm(final Book book) {
+	private Form editBookForm(final Book book, final int currentPage) {
 		Form<Object> form = new Form<Object>("editBookForm");
 
 		final TextField<Book> titleField = new TextField<Book>("title",
@@ -219,7 +215,7 @@ public class EditBookPage extends BasePage {
 		form.add(titleField);
 
 		final TextField<Book> tagsField = new TextField<Book>("tags",
-				new Model(book.getTags().toString().substring(1, book.getTags().toString().length() - 1)));
+				new Model(book.getTags().toString().substring(1, book.getTags().toString().length() - 1).replace(",", "")));
 		// titleField.setOutputMarkupId(true);
 		// titleField.setMarkupId(getId());
 		form.add(tagsField);
@@ -254,11 +250,25 @@ public class EditBookPage extends BasePage {
 				String text = editor.getDefaultModelObjectAsString();
 				String username = ddc.getDefaultModelObjectAsString();
 				String title = titleField.getDefaultModelObjectAsString();
-
+				String tagString = tagsField.getDefaultModelObjectAsString();
+				String tags[] = tagString.split(" ");
+				System.out.println("Tags: " + tags.toString());
+				
 				User user = userService.getUser(username);
 				book.setText(text);
 				book.setAuthor(user);
 				book.setTitle(title);
+				
+				Set<String> tagsSet = new HashSet<String>();
+				
+				for ( String tag : tags ) {
+					System.out.println("Tag: " + tag);
+					//book.addTag(tag);
+					tagsSet.add(tag);
+				}
+				
+				book.setTags(tagsSet);
+				
 				// Book newBook = new Book(book.getId(), title, text, user);
 
 				// Edit book
@@ -272,7 +282,9 @@ public class EditBookPage extends BasePage {
 
 				// Previous page
 				// setResponsePage(backPage);
-				setResponsePage(BooksPage.class);
+				PageParameters pageParameters = new PageParameters();
+				pageParameters.set("currentPage", currentPage);
+				setResponsePage(BooksPage.class, pageParameters);
 
 			}
 

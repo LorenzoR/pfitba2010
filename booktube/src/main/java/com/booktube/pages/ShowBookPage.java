@@ -3,6 +3,13 @@ package com.booktube.pages;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.wicket.request.Request;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.handler.render.WebPageRenderer;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -15,6 +22,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
@@ -23,6 +31,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.value.ValueMap;
 import org.wicketstuff.facebook.plugins.Comments;
 import org.wicketstuff.twitter.TweetButton;
@@ -48,8 +57,11 @@ public class ShowBookPage extends BasePage {
 	
 	private User user;
 
-	public ShowBookPage(Long bookId, final WebPage backPage) {
+	public ShowBookPage(PageParameters pageParameters) {
 
+		final Long bookId = pageParameters.get("book").toLong();
+		final int currentPage = pageParameters.get("currentPage").toInt();
+		
 		user = WiaSession.get().getLoggedInUser();
 
 		final Book book = bookService.getBook(bookId);
@@ -86,11 +98,14 @@ public class ShowBookPage extends BasePage {
 
 		parent.add(new ResetRatingLink("reset1", new Model<Rating>(rating1)));
 
-		parent.add(new Link("goBack") {
-			public void onClick() {
-				setResponsePage(HomePage.class);
-			}
-		});
+		PageParameters backPageParameters = new PageParameters();
+		backPageParameters.set("currentPage", currentPage);
+		parent.add(new BookmarkablePageLink<Object>("goBack", BooksPage.class, backPageParameters));
+//		parent.add(new Link("goBack") {
+//			public void onClick() {
+//				setResponsePage(HomePage.class);
+//			}
+//		});
 
 		List<Comment> comments = new ArrayList<Comment>(book.getComments());
 
@@ -110,10 +125,12 @@ public class ShowBookPage extends BasePage {
 			registerMessage.setVisible(false);
 		}
 		
-		final Model<String> url = Model.of("http://wicketstuff.org/");
+		final String currentURL = RequestCycle.get().getUrlRenderer().renderFullUrl(
+			    Url.parse(urlFor(ShowBookPage.class,null).toString()));
+		
+		final Model<String> url = Model.of(currentURL);
 		final Comments facebookComments = new Comments("facebookComments", url);
 		parent.add(facebookComments);
-		
 		
 		final IModel<String> twitterUrl = Model.of("https://github.com/tfreier/wicketstuff-core/tree/master/jdk-1.5-parent/twitter-parent");
 		final IModel<String> via = Model.of("tfreier");

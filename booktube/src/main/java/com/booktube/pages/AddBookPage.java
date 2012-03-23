@@ -1,6 +1,8 @@
 package com.booktube.pages;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
@@ -99,12 +101,15 @@ public class AddBookPage extends BasePage {
 				//User user = userService.getUser(username);
 				Book book = new Book(title, text, user);
 				
+				Set<String> tagsSet = new HashSet<String>();
+				
 				for ( String tag : tags ) {
 					System.out.println("Tag: " + tag);
-					book.addTag(tag);
+					//book.addTag(tag);
+					tagsSet.add(tag);
 				}
 				
-				
+				book.setTags(tagsSet);
 				book.setCategory("categoria");
 				book.setSubCategory("subcategoria");
 				
