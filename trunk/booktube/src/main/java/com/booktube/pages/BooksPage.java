@@ -1,11 +1,9 @@
 package com.booktube.pages;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.wicket.Page;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -20,6 +18,7 @@ import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.util.string.StringValue;
 
 import com.booktube.model.Book;
 import com.booktube.service.BookService;
@@ -36,11 +35,7 @@ public class BooksPage extends BasePage {
 
 	public static final int BOOKS_PER_PAGE = 5;
 
-	public Page backPage;
-
 	public BooksPage(final PageParameters parameters) {
-
-		this.backPage = this;
 
 		final WebMarkupContainer parent = new WebMarkupContainer("books");
 		parent.setOutputMarkupId(true);
@@ -66,6 +61,12 @@ public class BooksPage extends BasePage {
 
 		DataView<Book> dataView = bookList("bookList", type, parameter);
 
+		StringValue currentPage = parameters.get("currentPage");
+		
+		if ( !currentPage.isEmpty() ) {
+			dataView.setCurrentPage(currentPage.toInt());
+		}
+		
 		parent.add(dataView);
 		parent.add(new PagingNavigator("footerPaginator", dataView));
 
@@ -115,12 +116,18 @@ public class BooksPage extends BasePage {
 				// BookmarkablePageLink<Object>(
 				// "viewLink", ShowBookPage.class, parameters);
 
-				Link<Object> titleLink = new Link("viewLink") {
-					public void onClick() {
-						setResponsePage(new ShowBookPage(book.getId(),
-								BooksPage.this));
-					}
-				};
+				PageParameters detailsParameter = new PageParameters();
+				detailsParameter.set("book", book.getId());
+				detailsParameter.set("currentPage", this.getCurrentPage());
+				
+				BookmarkablePageLink<Object> titleLink = new BookmarkablePageLink<Object>("viewLink", ShowBookPage.class, detailsParameter); 
+				
+//				Link<Object> titleLink = new Link("viewLink") {
+//					public void onClick() {
+//						setResponsePage(new ShowBookPage(book.getId(),
+//								BooksPage.this));
+//					}
+//				};
 
 				titleLink.add(new Label("title", book.getTitle()));
 
@@ -136,20 +143,10 @@ public class BooksPage extends BasePage {
 				item.add(bplAuthor);
 				item.add(new Label("publishDate", book.getPublishDate()
 						.toString()));
-				item.add(new Link("editLink", item.getModel()) {
-					public void onClick() {
-						setResponsePage(new EditBookPage(book.getId(),
-								BooksPage.this));
-					}
-
-				});
-				item.add(new Link("detailsLink") {
-					public void onClick() {
-						setResponsePage(new ShowBookPage(book.getId(),
-								BooksPage.this));
-					}
-
-				});
+				
+				item.add(new BookmarkablePageLink<Object>("editLink", EditBookPage.class, detailsParameter));
+				item.add(new BookmarkablePageLink<Object>("detailsLink", ShowBookPage.class, detailsParameter));
+				
 				item.add(new Link<Book>("deleteLink", item.getModel()) {
 					private static final long serialVersionUID = -7155146615720218460L;
 

@@ -92,54 +92,67 @@ public class NewContact extends BasePage {
 		final TextArea editor = new TextArea("textArea", new Model());
 		editor.setOutputMarkupId(true);
 
-		
 		List<User> personsList = userService.getAllUsers(0, Integer.MAX_VALUE);
 
+		/* Saco al admin actual de la lista */
+		if (user != null) {
+			int currentUserIndex = 0;
+
+			for (User aUser : personsList) {
+				System.out.println("USERID: " + user.getId() + " aUSERID: " + aUser.getId());
+				if (user.getId().equals(aUser.getId())) {
+					break;
+				} else {
+					currentUserIndex++;
+				}
+			}
+
+			personsList.remove(currentUserIndex);
+		}
 		final CheckGroup group = new CheckGroup("group", new ArrayList());
 
-        add(form);
-        form.add(group);
-        group.add(new CheckGroupSelector("groupselector"));
-        ListView persons = new ListView("persons", personsList)
-        {
+		add(form);
+		form.add(group);
+		group.add(new CheckGroupSelector("groupselector"));
+		ListView persons = new ListView("persons", personsList) {
 
-            protected void populateItem(ListItem item)
-            {
-                item.add(new Check("checkbox", item.getModel()));
-                item.add(new Label("name", new PropertyModel(item.getModel(), "firstname")));
-                item.add(new Label("lastName", new PropertyModel(item.getModel(), "lastname")));
-            }
+			protected void populateItem(ListItem item) {
+				item.add(new Check("checkbox", item.getModel()));
+				item.add(new Label("name", new PropertyModel(item.getModel(),
+						"firstname")));
+				item.add(new Label("lastName", new PropertyModel(item
+						.getModel(), "lastname")));
+			}
 
-        };
+		};
 
-        group.add(persons);
-		
+		group.add(persons);
+
 		form.add(editor);
 		form.add(new AjaxSubmitLink("save") {
 
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-				
+
 				Set<User> receiverSet = new HashSet<User>();
-				
+
 				/* Si el usuario es Admin */
-				if ( true ) {
-					List<User> users = (List<User>) group.getDefaultModelObject();
-					
-					for (User receiver: users) {
+				if (true) {
+					List<User> users = (List<User>) group
+							.getDefaultModelObject();
+
+					for (User receiver : users) {
 						receiverSet.add(receiver);
 					}
-				}
-				else {
+				} else {
 					User admin = userService.getUser("admin");
 					receiverSet.add(admin);
 				}
-								
 
 				Message message = new Message(ddc
 						.getDefaultModelObjectAsString(), editor
 						.getDefaultModelObjectAsString(), user, receiverSet);
-				
+
 				messageService.insertMessage(message);
 
 				// message.addReceiver(user1);
@@ -180,7 +193,7 @@ public class NewContact extends BasePage {
 			@Override
 			protected void onError(AjaxRequestTarget target, Form<?> form) {
 				// TODO Auto-generated method stub
-				
+
 			}
 		});
 

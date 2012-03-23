@@ -66,6 +66,7 @@ public class WicketApplication extends WebApplication {
 		mountPage("editBook", EditBookPage.class);
 		mountPage("addBook", AddBookPage.class);
 		mountPage("register", RegisterPage.class);
+		mountPage("showBook", ShowBookPage.class);
 //		mount(new QueryStringUrlCodingStrategy("booktube", HomePage.class));
 //		mount(new QueryStringUrlCodingStrategy("writers", WritersPage.class));
 //		mount(new QueryStringUrlCodingStrategy("editBook", EditBookPage.class));

@@ -194,7 +194,9 @@ public class Book implements Serializable {
 	}
 
 	public void addTag(String tag) {
-		this.tags.add(tag);
+		if ( !tag.isEmpty() ) {
+			this.tags.add(tag);
+		}
 	}
 
 	public String toString() {
