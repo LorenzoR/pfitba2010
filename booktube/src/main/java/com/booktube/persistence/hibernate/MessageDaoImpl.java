@@ -2,6 +2,9 @@ package com.booktube.persistence.hibernate;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
+import org.hibernate.Query;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import com.booktube.model.Book;
@@ -42,21 +45,37 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements Mes
 	}
 
 	public List<Message> getAllMessagesTo(User receiver, int first, int count) {
-		return (List<Message>) getSession()
-		.createQuery(
-				"from Message message " + "where :x in elements(message.receiver)")
-				.setEntity("x", receiver).setFirstResult(first).setMaxResults(count)
-		.list();
+		Criteria criteria = getSession().createCriteria(Message.class)
+				.createCriteria("receiver")
+				.add(Restrictions.eq("receiver", receiver))
+				.add(Restrictions.eq("isRead", false))
+				.setFirstResult(first).setMaxResults(count);
+		
+		return (List<Message>) criteria.list();
 	}
 
 	public int countMessagesFrom(User sender) {
-		// TODO Auto-generated method stub
-		return 0;
+		Criteria criteria = getSession().createCriteria(Message.class)
+				.add(Restrictions.eq("sender", sender));
+		criteria.setProjection(Projections.rowCount());
+		return ((Number) criteria.uniqueResult()).intValue();
 	}
 
 	public int countMessagesTo(User receiver) {
-		// TODO Auto-generated method stub
-		return 0;
+		Criteria criteria = getSession().createCriteria(Message.class)
+				.createCriteria("receiver")
+				.add(Restrictions.eq("receiver", receiver));
+		criteria.setProjection(Projections.rowCount());
+		return ((Number) criteria.uniqueResult()).intValue();
+	}
+	
+	public int countUnreadMessagesTo(User receiver) {
+		Criteria criteria = getSession().createCriteria(Message.class)
+				.createCriteria("receiver")
+				.add(Restrictions.eq("receiver", receiver))
+				.add(Restrictions.eq("isRead", false));
+		criteria.setProjection(Projections.rowCount());
+		return ((Number) criteria.uniqueResult()).intValue();
 	}
 
 }

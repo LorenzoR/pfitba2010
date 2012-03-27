@@ -75,6 +75,10 @@ public class NewContact extends BasePage {
 		} else {
 			registerMessage.setVisible(false);
 		}
+		
+		System.out.println("MSG FROM: " + messageService.countMessagesFrom(user));
+		System.out.println("MSG TO: " + messageService.countMessagesTo(user));
+		System.out.println("UNREAD MSG TO: " + messageService.countUnreadMessagesTo(user));
 
 	}
 

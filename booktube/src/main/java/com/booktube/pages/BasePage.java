@@ -39,6 +39,7 @@ import com.booktube.WiaSession;
 import com.booktube.model.Book;
 import com.booktube.model.User;
 import com.booktube.service.BookService;
+import com.booktube.service.MessageService;
 import com.booktube.service.UserService;
 
 public abstract class BasePage extends WebPage {
@@ -48,6 +49,9 @@ public abstract class BasePage extends WebPage {
 
 	@SpringBean
 	BookService bookService;
+
+	@SpringBean
+	MessageService messageService;
 
 	private final int TITLE_SELECTED = 1;
 	private final int AUTHOR_SELECTED = 2;
@@ -202,17 +206,24 @@ public abstract class BasePage extends WebPage {
 		add(new BookmarkablePageLink<String>("title", HomePage.class));
 		add(new BookmarkablePageLink<String>("addBook", AddBookPage.class));
 		add(new BookmarkablePageLink<String>("showBooks", BooksPage.class));
-		/*add(new Link("showBooks") {
-			public void onClick() {
-				setResponsePage(BooksPage.class);
-			}
-		});*/
+		/*
+		 * add(new Link("showBooks") { public void onClick() {
+		 * setResponsePage(BooksPage.class); } });
+		 */
 		add(new BookmarkablePageLink<String>("showWriters", WritersPage.class));
 		add(new BookmarkablePageLink<String>("contact", NewContact.class));
 		add(new BookmarkablePageLink<String>("loadDataLink", LoadDataPage.class));
+		add(new BookmarkablePageLink<String>("messagesLink", MessagesPage.class));
 		BookmarkablePageLink<String> registerLink = new BookmarkablePageLink<String>(
 				"registerPage", RegisterPage.class);
 		add(registerLink);
+
+		if (WiaSession.get().isAuthenticated()) {
+			add(new Label("unreadMessages", Integer.toString(messageService
+					.countUnreadMessagesTo(WiaSession.get().getLoggedInUser()))));
+		} else {
+			add(new Label("unreadMessages", " "));
+		}
 
 		Form<?> loginForm = loginForm("login");
 
@@ -498,43 +509,33 @@ public abstract class BasePage extends WebPage {
 
 	@Override
 	protected void onBeforeRender() {
-		//storeCurrentPage();
+		// storeCurrentPage();
 		super.onBeforeRender();
 	}
 
-	/*private void storeCurrentPage() {
-		PageIdVersion pageIdVersion = new PageIdVersion();
-		pageIdVersion.id = getNumericId();
-		pageIdVersion.version = getVersions() - 1;
-
-		IPageMap pageMap = getPageMap();
-		HashMap<String, PageIdVersion> lastPageMap = getSession().getMetaData(
-				lastPageIdVersionKey);
-		if (lastPageMap == null) {
-			lastPageMap = new HashMap<String, PageIdVersion>();
-			getSession().setMetaData(lastPageIdVersionKey, lastPageMap);
-		}
-		PageIdVersion current = lastPageMap.get(pageMap.getName());
-
-		if (current != null) {
-			if (current.equals(pageIdVersion)) {
-				// refresh of current page
-				return;
-			}
-			pageIdVersion.last = current;
-			current.last = null;
-		}
-		lastPageMap.put(pageMap.getName(), pageIdVersion);
-	}*/
-/*
-	public void goToLastPage() {
-		HashMap<String, PageIdVersion> lastPageMap = getSession().getMetaData(
-				lastPageIdVersionKey);
-		PageIdVersion pageIdVersion = lastPageMap.get(getPageMap().getName()).last;
-		Page page = getPageMap().get(pageIdVersion.id, pageIdVersion.version);
-		setResponsePage(page);
-	}
-*/
+	/*
+	 * private void storeCurrentPage() { PageIdVersion pageIdVersion = new
+	 * PageIdVersion(); pageIdVersion.id = getNumericId(); pageIdVersion.version
+	 * = getVersions() - 1;
+	 * 
+	 * IPageMap pageMap = getPageMap(); HashMap<String, PageIdVersion>
+	 * lastPageMap = getSession().getMetaData( lastPageIdVersionKey); if
+	 * (lastPageMap == null) { lastPageMap = new HashMap<String,
+	 * PageIdVersion>(); getSession().setMetaData(lastPageIdVersionKey,
+	 * lastPageMap); } PageIdVersion current =
+	 * lastPageMap.get(pageMap.getName());
+	 * 
+	 * if (current != null) { if (current.equals(pageIdVersion)) { // refresh of
+	 * current page return; } pageIdVersion.last = current; current.last = null;
+	 * } lastPageMap.put(pageMap.getName(), pageIdVersion); }
+	 */
+	/*
+	 * public void goToLastPage() { HashMap<String, PageIdVersion> lastPageMap =
+	 * getSession().getMetaData( lastPageIdVersionKey); PageIdVersion
+	 * pageIdVersion = lastPageMap.get(getPageMap().getName()).last; Page page =
+	 * getPageMap().get(pageIdVersion.id, pageIdVersion.version);
+	 * setResponsePage(page); }
+	 */
 	class PageIdVersion {
 		public int id;
 		public int version;
