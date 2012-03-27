@@ -15,4 +15,5 @@ public interface MessageService {
     public List<Message> getReplyes(Message message);
     public int countMessagesFrom(User sender);
     public int countMessagesTo(User receiver);
+    public int countUnreadMessagesTo(User receiver);
 }

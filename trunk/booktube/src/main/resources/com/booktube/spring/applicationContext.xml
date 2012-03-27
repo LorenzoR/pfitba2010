@@ -56,9 +56,9 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost/booktubeMySQL_test" />
-		<property name="username" value="booktube" />
-		<property name="password" value="booktube" />
+		<property name="url" value="jdbc:mysql://localhost/booktubeMySQL" />
+		<property name="username" value="root" />
+		<property name="password" value="wz25pc82" />
 	</bean>
 
 	<!-- Hibernate session factory -->

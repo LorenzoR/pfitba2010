@@ -57,6 +57,10 @@ public class MessageServiceImpl implements MessageService {
 	public int countMessagesTo(User receiver) {
 		return itemDao.countMessagesTo(receiver);
 	}
+	
+	public int countUnreadMessagesTo(User receiver) {
+		return itemDao.countUnreadMessagesTo(receiver);
+	}
 
 
 }

@@ -15,4 +15,5 @@ public interface MessageDao {
     public List<Message> getAllMessagesTo(User receiver, int first, int count);
     public int countMessagesFrom(User sender);
     public int countMessagesTo(User receiver);
+    public int countUnreadMessagesTo(User receiver);
 }

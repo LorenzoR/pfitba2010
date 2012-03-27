@@ -1,0 +1,28 @@
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<head>
+<title>Messages</title>
+</head>
+<body>
+<wicket:extend>
+<div wicket:id="messages">
+
+	<h2>Message List</h2>
+	
+	<div wicket:id="messageList"  style="border: 1px black solid; margin-bottom: 5px; padding-left: 2px;">
+		<p>Sender: <span wicket:id="sender">Sender goes here</span></p>
+		<p>Subject: <span wicket:id="subject">Subject goes here</span></p>
+		<p>Text: <span wicket:id="text">Text goes here</span></p>
+		<p>
+			<a href="#">Detalles</a> | 
+			<a href="#" wicket:id="deleteLink">Eliminar</a> | 
+			<a href="#" wicket:id="editLink">Editar</a>
+		</p>
+	</div>
+
+	<div wicket:id="footerPaginator"></div>  
+</div>
+
+</wicket:extend>
+</body>
+</html>
