@@ -32,6 +32,7 @@ import org.apache.wicket.util.value.ValueMap;
 import com.booktube.WiaSession;
 import com.booktube.model.Book;
 import com.booktube.model.Message;
+import com.booktube.model.MessageDetail;
 import com.booktube.model.User;
 import com.booktube.service.MessageService;
 import com.booktube.service.UserService;
@@ -134,7 +135,12 @@ public class NewContact extends BasePage {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 
-				Set<User> receiverSet = new HashSet<User>();
+				
+				Message message = new Message(ddc
+						.getDefaultModelObjectAsString(), editor
+						.getDefaultModelObjectAsString(), user);
+				
+				Set<MessageDetail> receiverSet = new HashSet<MessageDetail>();
 
 				/* Si el usuario es Admin */
 				if (true) {
@@ -142,17 +148,17 @@ public class NewContact extends BasePage {
 							.getDefaultModelObject();
 
 					for (User receiver : users) {
-						receiverSet.add(receiver);
+						System.out.println("User: " + receiver);
+						//message.addReceiver(receiver);
+						receiverSet.add(new MessageDetail(receiver, message));
 					}
 				} else {
 					User admin = userService.getUser("admin");
-					receiverSet.add(admin);
+					receiverSet.add(new MessageDetail(admin, null));
 				}
 
-				Message message = new Message(ddc
-						.getDefaultModelObjectAsString(), editor
-						.getDefaultModelObjectAsString(), user, receiverSet);
-
+				System.out.println("Receiver: " + receiverSet.toString());
+				message.setReceiver(receiverSet);
 				messageService.insertMessage(message);
 
 				// message.addReceiver(user1);

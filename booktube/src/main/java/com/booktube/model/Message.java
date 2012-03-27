@@ -47,10 +47,15 @@ public class Message implements Serializable {
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User sender;
 
-	@ManyToMany(cascade = CascadeType.ALL)
+	/*@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "MSG_RCV", joinColumns = { @JoinColumn(name = "MESSAGE_ID") }, inverseJoinColumns = { @JoinColumn(name = "USER_ID") })
 	private Set<User> receiver;
-
+	*/
+	
+	@OneToMany(mappedBy = "message", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OnDelete(action=OnDeleteAction.CASCADE)
+	private Set<MessageDetail> receiver;
+	
 	/*@Basic
 	@Column(name = "REPLY_TO")
 	private Integer replyTo;
@@ -59,10 +64,6 @@ public class Message implements Serializable {
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "ANSWER", joinColumns = { @JoinColumn(name = "MESSAGE_ID") })
 	private Set<Message> answer;
-	
-	@Basic
-	@Column(name = "IS_READ")
-	private Boolean isRead;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "DATE")
@@ -80,23 +81,29 @@ public class Message implements Serializable {
 		
 	}
 	
+	public Message (String subject, String text, User sender) {
+		this.subject = subject;
+		this.text = text;
+		this.sender = sender;
+		this.date = Calendar.getInstance().getTime();
+		this.receiver = new HashSet<MessageDetail>();
+	}
+	
 	public Message (String subject, String text, User sender, User receiver) {
 		this.subject = subject;
 		this.text = text;
 		this.sender = sender;
-		this.receiver = new HashSet<User>();
-		this.receiver.add(receiver);
 		this.date = Calendar.getInstance().getTime();
-		this.isRead = false;
+		this.receiver = new HashSet<MessageDetail>();
+		this.receiver.add(new MessageDetail(receiver, this));
 	}
 	
-	public Message (String subject, String text, User sender, Set<User> receiver) {
+	public Message (String subject, String text, User sender, Set<MessageDetail> receiver) {
 		this.subject = subject;
 		this.text = text;
 		this.sender = sender;
 		this.receiver = receiver;
 		this.date = Calendar.getInstance().getTime();
-		this.isRead = false;
 	}
 
 	public Long getId() {
@@ -115,17 +122,16 @@ public class Message implements Serializable {
 		this.sender = sender;
 	}
 
-	public Set<User> getReceiver() {
+	public Set<MessageDetail> getReceiver() {
 		return receiver;
 	}
 
-	public void setReceiver(Set<User> receiver) {
+	public void setReceiver(Set<MessageDetail> receiver) {
 		this.receiver = receiver;
 	}
 	
-	public User addReceiver(User receiver) {
-		this.receiver.add(receiver);
-		return receiver;
+	public void addReceiver(User receiver) {
+		this.receiver.add(new MessageDetail(receiver, this));
 	}
 
 	public Date getDate() {
@@ -152,14 +158,6 @@ public class Message implements Serializable {
 		this.text = text;
 	}
 
-	public void setRead(Boolean read) {
-		this.isRead = read;
-	}
-
-	public Boolean isRead() {
-		return isRead;
-	}
-
 	public void setAnswer(Set<Message> answer) {
 		this.answer = answer;
 	}
@@ -175,7 +173,6 @@ public class Message implements Serializable {
 		result = prime * result + ((answer == null) ? 0 : answer.hashCode());
 		result = prime * result + ((date == null) ? 0 : date.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((isRead == null) ? 0 : isRead.hashCode());
 		result = prime * result
 				+ ((receiver == null) ? 0 : receiver.hashCode());
 		result = prime * result + ((sender == null) ? 0 : sender.hashCode());
@@ -207,11 +204,6 @@ public class Message implements Serializable {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
-			return false;
-		if (isRead == null) {
-			if (other.isRead != null)
-				return false;
-		} else if (!isRead.equals(other.isRead))
 			return false;
 		if (receiver == null) {
 			if (other.receiver != null)
