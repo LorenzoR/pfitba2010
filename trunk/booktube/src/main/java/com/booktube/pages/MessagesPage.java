@@ -63,14 +63,28 @@ public class MessagesPage extends BasePage {
 				CompoundPropertyModel<Message> model = new CompoundPropertyModel<Message>(message);
 				item.setDefaultModel(model);
 				final PageParameters parameters = new PageParameters();
-				parameters.set("user", message.getId());
+				parameters.set("messageId", message.getId());
 				//item.add(new Label("id"));
-				item.add(new Label("subject"));
-				item.add(new Label("sender"));
-				item.add(new Label("text"));
-				//item.add(new Label("lastname"));
+				if ( messageService.getMessageDetail(message, user).isRead() ) {
+					item.add(new Label("subject"));
+					item.add(new Label("sender"));
+					item.add(new Label("date"));
+				}
+				else {
+					item.add(new Label("subject", "<b>" + message.getSubject() + "</b>").setEscapeModelStrings(false));
+					item.add(new Label("sender", "<b>" + message.getSender() + "</b>").setEscapeModelStrings(false));
+					item.add(new Label("date", "<b>" + message.getDate() + "</b>").setEscapeModelStrings(false));
+				}
+				
+				item.add(new Link("detailsLink", item.getModel()) {
+					public void onClick() {
+						setResponsePage(ShowMessagePage.class, parameters);
+					}
+
+				});
 				item.add(new Link("editLink", item.getModel()) {
 					public void onClick() {
+						setResponsePage(ShowMessagePage.class, parameters);
 						//setResponsePage(new EditWriterPage(user.getId(),
 						//		MessagePage.this));
 					}

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -125,10 +126,13 @@ public class ShowBookPage extends BasePage {
 			registerMessage.setVisible(false);
 		}
 		
-		final String currentURL = RequestCycle.get().getUrlRenderer().renderFullUrl(
-			    Url.parse(urlFor(ShowBookPage.class,null).toString()));
+		//final String currentURL = RequestCycle.get().getUrlRenderer().renderFullUrl(
+		//	    Url.parse(urlFor(ShowBookPage.class,null).toString()));
 		
-		final Model<String> url = Model.of(currentURL);
+		final String url = RequestCycle.get().getUrlRenderer().renderFullUrl(
+				   Url.parse(urlFor(ShowBookPage.class,pageParameters).toString()));
+		
+		//final Model<String> url = Model.of(currentURL);
 		final Comments facebookComments = new Comments("facebookComments", url);
 		parent.add(facebookComments);
 		

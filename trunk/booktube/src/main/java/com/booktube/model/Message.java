@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import javax.persistence.Basic;
@@ -165,6 +166,18 @@ public class Message implements Serializable {
 	public Set<Message> getAnswer() {
 		return answer;
 	}
+	
+	/*public void setIsRead(User user) {
+		Iterator<MessageDetail> iterator = this.receiver.iterator();
+		
+		while ( iterator.hasNext() ) {
+			MessageDetail messageDetail = iterator.next();
+			if ( user.getId().equals(messageDetail.getReceiver().getId()) ) {
+				messageDetail.setRead(true);
+				break;
+			}
+		}
+	}*/
 
 	@Override
 	public int hashCode() {
