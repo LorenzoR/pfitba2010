@@ -9,6 +9,7 @@ import org.hibernate.criterion.Restrictions;
 
 import com.booktube.model.Book;
 import com.booktube.model.Message;
+import com.booktube.model.MessageDetail;
 import com.booktube.model.User;
 import com.booktube.persistence.MessageDao;
 
@@ -48,7 +49,6 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements Mes
 		Criteria criteria = getSession().createCriteria(Message.class)
 				.createCriteria("receiver")
 				.add(Restrictions.eq("receiver", receiver))
-				.add(Restrictions.eq("isRead", false))
 				.setFirstResult(first).setMaxResults(count);
 		
 		return (List<Message>) criteria.list();
@@ -76,6 +76,20 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements Mes
 				.add(Restrictions.eq("isRead", false));
 		criteria.setProjection(Projections.rowCount());
 		return ((Number) criteria.uniqueResult()).intValue();
+	}
+	
+	public void setMessageRead(MessageDetail messageDetail) {
+		messageDetail.setRead(true);
+		getSession().merge(messageDetail);
+		getSession().flush();
+	}
+
+	public MessageDetail getMessageDetail(Message message, User receiver) {
+		Criteria criteria = getSession().createCriteria(MessageDetail.class)
+				.add(Restrictions.eq("receiver", receiver))
+				.add(Restrictions.eq("message", message));
+
+		return (MessageDetail) criteria.setMaxResults(1).uniqueResult();
 	}
 
 }

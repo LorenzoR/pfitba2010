@@ -34,6 +34,8 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
 import org.wicketstuff.facebook.FacebookSdk;
 import org.wicketstuff.facebook.plugins.LikeButton;
+import org.wicketstuff.facebook.plugins.LikeButton.LikeButtonAction;
+import org.wicketstuff.facebook.plugins.LikeButton.LikeButtonLayoutStyle;
 
 import com.booktube.WiaSession;
 import com.booktube.model.Book;
@@ -198,7 +200,10 @@ public abstract class BasePage extends WebPage {
 		add(new FacebookSdk("fbRoot"));
 
 		final IModel<String> url = Model.of("http://localhost:8080");
-		add(new LikeButton("likeButton", url));
+		final LikeButton likeButton = new LikeButton("likeButton", url);
+		likeButton.setLayoutStyle(LikeButtonLayoutStyle.BUTTON_COUNT);
+		likeButton.setAction(LikeButtonAction.LIKE);
+		add(likeButton);
 
 		add(new Label("footer",
 				"Ayuda | Acerca de | Contacto | Términos y Condiciones"));
