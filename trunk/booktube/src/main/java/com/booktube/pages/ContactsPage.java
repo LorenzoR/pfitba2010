@@ -144,4 +144,11 @@ public class ContactsPage extends BasePage {
 		return messagesPLV;
 
 	}
+
+	@Override
+	protected void setPageTitle() {
+		// TODO Auto-generated method stub
+		String newTitle = "Booktube - Contact"; 
+		super.get("pageTitle").setDefaultModelObject(newTitle);
+	}
 }

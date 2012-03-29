@@ -30,7 +30,8 @@ public class EditBookPage extends BasePage {
 	UserService userService;
 
 	private List<User> users = userService.getAllUsers(0, Integer.MAX_VALUE);
-
+	private final Book book;
+	
 	public EditBookPage(PageParameters pageParameters) {
 
 		Long bookId = pageParameters.get("book").toLong();
@@ -38,7 +39,7 @@ public class EditBookPage extends BasePage {
 		// this.backPage = backPage;
 		//Integer bookId = book.getId();
 
-		final Book book = bookService.getBook(bookId);
+		book = bookService.getBook(bookId);
 
 		if (book == null) {
 			setResponsePage(HomePage.class);
@@ -296,6 +297,13 @@ public class EditBookPage extends BasePage {
 		});
 
 		return form;
+	}
+
+	@Override
+	protected void setPageTitle() {
+		// TODO Auto-generated method stub
+		String newTitle = "Booktube - Edit " + book.getTitle(); 
+		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 
 }

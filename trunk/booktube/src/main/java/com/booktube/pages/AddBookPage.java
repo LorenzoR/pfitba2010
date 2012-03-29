@@ -139,6 +139,13 @@ public class AddBookPage extends BasePage {
 		
 		return form;
 	}
+
+	@Override
+	protected void setPageTitle() {
+		// TODO Auto-generated method stub
+		String newTitle = "Booktube - New Book"; 
+		super.get("pageTitle").setDefaultModelObject(newTitle);
+	}
 	
 
 	

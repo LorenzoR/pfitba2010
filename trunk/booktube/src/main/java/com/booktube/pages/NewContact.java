@@ -209,4 +209,11 @@ public class NewContact extends BasePage {
 
 		return form;
 	}
+
+	@Override
+	protected void setPageTitle() {
+		// TODO Auto-generated method stub
+		String newTitle = "Booktube - New Contact"; 
+		super.get("pageTitle").setDefaultModelObject(newTitle);
+	}
 }

@@ -33,9 +33,11 @@ public class BooksByAuthor extends BasePage {
 
 	public static final int BOOKS_PER_PAGE = 5;
 
+	private final String author;
+	
 	public BooksByAuthor(final PageParameters parameters) {
 
-		String author = parameters.get("author").toString();
+		author = parameters.get("author").toString();
 		
 		final WebMarkupContainer parent = new WebMarkupContainer("books");
 		parent.setOutputMarkupId(true);
@@ -142,6 +144,12 @@ public class BooksByAuthor extends BasePage {
 			// TODO Auto-generated method stub
 
 		}
+	}
+
+	@Override
+	protected void setPageTitle() {
+		String newTitle = "Booktube - Books by" + author; 
+		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 
 }

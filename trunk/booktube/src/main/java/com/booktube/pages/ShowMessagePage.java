@@ -20,18 +20,21 @@ public class ShowMessagePage extends BasePage {
 	MessageService messageService;
 	
 	private User user;
+	private final Message message;
 	
 	public ShowMessagePage(final PageParameters pageParameters) {
 		
 		user = WiaSession.get().getLoggedInUser();
 		Integer messageId = pageParameters.get("messageId").toInt();
 		
-		Message message = messageService.getMessage(messageId);
+		message = messageService.getMessage(messageId);
 		
 		final WebMarkupContainer parent = new WebMarkupContainer("messageDetails");
 		parent.setOutputMarkupId(true);
 		add(parent);
 
+		String newTitle = "Booktube - Message " + message.getSubject(); 
+		super.get("pageTitle").setDefaultModelObject(newTitle);
 		
 		CompoundPropertyModel<Message> model = new CompoundPropertyModel<Message>(message);
 		parent.setDefaultModel(model);
@@ -42,6 +45,11 @@ public class ShowMessagePage extends BasePage {
 		MessageDetail messageDetail = messageService.getMessageDetail(message, user);
 		messageService.setMessageRead(messageDetail);
 		
+	}
+
+	@Override
+	protected void setPageTitle() {
+		// TODO Auto-generated method stub
 	}
 
 }

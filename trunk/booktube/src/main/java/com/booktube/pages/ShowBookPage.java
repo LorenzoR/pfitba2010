@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
@@ -35,6 +36,9 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.value.ValueMap;
 import org.wicketstuff.facebook.plugins.Comments;
+import org.wicketstuff.facebook.plugins.LikeButton;
+import org.wicketstuff.facebook.plugins.LikeButton.LikeButtonAction;
+import org.wicketstuff.facebook.plugins.LikeButton.LikeButtonLayoutStyle;
 import org.wicketstuff.twitter.TweetButton;
 
 import com.booktube.WiaSession;
@@ -56,7 +60,8 @@ public class ShowBookPage extends BasePage {
 	/** backwards nav page */
 	// private final Page backPage;
 	
-	private User user;
+	private final User user;
+	private final Book book;
 
 	public ShowBookPage(PageParameters pageParameters) {
 
@@ -65,12 +70,14 @@ public class ShowBookPage extends BasePage {
 		
 		user = WiaSession.get().getLoggedInUser();
 
-		final Book book = bookService.getBook(bookId);
+		book = bookService.getBook(bookId);
 		
 		final WebMarkupContainer parent = new WebMarkupContainer("bookDetails");
 		parent.setOutputMarkupId(true);
 		add(parent);
 
+		String newTitle = "Booktube - " + book.getTitle() + " by " + book.getAuthor(); 
+		super.get("pageTitle").setDefaultModelObject(newTitle);
 		
 		CompoundPropertyModel<Book> model = new CompoundPropertyModel<Book>(book);
 		parent.setDefaultModel(model);
@@ -143,6 +150,15 @@ public class ShowBookPage extends BasePage {
 		final TweetButton tweetButton = new TweetButton("tweetButton", twitterUrl, text, via);
 	
 		parent.add(tweetButton);
+		
+		final LikeButton likeButton = new LikeButton("likeButton", url);
+		likeButton.setLayoutStyle(LikeButtonLayoutStyle.BUTTON_COUNT);
+		likeButton.setAction(LikeButtonAction.LIKE);
+		parent.add(likeButton);
+		
+		//Label googlePlusOne = new Label("plusone");
+		//googlePlusOne.add(new AttributeModifier("href", true, new Model(url)));
+		//parent.add(googlePlusOne);
 
 	}
 
@@ -290,6 +306,12 @@ public class ShowBookPage extends BasePage {
 	 */
 	public Boolean getHasVoted() {
 		return hasVoted;
+	}
+
+	@Override
+	protected void setPageTitle() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

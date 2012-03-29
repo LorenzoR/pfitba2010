@@ -12,6 +12,8 @@ import java.util.Random;
 
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -30,9 +32,11 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
 import org.wicketstuff.facebook.FacebookSdk;
+import org.wicketstuff.facebook.plugins.LikeBox;
 import org.wicketstuff.facebook.plugins.LikeButton;
 import org.wicketstuff.facebook.plugins.LikeButton.LikeButtonAction;
 import org.wicketstuff.facebook.plugins.LikeButton.LikeButtonLayoutStyle;
@@ -59,7 +63,9 @@ public abstract class BasePage extends WebPage {
 	private final int AUTHOR_SELECTED = 2;
 	private final int RATING_SELECTED = 3;
 	private final int TAG_SELECTED = 4;
-
+	
+	protected abstract void setPageTitle();
+	
 	public BasePage() {
 
 		// WebMarkupContainer group = new WebMarkupContainer("loginContainer");
@@ -197,13 +203,21 @@ public abstract class BasePage extends WebPage {
 		// add(group);
 		// group.setVisible(false);
 
+		// final String url = RequestCycle.get().getUrlRenderer().renderFullUrl(
+		// Url.parse(urlFor(ShowBookPage.class,null).toString()));
+
+		add(new Label("pageTitle", "Booktube"));
+
 		add(new FacebookSdk("fbRoot"));
 
 		final IModel<String> url = Model.of("http://localhost:8080");
-		final LikeButton likeButton = new LikeButton("likeButton", url);
-		likeButton.setLayoutStyle(LikeButtonLayoutStyle.BUTTON_COUNT);
-		likeButton.setAction(LikeButtonAction.LIKE);
-		add(likeButton);
+		// final LikeBox likeBox = new LikeBox("likeBox",
+		// Model.of("https://www.facebook.com/apps/application.php?id=142662635778399"));
+		// add(likeBox);
+		// final LikeButton likeButton = new LikeButton("likeButton", url);
+		// likeButton.setLayoutStyle(LikeButtonLayoutStyle.BUTTON_COUNT);
+		// likeButton.setAction(LikeButtonAction.LIKE);
+		// add(likeButton);
 
 		add(new Label("footer",
 				"Ayuda | Acerca de | Contacto | Términos y Condiciones"));
@@ -261,6 +275,8 @@ public abstract class BasePage extends WebPage {
 			// WiaSession.get().getUser().getUsername()));
 			logoutLink.setVisible(false);
 		}
+		
+		setPageTitle();
 
 	}
 
@@ -506,45 +522,6 @@ public abstract class BasePage extends WebPage {
 		});
 
 		return form;
-	}
-
-	// must declare hash map because meta data must be serializable
-	private MetaDataKey<HashMap<String, PageIdVersion>> lastPageIdVersionKey = new MetaDataKey<HashMap<String, PageIdVersion>>() {
-	};
-
-	@Override
-	protected void onBeforeRender() {
-		// storeCurrentPage();
-		super.onBeforeRender();
-	}
-
-	/*
-	 * private void storeCurrentPage() { PageIdVersion pageIdVersion = new
-	 * PageIdVersion(); pageIdVersion.id = getNumericId(); pageIdVersion.version
-	 * = getVersions() - 1;
-	 * 
-	 * IPageMap pageMap = getPageMap(); HashMap<String, PageIdVersion>
-	 * lastPageMap = getSession().getMetaData( lastPageIdVersionKey); if
-	 * (lastPageMap == null) { lastPageMap = new HashMap<String,
-	 * PageIdVersion>(); getSession().setMetaData(lastPageIdVersionKey,
-	 * lastPageMap); } PageIdVersion current =
-	 * lastPageMap.get(pageMap.getName());
-	 * 
-	 * if (current != null) { if (current.equals(pageIdVersion)) { // refresh of
-	 * current page return; } pageIdVersion.last = current; current.last = null;
-	 * } lastPageMap.put(pageMap.getName(), pageIdVersion); }
-	 */
-	/*
-	 * public void goToLastPage() { HashMap<String, PageIdVersion> lastPageMap =
-	 * getSession().getMetaData( lastPageIdVersionKey); PageIdVersion
-	 * pageIdVersion = lastPageMap.get(getPageMap().getName()).last; Page page =
-	 * getPageMap().get(pageIdVersion.id, pageIdVersion.version);
-	 * setResponsePage(page); }
-	 */
-	class PageIdVersion {
-		public int id;
-		public int version;
-		public PageIdVersion last;
 	}
 
 }

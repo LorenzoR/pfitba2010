@@ -36,13 +36,14 @@ public class EditWriterPage extends BasePage {
 	// private final Page backPage;
 
 	private List<User> users = userService.getAllUsers(0, Integer.MAX_VALUE);
-
+	private final User user;
+	
 	public EditWriterPage(Long userId, final WebPage backPage) {
 
 		// this.backPage = backPage;
 		//Integer bookId = book.getId();
 
-		final User user = userService.getUser(userId);
+		user = userService.getUser(userId);
 
 		if (user == null) {
 			setResponsePage(HomePage.class);
@@ -140,6 +141,13 @@ public class EditWriterPage extends BasePage {
 		});
 
 		return form;
+	}
+
+	@Override
+	protected void setPageTitle() {
+		// TODO Auto-generated method stub
+		String newTitle = "Booktube - Edit " + user.getUsername(); 
+		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 
 }
