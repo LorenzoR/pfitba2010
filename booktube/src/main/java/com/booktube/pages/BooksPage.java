@@ -256,4 +256,11 @@ public class BooksPage extends BasePage {
 		}
 	}
 
+	@Override
+	protected void setPageTitle() {
+		// TODO Auto-generated method stub
+		String newTitle = "Booktube - Books"; 
+		super.get("pageTitle").setDefaultModelObject(newTitle);
+	}
+
 }

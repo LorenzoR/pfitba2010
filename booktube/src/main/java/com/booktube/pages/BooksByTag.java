@@ -144,4 +144,10 @@ public class BooksByTag extends BasePage {
 		}
 	}
 
+	@Override
+	protected void setPageTitle() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

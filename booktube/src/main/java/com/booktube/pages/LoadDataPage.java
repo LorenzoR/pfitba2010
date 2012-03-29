@@ -69,4 +69,11 @@ public class LoadDataPage extends BasePage {
 		bookService.insertBook(book);
 	}
 
+	@Override
+	protected void setPageTitle() {
+		// TODO Auto-generated method stub
+		String newTitle = "Booktube - Load Data"; 
+		super.get("pageTitle").setDefaultModelObject(newTitle);
+	}
+
 }

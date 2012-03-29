@@ -107,4 +107,9 @@ public class AutoCompletePage extends BasePage
             }
         });
     }
+	@Override
+	protected void setPageTitle() {
+		// TODO Auto-generated method stub
+		
+	}
 }

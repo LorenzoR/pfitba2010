@@ -139,5 +139,12 @@ public class MessagesPage extends BasePage {
 		}
 	}
 
+	@Override
+	protected void setPageTitle() {
+		// TODO Auto-generated method stub
+		String newTitle = "Booktube - Messages"; 
+		super.get("pageTitle").setDefaultModelObject(newTitle);
+	}
+
 
 }

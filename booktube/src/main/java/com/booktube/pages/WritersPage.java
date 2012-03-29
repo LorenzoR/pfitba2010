@@ -124,4 +124,11 @@ public class WritersPage extends BasePage {
 		}
 	}
 
+	@Override
+	protected void setPageTitle() {
+		// TODO Auto-generated method stub
+		String newTitle = "Booktube - Writers"; 
+		super.get("pageTitle").setDefaultModelObject(newTitle);
+	}
+
 }

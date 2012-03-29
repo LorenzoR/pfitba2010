@@ -103,4 +103,11 @@ public class RegisterPage extends BasePage {
 
 		return form;
 	}
+
+	@Override
+	protected void setPageTitle() {
+		// TODO Auto-generated method stub
+		String newTitle = "Booktube - Register"; 
+		super.get("pageTitle").setDefaultModelObject(newTitle);
+	}
 }
