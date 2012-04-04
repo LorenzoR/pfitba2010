@@ -56,6 +56,8 @@ public class EditWriterPage extends BasePage {
 
 		//setResponsePage(backPage);
 		//goToLastPage();
+		String newTitle = "Booktube - Edit " + user.getUsername(); 
+		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 
 	private Form editWriterForm(final User writer) {
@@ -146,8 +148,6 @@ public class EditWriterPage extends BasePage {
 	@Override
 	protected void setPageTitle() {
 		// TODO Auto-generated method stub
-		String newTitle = "Booktube - Edit " + user.getUsername(); 
-		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 
 }
