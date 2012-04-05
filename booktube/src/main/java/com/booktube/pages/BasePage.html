@@ -2,72 +2,109 @@
 <html
 	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
 <head>
-<style>
-	div.wicket-aa {
-        font-family: "Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana;
-        font-size: 12px;
-        background-color: white;
-        border-width: 1px;
-        border-color: #cccccc;
-        border-style: solid;
-        padding: 2px;
-        margin: 1px 0 0 0;
-        text-align:left;
-    }
-    div.wicket-aa ul { list-style:none; padding: 2px; margin:0; }
-    div.wicket-aa ul li.selected { background-color: #FFFF00; padding: 2px; margin:0; }
-</style>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
-<meta name="keywords" content="">
-<meta name="description" content="">
-<title wicket:id="pageTitle"></title> 
-<link rel="stylesheet" type="text/css" href="reset-fonts-grids.css">
-<link rel="stylesheet" type="text/css" href="base.css">
+<!-- <style> -->
+<!-- 	div.wicket-aa { -->
+<!--         font-family: "Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana; -->
+<!--         font-size: 12px; -->
+<!--         background-color: white; -->
+<!--         border-width: 1px; -->
+<!--         border-color: #cccccc; -->
+<!--         border-style: solid; -->
+<!--         padding: 2px; -->
+<!--         margin: 1px 0 0 0; -->
+<!--         text-align:left; -->
+<!--     } -->
+<!--     div.wicket-aa ul { list-style:none; padding: 2px; margin:0; } -->
+<!--     div.wicket-aa ul li.selected { background-color: #FFFF00; padding: 2px; margin:0; } -->
+<!-- </style> -->
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
+	<meta name="keywords" content="">
+	<meta name="description" content="">
+	<title wicket:id="pageTitle"></title>
+	
+	<link rel="stylesheet" type="text/css" href="administration.css">
+	<script  src="/js/script.js" type="text/javascript" language="Javascript"></script>
+	 
+	<link rel="stylesheet" type="text/css" href="reset-fonts-grids.css">
+	<link rel="stylesheet" type="text/css" href="base.css">
 </head>
 <body>
 <div id="fb-root" wicket:id="fbRoot"></div>
 
 <div id="doc4" class="yui-t7">
+
+<div id="page" >
+	
 	<div id="hd">
-		<h1><a href="#" wicket:id="title">BookTube</a></h1>
-		<div style="float:left">
-			<a href="#" wicket:id="showBooks">Leer</a> |
-			<a href="#" wicket:id="addBook">Compartir</a> | 
-			<a href="#" wicket:id="showWriters">Escritores</a> |
-			<a href="#" wicket:id="contact">Contáctenos</a> |
-			<a href="#" wicket:id="messagesLink">Mensajes</a> ( <span wicket:id="unreadMessages"></span> ) |
-			<a href="#" wicket:id="loadDataLink">Load Data</a>
-		</div>
-		<div style="text-align:right;">
-		<form wicket:id="login">
-			<p>
-				<span wicket:id="feedback"></span>
-				User: <input type="text" wicket:id="username" value=""/>
-				Pass: <input type="password" wicket:id="password" value=""/>
-				<input type="submit" value="Login" wicket:id="button1" />
-			</p>
-		</form>
-		| <a href="#" wicket:id="registerPage">Registrate</a>
-		<span wicket:id="welcome"></span>
-		<a href="#" wicket:id="logoutLink">Logout</a>
+		<div id="logo">
+			<a href="#" wicket:id="logoLink"><img src="/img/logo_03c.png"></a>			
+		</div>	
 		
+		<div id="loginDiv">	
+			<form wicket:id="login">
+				<p><span wicket:id="feedback"></span></p>		
+					<table>
+						<tr>
+							<td>User:</td><td><input type="text" class="text" wicket:id="username" value=""/></td>		
+							<td><input type="submit" class="loginButton" value="Login" wicket:id="button1" /></td>					
+						</tr>
+						<tr>
+							<td>Pass:</td><td><input class="text" type="password" wicket:id="password" value=""/></td>						
+						</tr>						
+					</table>
+			</form>
+			<div id="registerLabel">
+				<a href="#" wicket:id="registerPage">Registrate</a>
+			</div>
+			<div id="welcomeLogoutLabel">
+				<span wicket:id="welcome" ></span>
+				<a href="#" wicket:id="logoutLink" >Logout</a>
+			</div>			
 		</div>
-		<form wicket:id="searchBook">
-		Buscar Libro: <input type="text" wicket:id="bookTitle" value="" size="30"> &nbsp;
-		<input type="submit" wicket:id="find" value="Buscar"/>
-		<br/>
-		<span wicket:id="group">
-	    	<input wicket:id="author" type="radio" checked="checked"/> Autor
-	    	<input wicket:id="title" type="radio"/> Titulo
-	    	<input wicket:id="rating" type="radio"/> Rating
-	    	<input wicket:id="tag" type="radio"/> Tag
-	  	</span>
-		</form>
-		<div style="float:right; position:relative; border:1px black solid;">
+		
+		
+		<div id="randomQuote">
 			<span wicket:id="randomQuote">Random Quote</span>
 		</div>
-	</div>
-	<hr />
+		
+		<div class="auxDiv"></div>
+				
+		<div id="searchbox" >
+			<form wicket:id="searchBook">
+			Buscar Libro: 
+			<input class="searchField" type="text" wicket:id="bookTitle" value="Buscar"/> &nbsp;
+			<input class="searchButton" type="submit" wicket:id="find" value="Buscar"/>
+			<br/>
+			<span wicket:id="group">
+		    	<input id="ratio" wicket:id="author" type="radio" checked="checked"/> Autor
+		    	<input id="ratio" wicket:id="title" type="radio" /> Titulo
+		    	<input id="ratio" wicket:id="rating" type="radio"/> Rating
+		    	<input id="ratio" wicket:id="tag" type="radio"/> Tag
+		  	</span>
+			</form>
+		</div>
+					
+		<DIV id="mainmenubg"></DIV>
+		<DIV id="mainmenu">
+			<UL>
+				<LI><A href="#" wicket:id="showBooks" >Leer</A></LI>
+				<LI><A href="#" wicket:id="addBook">Compartir</A></LI>
+				<LI><A href="#" wicket:id="showWriters">Escritores</A></LI>
+				<LI><A href="#" wicket:id="contact">Contactenos</A></LI>
+				<LI><A href="#" wicket:id="adminTools" >Administración</A></LI>
+				<LI><a href="#" wicket:id="messagesLink">Mensajes</a> ( <span wicket:id="unreadMessages"></span> )</LI>
+				<LI><a href="#" wicket:id="loadDataLink">Load Data</a></LI>				
+			</UL>
+			<DIV class="clear"></DIV>
+		</DIV>
+		
+			
+	</div>		<!-- id=hd -->
+		
+				
+
+	
+
 	<div id="bd">
 		<div id="yui-main">
 			<div class="yui-b">
@@ -78,10 +115,86 @@
 			<!-- PUT SECONDARY COLUMN CODE HERE -->
 		</div>
 	</div>
-	<hr />
+	
+	
 	<div id="ft">
-		<span wicket:id="footer"></span>
+		<div id="footer">
+			<div id="footermenu" >
+				<a href="#" wicket:id="home">Home</a><SPAN>|</SPAN> 
+				<A class=selected href="#" wicket:id="ayuda" >Ayuda</A><SPAN>|</SPAN>
+				<A href="#" wicket:id="acercaDe" >Acerca de</A><SPAN>|</SPAN>
+				<A href="#" wicket:id="contacto">Contacto</A><SPAN>|</SPAN>
+				<A href="#" wicket:id="terminosYcondiciones">Términos y condiciones</A><SPAN>|</SPAN>
+			</div>
+			<DIV id="logoGrupo"><IMG src="/img/poweredByNosotros_b.png"></DIV>			
+		</div>
+		 
 	</div>
-</div>
+	
+</div> <!-- id=page --> 
+
+
+
+
+
+
+
+<!-- 	<div id="hd"> -->
+<!-- 		<h1><a href="#" wicket:id="title">BookTube</a></h1> -->
+<!-- 		<div style="float:left"> -->
+<!-- 			<a href="#" wicket:id="showBooks">Leer</a> | -->
+<!-- 			<a href="#" wicket:id="addBook">Compartir</a> |  -->
+<!-- 			<a href="#" wicket:id="showWriters">Escritores</a> | -->
+<!-- 			<a href="#" wicket:id="contact">Contáctenos</a> | -->
+<!-- 			<a href="#" wicket:id="messagesLink">Mensajes</a> ( <span wicket:id="unreadMessages"></span> ) | -->
+<!-- 			<a href="#" wicket:id="loadDataLink">Load Data</a> -->
+<!-- 		</div> -->
+<!-- 		<div style="text-align:right;"> -->
+<!-- 		<form wicket:id="login"> -->
+<!-- 			<p> -->
+<!-- 				<span wicket:id="feedback"></span> -->
+<!-- 				User: <input type="text" wicket:id="username" value=""/> -->
+<!-- 				Pass: <input type="password" wicket:id="password" value=""/> -->
+<!-- 				<input type="submit" value="Login" wicket:id="button1" /> -->
+<!-- 			</p> -->
+<!-- 		</form> -->
+<!-- 		| <a href="#" wicket:id="registerPage">Registrate</a> -->
+<!-- 		<span wicket:id="welcome"></span> -->
+<!-- 		<a href="#" wicket:id="logoutLink">Logout</a> -->
+		
+<!-- 		</div> -->
+<!-- 		<form wicket:id="searchBook"> -->
+<!-- 		Buscar Libro: <input type="text" wicket:id="bookTitle" value="" size="30"> &nbsp; -->
+<!-- 		<input type="submit" wicket:id="find" value="Buscar"/> -->
+<!-- 		<br/> -->
+<!-- 		<span wicket:id="group"> -->
+<!-- 	    	<input wicket:id="author" type="radio" checked="checked"/> Autor -->
+<!-- 	    	<input wicket:id="title" type="radio"/> Titulo -->
+<!-- 	    	<input wicket:id="rating" type="radio"/> Rating -->
+<!-- 	    	<input wicket:id="tag" type="radio"/> Tag -->
+<!-- 	  	</span> -->
+<!-- 		</form> -->
+<!-- 		<div style="float:right; position:relative; border:1px black solid;"> -->
+<!-- 			<span wicket:id="randomQuote">Random Quote</span> -->
+<!-- 		</div> -->
+<!-- 	</div> -->
+<!-- 	<hr /> -->
+<!-- 	<div id="bd"> -->
+<!-- 		<div id="yui-main"> -->
+<!-- 			<div class="yui-b"> -->
+<!-- 				<wicket:child /> -->
+<!-- 			</div> -->
+<!-- 		</div> -->
+<!-- 		<div class="yui-b"> -->
+<!-- 			PUT SECONDARY COLUMN CODE HERE -->
+<!-- 		</div> -->
+<!-- 	</div> -->
+<!-- 	<hr /> -->
+<!-- 	<div id="ft"> -->
+<!-- 		<span wicket:id="footer"></span> -->
+<!-- 	</div> -->
+
+
+</div>     <!--  class="yui-t7"   -->
 </body>
 </html>

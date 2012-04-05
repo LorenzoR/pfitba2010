@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<head>
+<!-- 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> -->	 
+	<title>Left Menu Panel</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<wicket:head>	
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<wicket:link>
+			<link href="LeftMenuPanel.css" rel="stylesheet"/>			 
+		</wicket:link>
+	</wicket:head>
+</head>
+
+<body>
+	<wicket:panel>
+<!-- 		<h3 class="here" wicket:id="panelTitle"></h3> -->
+		<DIV class="leftBar">
+			<DIV class=menu>		
+				<DIV class=title>
+					<DIV class=shadow>Opciones</DIV>
+					<DIV class=glare>Opciones</DIV>
+					<DIV class=face>Opciones</DIV>
+					<DIV class=clear></DIV>
+				</DIV>
+
+				<UL>
+					<LI><A title=Usuarios href="#" wicket:id="usersAdministrationLink" >Administraci&oacute;n de Usuarios</A></LI>
+					<LI><A title=Trabajos href="#" wicket:id="worksAdministrationLink" >Administraci&oacute;n de Trabajos</A></LI>
+					<LI><A title=Mensajes href="#" wicket:id="messagesAdministrationLink" >Administraci&oacute;n de Mensajes</A></LI>
+					<LI><A title=Campañas href="#" wicket:id="campaignsAdministrationLink" >Administraci&oacute;n de Campa&ntilde;as</A></LI>
+					<LI><A title=Reportes href="#" wicket:id="reportsAdministrationLink" >Administraci&oacute;n de Reportes</A></LI>
+				</UL>
+			</DIV>  <!--class=menu -->
+			<IMG class=shadow src="/img/pagebg.png">
+		</DIV>	 <!--  class="leftBar" -->				
+		<DIV class="clear"></DIV>				
+		
+	</wicket:panel>
+</body>
+
+</html>

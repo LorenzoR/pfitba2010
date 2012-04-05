@@ -1,0 +1,253 @@
+/*ESTILO GENERAL*/
+
+HTML {
+	OVERFLOW-Y: scroll
+}
+
+BODY {
+	MARGIN: 0px; FONT-FAMILY: "Lucida Grande", "Lucida Sans Unicode", "Segoe UI", Helvetica, Sans-serif; BACKGROUND: url(/img/pagebg.jpg) #ffffff repeat-x; COLOR: #666666;
+	width:930px; margin: 0px auto; text-align: center; font-size: 0.8em;
+}/*background:#EAEAEA url(img/pagebg.jpg) repeat-y top center*/
+
+A {
+	OUTLINE-STYLE: none; OUTLINE-COLOR: invert; OUTLINE-WIDTH: medium; COLOR: #00688a
+}
+
+hr{padding:0 0 0 0}
+
+div.auxDiv{clear:both}
+DIV.clear {	HEIGHT: 0px; CLEAR: both; FONT-SIZE: 0px }
+
+INPUT:focus {
+	OUTLINE-STYLE: none; OUTLINE-COLOR: invert; OUTLINE-WIDTH: medium
+}
+
+input[type="text"], input[type="password"], textarea {	
+	font-size:11px;
+	color:#777777;
+	margin: 0px;  
+    padding: 3px 4px 3px 4px;  
+    border: solid 1px #E5E5E5;  
+    outline: 0;    
+    background: #FFFFFF url('/img/bg_form.png') left top repeat-x;  
+    background: -webkit-gradient(linear, left top, left 14, from(#FFFFFF), color-stop(4%, #EEEEEE), to(#FFFFFF));  
+    background: -moz-linear-gradient(top, #FFFFFF, #EEEEEE 0px, #FFFFFF 14px);  
+    box-shadow: rgba(0,0,0, 0.1) 0px 0px 8px;  
+    -moz-box-shadow: rgba(0,0,0, 0.1) 0px 0px 8px;  
+    -webkit-box-shadow: rgba(0,0,0, 0.1) 0px 0px 8px;  
+    -moz-border-radius: 3px;  
+    -webkit-border-radius: 3px;
+}
+
+input[type="submit"]{	  
+    width: auto;
+    text-align:center;
+    font-size: 10px;  
+    color: #FFFFFF; 
+    padding: 0px;
+    margin:0px;       
+    margin-left:5px;
+    border: 0; 
+    background: #168eb5;
+    -moz-border-radius: 5px;  
+    -webkit-border-radius: 5px;
+}
+
+input:hover, textarea:hover,  
+input:focus, textarea:focus {  
+	border:solid 2px;
+    border-color: #C9C9C9;  
+    -webkit-box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 8px;  
+}
+
+
+/* Para efectos de brillo y sombra */
+
+DIV.face {
+	POSITION: relative; WIDTH: 100%; HEIGHT: 100%; text-shadow: 2px 1px 2px #E0E0E0
+}
+DIV.glare {
+	Z-INDEX: 1; POSITION: absolute; FILTER: alpha(opacity:35); WIDTH: 100%; HEIGHT: 15px; COLOR: white; OVERFLOW: hidden; opacity: 0.35; -moz-opacity: 0.35; -webkit-opacity: 0.35
+}
+DIV.shadow {
+	POSITION: absolute; FILTER: alpha(opacity:10); MARGIN-TOP: 1px; MARGIN-LEFT: 1px; opacity: 0; -moz-opacity: 0; -webkit-opacity: 0
+}
+
+
+/* PARA EL HEADER EN TODAS LAS PAGINAS */
+
+DIV#page {
+	POSITION: relative; TEXT-ALIGN: left; WIDTH: 930px; PADDING-TOP: 0px;margin-top:15px; 
+}
+DIV#logo {
+	POSITION: absolute; TOP: 5px; LEFT: 0px
+}
+DIV#logo IMG {
+	position: absolute; top:0px; left:20px;
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; WIDTH: 170px; HEIGHT: auto; BORDER-TOP: 0px; BORDER-RIGHT: 0px;padding: 0px;z-index: 40000;
+}
+
+#hd{width:930px; height:200px; margin:0 auto;}
+
+div#loginDiv{width:100px; height:60px; padding-top:0px; margin-top:0px;  
+	POSITION: absolute; TOP: 34px; LEFT: 760px; z-index: 4000	}
+	
+div#loginDiv FORM{font-size: x-small;}
+div#loginDiv FORM TABLE TR TD{margin: 0px; padding:0px}
+div#loginDiv FORM INPUT.loginButton{width:40px; height:18px;}
+div#loginDiv FORM INPUT.text{width:60px; height:10px;font-size:10px; margin-bottom:4px }
+
+div#loginDiv div#registerLabel{font-size: x-small;}
+div#loginDiv div#welcomeLogoutLabel{font-size: 12px; width:290px; position:absolute; top:25px;left:0px}
+
+div#randomQuote{background-color: #fff; height:60px; width:640px;
+	POSITION: absolute; TOP: -10px; LEFT: 230px
+}	
+
+DIV#searchbox {
+	POSITION: absolute; WIDTH: 367px; HEIGHT: 56px; TOP: 50px; LEFT: 280px;
+}
+DIV#searchbox FORM INPUT.searchField { width:150px; height:12px;
+/*width:205px; height:31px; background-image:url(/img/input3.gif);border;0px*/
+/* 	background-image:url(/img/searchbox.png); background-repeat:no-repeat; */
+/*border: 0px;*/
+}
+
+DIV#searchbox FORM INPUT.searchButton{width:40px; height:22px;}
+
+DIV#mainmenubg {
+	POSITION: absolute; WIDTH: 930px; BACKGROUND: url(/img/mainmenubg.png); HEIGHT: 41px; TOP: 101px; 
+}
+DIV#mainmenu {
+	Z-INDEX: 1000; POSITION: absolute; WIDTH: 930px; HEIGHT: 41px; TOP: 101px; LEFT:100px; 
+}
+DIV#mainmenu UL {
+	POSITION: relative; TEXT-ALIGN: center; PADDING-BOTTOM: 0px; LIST-STYLE-TYPE: none; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FLOAT: left; CLEAR: left; LIST-STYLE-IMAGE: none; PADDING-TOP: 0px; LEFT: 50%
+}
+DIV#mainmenu UL LI {
+	Z-INDEX: 1; POSITION: relative; PADDING-BOTTOM: 0px; TEXT-TRANSFORM: uppercase; MARGIN: 15px 17px 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; DISPLAY: block; FLOAT: left; LETTER-SPACING: 1px; COLOR: #666; FONT-SIZE: 11px; RIGHT: 50%; PADDING-TOP: 0px
+}
+DIV#mainmenu UL LI A {
+	MIN-WIDTH: 30px; DISPLAY: block; HEIGHT: 24px; COLOR: #666; TEXT-DECORATION: none
+}
+DIV#mainmenu UL LI A:hover {
+	BACKGROUND: url(/img/mainmenuhover.png) no-repeat 50% 8px; HEIGHT: 42px; COLOR: #ef9203
+}
+DIV#mainmenu UL LI A.selected {
+	BACKGROUND: url(/img/mainmenusel.png) no-repeat 50% 8px; HEIGHT: 42px; COLOR: #000
+}
+DIV#mainmenu UL LI A.selected:hover {
+	BACKGROUND: url(/img/mainmenuhover.png) no-repeat 50% 8px; HEIGHT: 42px; COLOR: #ef9203
+}
+
+
+
+
+/* ESTILO PARA LA PAGINA DE ADMINISTRACION */
+
+div.adminContainer { 
+  font-family:arial; 
+  font-size: 10pt; 
+  position: relative;
+  width: 900px;
+  margin: 0px auto;  
+    
+}
+
+
+div.adminContainer div.leftPaneDiv{		
+	width: 265px;
+	float: left;
+}
+
+div.adminContainer div.rightPaneDiv{
+	background-color: #ffffff;
+	color: #0000;
+	width: 635px;
+	float: right;
+	margin: 0px auto;
+} 
+
+div.adminContainer div.rightPaneDiv div.rightPaneContentDiv div.windowFrame{
+	border:1px solid #ccc; 
+	background:white; 
+	text-align:center;
+}
+
+
+
+/* Para BREAD SCRUMS o Navigation Path */
+
+DIV#navpath {
+	LINE-HEIGHT: 18px; PADDING-TOP: 1px
+}
+DIV#navpath SPAN {
+	PADDING-BOTTOM: 0px; PADDING-LEFT: 12px; PADDING-RIGHT: 1px; BACKGROUND: url(/img/pathsep.png) no-repeat 4px 50%; COLOR: #ccc; FONT-SIZE: 11px; PADDING-TOP: 0px
+}
+DIV#navpath SPAN A {
+	PADDING-BOTTOM: 1px; PADDING-LEFT: 4px; PADDING-RIGHT: 4px; COLOR: #666; TEXT-DECORATION: none; PADDING-TOP: 1px
+}
+DIV#navpath SPAN A:hover {
+	BACKGROUND: #e6e6e6; COLOR: #00688a
+}
+
+
+/* Para el contenido principal, que aparece a la derecha */
+
+DIV.children {
+	LINE-HEIGHT: 20px; MIN-HEIGHT: 20px; COLOR: #666666; FONT-SIZE: 13px
+}
+DIV.children DIV.hidden.item {
+	FILTER: alpha(opacity=30); opacity: 0.3
+}
+DIV.children DIV.item {
+	POSITION: relative;
+	MIN-HEIGHT: 70px; PADDING-LEFT: 130px; MARGIN-BOTTOM: 0px; padding-bottom:0px
+}
+DIV.children DIV.item DIV.image {
+	WIDTH: 60px; MARGIN-LEFT: -70px; margin-top:-5px;
+}
+DIV.children DIV.item DIV.image IMG {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; BORDER-TOP: 0px; BORDER-RIGHT: 0px;
+	width: 65px;
+}
+DIV.children DIV.item DIV.title A {
+	TEXT-DECORATION: none
+}
+DIV.children DIV.item DIV.title A:hover {
+	TEXT-DECORATION: underline
+}
+DIV.children DIV.kicker {
+	POSITION: static
+}
+DIV.details.children DIV.image {
+	POSITION: absolute
+}
+
+
+/* FOOTER */
+
+#footer {
+	PADDING-BOTTOM: 30px; MARGIN: 0px; BACKGROUND: url(/img/pagebg.png) no-repeat 0px 1px; HEIGHT: 25px; BORDER-TOP: #999 1px solid; clear:both;
+}
+#footer DIV#footermenu {
+	MARGIN-TOP: 25px; FLOAT: left; COLOR: #a0a0a0; FONT-SIZE: 11px
+}
+#footer DIV#footermenu SPAN {
+	MARGIN-LEFT: 8px; MARGIN-RIGHT: 8px
+}
+#footer DIV#footermenu A {
+	COLOR: #a0a0a0; TEXT-DECORATION: none
+}
+#footer DIV#footermenu DIV A:hover {
+	COLOR: #ef9304
+}
+#footer DIV#footermenu A.selected {
+	COLOR: #000000
+}
+#footer DIV#logoGrupo {
+	FLOAT: right; COLOR: #666666; FONT-SIZE: 9px; padding-top:24px
+}
+#footer DIV#vsm IMG {
+	BORDER-BOTTOM: 0px; POSITION: relative; BORDER-LEFT: 0px; WIDTH: 182px; HEIGHT: 20px; BORDER-TOP: 0px; TOP: 28px; BORDER-RIGHT: 0px
+}
