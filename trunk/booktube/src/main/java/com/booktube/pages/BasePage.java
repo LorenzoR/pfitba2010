@@ -207,6 +207,8 @@ public abstract class BasePage extends WebPage {
 		// Url.parse(urlFor(ShowBookPage.class,null).toString()));
 
 		add(new Label("pageTitle", "Booktube"));
+		// LINK PARA EL LOGO
+		add(new BookmarkablePageLink<String>("logoLink", HomePage.class));
 
 		add(new FacebookSdk("fbRoot"));
 
@@ -219,10 +221,23 @@ public abstract class BasePage extends WebPage {
 		// likeButton.setAction(LikeButtonAction.LIKE);
 		// add(likeButton);
 
-		add(new Label("footer",
-				"Ayuda | Acerca de | Contacto | Términos y Condiciones"));
+		// LINKS EN EL FOOTER
+//		add(new Label("footer",
+//		"Ayuda | Acerca de | Contacto | Términos y Condiciones"));
+		MenuLink homeLink = new MenuLink("home", HomePage.class);
+		add(homeLink);		
+		MenuLink helpLink = new MenuLink("ayuda", HelpPage.class);
+		add(helpLink);		
+		MenuLink aboutLink = new MenuLink("acercaDe", AboutPage.class);
+		add(aboutLink);				
+		MenuLink simpleContactLink = new MenuLink("contacto", SimpleContactPage.class);
+		add(simpleContactLink);		
+		MenuLink termsAndConditionsLink = new MenuLink("terminosYcondiciones", TermsAndConditionsPage.class);
+		add(termsAndConditionsLink);
 
-		add(new BookmarkablePageLink<String>("title", HomePage.class));
+		//Robert: Ya no es necesario
+		//add(new BookmarkablePageLink<String>("title", HomePage.class));
+		
 		add(new BookmarkablePageLink<String>("addBook", AddBookPage.class));
 		add(new BookmarkablePageLink<String>("showBooks", BooksPage.class));
 		/*
@@ -233,6 +248,10 @@ public abstract class BasePage extends WebPage {
 		add(new BookmarkablePageLink<String>("contact", NewContact.class));
 		add(new BookmarkablePageLink<String>("loadDataLink", LoadDataPage.class));
 		add(new BookmarkablePageLink<String>("messagesLink", MessagesPage.class));
+		
+		MenuLink adminLink = new MenuLink("adminTools", AdministrationPage.class);		
+		add(adminLink);
+		
 		BookmarkablePageLink<String> registerLink = new BookmarkablePageLink<String>(
 				"registerPage", RegisterPage.class);
 		add(registerLink);
