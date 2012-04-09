@@ -17,6 +17,9 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 			
 			parent.add( new Label("pageTitle", "Campaigns Administration Page"));
 			
+			String newTitle = "Booktube - Campaings Administration"; 
+			super.get("pageTitle").setDefaultModelObject(newTitle);
+			
 	}
 
 }

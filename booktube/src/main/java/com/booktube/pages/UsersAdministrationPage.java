@@ -17,6 +17,9 @@ public class UsersAdministrationPage extends AdministrationPage{
 			
 			parent.add( new Label("pageTitle", "Users Administration Page"));
 			
+			String newTitle = "Booktube - Users Administration"; 
+			super.get("pageTitle").setDefaultModelObject(newTitle);
+			
 	}
 
 }

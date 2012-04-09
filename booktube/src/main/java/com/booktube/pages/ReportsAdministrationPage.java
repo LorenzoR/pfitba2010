@@ -14,6 +14,8 @@ public class ReportsAdministrationPage extends AdministrationPage{
 			parent.setOutputMarkupId(true);
 			add(parent);
 			
+			String newTitle = "Booktube - Reports Administration"; 
+			super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 
 }

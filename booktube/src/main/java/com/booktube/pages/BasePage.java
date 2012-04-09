@@ -257,8 +257,8 @@ public abstract class BasePage extends WebPage {
 		add(registerLink);
 
 		if (WiaSession.get().isAuthenticated()) {
-			add(new Label("unreadMessages", Integer.toString(messageService
-					.countUnreadMessagesTo(WiaSession.get().getLoggedInUser()))));
+			add(new Label("unreadMessages", "( " + Integer.toString(messageService
+					.countUnreadMessagesTo(WiaSession.get().getLoggedInUser())) + " )"));
 		} else {
 			add(new Label("unreadMessages", " "));
 		}
@@ -491,6 +491,8 @@ public abstract class BasePage extends WebPage {
 				new Model<String>(""));
 		final PasswordTextField password = new PasswordTextField("password",
 				new Model<String>(""));
+		
+		username.setRequired(true);
 
 		/*
 		 * final Label loginMsg = new Label("loginMsg",

@@ -4,7 +4,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 
-public class SimpleContactPage extends SiteBasePage {	
+public class SimpleContactPage extends BasePage {	
 	private static final long serialVersionUID = 8580310589800311892L;
 	public Page backPage;
 
@@ -14,6 +14,12 @@ public class SimpleContactPage extends SiteBasePage {
 		add(parent);
 		
 		parent.add(new Label("aContent", "Aca va el contenido de la Simple Contact Page."));
+	}
+
+	@Override
+	protected void setPageTitle() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

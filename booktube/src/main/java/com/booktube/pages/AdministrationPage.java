@@ -1,6 +1,7 @@
 package com.booktube.pages;
 
 import org.apache.wicket.Page;
+import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -27,13 +28,16 @@ public class AdministrationPage extends BasePage {
 	//public AdministrationPage(final PageParameters parameters) {
 	public AdministrationPage() {
 			super();
-			final WebMarkupContainer parent = new WebMarkupContainer("adminContainer"){			
-				private static final long serialVersionUID = -3147289158931550124L;
-
-				public boolean isTransparentResolver(){
-					return true;
-				}
-			};
+//			final WebMarkupContainer parent2 = new WebMarkupContainer("adminContainer"){			
+//				private static final long serialVersionUID = -3147289158931550124L;
+//
+//				public boolean isTransparentResolver(){
+//					return true;
+//				}
+//			};
+			
+			final TransparentWebMarkupContainer parent = new TransparentWebMarkupContainer("adminContainer");
+			
 			parent.setOutputMarkupId(true);
 			add(parent);
 			
@@ -48,7 +52,8 @@ public class AdministrationPage extends BasePage {
 	@Override
 	protected void setPageTitle() {
 		// TODO Auto-generated method stub
-		
+		String newTitle = "Booktube - Administracion"; 
+		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 		
 }
