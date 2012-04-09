@@ -19,7 +19,8 @@ public class HelpPage extends BasePage {
 	@Override
 	protected void setPageTitle() {
 		// TODO Auto-generated method stub
-		
+		String newTitle = "Booktube - Help Page"; 
+		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 	
 }

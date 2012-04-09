@@ -17,6 +17,9 @@ public class MessagesAdministrationPage extends AdministrationPage{
 			
 			parent.add( new Label("pageTitle", "Messages Administration Page"));
 			
+			String newTitle = "Booktube - Messages Administration"; 
+			super.get("pageTitle").setDefaultModelObject(newTitle);
+			
 	}
 
 }

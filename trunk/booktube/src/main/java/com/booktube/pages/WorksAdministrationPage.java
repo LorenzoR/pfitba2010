@@ -17,6 +17,9 @@ public class WorksAdministrationPage extends AdministrationPage{
 			
 			parent.add( new Label("pageTitle", "Works Administration Page"));
 			
+			String newTitle = "Booktube - Works Administration"; 
+			super.get("pageTitle").setDefaultModelObject(newTitle);
+			
 	}
 
 }

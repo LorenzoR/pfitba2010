@@ -91,13 +91,13 @@ public class RegisterPage extends BasePage {
 				System.out.println("Firstname: " + firstname);
 				System.out.println("Lastname: " + lastname);
 
-				target.addComponent(parent);
+				target.add(parent);
 				setResponsePage(HomePage.class);
 
 			}
 
 			protected void onError(AjaxRequestTarget target, Form<?> form) {
-				target.addComponent(feedback);
+				target.add(feedback);
 			}
 		});
 

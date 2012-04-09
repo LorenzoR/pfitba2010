@@ -156,9 +156,9 @@ public class ShowBookPage extends BasePage {
 		likeButton.setAction(LikeButtonAction.LIKE);
 		parent.add(likeButton);
 		
-		Label googlePlusOne = new Label("plusone");
-		googlePlusOne.add(new AttributeModifier("href", true, new Model("http://localhost:8080")));
-		parent.add(googlePlusOne);
+		//Label googlePlusOne = new Label("plusone");
+		//googlePlusOne.add(new AttributeModifier("href", true, new Model("http://localhost:8080")));
+		//parent.add(googlePlusOne);
 
 	}
 
