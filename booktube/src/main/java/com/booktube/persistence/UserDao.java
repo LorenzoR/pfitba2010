@@ -6,6 +6,7 @@ import java.util.List;
 import com.booktube.model.User;
 
 public interface UserDao {
+	public boolean usernameExists(String username);
     public List<User> getAllUsers(int first, int count);
     public User getUser(Long id);
     public User getUser(String username);

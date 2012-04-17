@@ -13,6 +13,10 @@ public class UserServiceImpl implements UserService {
         //this.dao = new UserMySQLDBdao();
     }
 
+    public boolean usernameExists(String username) {
+    	return itemDao.usernameExists(username);
+    }
+    
     public List<User> getAllUsers(int first, int count) {
         return itemDao.getAllUsers(first, count);
     }

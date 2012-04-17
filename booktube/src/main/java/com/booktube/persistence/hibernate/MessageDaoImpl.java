@@ -39,6 +39,11 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements Mes
 		getSession().flush();
 	}
 
+	public List<Message> getAllMessages(int first, int count) {
+		return (List<Message>) getSession().createCriteria(Message.class)
+				.setFirstResult(first).setMaxResults(count).list();
+	}
+	
 	public List<Message> getAllMessagesFrom(User sender, int first, int count) {
 		return (List<Message>) getSession().createCriteria(Message.class)
 		.add(Restrictions.eq("sender", sender))
@@ -54,6 +59,12 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements Mes
 		return (List<Message>) criteria.list();
 	}
 
+	public int countMessages() {
+		Criteria criteria = getSession().createCriteria(Message.class);
+		criteria.setProjection(Projections.rowCount());
+		return ((Number) criteria.uniqueResult()).intValue();
+	}
+	
 	public int countMessagesFrom(User sender) {
 		Criteria criteria = getSession().createCriteria(Message.class)
 				.add(Restrictions.eq("sender", sender));

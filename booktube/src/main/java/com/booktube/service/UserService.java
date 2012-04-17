@@ -6,6 +6,7 @@ import java.util.List;
 import com.booktube.model.User;
 
 public interface UserService {
+	public boolean usernameExists(String username);
     public List<User> getAllUsers(int first, int count);
     public void updateUser(User user);
     public void deleteUser(User user);

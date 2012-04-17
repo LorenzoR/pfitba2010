@@ -35,6 +35,11 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
+import org.odlabs.wiquery.core.events.Event;
+import org.odlabs.wiquery.core.events.MouseEvent;
+import org.odlabs.wiquery.core.events.WiQueryEventBehavior;
+import org.odlabs.wiquery.core.javascript.JsScope;
+import org.odlabs.wiquery.ui.dialog.Dialog;
 import org.wicketstuff.facebook.FacebookSdk;
 import org.wicketstuff.facebook.plugins.LikeBox;
 import org.wicketstuff.facebook.plugins.LikeButton;
@@ -63,11 +68,15 @@ public abstract class BasePage extends WebPage {
 	private final int AUTHOR_SELECTED = 2;
 	private final int RATING_SELECTED = 3;
 	private final int TAG_SELECTED = 4;
-	
-	protected abstract void setPageTitle();
-	
-	public BasePage() {
 
+	protected abstract void setPageTitle();
+
+	public BasePage() {
+		
+		System.out.println("USER " + "user" + "EXISTS: " + userService.usernameExists("user"));
+		
+		System.out.println("USER " + "userrrrr" + "EXISTS: " + userService.usernameExists("userrrrr"));
+		
 		// WebMarkupContainer group = new WebMarkupContainer("loginContainer");
 		if (WiaSession.get().isAuthenticated()) {
 			add(new Label("welcome", "Bienvenido "
@@ -222,22 +231,24 @@ public abstract class BasePage extends WebPage {
 		// add(likeButton);
 
 		// LINKS EN EL FOOTER
-//		add(new Label("footer",
-//		"Ayuda | Acerca de | Contacto | Términos y Condiciones"));
+		// add(new Label("footer",
+		// "Ayuda | Acerca de | Contacto | Términos y Condiciones"));
 		MenuLink homeLink = new MenuLink("home", HomePage.class);
-		add(homeLink);		
+		add(homeLink);
 		MenuLink helpLink = new MenuLink("ayuda", HelpPage.class);
-		add(helpLink);		
+		add(helpLink);
 		MenuLink aboutLink = new MenuLink("acercaDe", AboutPage.class);
-		add(aboutLink);				
-		MenuLink simpleContactLink = new MenuLink("contacto", SimpleContactPage.class);
-		add(simpleContactLink);		
-		MenuLink termsAndConditionsLink = new MenuLink("terminosYcondiciones", TermsAndConditionsPage.class);
+		add(aboutLink);
+		MenuLink simpleContactLink = new MenuLink("contacto",
+				SimpleContactPage.class);
+		add(simpleContactLink);
+		MenuLink termsAndConditionsLink = new MenuLink("terminosYcondiciones",
+				TermsAndConditionsPage.class);
 		add(termsAndConditionsLink);
 
-		//Robert: Ya no es necesario
-		//add(new BookmarkablePageLink<String>("title", HomePage.class));
-		
+		// Robert: Ya no es necesario
+		// add(new BookmarkablePageLink<String>("title", HomePage.class));
+
 		add(new BookmarkablePageLink<String>("addBook", AddBookPage.class));
 		add(new BookmarkablePageLink<String>("showBooks", BooksPage.class));
 		/*
@@ -248,17 +259,20 @@ public abstract class BasePage extends WebPage {
 		add(new BookmarkablePageLink<String>("contact", NewContact.class));
 		add(new BookmarkablePageLink<String>("loadDataLink", LoadDataPage.class));
 		add(new BookmarkablePageLink<String>("messagesLink", MessagesPage.class));
-		
-		MenuLink adminLink = new MenuLink("adminTools", AdministrationPage.class);		
+
+		MenuLink adminLink = new MenuLink("adminTools",
+				AdministrationPage.class);
 		add(adminLink);
-		
+
 		BookmarkablePageLink<String> registerLink = new BookmarkablePageLink<String>(
 				"registerPage", RegisterPage.class);
 		add(registerLink);
 
 		if (WiaSession.get().isAuthenticated()) {
-			add(new Label("unreadMessages", "( " + Integer.toString(messageService
-					.countUnreadMessagesTo(WiaSession.get().getLoggedInUser())) + " )"));
+			add(new Label("unreadMessages", "( "
+					+ Integer.toString(messageService
+							.countUnreadMessagesTo(WiaSession.get()
+									.getLoggedInUser())) + " )"));
 		} else {
 			add(new Label("unreadMessages", " "));
 		}
@@ -294,7 +308,7 @@ public abstract class BasePage extends WebPage {
 			// WiaSession.get().getUser().getUsername()));
 			logoutLink.setVisible(false);
 		}
-		
+
 		setPageTitle();
 
 	}
@@ -491,7 +505,7 @@ public abstract class BasePage extends WebPage {
 				new Model<String>(""));
 		final PasswordTextField password = new PasswordTextField("password",
 				new Model<String>(""));
-		
+
 		username.setRequired(true);
 
 		/*

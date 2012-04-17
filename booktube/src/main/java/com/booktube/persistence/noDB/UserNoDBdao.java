@@ -105,4 +105,8 @@ public class UserNoDBdao implements UserDao {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	public boolean usernameExists(String username) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
