@@ -15,6 +15,7 @@ import org.hibernate.criterion.Restrictions;
 
 import com.booktube.WicketApplication;
 import com.booktube.model.Book;
+import com.booktube.model.Message;
 import com.booktube.model.User;
 import com.booktube.persistence.UserDao;
 
@@ -24,6 +25,10 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 		super(User.class);
 	}
 
+	public boolean usernameExists(String username) {		
+		return getUser(username) != null;
+	}
+	
 	public List<User> getAllUsers(int first, int count) {
 		List<User> users = (List<User>) getSession().createCriteria(User.class)
 				.setFirstResult(first).setMaxResults(count).list();

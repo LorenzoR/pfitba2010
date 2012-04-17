@@ -45,6 +45,12 @@
 			</snapshots>
 		</repository>
 
+		<repository>
+			<id>wiquery-maven-repo</id>
+			<name>WiQuery repository</name>
+			<url>https://wiquery.googlecode.com/svn/repo/</url>
+		</repository>
+
 	</repositories>
 
 	<dependencies>
@@ -220,6 +226,12 @@
 			<groupId>org.wicketstuff</groupId>
 			<artifactId>wicketstuff-twitter</artifactId>
 			<version>1.5-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.odlabs.wiquery</groupId>
+			<artifactId>wiquery-jquery-ui</artifactId>
+			<version>1.5.4</version>
 		</dependency>
 
 	</dependencies>
