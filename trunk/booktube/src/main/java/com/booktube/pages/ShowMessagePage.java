@@ -25,7 +25,7 @@ public class ShowMessagePage extends BasePage {
 	public ShowMessagePage(final PageParameters pageParameters) {
 		
 		user = WiaSession.get().getLoggedInUser();
-		Integer messageId = pageParameters.get("messageId").toInt();
+		Long messageId = pageParameters.get("messageId").toLong();
 		
 		message = messageService.getMessage(messageId);
 		

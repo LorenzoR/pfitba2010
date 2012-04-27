@@ -25,13 +25,14 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements Mes
 	}
 
 	public void delete(Message message) {
+		System.out.println("Borro mensaje " + message);
 		getSession().delete(message);
 		getSession().flush();
 	}
 
-	public Message getMessage(Integer id) {
+	public Message getMessage(Long id) {
 		return (Message) getSession().getNamedQuery("message.id")
-		.setInteger("id", id).setMaxResults(1).uniqueResult();
+		.setLong("id", id).setMaxResults(1).uniqueResult();
 	}
 
 	public void insert(Message message) {

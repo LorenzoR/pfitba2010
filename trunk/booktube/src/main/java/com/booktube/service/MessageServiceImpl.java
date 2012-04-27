@@ -29,7 +29,7 @@ public class MessageServiceImpl implements MessageService {
 
 	}
 
-	public Message getMessage(Integer id) {
+	public Message getMessage(Long id) {
 		return itemDao.getMessage(id);
 	}
 

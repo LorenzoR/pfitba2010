@@ -33,7 +33,7 @@ public class RegisterPage extends BasePage {
 	@SpringBean
 	UserService userService;
 
-	static Dialog dialog;
+	private static Dialog dialog;
 
 	public RegisterPage() {
 
@@ -62,7 +62,7 @@ public class RegisterPage extends BasePage {
 			}
 		};
 
-		dialog = new Dialog("dialog");
+		dialog = new Dialog("success_dialog");
 //		dialog.setOpenEvent(JsScopeUiEvent.quickScope(new JsStatement().self()
 //				.chain("parents", "'.ui-dialog:first'")
 //				.chain("find", "'.ui-dialog-titlebar-close'").chain("hide")
@@ -153,11 +153,7 @@ public class RegisterPage extends BasePage {
 
 				target.add(parent);
 
-				System.out.println("Muestro dialog");
-				// JsScope.quickScope(dialog.open().render());
 				dialog.open(target);
-
-				// setResponsePage(HomePage.class);
 
 			}
 

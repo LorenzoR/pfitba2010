@@ -31,7 +31,7 @@ import com.booktube.model.User;
 import com.booktube.service.MessageService;
 import com.booktube.service.UserService;
 
-public class ContactsPage extends BasePage {
+public class CampaignsPage extends BasePage {
 
 	@SpringBean
 	MessageService messageService;
@@ -41,14 +41,14 @@ public class ContactsPage extends BasePage {
 	
 	User user;
 	
-	public ContactsPage() {
+	public CampaignsPage() {
 
 		// User user = new User("username", "firstname", "lastname");
 		// userService.insertUser(user);
 		// WicketApplication.instance().getUserService().insertUser(user);
 		// List<User> users = WicketApplication.instance().getUserService()
 		//List<User> users = userService.getAllUsers();
-		final WebMarkupContainer parent = new WebMarkupContainer("messages");
+		final WebMarkupContainer parent = new WebMarkupContainer("campaignsPage");
 		parent.setOutputMarkupId(true);
 		add(parent);
 		

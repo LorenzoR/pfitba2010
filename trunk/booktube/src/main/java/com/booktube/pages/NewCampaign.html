@@ -1,0 +1,60 @@
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<head>
+<title>Books</title>
+</head>
+<body>
+	<wicket:extend>
+		<div wicket:id="newCampaign">
+
+			<h2>Nueva Campaña</h2>
+
+			<ul>
+				<li><a href="#">Por sexo</a></li>
+				<li><a href="#">Por edad</a></li>
+				<li><a href="#">Por interes</a></li>
+			</ul>
+
+			<form wicket:id="form">
+				<p>
+					<select wicket:id="subject">
+						<option value="optionValue">OptionValue</option>
+					</select>
+				</p>
+				<br /> Text:
+				<p>
+					<textarea wicket:id="textArea" cols="60" rows="15"></textarea>
+				</p>
+
+				<span wicket:id="group">
+					<table>
+						<tr>
+							<td valign="top">Select persons</td>
+							<td><input type="checkbox" wicket:id="groupselector" />check/uncheck
+								all <br />
+								<table cellspacing="0" cellpadding="2">
+									<tr>
+										<td><b>Select</b></td>
+										<td><b>First Name</b></td>
+										<td><b>Last Name</b></td>
+									</tr>
+									<tr wicket:id="persons">
+										<td><input type="checkbox" wicket:id="checkbox" /></td>
+										<td><span wicket:id="name">[this is where name
+												will be]</span></td>
+										<td><span wicket:id="lastName">[this is where
+												lastname will be]</span></td>
+									</tr>
+								</table></td>
+						</tr>
+					</table>
+				</span> <input type="button" wicket:id="save" value="Send" />
+			</form>
+
+			<span wicket:id="registerMessage">Register message</span>
+
+		</div>
+
+	</wicket:extend>
+</body>
+</html>

@@ -65,8 +65,21 @@ public class ShowBookPage extends BasePage {
 
 	public ShowBookPage(PageParameters pageParameters) {
 
-		final Long bookId = pageParameters.get("book").toLong();
-		final int currentPage = pageParameters.get("currentPage").toInt();
+		if ( pageParameters.get("book").isEmpty() ) {
+			System.out.println("ERRRORRR");
+			System.exit(0);
+		}
+		
+		final int currentPage;
+		
+		if ( pageParameters.get("currentPage").isEmpty() ) {
+			currentPage = 0;
+		}
+		else {
+			currentPage = pageParameters.get("currentPage").toInt();
+		}
+		
+		final Long bookId = pageParameters.get("book").toLong();		
 		
 		user = WiaSession.get().getLoggedInUser();
 
@@ -140,7 +153,7 @@ public class ShowBookPage extends BasePage {
 				   Url.parse(urlFor(ShowBookPage.class,pageParameters).toString()));
 		
 		//final Model<String> url = Model.of(currentURL);
-		final Comments facebookComments = new Comments("facebookComments", url);
+		final Comments facebookComments = new Comments("facebookComments", "http://example.com");
 		parent.add(facebookComments);
 		
 		final IModel<String> twitterUrl = Model.of("https://github.com/tfreier/wicketstuff-core/tree/master/jdk-1.5-parent/twitter-parent");
