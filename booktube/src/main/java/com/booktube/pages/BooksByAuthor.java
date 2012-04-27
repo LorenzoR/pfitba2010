@@ -20,6 +20,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import com.booktube.model.Book;
+import com.booktube.model.BookTag;
 import com.booktube.service.BookService;
 import com.booktube.service.UserService;
 
@@ -61,7 +62,7 @@ public class BooksByAuthor extends BasePage {
 			protected void populateItem(Item<Book> item) {
 				Book book = (Book) item.getModelObject();
 
-				List<String> tagList = new ArrayList<String>(book.getTags());
+				List<BookTag> tagList = new ArrayList<BookTag>(book.getTags());
 
 				item.add(new PropertyListView<Object>("tagList", tagList) {
 

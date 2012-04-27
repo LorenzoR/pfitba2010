@@ -26,12 +26,12 @@ public class MessageDetail implements Serializable {
 	@Column(name = "MESSAGE_DETAIL_ID")
 	private Long id;
 	
-	@ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToOne(cascade=CascadeType.PERSIST, fetch = FetchType.LAZY)
 	@JoinColumn(name="MESSAGE_ID", updatable = false)
 	@OnDelete(action=OnDeleteAction.CASCADE)
 	private Message message;
 	
-	@ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToOne(cascade=CascadeType.PERSIST, fetch = FetchType.LAZY)
 	@JoinColumn(name="USER_ID", updatable = false)
 	@OnDelete(action=OnDeleteAction.CASCADE)
 	private User receiver;

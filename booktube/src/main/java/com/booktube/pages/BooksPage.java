@@ -21,6 +21,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
 
 import com.booktube.model.Book;
+import com.booktube.model.BookTag;
 import com.booktube.service.BookService;
 import com.booktube.service.BookService.SearchType;
 import com.booktube.service.UserService;
@@ -84,10 +85,10 @@ public class BooksPage extends BasePage {
 
 			protected void populateItem(Item<Book> item) {
 				final Book book = (Book) item.getModelObject();
-				List<String> tagList = null;
+				List<BookTag> tagList = null;
 				
 				if ( book.getTags() != null ) {
-					tagList = new ArrayList<String>(book.getTags());
+					tagList = new ArrayList<BookTag>(book.getTags());
 				}
 				
 
@@ -96,14 +97,14 @@ public class BooksPage extends BasePage {
 					private static final long serialVersionUID = -7951435365391555660L;
 
 					protected void populateItem(ListItem<Object> item) {
-						String tag = (String) item.getModelObject();
+						BookTag tag = (BookTag) item.getModelObject();
 						final PageParameters parameters = new PageParameters();
-						parameters.set("tag", tag);
+						parameters.set("tag", tag.getValue());
 						parameters.set("type", "tag");
 
 						BookmarkablePageLink<Object> bpl = new BookmarkablePageLink<Object>(
 								"tagLink", BooksPage.class, parameters);
-						bpl.add(new Label("tagName", tag));
+						bpl.add(new Label("tagName", tag.getValue()));
 						item.add(bpl);
 
 					}

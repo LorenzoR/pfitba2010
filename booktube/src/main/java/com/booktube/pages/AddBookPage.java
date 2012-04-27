@@ -20,6 +20,7 @@ import org.apache.wicket.util.value.ValueMap;
 
 import com.booktube.WiaSession;
 import com.booktube.model.Book;
+import com.booktube.model.BookTag;
 import com.booktube.model.User;
 import com.booktube.service.BookService;
 import com.booktube.service.UserService;
@@ -101,12 +102,12 @@ public class AddBookPage extends BasePage {
 				//User user = userService.getUser(username);
 				Book book = new Book(title, text, user);
 				
-				Set<String> tagsSet = new HashSet<String>();
+				Set<BookTag> tagsSet = new HashSet<BookTag>();
 				
 				for ( String tag : tags ) {
 					System.out.println("Tag: " + tag);
 					//book.addTag(tag);
-					tagsSet.add(tag);
+					tagsSet.add(new BookTag(tag, book));
 				}
 				
 				book.setTags(tagsSet);

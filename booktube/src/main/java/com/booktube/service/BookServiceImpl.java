@@ -4,10 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.booktube.model.Book;
-import com.booktube.model.Comment;
 import com.booktube.persistence.BookDao;
-import com.booktube.persistence.UserDao;
-import com.booktube.persistence.hibernate.BookDaoImpl;
 
 public class BookServiceImpl implements BookService {
     private BookDao itemDao;

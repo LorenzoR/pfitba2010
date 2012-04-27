@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.Page;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
@@ -15,6 +17,9 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.odlabs.wiquery.ui.core.JsScopeUiEvent;
+import org.odlabs.wiquery.ui.dialog.AjaxDialogButton;
+import org.odlabs.wiquery.ui.dialog.Dialog;
 
 import com.booktube.model.User;
 import com.booktube.pages.WritersPage.WriterProvider;
@@ -27,6 +32,8 @@ public class UsersAdministrationPage extends AdministrationPage {
 	UserService userService;
 
 	public static final int WRITERS_PER_PAGE = 5;
+	
+	private static Dialog dialog;
 
 	// public AdministrationPage(final PageParameters parameters) {
 	public UsersAdministrationPage() {
@@ -43,6 +50,23 @@ public class UsersAdministrationPage extends AdministrationPage {
 		parent.add(dataView);
 		parent.add(new PagingNavigator("footerPaginator", dataView));
 
+		AjaxDialogButton ok = new AjaxDialogButton("OK") {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onButtonClicked(AjaxRequestTarget target) {
+				setResponsePage(UsersAdministrationPage.class);
+
+			}
+		};
+
+		dialog = new Dialog("success_dialog");
+		dialog.setButtons(ok);
+		dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
+
+		parent.add(dialog);
+		
 		String newTitle = "Booktube - Users Administration";
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 
@@ -73,21 +97,38 @@ public class UsersAdministrationPage extends AdministrationPage {
 					}
 
 				});
-				item.add(new Link<User>("deleteLink", item.getModel()) {
-					private static final long serialVersionUID = -7155146615720218460L;
+				item.add(new AjaxLink<User>("deleteLink", item.getModel()) {
 
-					public void onClick() {
-
+					@Override
+					public void onClick(AjaxRequestTarget target) {
+						// TODO Auto-generated method stub
 						User user = (User) getModelObject();
 						Long userId = user.getId();
 
 						userService.deleteUser(user);
 						System.out.println("User " + userId + " deleted.");
 
-						setResponsePage(UsersAdministrationPage.this);
+						dialog.open(target);
 					}
-
+					
 				});
+//				item.add(new Link<User>("deleteLink", item.getModel()) {
+//					private static final long serialVersionUID = -7155146615720218460L;
+//
+//					public void onClick() {
+//
+//						User user = (User) getModelObject();
+//						Long userId = user.getId();
+//
+//						userService.deleteUser(user);
+//						System.out.println("User " + userId + " deleted.");
+//
+//						dialog.open(target);
+//						
+//						//setResponsePage(UsersAdministrationPage.this);
+//					}
+//
+//				});
 			}
 
 		};
