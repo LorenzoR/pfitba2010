@@ -9,7 +9,7 @@ import com.booktube.service.BookService.SearchType;
 public interface BookDao {
     public Book getBook(Long id);
     public void update(Book book);
-    public void insert(Book book);
+    public Long insert(Book book);
     public void delete(Book book);
     public List<Book> getAllBooks(int first, int count);
 	public List<Book> findBookByTitle(String title, int first, int count);

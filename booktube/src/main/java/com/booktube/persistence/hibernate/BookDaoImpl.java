@@ -54,11 +54,13 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 		getSession().flush();
 	}
 
-	public void insert(Book book) {
+	public Long insert(Book book) {
 		System.out.println("COMMENTS: " + book.getComments().toString());
 		System.out.println("TAGS: " + book.getTags().toString());
-		getSession().save(book);
+		Long newBookId = (Long) getSession().save(book);
 		getSession().flush();
+		
+		return newBookId;
 	}
 
 	public void delete(Book book) {

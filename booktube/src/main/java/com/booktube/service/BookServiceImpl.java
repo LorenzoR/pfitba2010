@@ -25,8 +25,8 @@ public class BookServiceImpl implements BookService {
         return itemDao.getBook(id);
     }
 
-    public void insertBook(Book book) {
-        itemDao.insert(book);
+    public Long insertBook(Book book) {
+        return itemDao.insert(book);
     }
     
     public BookDao getItemDao() {

@@ -10,7 +10,7 @@ public interface MessageDao {
 
 	public void update(Message message);
     public void delete(Message message);
-    public Message getMessage(Integer id);
+    public Message getMessage(Long id);
     public MessageDetail getMessageDetail(Message message, User receiver);
     public void insert(Message message);
     public List<Message> getAllMessages(int first, int count);

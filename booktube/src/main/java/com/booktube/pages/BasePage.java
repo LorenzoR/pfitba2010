@@ -50,6 +50,7 @@ import org.wicketstuff.facebook.plugins.LikeButton.LikeButtonLayoutStyle;
 import com.booktube.WiaSession;
 import com.booktube.model.Book;
 import com.booktube.model.User;
+import com.booktube.model.User.Level;
 import com.booktube.service.BookService;
 import com.booktube.service.MessageService;
 import com.booktube.service.UserService;
@@ -74,11 +75,6 @@ public abstract class BasePage extends WebPage {
 
 	public BasePage() {
 		
-		System.out.println("USER " + "user" + "EXISTS: " + userService.usernameExists("user"));
-		
-		System.out.println("USER " + "userrrrr" + "EXISTS: " + userService.usernameExists("userrrrr"));
-		
-		// WebMarkupContainer group = new WebMarkupContainer("loginContainer");
 		if (WiaSession.get().isAuthenticated()) {
 			add(new Label("welcome", "Bienvenido "
 					+ WiaSession.get().getLoggedInUser().getUsername() + " | "));
@@ -257,7 +253,11 @@ public abstract class BasePage extends WebPage {
 		 * setResponsePage(BooksPage.class); } });
 		 */
 		add(new BookmarkablePageLink<String>("showWriters", WritersPage.class));
-		add(new BookmarkablePageLink<String>("contact", NewContact.class));
+		BookmarkablePageLink<String> contactLink = new BookmarkablePageLink<String>("contact", NewContact.class);
+		add(contactLink);
+		BookmarkablePageLink<String> campaignsLink = new BookmarkablePageLink<String>("campaigns", NewCampaign.class);
+		campaignsLink.setVisible(false);
+		add(campaignsLink);
 		add(new BookmarkablePageLink<String>("loadDataLink", LoadDataPage.class));
 		add(new BookmarkablePageLink<String>("messagesLink", MessagesPage.class));
 
@@ -274,6 +274,12 @@ public abstract class BasePage extends WebPage {
 					+ Integer.toString(messageService
 							.countUnreadMessagesTo(WiaSession.get()
 									.getLoggedInUser())) + " )"));
+			
+			if ( WiaSession.get().getLoggedInUser().getLevel() == Level.ADMIN ) {
+				campaignsLink.setVisible(true);
+				contactLink.setVisible(false);
+			}
+			
 		} else {
 			add(new Label("unreadMessages", " "));
 		}

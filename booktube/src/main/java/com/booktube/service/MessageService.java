@@ -9,7 +9,7 @@ import com.booktube.model.User;
 public interface MessageService {
 	public void updateMessage(Message message);
     public void deleteMessage(Message message);
-    public Message getMessage(Integer id);
+    public Message getMessage(Long id);
     public MessageDetail getMessageDetail(Message message, User receiver);
     public void insertMessage(Message message);
     public List<Message> getAllMessages(int first, int count);

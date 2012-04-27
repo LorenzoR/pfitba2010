@@ -5,12 +5,16 @@
 </head>
 <body>
 <wicket:extend>
+<p wicket:id="success_dialog">
+	Usuario editado con exito!
+</p>
 <h3>Edit Writer <span wicket:id="writerId"></span></h3>
 <form wicket:id="editWriterForm">
 	<p>Username: <input type="text" wicket:id="username" value=""/></p>
 	<p>Name: <input type="text" wicket:id="firstname" value=""/></p>
 	<p>Lastname: <input type="text" wicket:id="lastname" value=""/></p>
-	<input type="button" wicket:id="save" value="Edit Book"/>
+	<p>Level: <select wicket:id="level"></select>
+	<input type="button" wicket:id="save" value="Edit User"/>
 </form>
 </wicket:extend>
 </body>

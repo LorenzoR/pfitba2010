@@ -241,6 +241,9 @@ public class Message implements Serializable {
 		return true;
 	}
 	
+	public String toString() {
+		return subject + ": " + text + " by: " + sender;
+	}
 	
 
 }

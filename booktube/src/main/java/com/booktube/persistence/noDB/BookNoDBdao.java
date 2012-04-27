@@ -78,7 +78,7 @@ public class BookNoDBdao implements BookDao {
         }*/
     }
 
-    public void insert(Book book) {
+    public Long insert(Book book) {
     	Long lastId = (long) 0;
         Iterator<Book> iter = books.iterator();
         while (iter.hasNext()) {
@@ -92,6 +92,8 @@ public class BookNoDBdao implements BookDao {
         //book.setAuthor((User)authors.get(book.getAuthor().getId().intValue()));
         book.setId(new Long(lastId + 1));
         books.add(book);
+        
+        return 0L;
     }
 
     public void delete(Book book) {

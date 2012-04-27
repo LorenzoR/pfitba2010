@@ -12,7 +12,7 @@ public interface BookService {
     public void updateBook(Book book);
     public void deleteBook(Book book);
     public Book getBook(Long id);
-    public void insertBook(Book book);
+    public Long insertBook(Book book);
     public List<Book> getAllBooks(int first, int count);
     public List<Book> findBookByTitle(String title, int first, int count);
     public List<Book> findBookByTag(String tag, int first, int count);
