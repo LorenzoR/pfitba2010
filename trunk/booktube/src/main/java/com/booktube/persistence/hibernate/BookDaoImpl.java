@@ -25,7 +25,6 @@ import org.mortbay.jetty.security.SSORealm;
 
 import com.booktube.WicketApplication;
 import com.booktube.model.Book;
-import com.booktube.model.Comment;
 import com.booktube.model.User;
 import com.booktube.persistence.BookDao;
 import com.booktube.service.BookService.SearchType;
@@ -56,6 +55,8 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 	}
 
 	public void insert(Book book) {
+		System.out.println("COMMENTS: " + book.getComments().toString());
+		System.out.println("TAGS: " + book.getTags().toString());
 		getSession().save(book);
 		getSession().flush();
 	}

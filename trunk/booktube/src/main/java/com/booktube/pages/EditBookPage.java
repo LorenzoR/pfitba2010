@@ -17,6 +17,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import com.booktube.model.Book;
+import com.booktube.model.BookTag;
 import com.booktube.model.User;
 import com.booktube.service.BookService;
 import com.booktube.service.UserService;
@@ -260,12 +261,12 @@ public class EditBookPage extends BasePage {
 				book.setAuthor(user);
 				book.setTitle(title);
 				
-				Set<String> tagsSet = new HashSet<String>();
+				Set<BookTag> tagsSet = new HashSet<BookTag>();
 				
 				for ( String tag : tags ) {
 					System.out.println("Tag: " + tag);
 					//book.addTag(tag);
-					tagsSet.add(tag);
+					tagsSet.add(new BookTag(tag, book));
 				}
 				
 				book.setTags(tagsSet);

@@ -41,6 +41,7 @@ import org.odlabs.wiquery.core.events.WiQueryEventBehavior;
 import org.odlabs.wiquery.core.javascript.JsScope;
 import org.odlabs.wiquery.ui.dialog.Dialog;
 import org.wicketstuff.facebook.FacebookSdk;
+import org.wicketstuff.facebook.plugins.Comments;
 import org.wicketstuff.facebook.plugins.LikeBox;
 import org.wicketstuff.facebook.plugins.LikeButton;
 import org.wicketstuff.facebook.plugins.LikeButton.LikeButtonAction;

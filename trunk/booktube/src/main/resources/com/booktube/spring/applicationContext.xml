@@ -110,6 +110,7 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
 				<value>com.booktube.model.Rating</value>
 				<value>com.booktube.model.Message</value>
 				<value>com.booktube.model.MessageDetail</value>
+				<value>com.booktube.model.BookTag</value>
 			</list>
 
 		</property>

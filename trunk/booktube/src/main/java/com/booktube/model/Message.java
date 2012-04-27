@@ -43,7 +43,7 @@ public class Message implements Serializable {
 	@Column(name = "MESSAGE_ID")
 	private Long id;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
 	@JoinColumn(name = "SENDER_ID")
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User sender;
@@ -62,7 +62,7 @@ public class Message implements Serializable {
 	private Integer replyTo;
 	*/
 	
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(cascade = CascadeType.PERSIST)
 	@JoinTable(name = "ANSWER", joinColumns = { @JoinColumn(name = "MESSAGE_ID") })
 	private Set<Message> answer;
 	

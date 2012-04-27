@@ -94,7 +94,7 @@ public class MessagesAdministrationPage extends AdministrationPage {
 
 						Message message = (Message) getModelObject();
 						Long messageId = message.getId();
-
+						messageService.deleteMessage(message);
 						// userService.deleteUser(message);
 						// System.out.println("User " + messageId +
 						// " deleted.");

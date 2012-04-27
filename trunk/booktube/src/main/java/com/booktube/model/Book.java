@@ -66,6 +66,7 @@ public class Book implements Serializable {
 	//@ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="USER_ID")
+	@OnDelete(action=OnDeleteAction.CASCADE)
 	private User author;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -86,10 +87,30 @@ public class Book implements Serializable {
 	@Column(name = "TAG")
 	@OrderBy(clause = "TAG")
 	*/
-	@ElementCollection
+	/* CASI ANDAAAAA
+	 * @ElementCollection
 	@OrderBy(clause = "TAGS ASC")
+	@Cascade({org.hibernate.annotations.CascadeType.ALL, org.hibernate.annotations.CascadeType.DELETE_ORPHAN})
 	private Set<String> tags;
+	*/
 	
+	@OneToMany(mappedBy = "book", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+	@Cascade( org.hibernate.annotations.CascadeType.SAVE_UPDATE )
+	@OnDelete(action=OnDeleteAction.CASCADE)
+	@OrderBy(clause = "TEXT ASC")
+	private Set<BookTag> tags;
+	
+	/* @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent") */
+	/* @OneToMany */
+	@OneToMany(mappedBy = "book", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+	@Cascade( org.hibernate.annotations.CascadeType.SAVE_UPDATE )
+	@OnDelete(action=OnDeleteAction.CASCADE)
+	@OrderBy(clause = "DATE ASC")
+	private Set<Comment> comments;
+	/*
+	 * @JoinTable(name = "BOOK_COMMENT", joinColumns = { @JoinColumn(name =
+	 * "BOOK_ID") }, inverseJoinColumns = { @JoinColumn(name = "COMMENT_ID") })
+	 */
 	
 	/*@OneToMany(cascade=CascadeType.ALL, mappedBy="customer", fetch=FetchType.EAGER, targetEntity = String.class)
     //@JoinTable(name = "BOOK_TAG", joinColumns = @JoinColumn(name = "BOOK_ID"))
@@ -106,17 +127,6 @@ public class Book implements Serializable {
 	@Column(name = "SUBCATEGORY")
 	private String subCategory;
 
-	/* @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent") */
-	/* @OneToMany */
-	@OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@OnDelete(action=OnDeleteAction.CASCADE)
-	@OrderBy(clause = "DATE ASC")
-	private Set<Comment> comments;
-	/*
-	 * @JoinTable(name = "BOOK_COMMENT", joinColumns = { @JoinColumn(name =
-	 * "BOOK_ID") }, inverseJoinColumns = { @JoinColumn(name = "COMMENT_ID") })
-	 */
-
 	@Basic
 	@Column(name = "HITS")
 	private Long hits;
@@ -131,8 +141,8 @@ public class Book implements Serializable {
 		this.author = author;
 		this.publishDate = Calendar.getInstance().getTime();
 		this.rating = new Rating();
-		this.tags = new HashSet();
-		this.comments = new HashSet();
+		this.tags = new HashSet<BookTag>();
+		this.comments = new HashSet<Comment>();
 	}
 
 	public Book(String title, String text, User author) {
@@ -141,8 +151,8 @@ public class Book implements Serializable {
 		this.author = author;
 		this.publishDate = Calendar.getInstance().getTime();
 		this.rating = new Rating();
-		this.tags = new HashSet();
-		this.comments = new HashSet();
+		this.tags = new HashSet<BookTag>();
+		this.comments = new HashSet<Comment>();
 	}
 
 	public Long getId() {
@@ -185,18 +195,19 @@ public class Book implements Serializable {
 		this.author = author;
 	}
 
-	public Set<String> getTags() {
+	public Set<BookTag> getTags() {
 		return tags;
 	}
 
-	public void setTags(Set<String> tags) {
+	public void setTags(Set<BookTag> tags) {
 		this.tags = tags;
 	}
 
-	public void addTag(String tag) {
-		if ( !tag.isEmpty() ) {
-			this.tags.add(tag);
-		}
+	public BookTag addTag(String text) {
+		BookTag tag = new BookTag(text, this);
+		this.tags.add(tag);
+		System.out.println(this.tags.toString());
+		return tag;
 	}
 
 	public String toString() {
@@ -219,6 +230,7 @@ public class Book implements Serializable {
 	public Comment addComment(User user, String text) {
 		Comment comment = new Comment(user, this, text);
 		this.comments.add(comment);
+		System.out.println(this.comments.toString());
 		return comment;
 	}
 
@@ -342,5 +354,7 @@ public class Book implements Serializable {
 			return false;
 		return true;
 	}
+	
+	
 	
 }
