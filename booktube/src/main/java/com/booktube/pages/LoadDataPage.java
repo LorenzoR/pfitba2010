@@ -16,6 +16,7 @@ import com.booktube.model.Message.Type;
 import com.booktube.model.MessageDetail;
 import com.booktube.model.BookTag;
 import com.booktube.model.User;
+import com.booktube.model.User.Gender;
 import com.booktube.pages.BasePage;
 import com.booktube.service.BookService;
 import com.booktube.service.UserService;
@@ -55,9 +56,13 @@ public class LoadDataPage extends BasePage {
 		User user = new User("user", "pass", "nombre", "apellido",
 				User.Level.USER);
 		user.setBirthdate(new Date());
+		user.setGender(Gender.MALE);
+		user.setCountry("Country 1");
 		this.admin = new User("admin", "admin", "nombre", "apellido",
 				User.Level.ADMIN);
 		this.admin.setBirthdate(new Date());
+		this.admin.setGender(Gender.MALE);
+		this.admin.setCountry("Country 1");
 
 		userService.insertUser(user);
 		users.add(user);
@@ -66,18 +71,24 @@ public class LoadDataPage extends BasePage {
 		user = new User("user2", "user2", "user2", "user2",
 				User.Level.USER);
 		user.setBirthdate(new Date());
+		user.setGender(Gender.FEMALE);
+		user.setCountry("Country 2");
 		userService.insertUser(user);
 		users.add(user);
 
 		user = new User("user3", "user3", "user3", "user3",
 				User.Level.USER);
 		user.setBirthdate(new Date());
+		user.setGender(Gender.MALE);
+		user.setCountry("Country 3");
 		userService.insertUser(user);
 		users.add(user);
 
 		user = new User("user4", "user4", "user4", "user4",
 				User.Level.USER);
 		user.setBirthdate(new Date());
+		user.setGender(Gender.MALE);
+		user.setCountry("Country 2");
 		userService.insertUser(user);
 		users.add(user);
 
@@ -143,13 +154,18 @@ public class LoadDataPage extends BasePage {
 		
 		message.setReceiver(receiverSet);
 		
-		Set<Message> answer = new HashSet<Message>();
-		answer.add(new Message(Type.PRIVATE_MESSAGE, "RE: subject", "respuesta a text",  users.get(0), admin));
-		message.setAnswer(answer);
+		Set<Message> answerSet = new HashSet<Message>();
+		Message answer = new Message(Type.FIRST_ANSWER, "RE: subject", "respuesta a text",  users.get(0), admin);
+		answerSet.add(answer);
+		message.setAnswer(answerSet);
+	
+		answerSet = new HashSet<Message>();
+		answerSet.add(new Message(Type.ANSWER, "RE: RE: subject", "respuesta a repuesta a text", admin, users.get(0)));
+		answer.setAnswer(answerSet);
 		
 		messageService.insertMessage(message);
 		
-		message = new Message(Type.PRIVATE_MESSAGE, "subject", "text", admin);
+		message = new Message(Type.PRIVATE_MESSAGE, "subject2", "text2", admin);
 
 		receiverSet = new HashSet<MessageDetail>();
 

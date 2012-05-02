@@ -43,7 +43,7 @@ import com.booktube.model.User.Level;
 		@NamedQuery(name = "message.id", query = "from Message m where m.id = :id")})
 public class Message implements Serializable {
 
-	public enum Type { PRIVATE_MESSAGE, ANSWER, CAMPAIGN };
+	public enum Type { PRIVATE_MESSAGE, ANSWER, FIRST_ANSWER, CAMPAIGN };
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -86,10 +86,10 @@ public class Message implements Serializable {
 	@Column(name = "TEXT", columnDefinition = "LONGTEXT")
 	private String text;
 	
-	/*@Enumerated(EnumType.ORDINAL)
+	@Enumerated(EnumType.ORDINAL)
 	@Column(name = "TYPE", nullable = false)
 	private Type type;
-	*/
+	
 	
 	public Message () {
 		
@@ -101,7 +101,7 @@ public class Message implements Serializable {
 		this.sender = sender;
 		this.date = Calendar.getInstance().getTime();
 		this.receiver = new HashSet<MessageDetail>();
-		//this.setType(type);
+		this.setType(type);
 	}
 	
 	public Message (Type type, String subject, String text, User sender, User receiver) {
@@ -111,7 +111,7 @@ public class Message implements Serializable {
 		this.date = Calendar.getInstance().getTime();
 		this.receiver = new HashSet<MessageDetail>();
 		this.receiver.add(new MessageDetail(receiver, this));
-		//this.setType(type);
+		this.setType(type);
 	}
 	
 	public Message (Type type, String subject, String text, User sender, Set<MessageDetail> receiver) {
@@ -120,7 +120,7 @@ public class Message implements Serializable {
 		this.sender = sender;
 		this.receiver = receiver;
 		this.date = Calendar.getInstance().getTime();
-		//this.setType(type);
+		this.setType(type);
 	}
 
 	public Long getId() {
@@ -259,6 +259,14 @@ public class Message implements Serializable {
 	
 	public String toString() {
 		return subject + ": " + text + " by: " + sender;
+	}
+
+	public Type getType() {
+		return type;
+	}
+
+	public void setType(Type type) {
+		this.type = type;
 	}
 	
 

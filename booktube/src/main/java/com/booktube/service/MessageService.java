@@ -16,7 +16,9 @@ public interface MessageService {
     public List<Message> getAllMessagesFrom(User sender, int first, int count);
     public List<Message> getAllMessagesTo(User receiver, int first, int count);
     public List<Message> getReplyes(Message message);
+    public List<Message> getAllCampaigns(int first, int count);
     public int countMessages();
+    public int countCampaigns();
     public int countMessagesFrom(User sender);
     public int countMessagesTo(User receiver);
     public int countUnreadMessagesTo(User receiver);

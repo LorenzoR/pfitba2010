@@ -16,6 +16,8 @@ public interface MessageDao {
     public List<Message> getAllMessages(int first, int count);
     public List<Message> getAllMessagesFrom(User sender, int first, int count);
     public List<Message> getAllMessagesTo(User receiver, int first, int count);
+    public List<Message> getAllCampaigns(int first, int count);
+    public int countCampaigns();
     public int countMessages();
     public int countMessagesFrom(User sender);
     public int countMessagesTo(User receiver);

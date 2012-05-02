@@ -8,7 +8,28 @@
 
 <wicket:extend>
 	<div wicket:id="campaignsContainer">	
+		<p wicket:id="success_dialog">
+	    	 <span wicket:id="success_dialog_text">Success dialog goes here</span>
+	    </p>
+	    <p wicket:id="delete_confirmation_dialog">
+	    	<span wicket:id="delete_confirmation_dialog_text">Delete confirmation dialog goes here</span>
+	    </p>
 		<h3 wicket:id="pageTitle"></h3>
+		
+		<div wicket:id="campaignsList"  style="border: 1px black solid; margin-bottom: 5px; padding-left: 2px;">
+		<p><b>Sender: </b><span wicket:id="sender">Sender goes here</span></p>
+		<p><b>Receivers: </b><span wicket:id="receiver">Receiver goes here</span></p>
+		<p><b>Subject: </b><span wicket:id="subject">Subject goes here</span></p>
+		<p><b>Date: </b><span wicket:id="date">Date goes here</span></p>
+		<p>
+			<a href="#" wicket:id="detailsLink">Detalles</a> | 
+			<a href="#" wicket:id="deleteLink">Eliminar</a> | 
+			<a href="#" wicket:id="editLink">Editar</a>
+		</p>
+		</div>
+
+		<div wicket:id="footerPaginator"></div>  
+		
 	</div>
 </wicket:extend>
 

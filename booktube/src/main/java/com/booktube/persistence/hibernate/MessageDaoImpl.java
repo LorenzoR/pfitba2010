@@ -11,6 +11,7 @@ import org.hibernate.criterion.Restrictions;
 
 import com.booktube.model.Book;
 import com.booktube.model.Message;
+import com.booktube.model.Message.Type;
 import com.booktube.model.MessageDetail;
 import com.booktube.model.User;
 import com.booktube.persistence.MessageDao;
@@ -63,6 +64,7 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 
 	public List<Message> getAllMessagesTo(User receiver, int first, int count) {
 		Criteria criteria = getSession().createCriteria(Message.class)
+				.add(Restrictions.or(Restrictions.eq("type", Type.PRIVATE_MESSAGE), Restrictions.eq("type", Type.FIRST_ANSWER)))
 				.createCriteria("receiver")
 				.add(Restrictions.eq("receiver", receiver))
 				.setFirstResult(first).setMaxResults(count);
@@ -124,6 +126,19 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 		message.setReceiver(messageDetail);
 
 		insert(message);
+	}
+
+	public List<Message> getAllCampaigns(int first, int count) {
+		return (List<Message>) getSession().createCriteria(Message.class)
+				.add(Restrictions.eq("type", Type.CAMPAIGN))
+				.setFirstResult(first).setMaxResults(count).list();
+	}
+
+	public int countCampaigns() {
+		Criteria criteria = getSession().createCriteria(Message.class)
+				.add(Restrictions.eq("type", Type.CAMPAIGN));
+		criteria.setProjection(Projections.rowCount());
+		return ((Number) criteria.uniqueResult()).intValue();
 	}
 
 }

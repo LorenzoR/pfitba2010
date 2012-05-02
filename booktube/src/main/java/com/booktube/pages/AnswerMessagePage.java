@@ -195,7 +195,16 @@ public class AnswerMessagePage extends BasePage {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 
-				Message answer = new Message(Type.ANSWER, "RE: " + message.getSubject(), editor
+				Type type;
+				
+				if ( message.getType() == Type.PRIVATE_MESSAGE || message.getType() == Type.CAMPAIGN  ) {
+					type = Type.FIRST_ANSWER;
+				}
+				else {
+					type = Type.ANSWER;
+				}
+				
+				Message answer = new Message(type, "RE: " + message.getSubject(), editor
 						.getDefaultModelObjectAsString(), user, message.getSender());
 				
 				Set<Message> answers = new HashSet<Message>();
