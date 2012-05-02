@@ -8,6 +8,8 @@ import java.util.Map;
 
 import com.booktube.model.Book;
 import com.booktube.model.User;
+import com.booktube.model.User.Gender;
+import com.booktube.model.User.Level;
 import com.booktube.persistence.UserDao;
 
 public class UserNoDBdao implements UserDao {
@@ -61,7 +63,7 @@ public class UserNoDBdao implements UserDao {
 		// TODO Auto-generated method stub
 		
 	}
-	public void insert(User user) {
+	public Long insert(User user) {
 		Long lastId = (long) 0;
         Iterator<User> iter = users.iterator();
         while (iter.hasNext()) { 
@@ -73,6 +75,8 @@ public class UserNoDBdao implements UserDao {
         
         user.setId(new Long(lastId + 1));
         users.add(user);
+        
+        return 1L;
 		
 	}
 	public void delete(Integer id) {
@@ -108,5 +112,23 @@ public class UserNoDBdao implements UserDao {
 	public boolean usernameExists(String username) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	public List<User> getUsersByGender(int first, int count, Gender gender) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public List<User> getUsersByAge(int first, int count, int lowerAge,
+			int higherAge) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public List<User> getUsers(int first, int count, Gender gender,
+			int lowerAge, int higherAge) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public List<User> getUsers(int first, int count, Level level) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -1,6 +1,8 @@
 package com.booktube.persistence.hibernate;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -13,42 +15,50 @@ import com.booktube.model.MessageDetail;
 import com.booktube.model.User;
 import com.booktube.persistence.MessageDao;
 
-public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements MessageDao {
+public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
+		MessageDao {
 
 	protected MessageDaoImpl() {
 		super(Message.class);
 	}
-	
+
 	public void update(Message message) {
-		getSession().merge(message);
+		getSession().saveOrUpdate(message);
 		getSession().flush();
+		//super.update(message);
+		//getSession().merge(message);
+		//getSession().flush();
 	}
 
 	public void delete(Message message) {
-		System.out.println("Borro mensaje " + message);
-		getSession().delete(message);
-		getSession().flush();
+		super.delete(message);
+		//System.out.println("Borro mensaje " + message);
+		//getSession().delete(message);
+		//getSession().flush();
 	}
 
 	public Message getMessage(Long id) {
 		return (Message) getSession().getNamedQuery("message.id")
-		.setLong("id", id).setMaxResults(1).uniqueResult();
+				.setLong("id", id).setMaxResults(1).uniqueResult();
 	}
 
-	public void insert(Message message) {
-		getSession().save(message);
+	public Long insert(Message message) {
+		/*Long id = (Long) getSession().save(message);
 		getSession().flush();
+		return id;
+		*/
+		return super.insert(message);
 	}
 
 	public List<Message> getAllMessages(int first, int count) {
 		return (List<Message>) getSession().createCriteria(Message.class)
 				.setFirstResult(first).setMaxResults(count).list();
 	}
-	
+
 	public List<Message> getAllMessagesFrom(User sender, int first, int count) {
 		return (List<Message>) getSession().createCriteria(Message.class)
-		.add(Restrictions.eq("sender", sender))
-		.setFirstResult(first).setMaxResults(count).list();
+				.add(Restrictions.eq("sender", sender)).setFirstResult(first)
+				.setMaxResults(count).list();
 	}
 
 	public List<Message> getAllMessagesTo(User receiver, int first, int count) {
@@ -56,7 +66,7 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements Mes
 				.createCriteria("receiver")
 				.add(Restrictions.eq("receiver", receiver))
 				.setFirstResult(first).setMaxResults(count);
-		
+
 		return (List<Message>) criteria.list();
 	}
 
@@ -65,10 +75,10 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements Mes
 		criteria.setProjection(Projections.rowCount());
 		return ((Number) criteria.uniqueResult()).intValue();
 	}
-	
+
 	public int countMessagesFrom(User sender) {
-		Criteria criteria = getSession().createCriteria(Message.class)
-				.add(Restrictions.eq("sender", sender));
+		Criteria criteria = getSession().createCriteria(Message.class).add(
+				Restrictions.eq("sender", sender));
 		criteria.setProjection(Projections.rowCount());
 		return ((Number) criteria.uniqueResult()).intValue();
 	}
@@ -80,7 +90,7 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements Mes
 		criteria.setProjection(Projections.rowCount());
 		return ((Number) criteria.uniqueResult()).intValue();
 	}
-	
+
 	public int countUnreadMessagesTo(User receiver) {
 		Criteria criteria = getSession().createCriteria(Message.class)
 				.createCriteria("receiver")
@@ -89,7 +99,7 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements Mes
 		criteria.setProjection(Projections.rowCount());
 		return ((Number) criteria.uniqueResult()).intValue();
 	}
-	
+
 	public void setMessageRead(MessageDetail messageDetail) {
 		messageDetail.setRead(true);
 		getSession().merge(messageDetail);
@@ -102,6 +112,18 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements Mes
 				.add(Restrictions.eq("message", message));
 
 		return (MessageDetail) criteria.setMaxResults(1).uniqueResult();
+	}
+
+	public void sendMessages(Message message, List<User> receivers) {
+		Set<MessageDetail> messageDetail = new HashSet<MessageDetail>();
+
+		for (User aUser : receivers) {
+			messageDetail.add(new MessageDetail(aUser, message));
+		}
+		
+		message.setReceiver(messageDetail);
+
+		insert(message);
 	}
 
 }

@@ -7,21 +7,32 @@
 	<wicket:extend>
 		<div wicket:id="newCampaign">
 
-			<h2>Nueva Campaña</h2>
-
-			<ul>
-				<li><a href="#">Por sexo</a></li>
-				<li><a href="#">Por edad</a></li>
-				<li><a href="#">Por interes</a></li>
-			</ul>
+			<h2>Nueva Campa&ntilde;a</h2>		
 
 			<form wicket:id="form">
+			
+				<p><b>Filtros</b></p>
 				<p>
-					<select wicket:id="subject">
+					<b>Por sexo:</b> &nbsp;
+					<select wicket:id="gender">
 						<option value="optionValue">OptionValue</option>
 					</select>
 				</p>
-				<br /> Text:
+				
+				<p>
+					<b>Por Edad:</b> &nbsp;
+					Desde: <input type="text" wicket:id="lowAge" value="" />
+					Hasta: <input type="text" wicket:id="highAge" value="" />
+				</p>
+			
+				<p><b>Mensaje</b></p>
+			
+				<p> 
+					<b>Asunto:</b> &nbsp;
+					<input type="text" wicket:id="subject" value="" />
+				</p>
+				<br /> 
+				<b>Text:</b>
 				<p>
 					<textarea wicket:id="textArea" cols="60" rows="15"></textarea>
 				</p>

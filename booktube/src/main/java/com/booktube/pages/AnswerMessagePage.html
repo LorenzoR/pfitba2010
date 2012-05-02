@@ -1,18 +1,28 @@
 <html
 	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
 <head>
-<title>Messages</title>
+<title>Books</title>
 </head>
 <body>
 <wicket:extend>
-<div wicket:id="messages">
+<div wicket:id="books">
 
-	<h2>Message List</h2>
+	<h2>Reply</h2>
+	
+	<form wicket:id="form">
+		Text: 
+		<p><textarea wicket:id="textArea" cols="60" rows="15"></textarea></p>
+		
+		<input type="button" wicket:id="save" value="Send"/>
+	</form>
+	
+	<hr />
 	
 	<div wicket:id="messageList"  style="border: 1px black solid; margin-bottom: 5px; padding-left: 2px;">
 		<p>Sender: <span wicket:id="sender">Sender goes here</span></p>
 		<p>Subject: <span wicket:id="subject">Subject goes here</span></p>
 		<p>Date: <span wicket:id="date">Date goes here</span></p>
+		<p>Text: <span wicket:id="text">Text goes here</span></p>
 		<p>
 			<a href="#" wicket:id="detailsLink">Detalles</a> | 
 			<a href="#" wicket:id="answerLink">Responder</a> | 
@@ -21,7 +31,8 @@
 		</p>
 	</div>
 
-	<div wicket:id="footerPaginator"></div>  
+	<span wicket:id="registerMessage">Register message</span>
+
 </div>
 
 </wicket:extend>

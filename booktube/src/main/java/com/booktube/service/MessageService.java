@@ -21,4 +21,5 @@ public interface MessageService {
     public int countMessagesTo(User receiver);
     public int countUnreadMessagesTo(User receiver);
     public void setMessageRead(MessageDetail messageDetail);
+    public void sendMessages(Message message, List<User> receivers);
 }

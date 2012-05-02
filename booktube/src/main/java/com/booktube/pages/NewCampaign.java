@@ -34,6 +34,8 @@ import com.booktube.model.Book;
 import com.booktube.model.Message;
 import com.booktube.model.MessageDetail;
 import com.booktube.model.User;
+import com.booktube.model.Message.Type;
+import com.booktube.model.User.Gender;
 import com.booktube.service.MessageService;
 import com.booktube.service.UserService;
 
@@ -80,19 +82,33 @@ public class NewCampaign extends BasePage {
 	}
 
 	private Form<?> newContactForm(final WebMarkupContainer parent) {
-		Form<?> form = new Form("form");
+		Form<?> form = new Form<Object>("form");
 
-		List<String> subjects = Arrays.asList(new String[] { "subject1",
-				"subject2", "subject3" });
+		List<String> genders = Arrays.asList(new String[] { "Todos", "Masculino",
+				"Femenino" });
 
-		// final DropDownChoice ddc=new DropDownChoice("ddc", subjects);
-		final DropDownChoice ddc = new DropDownChoice("subject",
-				new PropertyModel(this, ""), subjects);
+		final DropDownChoice<String> genderSelect = new DropDownChoice<String>("gender",
+				new PropertyModel<String>(this, ""), genders);
 
-		form.add(ddc);
+		form.add(genderSelect);
+		
+		final TextField<String> lowAgeField = new TextField<String>(
+				"lowAge", new Model<String>(""));
+		
+		form.add(lowAgeField);
+		
+		final TextField<String> highAgeField = new TextField<String>(
+				"highAge", new Model<String>(""));
+		
+		form.add(highAgeField);
+		
+		final TextField<String> subject = new TextField<String>(
+				"subject", new Model<String>(""));
 
-		final TextArea editor = new TextArea("textArea", new Model());
-		editor.setOutputMarkupId(true);
+		form.add(subject);
+
+		final TextArea<String> text = new TextArea<String>("textArea", new Model<String>());
+		text.setOutputMarkupId(true);
 
 		List<User> personsList = userService.getAllUsers(0, Integer.MAX_VALUE);
 
@@ -130,20 +146,48 @@ public class NewCampaign extends BasePage {
 
 		group.add(persons);
 
-		form.add(editor);
+		form.add(text);
 		form.add(new AjaxSubmitLink("save") {
 
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 
 				
-				Message message = new Message(ddc
-						.getDefaultModelObjectAsString(), editor
-						.getDefaultModelObjectAsString(), user);
+				Message message = new Message(Type.CAMPAIGN,
+						subject.getDefaultModelObjectAsString(), 
+						text.getDefaultModelObjectAsString(), user);
 				
-				Set<MessageDetail> receiverSet = new HashSet<MessageDetail>();
+				String genderString = genderSelect.getDefaultModelObjectAsString();
+				
+				Gender gender;
+				
+				if ( genderString.equals("Masculino") ) {
+					gender = Gender.MALE;
+				}
+				else if ( genderString.equals("Femenino") ) {
+					gender = Gender.FEMALE;
+				}
+				else {
+					gender = null;
+				}
+				
+				int lowAge = Integer.valueOf(lowAgeField.getDefaultModelObjectAsString());
+				int highAge = Integer.valueOf(highAgeField.getDefaultModelObjectAsString());
+				
+				List<User> receivers;
+				
+				if ( gender == null ) {
+					receivers = userService.getUsersByAge(0, Integer.MAX_VALUE, lowAge, highAge);
+				}
+				else {
+					receivers = userService.getUsers(0, Integer.MAX_VALUE, gender, lowAge, highAge);
+				}
+				
+				messageService.sendMessages(message, receivers);	
+				
+				/*Set<MessageDetail> receiverSet = new HashSet<MessageDetail>();
 
-				/* Si el usuario es Admin */
+				// Si el usuario es Admin
 				if (true) {
 					List<User> users = (List<User>) group
 							.getDefaultModelObject();
@@ -161,7 +205,10 @@ public class NewCampaign extends BasePage {
 				System.out.println("Receiver: " + receiverSet.toString());
 				message.setReceiver(receiverSet);
 				messageService.insertMessage(message);
-
+				*/
+				
+				
+				
 				// message.addReceiver(user1);
 
 				// message.addReceiver(user2);
@@ -207,6 +254,30 @@ public class NewCampaign extends BasePage {
 		return form;
 	}
 
+	private void sendMessageByGender(Message message, Gender gender) {
+		List<User> receivers = userService.getUsersByGender(0, Integer.MAX_VALUE, gender);
+		Set<MessageDetail> messageDetail = new HashSet<MessageDetail>();
+		
+		for ( User aUser : receivers ) {
+			messageDetail.add(new MessageDetail(aUser, message));
+		}
+		
+		messageService.insertMessage(message);
+		
+	}
+	
+	private void sendMessageByAge(Message message, int lowerAge, int higherAge) {
+		List<User> receivers = userService.getUsersByAge(0, Integer.MAX_VALUE, lowerAge, higherAge);
+		Set<MessageDetail> messageDetail = new HashSet<MessageDetail>();
+		
+		for ( User aUser : receivers ) {
+			messageDetail.add(new MessageDetail(aUser, message));
+		}
+		
+		messageService.insertMessage(message);
+		
+	}
+	
 	@Override
 	protected void setPageTitle() {
 		// TODO Auto-generated method stub

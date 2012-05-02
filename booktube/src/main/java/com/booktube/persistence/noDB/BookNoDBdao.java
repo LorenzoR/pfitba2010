@@ -10,7 +10,9 @@ import java.util.Set;
 //import org.apache.commons.logging.LogFactory;
 
 import com.booktube.model.Book;
+import com.booktube.model.BookTag;
 import com.booktube.model.Comment;
+import com.booktube.model.Message;
 import com.booktube.model.User;
 import com.booktube.persistence.BookDao;
 import com.booktube.service.BookService.SearchType;
@@ -170,8 +172,23 @@ public class BookNoDBdao implements BookDao {
 		return null;
 	}
 
-	public List<String> getAllTags() {
+	public List<BookTag> getAllTags() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public List<String> getCategories(int first, int count) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<String> getSubcategories(int first, int count) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void sendMessages(Message message, List<User> receivers) {
+		// TODO Auto-generated method stub
+		
 	}
 }

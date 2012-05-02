@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.booktube.model.User;
+import com.booktube.model.User.Gender;
+import com.booktube.model.User.Level;
 import com.booktube.persistence.UserDao;
 
 public class UserServiceImpl implements UserService {
@@ -19,6 +21,22 @@ public class UserServiceImpl implements UserService {
     
     public List<User> getAllUsers(int first, int count) {
         return itemDao.getAllUsers(first, count);
+    }
+    
+    public List<User> getUsers(int first, int count, Gender gender, int lowerAge, int higherAge) {
+    	return itemDao.getUsers(first, count, gender, lowerAge, higherAge);
+    }
+    
+    public List<User> getUsers(int first, int count, Level level) {
+    	return itemDao.getUsers(first, count, level);
+    }
+    
+    public List<User> getUsersByGender(int first, int count, Gender gender) {
+    	return itemDao.getUsersByGender(first, count, gender);
+    }
+    
+    public List<User> getUsersByAge(int first, int count, int lowerAge, int higherAge) {
+    	return itemDao.getUsersByAge(first, count, lowerAge, higherAge);
     }
 
     public void updateUser(User user) {

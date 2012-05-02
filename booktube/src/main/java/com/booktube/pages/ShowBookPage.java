@@ -1,6 +1,7 @@
 package com.booktube.pages;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -60,8 +61,8 @@ public class ShowBookPage extends BasePage {
 	/** backwards nav page */
 	// private final Page backPage;
 	
-	private final User user;
-	private final Book book;
+	private User user = WiaSession.get().getLoggedInUser();
+	private Book book;
 
 	public ShowBookPage(PageParameters pageParameters) {
 
@@ -81,7 +82,7 @@ public class ShowBookPage extends BasePage {
 		
 		final Long bookId = pageParameters.get("book").toLong();		
 		
-		user = WiaSession.get().getLoggedInUser();
+		//user = WiaSession.get().getLoggedInUser();
 
 		book = bookService.getBook(bookId);
 		
@@ -113,11 +114,16 @@ public class ShowBookPage extends BasePage {
 			@Override
 			protected void onRated(int rating, AjaxRequestTarget target) {
 				rating1.addRating(rating);
+				if ( user != null) {
+					User newUser = userService.getUser(user.getId());
+					System.out.println("NEW USER: " + newUser);
+					book.addUserVote(newUser);
+				}
 				bookService.updateBook(book);
 			}
 		});
 
-		parent.add(new ResetRatingLink("reset1", new Model<Rating>(rating1)));
+		parent.add(new ResetRatingLink("reset1", new Model<Rating>(rating1), book));
 
 		PageParameters backPageParameters = new PageParameters();
 		backPageParameters.set("currentPage", currentPage);
@@ -281,6 +287,7 @@ public class ShowBookPage extends BasePage {
 	private final class ResetRatingLink extends Link<Rating> {
 		/** For serialization. */
 		private static final long serialVersionUID = 1L;
+		private final Book book;
 
 		/**
 		 * Constructor.
@@ -290,8 +297,9 @@ public class ShowBookPage extends BasePage {
 		 * @param object
 		 *            the model to reset.
 		 */
-		public ResetRatingLink(String id, IModel<Rating> object) {
+		public ResetRatingLink(String id, IModel<Rating> object, Book book) {
 			super(id, object);
+			this.book = book;
 		}
 
 		/**
@@ -305,12 +313,6 @@ public class ShowBookPage extends BasePage {
 			rating.setSumOfRatings(0);
 		}
 	}
-	
-	/**
-	 * keeps track whether the user has already voted on this page, comes
-	 * typically from the database, or is stored in a cookie on the client side.
-	 */
-	private Boolean hasVoted = Boolean.FALSE;
 
 	/**
 	 * Getter for the hasVoted flag.
@@ -318,7 +320,7 @@ public class ShowBookPage extends BasePage {
 	 * @return <code>true</code> when the user has already voted.
 	 */
 	public Boolean getHasVoted() {
-		return hasVoted;
+		return this.book.getUserVotes().contains(user);
 	}
 
 	@Override

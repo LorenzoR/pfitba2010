@@ -8,8 +8,13 @@ package com.booktube.persistence.hibernate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
+import com.booktube.model.Message;
+import com.booktube.model.User;
 
 /**
  * AbstractDaoHibernate
@@ -63,12 +68,31 @@ public class AbstractDaoHibernate<T> extends HibernateDaoSupport {
 		getSession().saveOrUpdate(persistedObject);
 	}
 
-	private void delete(T persistedObject) {
+	public Long insert(T persistedObject) {
+		Long id = (Long) getSession().save(persistedObject);
+		getSession().flush();
+
+		return id;
+	}
+	
+	public void delete(T persistedObject) {
 		getSession().delete(persistedObject);
+		getSession().flush();
 	}
 
 	public void delete(Long id) {
 		delete(loadChecked(id));
+	}
+	
+	public void update(T persistedObject) {
+		getSession().merge(persistedObject);
+		getSession().flush();
+	}
+	
+	public int getCount() {
+		Criteria criteria = getSession().createCriteria(entityClass);
+		criteria.setProjection(Projections.rowCount());
+		return ((Number) criteria.uniqueResult()).intValue();
 	}
 
 }

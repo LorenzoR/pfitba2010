@@ -1,15 +1,23 @@
 package com.booktube.pages;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.validation.EqualPasswordInputValidator;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.validator.StringValidator;
@@ -25,6 +33,7 @@ import org.odlabs.wiquery.ui.dialog.Dialog;
 import org.odlabs.wiquery.ui.dialog.DialogButton;
 
 import com.booktube.model.User;
+import com.booktube.model.User.Gender;
 import com.booktube.pages.validators.UniqueUsernameValidator;
 import com.booktube.service.UserService;
 
@@ -99,14 +108,32 @@ public class RegisterPage extends BasePage {
 		final TextField<String> lastnameField = new TextField<String>(
 				"lastname", new Model<String>(""));
 
+		final TextField<String> birthdateField = new TextField<String>(
+				"birthdate", new Model<String>(""));
+		
 		final PasswordTextField passwordField1 = new PasswordTextField(
 				"password1", new Model<String>(""));
 		final PasswordTextField passwordField2 = new PasswordTextField(
 				"password2", new Model<String>(""));
 
+		List<String> countryList = Arrays.asList(new String[] { "Country 1",
+				"...", "Country 2" });
+
+		final DropDownChoice<String> countrySelect = new DropDownChoice<String>("country",
+				new PropertyModel<String>(this, ""), countryList);
+		
+		List<String> genderList = Arrays.asList(new String[] { "Masculino",
+				"Femenino" });
+
+		final DropDownChoice<String> genderSelect = new DropDownChoice<String>("gender",
+				new PropertyModel<String>(this, ""), genderList);
+		
+		
+		
 		usernameField.setRequired(true);
 		firstnameField.setRequired(true);
 		lastnameField.setRequired(true);
+		birthdateField.setRequired(true);
 		passwordField1.setRequired(true);
 		passwordField2.setRequired(true);
 
@@ -118,8 +145,11 @@ public class RegisterPage extends BasePage {
 		form.add(usernameField);
 		form.add(firstnameField);
 		form.add(lastnameField);
+		form.add(birthdateField);
 		form.add(passwordField1);
 		form.add(passwordField2);
+		form.add(countrySelect);
+		form.add(genderSelect);
 
 		form.add(new AjaxSubmitLink("save") {
 
@@ -140,16 +170,43 @@ public class RegisterPage extends BasePage {
 				String lastname = lastnameField.getDefaultModelObjectAsString();
 				String password = passwordField1
 						.getDefaultModelObjectAsString();
+				String country = countrySelect.getDefaultModelObjectAsString();
+				String gender = genderSelect.getDefaultModelObjectAsString();
+				String birthdate = birthdateField.getDefaultModelObjectAsString();
 
 				User user = new User(username, password, firstname, lastname,
 						User.Level.USER);
+				
+				System.out.println("GENDER: " + gender);
+				
+				if ( gender.equals("Masculino") ) {
+					user.setGender(Gender.MALE);
+				}
+				else {
+					user.setGender(Gender.FEMALE);
+				}
+				
+				user.setCountry(country);
+				
+				SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+				
+				try {
+					user.setBirthdate(sdf.parse(birthdate));
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
+				System.out.println("USER GENDER: " + user.getGender());
+				
 				/* Insert user */
 				userService.insertUser(user);
 				System.out.println("User inserted.");
 				System.out.println("Username: " + username);
 				System.out.println("Firstname: " + firstname);
 				System.out.println("Lastname: " + lastname);
+				System.out.println("Country: " + country);
+				System.out.println("Gender: " + gender);
 
 				target.add(parent);
 

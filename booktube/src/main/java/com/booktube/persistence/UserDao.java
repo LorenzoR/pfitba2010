@@ -4,14 +4,20 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.booktube.model.User;
+import com.booktube.model.User.Gender;
+import com.booktube.model.User.Level;
 
 public interface UserDao {
 	public boolean usernameExists(String username);
     public List<User> getAllUsers(int first, int count);
+    public List<User> getUsersByGender(int first, int count, Gender gender);
+    public List<User> getUsersByAge(int first, int count, int lowerAge, int higherAge);
+    public List<User> getUsers(int first, int count, Gender gender, int lowerAge, int higherAge);
+    public List<User> getUsers(int first, int count, Level level);
     public User getUser(Long id);
     public User getUser(String username);
     public void update(User user);
-    public void insert(User user);
+    public Long insert(User user);
     public void delete(User user);
     public int getCount();
     public Iterator<User> iterator(int first, int count);

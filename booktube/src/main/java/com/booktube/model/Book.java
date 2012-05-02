@@ -17,6 +17,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -94,6 +95,11 @@ public class Book implements Serializable {
 	private Set<String> tags;
 	*/
 	
+	@ManyToMany(fetch=FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+	@Cascade( org.hibernate.annotations.CascadeType.SAVE_UPDATE )
+	@JoinTable(name = "USERVOTES", joinColumns = { @JoinColumn(name = "BOOK_ID") }, inverseJoinColumns = { @JoinColumn(name = "USER_ID") })
+	private Set<User> userVotes;
+	
 	@OneToMany(mappedBy = "book", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
 	@Cascade( org.hibernate.annotations.CascadeType.SAVE_UPDATE )
 	@OnDelete(action=OnDeleteAction.CASCADE)
@@ -125,7 +131,7 @@ public class Book implements Serializable {
 
 	@Basic
 	@Column(name = "SUBCATEGORY")
-	private String subCategory;
+	private String subcategory;
 
 	@Basic
 	@Column(name = "HITS")
@@ -143,6 +149,7 @@ public class Book implements Serializable {
 		this.rating = new Rating();
 		this.tags = new HashSet<BookTag>();
 		this.comments = new HashSet<Comment>();
+		this.userVotes = new HashSet<User>();
 	}
 
 	public Book(String title, String text, User author) {
@@ -153,6 +160,7 @@ public class Book implements Serializable {
 		this.rating = new Rating();
 		this.tags = new HashSet<BookTag>();
 		this.comments = new HashSet<Comment>();
+		this.userVotes = new HashSet<User>();
 	}
 
 	public Long getId() {
@@ -251,11 +259,11 @@ public class Book implements Serializable {
 	}
 
 	public void setSubCategory(String subCategory) {
-		this.subCategory = subCategory;
+		this.subcategory = subCategory;
 	}
 
 	public String getSubCategory() {
-		return subCategory;
+		return subcategory;
 	}
 
 	public void setHits(Long hits) {
@@ -264,6 +272,18 @@ public class Book implements Serializable {
 
 	public Long getHits() {
 		return hits;
+	}
+
+	public void addUserVote(User user) {
+		this.userVotes.add(user);
+	}
+	
+	public Set<User> getUserVotes() {
+		return userVotes;
+	}
+
+	public void setUserVotes(Set<User> userVotes) {
+		this.userVotes = userVotes;
 	}
 
 	@Override
@@ -281,7 +301,7 @@ public class Book implements Serializable {
 				+ ((publishDate == null) ? 0 : publishDate.hashCode());
 		result = prime * result + ((rating == null) ? 0 : rating.hashCode());
 		result = prime * result
-				+ ((subCategory == null) ? 0 : subCategory.hashCode());
+				+ ((subcategory == null) ? 0 : subcategory.hashCode());
 		result = prime * result + ((tags == null) ? 0 : tags.hashCode());
 		result = prime * result + ((text == null) ? 0 : text.hashCode());
 		result = prime * result + ((title == null) ? 0 : title.hashCode());
@@ -332,10 +352,10 @@ public class Book implements Serializable {
 				return false;
 		} else if (!rating.equals(other.rating))
 			return false;
-		if (subCategory == null) {
-			if (other.subCategory != null)
+		if (subcategory == null) {
+			if (other.subcategory != null)
 				return false;
-		} else if (!subCategory.equals(other.subCategory))
+		} else if (!subcategory.equals(other.subcategory))
 			return false;
 		if (tags == null) {
 			if (other.tags != null)

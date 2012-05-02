@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -16,6 +17,8 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import javax.persistence.EnumType.*;
 
@@ -27,6 +30,7 @@ import javax.persistence.EnumType.*;
 public class User implements Serializable {
 	
 	public enum Level { ADMIN, USER }
+	public enum Gender { MALE, FEMALE }
 
 
 	@Id
@@ -50,6 +54,18 @@ public class User implements Serializable {
 	@Column(name = "LASTNAME", nullable = false)
 	private String lastname;
 
+	@Basic
+	@Column(name = "COUNTRY", nullable = false)
+	private String country = "Country";
+	
+	@Enumerated(EnumType.ORDINAL)
+	@Column(name = "GENDER", nullable = false)
+	private Gender gender = Gender.FEMALE;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "BIRTHDATE", nullable = false)
+	private Date birthdate;
+	
 	@Enumerated(EnumType.ORDINAL)
 	@Column(name = "LEVEL", nullable = false)
 	private Level level;
@@ -159,6 +175,30 @@ public class User implements Serializable {
 
 	public Level getLevel() {
 		return level;
+	}
+	
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	public Gender getGender() {
+		return gender;
+	}
+
+	public void setGender(Gender gender) {
+		this.gender = gender;
+	}
+
+	public Date getBirthdate() {
+		return birthdate;
+	}
+
+	public void setBirthdate(Date birthdate) {
+		this.birthdate = birthdate;
 	}
 
 	public static String hash(String s, String hashFunction) {

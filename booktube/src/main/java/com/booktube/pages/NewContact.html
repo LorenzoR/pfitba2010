@@ -21,30 +21,6 @@
 		Text: 
 		<p><textarea wicket:id="textArea" cols="60" rows="15"></textarea></p>
 		
-		<span wicket:id="group">
-            <table>
-             <tr>
-              <td valign="top">Select persons</td>
-              <td>
-                  <input type="checkbox" wicket:id="groupselector" />check/uncheck all
-                  <br/>
-                  <table cellspacing="0" cellpadding="2">
-                    <tr>
-                        <td><b>Select</b></td>
-                        <td><b>First Name</b></td>
-                        <td><b>Last Name</b></td>
-                    </tr>
-                    <tr wicket:id="persons">
-                        <td><input type="checkbox" wicket:id="checkbox"/></td>
-                        <td><span wicket:id="name">[this is where name will be]</span></td>
-                        <td><span wicket:id="lastName">[this is where lastname will be]</span></td>
-                    </tr>
-                  </table>
-              </td>
-             </tr>
-            </table>
-        </span>
-		
 		<input type="button" wicket:id="save" value="Send"/>
 	</form>
 

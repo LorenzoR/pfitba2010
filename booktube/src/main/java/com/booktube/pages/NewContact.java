@@ -34,6 +34,8 @@ import com.booktube.model.Book;
 import com.booktube.model.Message;
 import com.booktube.model.MessageDetail;
 import com.booktube.model.User;
+import com.booktube.model.Message.Type;
+import com.booktube.model.User.Level;
 import com.booktube.service.MessageService;
 import com.booktube.service.UserService;
 
@@ -88,50 +90,15 @@ public class NewContact extends BasePage {
 		List<String> subjects = Arrays.asList(new String[] { "subject1",
 				"subject2", "subject3" });
 
-		// final DropDownChoice ddc=new DropDownChoice("ddc", subjects);
-		final DropDownChoice ddc = new DropDownChoice("subject",
+		final DropDownChoice subject = new DropDownChoice("subject",
 				new PropertyModel(this, ""), subjects);
 
-		form.add(ddc);
+		form.add(subject);
 
 		final TextArea editor = new TextArea("textArea", new Model());
 		editor.setOutputMarkupId(true);
 
-		List<User> personsList = userService.getAllUsers(0, Integer.MAX_VALUE);
-
-		/* Saco al admin actual de la lista */
-		if (user != null) {
-			int currentUserIndex = 0;
-
-			for (User aUser : personsList) {
-				System.out.println("USERID: " + user.getId() + " aUSERID: " + aUser.getId());
-				if (user.getId().equals(aUser.getId())) {
-					break;
-				} else {
-					currentUserIndex++;
-				}
-			}
-
-			personsList.remove(currentUserIndex);
-		}
-		final CheckGroup group = new CheckGroup("group", new ArrayList());
-
 		add(form);
-		form.add(group);
-		group.add(new CheckGroupSelector("groupselector"));
-		ListView persons = new ListView("persons", personsList) {
-
-			protected void populateItem(ListItem item) {
-				item.add(new Check("checkbox", item.getModel()));
-				item.add(new Label("name", new PropertyModel(item.getModel(),
-						"firstname")));
-				item.add(new Label("lastName", new PropertyModel(item
-						.getModel(), "lastname")));
-			}
-
-		};
-
-		group.add(persons);
 
 		form.add(editor);
 		form.add(new AjaxSubmitLink("save") {
@@ -140,13 +107,19 @@ public class NewContact extends BasePage {
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 
 				
-				Message message = new Message(ddc
+				Message message = new Message(Type.PRIVATE_MESSAGE,subject
 						.getDefaultModelObjectAsString(), editor
 						.getDefaultModelObjectAsString(), user);
 				
-				Set<MessageDetail> receiverSet = new HashSet<MessageDetail>();
+				List<User> receivers = userService.getUsers(0, Integer.MAX_VALUE, Level.ADMIN);
+				
+				messageService.sendMessages(message, receivers);
+				
+				
+				//Set<MessageDetail> receiverSet = new HashSet<MessageDetail>();
 
-				/* Si el usuario es Admin */
+				/*
+				// Si el usuario es Admin
 				if (true) {
 					List<User> users = (List<User>) group
 							.getDefaultModelObject();
@@ -164,6 +137,7 @@ public class NewContact extends BasePage {
 				System.out.println("Receiver: " + receiverSet.toString());
 				message.setReceiver(receiverSet);
 				messageService.insertMessage(message);
+				*/
 
 				// message.addReceiver(user1);
 

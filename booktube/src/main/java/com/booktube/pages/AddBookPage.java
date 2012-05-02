@@ -1,11 +1,15 @@
 package com.booktube.pages;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
+import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
@@ -17,6 +21,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
 import org.odlabs.wiquery.ui.core.JsScopeUiEvent;
 import org.odlabs.wiquery.ui.dialog.AjaxDialogButton;
@@ -73,12 +78,11 @@ public class AddBookPage extends BasePage {
 				// do your cancel logic here
 				System.out.println("BUTTON CLICKED!!");
 				setResponsePage(HomePage.class);
-				if ( lastInsertedId != null ) {
+				if (lastInsertedId != null) {
 					PageParameters pageParameters = new PageParameters();
 					pageParameters.set("book", lastInsertedId);
 					setResponsePage(ShowBookPage.class, pageParameters);
 				}
-				
 
 			}
 		};
@@ -105,7 +109,69 @@ public class AddBookPage extends BasePage {
 		final TextArea editor = new TextArea("textArea");
 		editor.setOutputMarkupId(true);
 
-		final DropDownChoice ddc;
+		final AutoCompleteTextField<String> category = new AutoCompleteTextField<String>(
+				"category", new Model<String>("")) {
+
+			private static final long serialVersionUID = 2977239698122401133L;
+
+			@Override
+			protected Iterator<String> getChoices(String input) {
+				if (Strings.isEmpty(input)) {
+					List<String> emptyList = Collections.emptyList();
+					return emptyList.iterator();
+				}
+
+				List<String> choices = new ArrayList<String>(10);
+
+				List<String> categories = bookService.getCategories(0, Integer.MAX_VALUE);
+
+				for (final String aCategory : categories ) {
+
+					if (aCategory.toUpperCase().startsWith(input.toUpperCase())) {
+						choices.add(aCategory);
+						if (choices.size() == 10) {
+							break;
+						}
+					}
+				}
+
+				return choices.iterator();
+			}
+		};
+		
+		form.add(category);
+		
+		final AutoCompleteTextField<String> subcategory = new AutoCompleteTextField<String>(
+				"subcategory", new Model<String>("")) {
+
+			private static final long serialVersionUID = 2977239698122401133L;
+
+			@Override
+			protected Iterator<String> getChoices(String input) {
+				if (Strings.isEmpty(input)) {
+					List<String> emptyList = Collections.emptyList();
+					return emptyList.iterator();
+				}
+
+				List<String> choices = new ArrayList<String>(10);
+
+				List<String> subcategories = bookService.getSubcategories(0, Integer.MAX_VALUE);
+
+				for (final String aSubcategory : subcategories ) {
+
+					if (aSubcategory.toUpperCase().startsWith(input.toUpperCase())) {
+						choices.add(aSubcategory);
+						if (choices.size() == 10) {
+							break;
+						}
+					}
+				}
+
+				return choices.iterator();
+			}
+		};
+		
+		form.add(subcategory);
 
 		ValueMap myParameters = new ValueMap();
 
