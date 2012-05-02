@@ -41,7 +41,7 @@ public class MessageServiceImpl implements MessageService {
 	public List<Message> getAllMessages(int first, int count) {
 		return itemDao.getAllMessages(first, count);
 	}
-
+	
 	public List<Message> getAllMessagesTo(User receiver, int first, int count) {
 		return itemDao.getAllMessagesTo(receiver, first, count);
 	}
@@ -79,5 +79,8 @@ public class MessageServiceImpl implements MessageService {
 		return itemDao.getMessageDetail(message, receiver);
 	}
 
+	public void sendMessages(Message message, List<User> receivers) {
+		itemDao.sendMessages(message, receivers);
+	}
 
 }

@@ -82,6 +82,12 @@ public class MessagesPage extends BasePage {
 					}
 
 				});
+				item.add(new Link("answerLink", item.getModel()) {
+					public void onClick() {
+						setResponsePage(AnswerMessagePage.class, parameters);
+					}
+
+				});
 				item.add(new Link("editLink", item.getModel()) {
 					public void onClick() {
 						setResponsePage(ShowMessagePage.class, parameters);

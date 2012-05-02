@@ -11,6 +11,8 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,10 +29,13 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.Type;
+
+import com.booktube.model.User.Level;
 
 @Entity
 @Table(name = "MESSAGE")
@@ -38,6 +43,8 @@ import org.hibernate.annotations.Type;
 		@NamedQuery(name = "message.id", query = "from Message m where m.id = :id")})
 public class Message implements Serializable {
 
+	public enum Type { PRIVATE_MESSAGE, ANSWER, CAMPAIGN };
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "MESSAGE_ID")
@@ -62,7 +69,8 @@ public class Message implements Serializable {
 	private Integer replyTo;
 	*/
 	
-	@ManyToMany(cascade = CascadeType.PERSIST)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+	@Cascade( org.hibernate.annotations.CascadeType.SAVE_UPDATE )
 	@JoinTable(name = "ANSWER", joinColumns = { @JoinColumn(name = "MESSAGE_ID") })
 	private Set<Message> answer;
 	
@@ -78,33 +86,41 @@ public class Message implements Serializable {
 	@Column(name = "TEXT", columnDefinition = "LONGTEXT")
 	private String text;
 	
+	/*@Enumerated(EnumType.ORDINAL)
+	@Column(name = "TYPE", nullable = false)
+	private Type type;
+	*/
+	
 	public Message () {
 		
 	}
 	
-	public Message (String subject, String text, User sender) {
+	public Message (Type type, String subject, String text, User sender) {
 		this.subject = subject;
 		this.text = text;
 		this.sender = sender;
 		this.date = Calendar.getInstance().getTime();
 		this.receiver = new HashSet<MessageDetail>();
+		//this.setType(type);
 	}
 	
-	public Message (String subject, String text, User sender, User receiver) {
+	public Message (Type type, String subject, String text, User sender, User receiver) {
 		this.subject = subject;
 		this.text = text;
 		this.sender = sender;
 		this.date = Calendar.getInstance().getTime();
 		this.receiver = new HashSet<MessageDetail>();
 		this.receiver.add(new MessageDetail(receiver, this));
+		//this.setType(type);
 	}
 	
-	public Message (String subject, String text, User sender, Set<MessageDetail> receiver) {
+	public Message (Type type, String subject, String text, User sender, Set<MessageDetail> receiver) {
 		this.subject = subject;
 		this.text = text;
 		this.sender = sender;
 		this.receiver = receiver;
 		this.date = Calendar.getInstance().getTime();
+		//this.setType(type);
 	}
 
 	public Long getId() {

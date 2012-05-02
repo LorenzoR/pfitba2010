@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.booktube.model.Book;
+import com.booktube.model.BookTag;
 
 public interface BookService {
 	
@@ -17,7 +18,10 @@ public interface BookService {
     public List<Book> findBookByTitle(String title, int first, int count);
     public List<Book> findBookByTag(String tag, int first, int count);
     public List<Book> findBookByAuthor(String author, int first, int count);
+    public int getCount();
     public int getCount(SearchType type, String parameter);
     public Iterator<Book> iterator(int first, int count);
-    public List<String> getAllTags();
+    public List<BookTag> getAllTags();
+    public List<String> getCategories(int first, int count);
+    public List<String> getSubcategories(int first, int count);
 }

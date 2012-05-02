@@ -19,6 +19,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
@@ -49,6 +50,7 @@ import org.wicketstuff.facebook.plugins.LikeButton.LikeButtonLayoutStyle;
 
 import com.booktube.WiaSession;
 import com.booktube.model.Book;
+import com.booktube.model.BookTag;
 import com.booktube.model.User;
 import com.booktube.model.User.Level;
 import com.booktube.service.BookService;
@@ -253,11 +255,15 @@ public abstract class BasePage extends WebPage {
 		 * setResponsePage(BooksPage.class); } });
 		 */
 		add(new BookmarkablePageLink<String>("showWriters", WritersPage.class));
-		BookmarkablePageLink<String> contactLink = new BookmarkablePageLink<String>("contact", NewContact.class);
-		add(contactLink);
-		BookmarkablePageLink<String> campaignsLink = new BookmarkablePageLink<String>("campaigns", NewCampaign.class);
-		campaignsLink.setVisible(false);
-		add(campaignsLink);
+		
+		WebMarkupContainer contactLi = new WebMarkupContainer("contact_li");
+		contactLi.add(new BookmarkablePageLink<String>("contact", NewContact.class));
+		add(contactLi);
+		WebMarkupContainer campaignsLi = new WebMarkupContainer("campaigns_li");
+		campaignsLi.add(new BookmarkablePageLink<String>("campaigns", NewCampaign.class));
+		campaignsLi.setVisible(false);
+		add(campaignsLi);
+		
 		add(new BookmarkablePageLink<String>("loadDataLink", LoadDataPage.class));
 		add(new BookmarkablePageLink<String>("messagesLink", MessagesPage.class));
 
@@ -276,8 +282,10 @@ public abstract class BasePage extends WebPage {
 									.getLoggedInUser())) + " )"));
 			
 			if ( WiaSession.get().getLoggedInUser().getLevel() == Level.ADMIN ) {
-				campaignsLink.setVisible(true);
-				contactLink.setVisible(false);
+				//campaignsLink.setVisible(true);
+				contactLi.setVisible(false);
+				campaignsLi.setVisible(true);
+				//contactLink.setVisible(false);
 			}
 			
 		} else {
@@ -427,12 +435,12 @@ public abstract class BasePage extends WebPage {
 						}
 					}
 				} else if (selectedRadio == TAG_SELECTED) {
-					List<String> tags = bookService.getAllTags();
+					List<BookTag> tags = bookService.getAllTags();
 
-					for (final String tag : tags) {
+					for (final BookTag tag : tags) {
 
-						if (tag.toUpperCase().startsWith(input.toUpperCase())) {
-							choices.add(tag);
+						if (tag.getValue().toUpperCase().startsWith(input.toUpperCase())) {
+							choices.add(tag.getValue());
 							if (choices.size() == 10) {
 								break;
 							}

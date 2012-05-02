@@ -7,9 +7,11 @@ import java.util.List;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import org.hibernate.Criteria;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
@@ -17,7 +19,9 @@ import com.booktube.WicketApplication;
 import com.booktube.model.Book;
 import com.booktube.model.Message;
 import com.booktube.model.User;
+import com.booktube.model.User.Gender;
 import com.booktube.persistence.UserDao;
+import com.booktube.model.User.Level;
 
 public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 
@@ -25,10 +29,10 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 		super(User.class);
 	}
 
-	public boolean usernameExists(String username) {		
+	public boolean usernameExists(String username) {
 		return getUser(username) != null;
 	}
-	
+
 	public List<User> getAllUsers(int first, int count) {
 		List<User> users = (List<User>) getSession().createCriteria(User.class)
 				.setFirstResult(first).setMaxResults(count).list();
@@ -37,9 +41,53 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 
 	}
 
+	public List<User> getUsers(int first, int count, Gender gender, int lowerAge, int higherAge) {
+		List<User> users = (List<User>) getSession().createCriteria(User.class)
+				.add(Restrictions.eq("gender", gender)).setFirstResult(first)
+				.add(Expression.sql("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 >= " + lowerAge))
+				.add(Expression.sql("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 <= " + higherAge))
+				.setMaxResults(count).list();
+		
+		return users;
+	}
+	
+	public List<User> getUsers(int first, int count, Level level) {
+		List<User> users = (List<User>) getSession().createCriteria(User.class)
+				.add(Restrictions.eq("level", level)).setFirstResult(first)
+				.setMaxResults(count).list();
+
+		return users;
+	}
+	
+	public List<User> getUsersByGender(int first, int count, Gender gender) {
+		List<User> users = (List<User>) getSession().createCriteria(User.class)
+				.add(Restrictions.eq("gender", gender)).setFirstResult(first)
+				.setMaxResults(count).list();
+
+		return users;
+	}
+
+	public List<User> getUsersByAge(int first, int count, int lowerAge,
+			int higherAge) {
+
+		List<User> users = (List<User>) getSession().createCriteria(User.class)
+				.add(Expression.sql("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 >= " + lowerAge))
+				.add(Expression.sql("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 <= " + higherAge))
+				//.add(Restrictions.gt("age", lowerAge))
+				//.add(Restrictions.lt("age", higherAge))
+				.setFirstResult(first)
+				.setMaxResults(count).list();
+		return users;
+
+		// SQLQuery query =
+		// getSession().createSQLQuery("SELECT DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 AS age FROM user");
+
+		// return query.list();
+	}
+
 	public User getUser(Long id) {
-		return (User) getSession().getNamedQuery("user.id")
-				.setLong("id", id).setMaxResults(1).uniqueResult();
+		return (User) getSession().getNamedQuery("user.id").setLong("id", id)
+				.setMaxResults(1).uniqueResult();
 	}
 
 	public User getUser(String username) {
@@ -49,24 +97,30 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 	}
 
 	public void update(User user) {
-		getSession().merge(user);
-		getSession().flush();
+		super.update(user);
+		//getSession().merge(user);
+		//getSession().flush();
 
 	}
 
-	public void insert(User user) {
-		getSession().save(user);
+	public Long insert(User user) {
+		/*Long id = (Long) getSession().save(user);
+		getSession().flush();
+		return id;*/
+		return super.insert(user);
 	}
 
 	public void delete(User user) {
-		getSession().delete(user);
-		getSession().flush();
+		super.delete(user);
+		//getSession().delete(user);
+		//getSession().flush();
 	}
 
 	public int getCount() {
-		Criteria criteria = getSession().createCriteria(User.class);
-		criteria.setProjection(Projections.rowCount());
-		return ((Number) criteria.uniqueResult()).intValue();
+//		Criteria criteria = getSession().createCriteria(User.class);
+//		criteria.setProjection(Projections.rowCount());
+//		return ((Number) criteria.uniqueResult()).intValue();
+		return super.getCount();
 	}
 
 	public Iterator<User> iterator(int first, int count) {

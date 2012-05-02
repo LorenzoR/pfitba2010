@@ -1,6 +1,7 @@
 package com.booktube.pages;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -11,6 +12,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import com.booktube.model.Book;
 import com.booktube.model.Message;
+import com.booktube.model.Message.Type;
 import com.booktube.model.MessageDetail;
 import com.booktube.model.BookTag;
 import com.booktube.model.User;
@@ -52,8 +54,10 @@ public class LoadDataPage extends BasePage {
 
 		User user = new User("user", "pass", "nombre", "apellido",
 				User.Level.USER);
+		user.setBirthdate(new Date());
 		this.admin = new User("admin", "admin", "nombre", "apellido",
 				User.Level.ADMIN);
+		this.admin.setBirthdate(new Date());
 
 		userService.insertUser(user);
 		users.add(user);
@@ -61,16 +65,19 @@ public class LoadDataPage extends BasePage {
 
 		user = new User("user2", "user2", "user2", "user2",
 				User.Level.USER);
+		user.setBirthdate(new Date());
 		userService.insertUser(user);
 		users.add(user);
 
 		user = new User("user3", "user3", "user3", "user3",
 				User.Level.USER);
+		user.setBirthdate(new Date());
 		userService.insertUser(user);
 		users.add(user);
 
 		user = new User("user4", "user4", "user4", "user4",
 				User.Level.USER);
+		user.setBirthdate(new Date());
 		userService.insertUser(user);
 		users.add(user);
 
@@ -127,7 +134,7 @@ public class LoadDataPage extends BasePage {
 
 	public void addMessages() {
 
-		Message message = new Message("subject", "text", admin);
+		Message message = new Message(Type.PRIVATE_MESSAGE, "subject", "text", admin);
 
 		Set<MessageDetail> receiverSet = new HashSet<MessageDetail>();
 
@@ -135,9 +142,14 @@ public class LoadDataPage extends BasePage {
 		receiverSet.add(new MessageDetail(users.get(1), message));
 		
 		message.setReceiver(receiverSet);
+		
+		Set<Message> answer = new HashSet<Message>();
+		answer.add(new Message(Type.PRIVATE_MESSAGE, "RE: subject", "respuesta a text",  users.get(0), admin));
+		message.setAnswer(answer);
+		
 		messageService.insertMessage(message);
 		
-		message = new Message("subject", "text", admin);
+		message = new Message(Type.PRIVATE_MESSAGE, "subject", "text", admin);
 
 		receiverSet = new HashSet<MessageDetail>();
 

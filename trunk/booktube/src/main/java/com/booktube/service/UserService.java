@@ -4,10 +4,16 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.booktube.model.User;
+import com.booktube.model.User.Gender;
+import com.booktube.model.User.Level;
 
 public interface UserService {
 	public boolean usernameExists(String username);
     public List<User> getAllUsers(int first, int count);
+    public List<User> getUsersByGender(int first, int count, Gender gender);
+    public List<User> getUsersByAge(int first, int count, int lowerAge, int higherAge);
+    public List<User> getUsers(int first, int count, Gender gender, int lowerAge, int higherAge);
+    public List<User> getUsers(int first, int count, Level level);
     public void updateUser(User user);
     public void deleteUser(User user);
     public User getUser(Long id);
