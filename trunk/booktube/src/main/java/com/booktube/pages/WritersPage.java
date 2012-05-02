@@ -62,11 +62,17 @@ public class WritersPage extends BasePage {
 				CompoundPropertyModel<User> model = new CompoundPropertyModel<User>(user);
 				item.setDefaultModel(model);
 				final PageParameters parameters = new PageParameters();
-				parameters.set("user", user.getId());
+				parameters.set("userId", user.getId());
 				item.add(new Label("id"));
 				item.add(new Label("username"));
 				item.add(new Label("firstname"));
 				item.add(new Label("lastname"));
+				item.add(new Link("detailsLink", item.getModel()) {
+					public void onClick() {
+						setResponsePage(ShowUserPage.class, parameters);
+					}
+
+				});
 				item.add(new Link("editLink", item.getModel()) {
 					public void onClick() {
 						setResponsePage(new EditWriterPage(user.getId(),

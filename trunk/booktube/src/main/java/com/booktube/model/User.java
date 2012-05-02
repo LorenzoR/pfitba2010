@@ -56,11 +56,11 @@ public class User implements Serializable {
 
 	@Basic
 	@Column(name = "COUNTRY", nullable = false)
-	private String country = "Country";
+	private String country;
 	
 	@Enumerated(EnumType.ORDINAL)
 	@Column(name = "GENDER", nullable = false)
-	private Gender gender = Gender.FEMALE;
+	private Gender gender;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "BIRTHDATE", nullable = false)

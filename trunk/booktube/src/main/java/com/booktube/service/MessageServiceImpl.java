@@ -54,6 +54,14 @@ public class MessageServiceImpl implements MessageService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public List<Message> getAllCampaigns(int first, int count) {
+		return itemDao.getAllCampaigns(first, count);
+	}
+	
+	public int countCampaigns() {
+		return itemDao.countCampaigns();
+	}
 
 	public int countMessages() {
 		return itemDao.countMessages();
