@@ -76,7 +76,7 @@ public class UsersAdministrationPage extends AdministrationPage {
 
 		IDataProvider<User> dataProvider = new WriterProvider();
 
-		DataView<User> dataView = new DataView<User>("writerList",
+		DataView<User> dataView = new DataView<User>(label,
 				dataProvider, WRITERS_PER_PAGE) {
 
 			protected void populateItem(Item<User> item) {

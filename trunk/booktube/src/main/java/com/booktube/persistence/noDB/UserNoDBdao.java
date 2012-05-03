@@ -131,4 +131,18 @@ public class UserNoDBdao implements UserDao {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	public List<User> getUsersByCountry(int first, int count, String country) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public List<User> getUsers(int first, int count, Gender gender,
+			int lowerAge, int higherAge, String country) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public List<User> getUsers(int first, int count, Gender gender,
+			Integer lowerAge, Integer higherAge, String country) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

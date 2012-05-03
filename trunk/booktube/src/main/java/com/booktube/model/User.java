@@ -32,7 +32,6 @@ public class User implements Serializable {
 	public enum Level { ADMIN, USER }
 	public enum Gender { MALE, FEMALE }
 
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "USER_ID")
