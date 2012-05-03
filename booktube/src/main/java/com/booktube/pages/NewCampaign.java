@@ -102,6 +102,14 @@ public class NewCampaign extends BasePage {
 		
 		form.add(highAgeField);
 		
+		List<String> countryList = Arrays.asList(new String[] { "Country 1",
+				"...", "Country 2" });
+
+		final DropDownChoice<String> countrySelect = new DropDownChoice<String>("country",
+				new PropertyModel<String>(this, ""), countryList);
+		
+		form.add(countrySelect);
+		
 		final TextField<String> subject = new TextField<String>(
 				"subject", new Model<String>(""));
 
@@ -157,6 +165,8 @@ public class NewCampaign extends BasePage {
 						subject.getDefaultModelObjectAsString(), 
 						text.getDefaultModelObjectAsString(), user);
 				
+				String country = countrySelect.getDefaultModelObjectAsString();
+				
 				String genderString = genderSelect.getDefaultModelObjectAsString();
 				
 				Gender gender;
@@ -176,12 +186,14 @@ public class NewCampaign extends BasePage {
 				
 				List<User> receivers;
 				
-				if ( gender == null ) {
-					receivers = userService.getUsersByAge(0, Integer.MAX_VALUE, lowAge, highAge);
-				}
-				else {
-					receivers = userService.getUsers(0, Integer.MAX_VALUE, gender, lowAge, highAge);
-				}
+				receivers = userService.getUsers(0, Integer.MAX_VALUE, gender, lowAge, highAge, country);
+				
+//				if ( gender == null ) {
+//					receivers = userService.getUsersByAge(0, Integer.MAX_VALUE, lowAge, highAge);
+//				}
+//				else {
+//					receivers = userService.getUsers(0, Integer.MAX_VALUE, gender, lowAge, highAge);
+//				}
 				
 				messageService.sendMessages(message, receivers);	
 				
@@ -252,30 +264,6 @@ public class NewCampaign extends BasePage {
 		});
 
 		return form;
-	}
-
-	private void sendMessageByGender(Message message, Gender gender) {
-		List<User> receivers = userService.getUsersByGender(0, Integer.MAX_VALUE, gender);
-		Set<MessageDetail> messageDetail = new HashSet<MessageDetail>();
-		
-		for ( User aUser : receivers ) {
-			messageDetail.add(new MessageDetail(aUser, message));
-		}
-		
-		messageService.insertMessage(message);
-		
-	}
-	
-	private void sendMessageByAge(Message message, int lowerAge, int higherAge) {
-		List<User> receivers = userService.getUsersByAge(0, Integer.MAX_VALUE, lowerAge, higherAge);
-		Set<MessageDetail> messageDetail = new HashSet<MessageDetail>();
-		
-		for ( User aUser : receivers ) {
-			messageDetail.add(new MessageDetail(aUser, message));
-		}
-		
-		messageService.insertMessage(message);
-		
 	}
 	
 	@Override

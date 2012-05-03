@@ -23,8 +23,12 @@ public class UserServiceImpl implements UserService {
         return itemDao.getAllUsers(first, count);
     }
     
-    public List<User> getUsers(int first, int count, Gender gender, int lowerAge, int higherAge) {
-    	return itemDao.getUsers(first, count, gender, lowerAge, higherAge);
+    public List<User> getUsers(int first, int count, Gender gender, Integer lowerAge, Integer higherAge, String country) {
+    	return itemDao.getUsers(first, count, gender, lowerAge, higherAge, country);
+    }
+    
+    public List<User> getUsersByCountry(int first, int count, String country) {
+    	return itemDao.getUsersByCountry(first, count, country);
     }
     
     public List<User> getUsers(int first, int count, Level level) {

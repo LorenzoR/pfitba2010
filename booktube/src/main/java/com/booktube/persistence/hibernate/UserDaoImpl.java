@@ -11,6 +11,7 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -41,14 +42,35 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 
 	}
 
-	public List<User> getUsers(int first, int count, Gender gender, int lowerAge, int higherAge) {
-		List<User> users = (List<User>) getSession().createCriteria(User.class)
-				.add(Restrictions.eq("gender", gender)).setFirstResult(first)
-				.add(Expression.sql("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 >= " + lowerAge))
-				.add(Expression.sql("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 <= " + higherAge))
-				.setMaxResults(count).list();
+	public List<User> getUsers(int first, int count, Gender gender, Integer lowerAge, Integer higherAge, String country) {
 		
-		return users;
+		Criteria criteria = getSession().createCriteria(User.class);
+		
+		if ( lowerAge != null ) {
+			criteria.add(Expression.sql("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 >= " + lowerAge));
+		}
+		
+		if ( higherAge != null ) {
+			criteria.add(Expression.sql("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 <= " + higherAge));
+		}
+		
+		if ( gender != null ) {
+			criteria.add(Restrictions.eq("gender", gender));
+		}
+		
+		if ( country != null ) {
+			criteria.add(Restrictions.eq("country", country));
+		}
+		
+		return (List<User>) criteria.setFirstResult(first)
+				.setMaxResults(count).list();
+	}
+	
+	public List<User> getUsersByCountry(int first, int count, String country) {
+		return (List<User>) getSession().createCriteria(User.class)
+				.add(Restrictions.eq("country", country))
+				.setFirstResult(first)
+				.setMaxResults(count).list();
 	}
 	
 	public List<User> getUsers(int first, int count, Level level) {

@@ -45,6 +45,12 @@ public class ShowUserPage extends BasePage {
 		parent.setDefaultModel(model);
 		parent.add(new Label("id"));
 		parent.add(new Label("username"));
+		parent.add(new Label("firstname"));
+		parent.add(new Label("lastname"));
+		parent.add(new Label("gender"));
+		parent.add(new Label("birthdate"));
+		parent.add(new Label("country"));
+		parent.add(new Label("level"));
 
 	}
 

@@ -12,7 +12,8 @@ public interface UserService {
     public List<User> getAllUsers(int first, int count);
     public List<User> getUsersByGender(int first, int count, Gender gender);
     public List<User> getUsersByAge(int first, int count, int lowerAge, int higherAge);
-    public List<User> getUsers(int first, int count, Gender gender, int lowerAge, int higherAge);
+    public List<User> getUsersByCountry(int first, int count, String country);
+    public List<User> getUsers(int first, int count, Gender gender, Integer lowerAge, Integer higherAge, String country);
     public List<User> getUsers(int first, int count, Level level);
     public void updateUser(User user);
     public void deleteUser(User user);

@@ -51,7 +51,7 @@ public class MessagesAdministrationPage extends AdministrationPage {
 
 		parent.add(new Label("pageTitle", "Messages Administration Page"));
 
-		DataView<Message> dataView = messageList("messagesList");
+		DataView<Message> dataView = messageList("messageList");
 
 		parent.add(dataView);
 		parent.add(new PagingNavigator("footerPaginator", dataView));
@@ -142,7 +142,7 @@ public class MessagesAdministrationPage extends AdministrationPage {
 
 		IDataProvider<Message> dataProvider = new MessageProvider();
 
-		DataView<Message> dataView = new DataView<Message>("messageList",
+		DataView<Message> dataView = new DataView<Message>(label,
 				dataProvider, MESSAGES_PER_PAGE) {
 
 			protected void populateItem(Item<Message> item) {
