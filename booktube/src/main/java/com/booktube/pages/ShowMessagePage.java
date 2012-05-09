@@ -17,7 +17,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import com.booktube.WiaSession;
 import com.booktube.model.Book;
 import com.booktube.model.Message;
-import com.booktube.model.MessageDetail;
+import com.booktube.model.CampaignDetail;
 import com.booktube.model.User;
 import com.booktube.service.MessageService;
 
@@ -51,11 +51,11 @@ public class ShowMessagePage extends BasePage {
 		parent.add(new Label("sender"));
 		parent.add(new Label("subject"));
 
-		MessageDetail messageDetail = messageService.getMessageDetail(message,
-				user);
-		messageService.setMessageRead(messageDetail);
+		//CampaignDetail messageDetail = messageService.getMessageDetail(message,
+		//		user);
+		//messageService.setMessageRead(messageDetail);
 		
-		List<Message> messageList = getAnswers();
+		List<Message> messageList = getAnswers(message);
 		
 		ListView<Message> listview = new ListView<Message>("messageList", messageList) {
 			protected void populateItem(ListItem<Message> item) {
@@ -75,19 +75,18 @@ public class ShowMessagePage extends BasePage {
 
 	}
 
-	private List<Message> getAnswers() {
+	private List<Message> getAnswers(Message aMessage) {
 
 		List<Message> messageList = new ArrayList<Message>();
-		Message auxMessage;
 
-		System.out.println("DESEPUES MESSAGE: " + message);
+		System.out.println("DESEPUES MESSAGE: " + aMessage);
 
-		User sender = message.getSender();
+		User sender = aMessage.getSender();
 		System.out.println("SENDER: " + sender.getUsername());
 		User receiver = this.user;
 		User auxUser;
 
-		Message lastAnswer = message;
+		Message lastAnswer = aMessage;
 
 		System.out.println("ANSWERS: " + lastAnswer.getAnswer().toString());
 
@@ -95,14 +94,19 @@ public class ShowMessagePage extends BasePage {
 
 			Iterator<Message> messageIterator = lastAnswer.getAnswer()
 					.iterator();
-
+			
 			while (messageIterator.hasNext()) {
+				
 				lastAnswer = messageIterator.next();
-				System.out.println("ID: " + lastAnswer.getSender().getId());
+				
+				System.out.println("USER ID: " + lastAnswer.getSender().getId());
+				
+				System.out.println("MESSAGE ID: " + lastAnswer.getId());
 
-				if (lastAnswer.getSender().getId().equals(receiver.getId())) {
+				if ( receiver == null || lastAnswer.getSender().getId().equals(receiver.getId())) {
 					messageList.add(lastAnswer);
 				}
+			
 			}
 
 			auxUser = sender;

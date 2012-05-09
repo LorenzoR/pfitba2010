@@ -107,5 +107,9 @@ public class BookTag implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
+	
+	public String toString() {
+		return value;
+	}
 
 }

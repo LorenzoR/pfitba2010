@@ -25,13 +25,12 @@ public class AbstractDaoHibernate<T> extends HibernateDaoSupport {
 
 	// MEMBERS
 
-	private Class entityClass;
+	private Class<T> entityClass;
 
-	private SessionFactory sessionFactory;
 
 	// CONSTRUCTORS
 
-	protected AbstractDaoHibernate(Class dataClass) {
+	protected AbstractDaoHibernate(Class<T> dataClass) {
 		super();
 		this.entityClass = dataClass;
 	}
@@ -43,7 +42,6 @@ public class AbstractDaoHibernate<T> extends HibernateDaoSupport {
 		return (T) getSession().get(entityClass, id);
 	}
 
-	@SuppressWarnings("unchecked")
 	private T loadChecked(Long id) {
 		T persistedObject = load(id);
 
@@ -64,7 +62,7 @@ public class AbstractDaoHibernate<T> extends HibernateDaoSupport {
 		getSession().merge(detachedObject);
 	}
 
-	public void save(T persistedObject) {
+	public void saveOrUpdate(T persistedObject) {
 		getSession().saveOrUpdate(persistedObject);
 	}
 

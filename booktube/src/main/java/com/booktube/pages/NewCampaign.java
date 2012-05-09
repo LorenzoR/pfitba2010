@@ -32,7 +32,7 @@ import org.apache.wicket.util.value.ValueMap;
 import com.booktube.WiaSession;
 import com.booktube.model.Book;
 import com.booktube.model.Message;
-import com.booktube.model.MessageDetail;
+import com.booktube.model.CampaignDetail;
 import com.booktube.model.User;
 import com.booktube.model.Message.Type;
 import com.booktube.model.User.Gender;

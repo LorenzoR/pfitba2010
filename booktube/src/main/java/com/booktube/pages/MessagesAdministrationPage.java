@@ -24,7 +24,7 @@ import org.odlabs.wiquery.ui.dialog.Dialog;
 import org.odlabs.wiquery.ui.dialog.DialogButton;
 
 import com.booktube.model.Message;
-import com.booktube.model.MessageDetail;
+import com.booktube.model.CampaignDetail;
 import com.booktube.model.User;
 import com.booktube.pages.MessagesPage.MessageProvider;
 import com.booktube.service.MessageService;
@@ -147,7 +147,7 @@ public class MessagesAdministrationPage extends AdministrationPage {
 
 			protected void populateItem(Item<Message> item) {
 				final Message message = (Message) item.getModelObject();
-				final String receivers = getReceivers(message);
+				//final String receivers = getReceivers(message);
 				System.out.println("MESSAGE: " + message.getText());
 				CompoundPropertyModel<Message> model = new CompoundPropertyModel<Message>(
 						message);
@@ -157,7 +157,7 @@ public class MessagesAdministrationPage extends AdministrationPage {
 				// item.add(new Label("id"));
 				item.add(new Label("subject"));
 				item.add(new Label("sender"));
-				item.add(new Label("receiver", receivers));
+				item.add(new Label("receiver"));
 				item.add(new Label("date"));
 
 				item.add(new Link("detailsLink", item.getModel()) {
@@ -181,7 +181,7 @@ public class MessagesAdministrationPage extends AdministrationPage {
 
 						Message message = (Message) getModelObject();
 						messageId = message.getId();
-						messageService.deleteMessage(message);
+						//messageService.deleteMessage(message);
 						// userService.deleteUser(message);
 						// System.out.println("User " + messageId +
 						// " deleted.");
@@ -199,7 +199,7 @@ public class MessagesAdministrationPage extends AdministrationPage {
 		return dataView;
 	}
 
-	private String getReceivers(Message message) {
+	/*private String getReceivers(Message message) {
 		String receivers = "";
 		for (MessageDetail aMessageDetail : message.getReceiver()) {
 			if ( aMessageDetail.getReceiver() != null ) {
@@ -207,7 +207,7 @@ public class MessagesAdministrationPage extends AdministrationPage {
 			}
 		}
 		return receivers;
-	}
+	}*/
 
 	class MessageProvider implements IDataProvider<Message> {
 

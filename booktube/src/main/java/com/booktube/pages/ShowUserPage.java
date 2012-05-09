@@ -14,7 +14,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import com.booktube.WiaSession;
 import com.booktube.model.Message;
-import com.booktube.model.MessageDetail;
+import com.booktube.model.CampaignDetail;
 import com.booktube.model.User;
 import com.booktube.service.MessageService;
 import com.booktube.service.UserService;
