@@ -9,11 +9,8 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebApplication;
 
-import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -24,13 +21,9 @@ import com.booktube.pages.HomePage;
 import com.booktube.pages.RegisterPage;
 import com.booktube.pages.ShowBookPage;
 import com.booktube.pages.WritersPage;
-import com.booktube.service.BookServiceImpl;
 import com.booktube.service.BookService;
 import com.booktube.service.UserService;
-import com.booktube.service.UserServiceImpl;
 
-import org.apache.wicket.serialize.ISerializer;
-import org.apache.wicket.util.lang.Objects;
 
 /**
  * Application object for your web application. If you want to run this

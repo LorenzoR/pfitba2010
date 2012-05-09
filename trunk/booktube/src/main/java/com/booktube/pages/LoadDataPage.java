@@ -11,14 +11,16 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import com.booktube.model.Book;
+import com.booktube.model.Campaign;
 import com.booktube.model.Message;
 import com.booktube.model.Message.Type;
-import com.booktube.model.MessageDetail;
+import com.booktube.model.CampaignDetail;
 import com.booktube.model.BookTag;
 import com.booktube.model.User;
 import com.booktube.model.User.Gender;
 import com.booktube.pages.BasePage;
 import com.booktube.service.BookService;
+import com.booktube.service.CampaignService;
 import com.booktube.service.UserService;
 
 public class LoadDataPage extends BasePage {
@@ -28,6 +30,9 @@ public class LoadDataPage extends BasePage {
 
 	@SpringBean
 	BookService bookService;
+	
+	@SpringBean
+	CampaignService campaignService;
 
 	private List<User> users = new ArrayList<User>();
 	private User admin;
@@ -45,6 +50,7 @@ public class LoadDataPage extends BasePage {
 			addUsers();
 			addBooks();
 			addMessages();
+			addCampaigns();
 			label = "Cargue datos";
 		}
 
@@ -143,41 +149,68 @@ public class LoadDataPage extends BasePage {
 		
 	}
 
-	public void addMessages() {
+	public void addCampaigns() {
 
-		Message message = new Message(Type.PRIVATE_MESSAGE, "subject", "text", admin);
+		Campaign campaign = new Campaign(Type.PRIVATE_MESSAGE, "subject", "text", admin);
 
-		Set<MessageDetail> receiverSet = new HashSet<MessageDetail>();
+		Set<CampaignDetail> receiverSet = new HashSet<CampaignDetail>();
 
-		receiverSet.add(new MessageDetail(users.get(0), message));
-		receiverSet.add(new MessageDetail(users.get(1), message));
+		receiverSet.add(new CampaignDetail(users.get(0), campaign));
+		receiverSet.add(new CampaignDetail(users.get(1), campaign));
 		
-		message.setReceiver(receiverSet);
+		campaign.setReceiver(receiverSet);
 		
 		Set<Message> answerSet = new HashSet<Message>();
-		Message answer = new Message(Type.FIRST_ANSWER, "RE: subject", "respuesta a text",  users.get(0), admin);
-		answerSet.add(answer);
-		message.setAnswer(answerSet);
+		//Campaign answer = new Campaign(Type.FIRST_ANSWER, "RE: subject", "respuesta a text",  users.get(0), admin);
+		//answerSet.add(new Campaign(Type.FIRST_ANSWER, "RE: subject", "otra respuesta a text", users.get(1), admin));
+		//answerSet.add(answer);
+		//campaign.setAnswer(answerSet);
 	
-		answerSet = new HashSet<Message>();
-		answerSet.add(new Message(Type.ANSWER, "RE: RE: subject", "respuesta a repuesta a text", admin, users.get(0)));
-		answer.setAnswer(answerSet);
+		//answerSet = new HashSet<Campaign>();
+		//answerSet.add(new Campaign(Type.ANSWER, "RE: RE: subject", "respuesta a repuesta a text", admin, users.get(0)));
+		//answer.setAnswer(answerSet);
 		
-		messageService.insertMessage(message);
+		campaignService.insertCampaign(campaign);
 		
-		message = new Message(Type.PRIVATE_MESSAGE, "subject2", "text2", admin);
+		campaign = new Campaign(Type.PRIVATE_MESSAGE, "subject2", "text2", admin);
 
-		receiverSet = new HashSet<MessageDetail>();
+		receiverSet = new HashSet<CampaignDetail>();
 
-		receiverSet.add(new MessageDetail(users.get(1), message));
-		receiverSet.add(new MessageDetail(users.get(2), message));
-		receiverSet.add(new MessageDetail(users.get(3), message));
+		receiverSet.add(new CampaignDetail(users.get(1), campaign));
+		receiverSet.add(new CampaignDetail(users.get(2), campaign));
+		receiverSet.add(new CampaignDetail(users.get(3), campaign));
 		
-		message.setReceiver(receiverSet);
-		messageService.insertMessage(message);
+		campaign.setReceiver(receiverSet);
+		campaignService.insertCampaign(campaign);
 
 	}
 
+	public void addMessages() {
+		
+		Message message = new Message(Type.CAMPAIGN, "subject campaign", "text campaign", admin, users.get(0));
+
+		Set<CampaignDetail> receiverSet = new HashSet<CampaignDetail>();
+
+		//receiverSet.add(new MessageDetail(users.get(0), message));
+		//receiverSet.add(new MessageDetail(users.get(1), message));
+		
+		//message.setReceiver(receiverSet);
+		
+		messageService.insertMessage(message);
+		
+		message = new Message(Type.CAMPAIGN, "subject campaign 2", "text campaign 2", admin, users.get(1));
+
+		//receiverSet = new HashSet<MessageDetail>();
+
+		//receiverSet.add(new MessageDetail(users.get(1), message));
+		//receiverSet.add(new MessageDetail(users.get(2), message));
+		//receiverSet.add(new MessageDetail(users.get(3), message));
+		
+		//message.setReceiver(receiverSet);
+		messageService.insertMessage(message);
+		
+	}
+	
 	@Override
 	protected void setPageTitle() {
 		// TODO Auto-generated method stub

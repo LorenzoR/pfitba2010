@@ -65,7 +65,7 @@ public class MessagesPage extends BasePage {
 				final PageParameters parameters = new PageParameters();
 				parameters.set("messageId", message.getId());
 				//item.add(new Label("id"));
-				if ( messageService.getMessageDetail(message, user).isRead() ) {
+				if ( message.isRead() ) {
 					item.add(new Label("subject"));
 					item.add(new Label("sender"));
 					item.add(new Label("date"));

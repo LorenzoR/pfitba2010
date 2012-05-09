@@ -60,9 +60,15 @@ public class Message implements Serializable {
 	private Set<User> receiver;
 	*/
 	
-	@OneToMany(mappedBy = "message", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	/*@OneToMany(mappedBy = "message", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@OnDelete(action=OnDeleteAction.CASCADE)
 	private Set<MessageDetail> receiver;
+	*/
+	
+	@OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+	@JoinColumn(name = "RECEIVER_ID")
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	private User receiver;
 	
 	/*@Basic
 	@Column(name = "REPLY_TO")
@@ -71,7 +77,7 @@ public class Message implements Serializable {
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
 	@Cascade( org.hibernate.annotations.CascadeType.SAVE_UPDATE )
-	@JoinTable(name = "ANSWER", joinColumns = { @JoinColumn(name = "MESSAGE_ID") })
+	@JoinTable(name = "ANSWER", joinColumns = { @JoinColumn(name = "MESSAGE_ID") }, inverseJoinColumns = { @JoinColumn(name = "ANSWER_MESSAGE_ID") })
 	private Set<Message> answer;
 	
 	@Temporal(TemporalType.TIMESTAMP)
@@ -90,6 +96,9 @@ public class Message implements Serializable {
 	@Column(name = "TYPE", nullable = false)
 	private Type type;
 	
+	@Basic
+	@Column(name = "IS_READ")
+	private boolean isRead = false;	
 	
 	public Message () {
 		
@@ -100,7 +109,7 @@ public class Message implements Serializable {
 		this.text = text;
 		this.sender = sender;
 		this.date = Calendar.getInstance().getTime();
-		this.receiver = new HashSet<MessageDetail>();
+		//this.receiver = new HashSet<MessageDetail>();
 		this.setType(type);
 	}
 	
@@ -109,19 +118,20 @@ public class Message implements Serializable {
 		this.text = text;
 		this.sender = sender;
 		this.date = Calendar.getInstance().getTime();
-		this.receiver = new HashSet<MessageDetail>();
-		this.receiver.add(new MessageDetail(receiver, this));
+		//this.receiver = new HashSet<MessageDetail>();
+		//this.receiver.add(new MessageDetail(receiver, this));
+		this.receiver = receiver;
 		this.setType(type);
 	}
 	
-	public Message (Type type, String subject, String text, User sender, Set<MessageDetail> receiver) {
+	/*public Message (Type type, String subject, String text, User sender, Set<MessageDetail> receiver) {
 		this.subject = subject;
 		this.text = text;
 		this.sender = sender;
 		this.receiver = receiver;
 		this.date = Calendar.getInstance().getTime();
 		this.setType(type);
-	}
+	}*/
 
 	public Long getId() {
 		return id;
@@ -139,7 +149,15 @@ public class Message implements Serializable {
 		this.sender = sender;
 	}
 
-	public Set<MessageDetail> getReceiver() {
+	public User getReceiver() {
+		return receiver;
+	}
+	
+	public void setReceiver(User receiver) {
+		this.receiver = receiver;
+	}
+	
+	/*public Set<MessageDetail> getReceiver() {
 		return receiver;
 	}
 
@@ -149,7 +167,7 @@ public class Message implements Serializable {
 	
 	public void addReceiver(User receiver) {
 		this.receiver.add(new MessageDetail(receiver, this));
-	}
+	}*/
 
 	public Date getDate() {
 		return date;
@@ -267,6 +285,14 @@ public class Message implements Serializable {
 
 	public void setType(Type type) {
 		this.type = type;
+	}
+
+	public boolean isRead() {
+		return isRead;
+	}
+
+	public void setRead(boolean isRead) {
+		this.isRead = isRead;
 	}
 	
 

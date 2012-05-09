@@ -251,7 +251,7 @@ public class ShowBookPage extends BasePage {
 				/* Clear values */
 				editor.setModel(new Model(""));
 
-				target.addComponent(parent);
+				target.add(parent);
 
 			}
 

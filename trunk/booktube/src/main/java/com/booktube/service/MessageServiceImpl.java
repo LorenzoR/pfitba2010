@@ -3,7 +3,7 @@ package com.booktube.service;
 import java.util.List;
 
 import com.booktube.model.Message;
-import com.booktube.model.MessageDetail;
+import com.booktube.model.CampaignDetail;
 import com.booktube.model.User;
 import com.booktube.persistence.MessageDao;
 
@@ -79,13 +79,13 @@ public class MessageServiceImpl implements MessageService {
 		return itemDao.countUnreadMessagesTo(receiver);
 	}
 	
-	public void setMessageRead(MessageDetail messageDetail) {
+	public void setMessageRead(CampaignDetail messageDetail) {
 		itemDao.setMessageRead(messageDetail);
 	}
 
-	public MessageDetail getMessageDetail(Message message, User receiver) {
+	/*public CampaignDetail getMessageDetail(Message message, User receiver) {
 		return itemDao.getMessageDetail(message, receiver);
-	}
+	}*/
 
 	public void sendMessages(Message message, List<User> receivers) {
 		itemDao.sendMessages(message, receivers);

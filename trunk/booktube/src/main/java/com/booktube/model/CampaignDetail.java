@@ -18,18 +18,18 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
-@Table(name = "MESSAGE_DETAIL")
-public class MessageDetail implements Serializable {
+@Table(name = "CAMPAIGN_DETAIL")
+public class CampaignDetail implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "MESSAGE_DETAIL_ID")
+	@Column(name = "CAMPAIGN_DETAIL_ID")
 	private Long id;
 	
 	@ManyToOne(cascade=CascadeType.PERSIST, fetch = FetchType.LAZY)
-	@JoinColumn(name="MESSAGE_ID", updatable = false)
+	@JoinColumn(name="CAMPAIGN_ID", updatable = false)
 	@OnDelete(action=OnDeleteAction.CASCADE)
-	private Message message;
+	private Campaign campaign;
 	
 	@ManyToOne(cascade=CascadeType.PERSIST, fetch = FetchType.LAZY)
 	@JoinColumn(name="USER_ID", updatable = false)
@@ -40,15 +40,21 @@ public class MessageDetail implements Serializable {
 	@Column(name = "IS_READ")
 	private boolean isRead;
 
-	public MessageDetail() {
+	public CampaignDetail() {
 		
 	}
 	
-	public MessageDetail(User receiver, Message message) {
+	public CampaignDetail(User receiver, Campaign campaign) {
 		this.receiver = receiver;
-		this.message = message;
+		this.campaign = campaign;
 		this.isRead = false;
 	}
+	
+//	public MessageDetail(User receiver, Message message) {
+//		this.receiver = receiver;
+//		this.message = message;
+//		this.isRead = false;
+//	}
 	
 	public Long getId() {
 		return id;
@@ -58,12 +64,12 @@ public class MessageDetail implements Serializable {
 		this.id = id;
 	}
 
-	public Message getMessage() {
-		return message;
+	public Campaign getCampaign() {
+		return campaign;
 	}
 
-	public void setMessage(Message message) {
-		this.message = message;
+	public void setCampaign(Campaign campaign) {
+		this.campaign = campaign;
 	}
 
 	public User getReceiver() {
@@ -100,7 +106,7 @@ public class MessageDetail implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		MessageDetail other = (MessageDetail) obj;
+		CampaignDetail other = (CampaignDetail) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;

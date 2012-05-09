@@ -17,6 +17,10 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
 	<bean id="messageService" class="com.booktube.service.MessageServiceImpl">
 		<property name="itemDao" ref="messageDao" />
 	</bean>
+	
+	<bean id="campaignService" class="com.booktube.service.CampaignServiceImpl">
+		<property name="itemDao" ref="campaignDao" />
+	</bean>
 
 	<!-- DAOs -->
 	<bean id="userDao" class="com.booktube.persistence.hibernate.UserDaoImpl">
@@ -28,6 +32,10 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
 	</bean>
 	
 	<bean id="messageDao" class="com.booktube.persistence.hibernate.MessageDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="campaignDao" class="com.booktube.persistence.hibernate.CampaignDaoImpl">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
@@ -109,8 +117,9 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
 				<value>com.booktube.model.Comment</value>
 				<value>com.booktube.model.Rating</value>
 				<value>com.booktube.model.Message</value>
-				<value>com.booktube.model.MessageDetail</value>
+				<value>com.booktube.model.CampaignDetail</value>
 				<value>com.booktube.model.BookTag</value>
+				<value>com.booktube.model.Campaign</value>
 			</list>
 
 		</property>

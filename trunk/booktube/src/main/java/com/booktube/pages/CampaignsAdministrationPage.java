@@ -23,22 +23,24 @@ import org.odlabs.wiquery.ui.dialog.AjaxDialogButton;
 import org.odlabs.wiquery.ui.dialog.Dialog;
 import org.odlabs.wiquery.ui.dialog.DialogButton;
 
-import com.booktube.model.Message;
-import com.booktube.model.MessageDetail;
+import com.booktube.model.Campaign;
+import com.booktube.model.CampaignDetail;
 import com.booktube.pages.MessagesAdministrationPage.MessageProvider;
+import com.booktube.service.CampaignService;
 import com.booktube.service.MessageService;
 
 public class CampaignsAdministrationPage extends AdministrationPage{	
 	private static final long serialVersionUID = 3572068607555159574L;
+	
 	@SpringBean
-	MessageService messageService;
+	CampaignService campaignService;
 
 	private static Dialog deleteDialog;
 	private static Dialog deleteConfirmationDialog;
 
 	public static final int MESSAGES_PER_PAGE = 5;
 	
-	private static Long messageId;
+	private static Long campaignId;
 
 	public CampaignsAdministrationPage() {
 		super();
@@ -49,7 +51,7 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 
 		parent.add(new Label("pageTitle", "Campaigns Administration Page"));
 
-		DataView<Message> dataView = messageList("campaignsList");
+		DataView<Campaign> dataView = campaignList("campaignsList");
 
 		parent.add(dataView);
 		parent.add(new PagingNavigator("footerPaginator", dataView));
@@ -102,8 +104,8 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 			@Override
 			protected void onButtonClicked(AjaxRequestTarget target) {
 				System.out.println("Borro mensaje");
-				Message message = messageService.getMessage(messageId);
-				messageService.deleteMessage(message);
+				Campaign campaign = campaignService.getCampaign(campaignId);
+				campaignService.deleteCampaign(campaign);
 				// JsScopeUiEvent.quickScope(deleteConfirmationdialog.close().render());
 				JsScope.quickScope(dialog.close().render());
 				// deleteConfirmationdialog.close(target);
@@ -123,22 +125,22 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 
 	}
 
-	private DataView<Message> messageList(String label) {
+	private DataView<Campaign> campaignList(String label) {
 
-		IDataProvider<Message> dataProvider = new CampaignProvider();
+		IDataProvider<Campaign> dataProvider = new CampaignProvider();
 
-		DataView<Message> dataView = new DataView<Message>("campaignsList",
+		DataView<Campaign> dataView = new DataView<Campaign>("campaignsList",
 				dataProvider, MESSAGES_PER_PAGE) {
 
-			protected void populateItem(Item<Message> item) {
-				final Message message = (Message) item.getModelObject();
-				final String receivers = getReceivers(message);
-				System.out.println("MESSAGE: " + message.getText());
-				CompoundPropertyModel<Message> model = new CompoundPropertyModel<Message>(
-						message);
+			protected void populateItem(Item<Campaign> item) {
+				final Campaign campaign = (Campaign) item.getModelObject();
+				final String receivers = getReceivers(campaign);
+				System.out.println("MESSAGE: " + campaign.getText());
+				CompoundPropertyModel<Campaign> model = new CompoundPropertyModel<Campaign>(
+						campaign);
 				item.setDefaultModel(model);
 				final PageParameters parameters = new PageParameters();
-				parameters.set("messageId", message.getId());
+				parameters.set("messageId", campaign.getId());
 				// item.add(new Label("id"));
 				item.add(new Label("subject"));
 				item.add(new Label("sender"));
@@ -159,14 +161,14 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 					}
 
 				});
-				item.add(new AjaxLink<Message>("deleteLink", item.getModel()) {
+				item.add(new AjaxLink<Campaign>("deleteLink", item.getModel()) {
 
 					@Override
 					public void onClick(AjaxRequestTarget target) {
 
-						Message message = (Message) getModelObject();
-						messageId = message.getId();
-						messageService.deleteMessage(message);
+						Campaign campaign = (Campaign) getModelObject();
+						campaignId = campaign.getId();
+						campaignService.deleteCampaign(campaign);
 						// userService.deleteUser(message);
 						// System.out.println("User " + messageId +
 						// " deleted.");
@@ -184,35 +186,35 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 		return dataView;
 	}
 
-	private String getReceivers(Message message) {
+	private String getReceivers(Campaign campaign) {
 		String receivers = "";
-		for (MessageDetail aMessageDetail : message.getReceiver()) {
-			if ( aMessageDetail.getReceiver() != null ) {
-				receivers += aMessageDetail.getReceiver().getUsername() + ", ";
+		for (CampaignDetail aCampaignDetail : campaign.getReceiver()) {
+			if ( aCampaignDetail.getReceiver() != null ) {
+				receivers += aCampaignDetail.getReceiver().getUsername() + ", ";
 			}
 		}
 		return receivers;
 	}
 
-	class CampaignProvider implements IDataProvider<Message> {
+	class CampaignProvider implements IDataProvider<Campaign> {
 
-		private List<Message> messages;
+		private List<Campaign> campaigns;
 
 		public CampaignProvider() {
 		}
 
-		public Iterator<Message> iterator(int first, int count) {
+		public Iterator<Campaign> iterator(int first, int count) {
 
-			this.messages = messageService.getAllCampaigns(first, count);
-			return this.messages.iterator();
+			this.campaigns = campaignService.getAllCampaigns(first, count);
+			return this.campaigns.iterator();
 		}
 
 		public int size() {
 			return messageService.countCampaigns();
 		}
 
-		public IModel<Message> model(Message message) {
-			return new CompoundPropertyModel<Message>(message);
+		public IModel<Campaign> model(Campaign message) {
+			return new CompoundPropertyModel<Campaign>(message);
 		}
 
 		public void detach() {

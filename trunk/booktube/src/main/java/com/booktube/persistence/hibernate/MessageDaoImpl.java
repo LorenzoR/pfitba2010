@@ -12,7 +12,7 @@ import org.hibernate.criterion.Restrictions;
 import com.booktube.model.Book;
 import com.booktube.model.Message;
 import com.booktube.model.Message.Type;
-import com.booktube.model.MessageDetail;
+import com.booktube.model.CampaignDetail;
 import com.booktube.model.User;
 import com.booktube.persistence.MessageDao;
 
@@ -102,30 +102,31 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 		return ((Number) criteria.uniqueResult()).intValue();
 	}
 
-	public void setMessageRead(MessageDetail messageDetail) {
+	public void setMessageRead(CampaignDetail messageDetail) {
 		messageDetail.setRead(true);
 		getSession().merge(messageDetail);
 		getSession().flush();
 	}
 
-	public MessageDetail getMessageDetail(Message message, User receiver) {
-		Criteria criteria = getSession().createCriteria(MessageDetail.class)
+	/*public CampaignDetail getMessageDetail(Message message, User receiver) {
+		Criteria criteria = getSession().createCriteria(CampaignDetail.class)
 				.add(Restrictions.eq("receiver", receiver))
 				.add(Restrictions.eq("message", message));
 
-		return (MessageDetail) criteria.setMaxResults(1).uniqueResult();
-	}
+		return (CampaignDetail) criteria.setMaxResults(1).uniqueResult();
+	}*/
 
 	public void sendMessages(Message message, List<User> receivers) {
-		Set<MessageDetail> messageDetail = new HashSet<MessageDetail>();
+		//Set<MessageDetail> messageDetail = new HashSet<MessageDetail>();
 
 		for (User aUser : receivers) {
-			messageDetail.add(new MessageDetail(aUser, message));
+			insert(new Message(message.getType(), message.getSubject(), message.getText(), message.getSender(), aUser));
+			//messageDetail.add(new MessageDetail(aUser, message));
 		}
 		
-		message.setReceiver(messageDetail);
+		//message.setReceiver(messageDetail);
 
-		insert(message);
+		//insert(message);
 	}
 
 	public List<Message> getAllCampaigns(int first, int count) {

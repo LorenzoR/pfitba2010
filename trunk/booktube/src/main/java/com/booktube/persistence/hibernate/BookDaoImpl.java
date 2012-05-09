@@ -29,7 +29,7 @@ import com.booktube.WicketApplication;
 import com.booktube.model.Book;
 import com.booktube.model.BookTag;
 import com.booktube.model.Message;
-import com.booktube.model.MessageDetail;
+import com.booktube.model.CampaignDetail;
 import com.booktube.model.User;
 import com.booktube.persistence.BookDao;
 import com.booktube.service.BookService.SearchType;

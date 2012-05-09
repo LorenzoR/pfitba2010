@@ -51,6 +51,9 @@ public class EditBookPage extends BasePage {
 
 		add(editBookForm(book, currentPage));
 
+		String newTitle = "Booktube - Edit " + book.getTitle(); 
+		super.get("pageTitle").setDefaultModelObject(newTitle);
+		
 		//setResponsePage(backPage);
 		//goToLastPage();
 	}
@@ -303,8 +306,8 @@ public class EditBookPage extends BasePage {
 	@Override
 	protected void setPageTitle() {
 		// TODO Auto-generated method stub
-		String newTitle = "Booktube - Edit " + book.getTitle(); 
-		super.get("pageTitle").setDefaultModelObject(newTitle);
+//		String newTitle = "Booktube - Edit " + book.getTitle(); 
+//		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 
 }
