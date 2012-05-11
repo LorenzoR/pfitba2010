@@ -78,7 +78,7 @@ public class Message implements Serializable {
 	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
 	@Cascade( org.hibernate.annotations.CascadeType.SAVE_UPDATE )
 	@JoinTable(name = "ANSWER", joinColumns = { @JoinColumn(name = "MESSAGE_ID") }, inverseJoinColumns = { @JoinColumn(name = "ANSWER_MESSAGE_ID") })
-	private Set<Message> answer;
+	private Set<Message> answer = new HashSet<Message>();
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "DATE")
@@ -195,6 +195,10 @@ public class Message implements Serializable {
 
 	public void setAnswer(Set<Message> answer) {
 		this.answer = answer;
+	}
+	
+	public void addAnswer(Message answer) {
+		this.answer.add(answer);
 	}
 
 	public Set<Message> getAnswer() {

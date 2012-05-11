@@ -1,6 +1,7 @@
 package com.booktube.pages;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -57,6 +58,10 @@ public class ShowMessagePage extends BasePage {
 		
 		List<Message> messageList = getAnswers(message);
 		
+		Collections.reverse(messageList);
+		
+		messageList.add(message);
+		
 		ListView<Message> listview = new ListView<Message>("messageList", messageList) {
 			protected void populateItem(ListItem<Message> item) {
 				final Message message = (Message) item.getModelObject();
@@ -71,6 +76,9 @@ public class ShowMessagePage extends BasePage {
 		};
 		
 		parent.add(listview);
+		
+		message.setRead(true);
+		messageService.updateMessage(message);
 		
 
 	}
