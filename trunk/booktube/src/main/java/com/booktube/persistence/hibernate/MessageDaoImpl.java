@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
@@ -65,8 +66,8 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 	public List<Message> getAllMessagesTo(User receiver, int first, int count) {
 		Criteria criteria = getSession().createCriteria(Message.class)
 				.add(Restrictions.or(Restrictions.eq("type", Type.PRIVATE_MESSAGE), Restrictions.eq("type", Type.FIRST_ANSWER)))
-				.createCriteria("receiver")
 				.add(Restrictions.eq("receiver", receiver))
+				.addOrder(Order.desc("date"))
 				.setFirstResult(first).setMaxResults(count);
 
 		return (List<Message>) criteria.list();
@@ -87,7 +88,6 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 
 	public int countMessagesTo(User receiver) {
 		Criteria criteria = getSession().createCriteria(Message.class)
-				.createCriteria("receiver")
 				.add(Restrictions.eq("receiver", receiver));
 		criteria.setProjection(Projections.rowCount());
 		return ((Number) criteria.uniqueResult()).intValue();
@@ -95,7 +95,6 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 
 	public int countUnreadMessagesTo(User receiver) {
 		Criteria criteria = getSession().createCriteria(Message.class)
-				.createCriteria("receiver")
 				.add(Restrictions.eq("receiver", receiver))
 				.add(Restrictions.eq("isRead", false));
 		criteria.setProjection(Projections.rowCount());
