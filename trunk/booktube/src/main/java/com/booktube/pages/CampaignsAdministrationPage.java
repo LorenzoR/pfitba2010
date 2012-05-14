@@ -71,7 +71,7 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 
 		Dialog dialog = new Dialog("success_dialog");
 		
-		dialog.add(new Label("success_dialog_text", "Mensaje eliminado!"));
+		dialog.add(new Label("success_dialog_text", "Campaña eliminada!"));
 		
 		AjaxDialogButton ok = new AjaxDialogButton("OK") {
 
@@ -79,7 +79,7 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 
 			@Override
 			protected void onButtonClicked(AjaxRequestTarget target) {
-				setResponsePage(MessagesAdministrationPage.class);
+				setResponsePage(CampaignsAdministrationPage.class);
 
 			}
 		};
@@ -95,7 +95,7 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 
 		final Dialog dialog = new Dialog("delete_confirmation_dialog");
 
-		dialog.add(new Label("delete_confirmation_dialog_text", "Esta seguro que desea eliminar el mensaje?"));
+		dialog.add(new Label("delete_confirmation_dialog_text", "Esta seguro que desea eliminar la campaña?"));
 		
 		AjaxDialogButton yesButton = new AjaxDialogButton("Si") {
 
@@ -105,6 +105,7 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 			protected void onButtonClicked(AjaxRequestTarget target) {
 				System.out.println("Borro mensaje");
 				Campaign campaign = campaignService.getCampaign(campaignId);
+				System.out.println("CAMPAIGN ES : " + campaign);
 				campaignService.deleteCampaign(campaign);
 				// JsScopeUiEvent.quickScope(deleteConfirmationdialog.close().render());
 				JsScope.quickScope(dialog.close().render());
@@ -168,7 +169,7 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 
 						Campaign campaign = (Campaign) getModelObject();
 						campaignId = campaign.getId();
-						campaignService.deleteCampaign(campaign);
+						//campaignService.deleteCampaign(campaign);
 						// userService.deleteUser(message);
 						// System.out.println("User " + messageId +
 						// " deleted.");
@@ -210,11 +211,11 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 		}
 
 		public int size() {
-			return messageService.countCampaigns();
+			return campaignService.countCampaigns();
 		}
 
-		public IModel<Campaign> model(Campaign message) {
-			return new CompoundPropertyModel<Campaign>(message);
+		public IModel<Campaign> model(Campaign campaign) {
+			return new CompoundPropertyModel<Campaign>(campaign);
 		}
 
 		public void detach() {

@@ -31,6 +31,7 @@ import org.apache.wicket.util.value.ValueMap;
 
 import com.booktube.WiaSession;
 import com.booktube.model.Book;
+import com.booktube.model.Campaign;
 import com.booktube.model.Message;
 import com.booktube.model.CampaignDetail;
 import com.booktube.model.User;
@@ -74,48 +75,51 @@ public class NewCampaign extends BasePage {
 		} else {
 			registerMessage.setVisible(false);
 		}
-		
-		System.out.println("MSG FROM: " + messageService.countMessagesFrom(user));
+
+		System.out.println("MSG FROM: "
+				+ messageService.countMessagesFrom(user));
 		System.out.println("MSG TO: " + messageService.countMessagesTo(user));
-		System.out.println("UNREAD MSG TO: " + messageService.countUnreadMessagesTo(user));
+		System.out.println("UNREAD MSG TO: "
+				+ messageService.countUnreadMessagesTo(user));
 
 	}
 
 	private Form<?> newContactForm(final WebMarkupContainer parent) {
 		Form<?> form = new Form<Object>("form");
 
-		List<String> genders = Arrays.asList(new String[] { "Todos", "Masculino",
-				"Femenino" });
+		List<String> genders = Arrays.asList(new String[] { "Todos",
+				"Masculino", "Femenino" });
 
-		final DropDownChoice<String> genderSelect = new DropDownChoice<String>("gender",
-				new PropertyModel<String>(this, ""), genders);
+		final DropDownChoice<String> genderSelect = new DropDownChoice<String>(
+				"gender", new PropertyModel<String>(this, ""), genders);
 
 		form.add(genderSelect);
-		
-		final TextField<String> lowAgeField = new TextField<String>(
-				"lowAge", new Model<String>(""));
-		
+
+		final TextField<String> lowAgeField = new TextField<String>("lowAge",
+				new Model<String>(""));
+
 		form.add(lowAgeField);
-		
-		final TextField<String> highAgeField = new TextField<String>(
-				"highAge", new Model<String>(""));
-		
+
+		final TextField<String> highAgeField = new TextField<String>("highAge",
+				new Model<String>(""));
+
 		form.add(highAgeField);
-		
+
 		List<String> countryList = Arrays.asList(new String[] { "Country 1",
 				"...", "Country 2" });
 
-		final DropDownChoice<String> countrySelect = new DropDownChoice<String>("country",
-				new PropertyModel<String>(this, ""), countryList);
-		
+		final DropDownChoice<String> countrySelect = new DropDownChoice<String>(
+				"country", new PropertyModel<String>(this, ""), countryList);
+
 		form.add(countrySelect);
-		
-		final TextField<String> subject = new TextField<String>(
-				"subject", new Model<String>(""));
+
+		final TextField<String> subject = new TextField<String>("subject",
+				new Model<String>(""));
 
 		form.add(subject);
 
-		final TextArea<String> text = new TextArea<String>("textArea", new Model<String>());
+		final TextArea<String> text = new TextArea<String>("textArea",
+				new Model<String>());
 		text.setOutputMarkupId(true);
 
 		List<User> personsList = userService.getAllUsers(0, Integer.MAX_VALUE);
@@ -125,7 +129,8 @@ public class NewCampaign extends BasePage {
 			int currentUserIndex = 0;
 
 			for (User aUser : personsList) {
-				System.out.println("USERID: " + user.getId() + " aUSERID: " + aUser.getId());
+				System.out.println("USERID: " + user.getId() + " aUSERID: "
+						+ aUser.getId());
 				if (user.getId().equals(aUser.getId())) {
 					break;
 				} else {
@@ -160,67 +165,64 @@ public class NewCampaign extends BasePage {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 
-				
-				Message message = new Message(Type.CAMPAIGN,
-						subject.getDefaultModelObjectAsString(), 
-						text.getDefaultModelObjectAsString(), user);
-				
+				Campaign campaign = new Campaign(subject
+						.getDefaultModelObjectAsString(), text
+						.getDefaultModelObjectAsString(), user);
+
 				String country = countrySelect.getDefaultModelObjectAsString();
-				
-				String genderString = genderSelect.getDefaultModelObjectAsString();
-				
+
+				String genderString = genderSelect
+						.getDefaultModelObjectAsString();
+
 				Gender gender;
-				
-				if ( genderString.equals("Masculino") ) {
+
+				if (genderString.equals("Masculino")) {
 					gender = Gender.MALE;
-				}
-				else if ( genderString.equals("Femenino") ) {
+				} else if (genderString.equals("Femenino")) {
 					gender = Gender.FEMALE;
-				}
-				else {
+				} else {
 					gender = null;
 				}
-				
-				int lowAge = Integer.valueOf(lowAgeField.getDefaultModelObjectAsString());
-				int highAge = Integer.valueOf(highAgeField.getDefaultModelObjectAsString());
-				
-				List<User> receivers;
-				
-				receivers = userService.getUsers(0, Integer.MAX_VALUE, gender, lowAge, highAge, country);
-				
-//				if ( gender == null ) {
-//					receivers = userService.getUsersByAge(0, Integer.MAX_VALUE, lowAge, highAge);
-//				}
-//				else {
-//					receivers = userService.getUsers(0, Integer.MAX_VALUE, gender, lowAge, highAge);
-//				}
-				
-				messageService.sendMessages(message, receivers);	
-				
-				/*Set<MessageDetail> receiverSet = new HashSet<MessageDetail>();
 
-				// Si el usuario es Admin
-				if (true) {
-					List<User> users = (List<User>) group
-							.getDefaultModelObject();
+				int lowAge = Integer.valueOf(lowAgeField
+						.getDefaultModelObjectAsString());
+				int highAge = Integer.valueOf(highAgeField
+						.getDefaultModelObjectAsString());
 
-					for (User receiver : users) {
-						System.out.println("User: " + receiver);
-						//message.addReceiver(receiver);
-						receiverSet.add(new MessageDetail(receiver, message));
-					}
-				} else {
-					User admin = userService.getUser("admin");
-					receiverSet.add(new MessageDetail(admin, null));
-				}
+				List<User> receivers = userService.getUsers(0, Integer.MAX_VALUE, gender,
+						lowAge, highAge, country);
+				
+				campaignService.sendCampaign(campaign, receivers);
 
-				System.out.println("Receiver: " + receiverSet.toString());
-				message.setReceiver(receiverSet);
-				messageService.insertMessage(message);
-				*/
-				
-				
-				
+				// if ( gender == null ) {
+				// receivers = userService.getUsersByAge(0, Integer.MAX_VALUE,
+				// lowAge, highAge);
+				// }
+				// else {
+				// receivers = userService.getUsers(0, Integer.MAX_VALUE,
+				// gender, lowAge, highAge);
+				// }
+				campaignService.insertCampaign(campaign);
+				//messageService.sendMessages(message, receivers);
+
+				/*
+				 * Set<MessageDetail> receiverSet = new
+				 * HashSet<MessageDetail>();
+				 * 
+				 * // Si el usuario es Admin if (true) { List<User> users =
+				 * (List<User>) group .getDefaultModelObject();
+				 * 
+				 * for (User receiver : users) { System.out.println("User: " +
+				 * receiver); //message.addReceiver(receiver);
+				 * receiverSet.add(new MessageDetail(receiver, message)); } }
+				 * else { User admin = userService.getUser("admin");
+				 * receiverSet.add(new MessageDetail(admin, null)); }
+				 * 
+				 * System.out.println("Receiver: " + receiverSet.toString());
+				 * message.setReceiver(receiverSet);
+				 * messageService.insertMessage(message);
+				 */
+
 				// message.addReceiver(user1);
 
 				// message.addReceiver(user2);
@@ -265,11 +267,11 @@ public class NewCampaign extends BasePage {
 
 		return form;
 	}
-	
+
 	@Override
 	protected void setPageTitle() {
 		// TODO Auto-generated method stub
-		String newTitle = "Booktube - New Contact"; 
+		String newTitle = "Booktube - New Contact";
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 }

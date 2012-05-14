@@ -54,6 +54,7 @@ import com.booktube.model.BookTag;
 import com.booktube.model.User;
 import com.booktube.model.User.Level;
 import com.booktube.service.BookService;
+import com.booktube.service.CampaignService;
 import com.booktube.service.MessageService;
 import com.booktube.service.UserService;
 
@@ -67,6 +68,9 @@ public abstract class BasePage extends WebPage {
 
 	@SpringBean
 	MessageService messageService;
+	
+	@SpringBean
+	CampaignService campaignService;
 
 	private final int TITLE_SELECTED = 1;
 	private final int AUTHOR_SELECTED = 2;
@@ -259,17 +263,29 @@ public abstract class BasePage extends WebPage {
 		WebMarkupContainer contactLi = new WebMarkupContainer("contact_li");
 		contactLi.add(new BookmarkablePageLink<String>("contact", NewContact.class));
 		add(contactLi);
+		
+		WebMarkupContainer newCampaignsLi = new WebMarkupContainer("new_campaign_li");
+		newCampaignsLi.add(new BookmarkablePageLink<String>("new_campaign", NewCampaign.class));
+		newCampaignsLi.setVisible(false);
+		add(newCampaignsLi);
+		
 		WebMarkupContainer campaignsLi = new WebMarkupContainer("campaigns_li");
-		campaignsLi.add(new BookmarkablePageLink<String>("campaigns", NewCampaign.class));
-		campaignsLi.setVisible(false);
+		campaignsLi.add(new BookmarkablePageLink<String>("campaignsLink", CampaignsPage.class));
 		add(campaignsLi);
 		
 		add(new BookmarkablePageLink<String>("loadDataLink", LoadDataPage.class));
 		add(new BookmarkablePageLink<String>("messagesLink", MessagesPage.class));
 
-		MenuLink adminLink = new MenuLink("adminTools",
+		
+		
+		WebMarkupContainer administrationLi = new WebMarkupContainer("administration_li");
+		administrationLi.add(new MenuLink("adminTools", AdministrationPage.class));
+		administrationLi.setVisible(false);
+		add(administrationLi);
+		
+		/*MenuLink adminLink = new MenuLink("adminTools",
 				AdministrationPage.class);
-		add(adminLink);
+		add(adminLink);*/
 
 		BookmarkablePageLink<String> registerLink = new BookmarkablePageLink<String>(
 				"registerPage", RegisterPage.class);
@@ -281,15 +297,23 @@ public abstract class BasePage extends WebPage {
 							.countUnreadMessagesTo(WiaSession.get()
 									.getLoggedInUser())) + " )"));
 			
+			campaignsLi.add(new Label("unreadCampaigns", "( "
+					+ Integer.toString(campaignService
+							.countUnreadCampaignsTo(WiaSession.get()
+									.getLoggedInUser())) + " )"));
+			
 			if ( WiaSession.get().getLoggedInUser().getLevel() == Level.ADMIN ) {
 				//campaignsLink.setVisible(true);
 				contactLi.setVisible(false);
-				campaignsLi.setVisible(true);
+				campaignsLi.setVisible(false);
+				newCampaignsLi.setVisible(true);
+				administrationLi.setVisible(true);
 				//contactLink.setVisible(false);
 			}
 			
 		} else {
 			add(new Label("unreadMessages", " "));
+			campaignsLi.add(new Label("unreadCampaigns", " "));
 		}
 
 		Form<?> loginForm = loginForm("login");

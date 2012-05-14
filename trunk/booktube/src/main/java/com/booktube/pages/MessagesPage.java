@@ -1,5 +1,6 @@
 package com.booktube.pages;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -67,12 +68,14 @@ public class MessagesPage extends BasePage {
 				//item.add(new Label("id"));
 				if ( message.isRead() ) {
 					item.add(new Label("subject"));
+					item.add(new Label("receiver"));
 					item.add(new Label("sender"));
 					item.add(new Label("date"));
 				}
 				else {
 					item.add(new Label("subject", "<b>" + message.getSubject() + "</b>").setEscapeModelStrings(false));
 					item.add(new Label("sender", "<b>" + message.getSender() + "</b>").setEscapeModelStrings(false));
+					item.add(new Label("receiver", "<b>" + message.getReceiver() + "</b>").setEscapeModelStrings(false));
 					item.add(new Label("date", "<b>" + message.getDate() + "</b>").setEscapeModelStrings(false));
 				}
 				
@@ -126,13 +129,13 @@ public class MessagesPage extends BasePage {
 		}
 
 		public Iterator<Message> iterator(int first, int count) {
-
-			this.messages = messageService.getAllMessagesTo(user, first, count);
+			this.messages = messageService.getAllMessages(user, first, count);
+			Collections.sort(this.messages, Message.getAnswerDateComparator());
 			return this.messages.iterator();
 		}
 
 		public int size() {
-			return messageService.countMessagesTo(user);
+			return messageService.countMessages(user);
 		}
 
 		public IModel<Message> model(Message message) {

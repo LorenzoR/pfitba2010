@@ -14,6 +14,9 @@ public interface CampaignDao {
     public CampaignDetail getCampaignDetail(Campaign campaign, User receiver);
     public void insertCampaign(Campaign campaign);
 	public List<Campaign> getAllCampaigns(int first, int count);
+	public List<Campaign> getAllCampaignsTo(User user, int first, int count);
 	public int countCampaigns();
-	
+	public int countCampaignsTo(User user);
+	public int countUnreadCampaignsTo(User user);
+	public void sendCampaign(Campaign campaign, List<User> receivers);
 }

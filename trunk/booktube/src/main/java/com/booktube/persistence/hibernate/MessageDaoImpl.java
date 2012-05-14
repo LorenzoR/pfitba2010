@@ -1,5 +1,7 @@
 package com.booktube.persistence.hibernate;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -27,16 +29,16 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 	public void update(Message message) {
 		getSession().saveOrUpdate(message);
 		getSession().flush();
-		//super.update(message);
-		//getSession().merge(message);
-		//getSession().flush();
+		// super.update(message);
+		// getSession().merge(message);
+		// getSession().flush();
 	}
 
 	public void delete(Message message) {
 		super.delete(message);
-		//System.out.println("Borro mensaje " + message);
-		//getSession().delete(message);
-		//getSession().flush();
+		// System.out.println("Borro mensaje " + message);
+		// getSession().delete(message);
+		// getSession().flush();
 	}
 
 	public Message getMessage(Long id) {
@@ -45,36 +47,44 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 	}
 
 	public Long insert(Message message) {
-		/*Long id = (Long) getSession().save(message);
-		getSession().flush();
-		return id;
-		*/
+		/*
+		 * Long id = (Long) getSession().save(message); getSession().flush();
+		 * return id;
+		 */
 		return super.insert(message);
 	}
 
 	public List<Message> getAllMessages(int first, int count) {
 		return (List<Message>) getSession().createCriteria(Message.class)
+				.add(Restrictions.eq("type", Type.PRIVATE_MESSAGE))
+				.addOrder(Order.desc("date"))
 				.setFirstResult(first).setMaxResults(count).list();
 	}
 
 	public List<Message> getAllMessagesFrom(User sender, int first, int count) {
 		return (List<Message>) getSession().createCriteria(Message.class)
 				.add(Restrictions.eq("sender", sender)).setFirstResult(first)
+				.add(Restrictions.eq("type", Type.PRIVATE_MESSAGE))
 				.setMaxResults(count).list();
 	}
 
 	public List<Message> getAllMessagesTo(User receiver, int first, int count) {
-		Criteria criteria = getSession().createCriteria(Message.class)
-				.add(Restrictions.or(Restrictions.eq("type", Type.PRIVATE_MESSAGE), Restrictions.eq("type", Type.FIRST_ANSWER)))
+		Criteria criteria = getSession()
+				.createCriteria(Message.class)
+				// .add(Restrictions.or(Restrictions.eq("type",
+				// Type.PRIVATE_MESSAGE), Restrictions.eq("type",
+				// Type.FIRST_ANSWER)))
+				.add(Restrictions.eq("type", Type.PRIVATE_MESSAGE))
 				.add(Restrictions.eq("receiver", receiver))
-				.addOrder(Order.desc("date"))
-				.setFirstResult(first).setMaxResults(count);
+				.addOrder(Order.desc("date")).setFirstResult(first)
+				.setMaxResults(count);
 
 		return (List<Message>) criteria.list();
 	}
 
 	public int countMessages() {
-		Criteria criteria = getSession().createCriteria(Message.class);
+		Criteria criteria = getSession().createCriteria(Message.class)
+				.add(Restrictions.eq("type", Type.PRIVATE_MESSAGE));
 		criteria.setProjection(Projections.rowCount());
 		return ((Number) criteria.uniqueResult()).intValue();
 	}
@@ -87,8 +97,8 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 	}
 
 	public int countMessagesTo(User receiver) {
-		Criteria criteria = getSession().createCriteria(Message.class)
-				.add(Restrictions.eq("receiver", receiver));
+		Criteria criteria = getSession().createCriteria(Message.class).add(
+				Restrictions.eq("receiver", receiver));
 		criteria.setProjection(Projections.rowCount());
 		return ((Number) criteria.uniqueResult()).intValue();
 	}
@@ -107,36 +117,57 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 		getSession().flush();
 	}
 
-	/*public CampaignDetail getMessageDetail(Message message, User receiver) {
-		Criteria criteria = getSession().createCriteria(CampaignDetail.class)
-				.add(Restrictions.eq("receiver", receiver))
-				.add(Restrictions.eq("message", message));
-
-		return (CampaignDetail) criteria.setMaxResults(1).uniqueResult();
-	}*/
+	/*
+	 * public CampaignDetail getMessageDetail(Message message, User receiver) {
+	 * Criteria criteria = getSession().createCriteria(CampaignDetail.class)
+	 * .add(Restrictions.eq("receiver", receiver))
+	 * .add(Restrictions.eq("message", message));
+	 * 
+	 * return (CampaignDetail) criteria.setMaxResults(1).uniqueResult(); }
+	 */
 
 	public void sendMessages(Message message, List<User> receivers) {
-		//Set<MessageDetail> messageDetail = new HashSet<MessageDetail>();
+		// Set<MessageDetail> messageDetail = new HashSet<MessageDetail>();
 
 		for (User aUser : receivers) {
-			insert(new Message(message.getType(), message.getSubject(), message.getText(), message.getSender(), aUser));
-			//messageDetail.add(new MessageDetail(aUser, message));
+			insert(new Message(message.getType(), message.getSubject(),
+					message.getText(), message.getSender(), aUser));
+			// messageDetail.add(new MessageDetail(aUser, message));
 		}
-		
-		//message.setReceiver(messageDetail);
 
-		//insert(message);
+		// message.setReceiver(messageDetail);
+
+		// insert(message);
 	}
 
-	public List<Message> getAllCampaigns(int first, int count) {
+	/*public List<Message> getAllCampaigns(int first, int count) {
 		return (List<Message>) getSession().createCriteria(Message.class)
 				.add(Restrictions.eq("type", Type.CAMPAIGN))
 				.setFirstResult(first).setMaxResults(count).list();
 	}
 
 	public int countCampaigns() {
-		Criteria criteria = getSession().createCriteria(Message.class)
-				.add(Restrictions.eq("type", Type.CAMPAIGN));
+		Criteria criteria = getSession().createCriteria(Message.class).add(
+				Restrictions.eq("type", Type.CAMPAIGN));
+		criteria.setProjection(Projections.rowCount());
+		return ((Number) criteria.uniqueResult()).intValue();
+	}*/
+
+	public List<Message> getAllMessages(User user, int first, int count) {
+		List<Message> messages = getAllMessagesFrom(user, first, count);
+		messages.addAll(getAllMessagesTo(user, first, count));
+
+		Collections.sort(messages, Message.getDateComparator());
+
+		return messages;
+	}
+
+	public int countMessages(User user) {
+		Criteria criteria = getSession()
+				.createCriteria(Message.class)
+				.add(Restrictions.or(Restrictions.eq("sender", user),
+						Restrictions.eq("receiver", user)))
+				.add(Restrictions.eq("type", Type.PRIVATE_MESSAGE));
 		criteria.setProjection(Projections.rowCount());
 		return ((Number) criteria.uniqueResult()).intValue();
 	}

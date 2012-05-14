@@ -51,4 +51,20 @@ public class CampaignServiceImpl implements CampaignService {
 		return itemDao.countCampaigns();
 	}
 
+	public List<Campaign> getAllCampaignsTo(User user, int first, int count) {
+		return itemDao.getAllCampaignsTo(user, first, count);
+	}
+
+	public int countCampaignsTo(User user) {
+		return itemDao.countCampaignsTo(user);
+	}
+
+	public int countUnreadCampaignsTo(User user) {
+		return itemDao.countUnreadCampaignsTo(user);
+	}
+
+	public void sendCampaign(Campaign campaign, List<User> receivers) {
+		itemDao.sendCampaign(campaign, receivers);
+	}
+
 }

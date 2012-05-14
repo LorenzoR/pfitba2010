@@ -44,23 +44,12 @@ public class ShowMessagePage extends BasePage {
 
 		String newTitle = "Booktube - Message " + message.getSubject();
 		super.get("pageTitle").setDefaultModelObject(newTitle);
-
-		CompoundPropertyModel<Message> model = new CompoundPropertyModel<Message>(
-				message);
-		parent.setDefaultModel(model);
-		parent.add(new Label("text"));
-		parent.add(new Label("sender"));
-		parent.add(new Label("subject"));
-
-		//CampaignDetail messageDetail = messageService.getMessageDetail(message,
-		//		user);
-		//messageService.setMessageRead(messageDetail);
 		
-		List<Message> messageList = getAnswers(message);
+		List<Message> messageList = message.getAllAnswers();
 		
-		Collections.reverse(messageList);
+		//List<Message> messageList = getAnswers(message);
 		
-		messageList.add(message);
+		//Collections.sort(messageList, Message.getDateComparator());
 		
 		ListView<Message> listview = new ListView<Message>("messageList", messageList) {
 			protected void populateItem(ListItem<Message> item) {
@@ -86,42 +75,39 @@ public class ShowMessagePage extends BasePage {
 	private List<Message> getAnswers(Message aMessage) {
 
 		List<Message> messageList = new ArrayList<Message>();
-
-		System.out.println("DESEPUES MESSAGE: " + aMessage);
-
 		User sender = aMessage.getSender();
-		System.out.println("SENDER: " + sender.getUsername());
 		User receiver = this.user;
 		User auxUser;
 
-		Message lastAnswer = aMessage;
+		messageList.add(aMessage);
+		
+		Message lastAnswer = aMessage.getAnswer();
 
-		System.out.println("ANSWERS: " + lastAnswer.getAnswer().toString());
+		while ( lastAnswer != null ) {
 
-		do {
-
-			Iterator<Message> messageIterator = lastAnswer.getAnswer()
-					.iterator();
+			//Iterator<Message> messageIterator = lastAnswer.getAnswer()
+			//		.iterator();
 			
-			while (messageIterator.hasNext()) {
+			//while (messageIterator.hasNext()) {
 				
-				lastAnswer = messageIterator.next();
+				//lastAnswer = messageIterator.next();
+				lastAnswer.setRead(true);
+				messageList.add(lastAnswer);
 				
-				System.out.println("USER ID: " + lastAnswer.getSender().getId());
-				
-				System.out.println("MESSAGE ID: " + lastAnswer.getId());
-
-				if ( receiver == null || lastAnswer.getSender().getId().equals(receiver.getId())) {
-					messageList.add(lastAnswer);
-				}
+				messageService.updateMessage(lastAnswer);
+//				if ( receiver == null || lastAnswer.getSender().getId().equals(receiver.getId())) {
+//					messageList.add(lastAnswer);
+//				}
 			
-			}
+			//}
 
 			auxUser = sender;
 			sender = receiver;
 			receiver = auxUser;
+			
+			lastAnswer = lastAnswer.getAnswer();
 
-		} while (lastAnswer != null && lastAnswer.getAnswer().size() > 0);
+		}
 
 		return messageList;
 	}
