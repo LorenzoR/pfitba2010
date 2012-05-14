@@ -64,7 +64,7 @@ public class Campaign implements Serializable {
 		
 	}
 	
-	public Campaign(Type type, String subject, String text, User sender, Set<CampaignDetail> receiver) {
+	public Campaign(String subject, String text, User sender, Set<CampaignDetail> receiver) {
 		this.subject = subject;
 		this.text = text;
 		this.sender = sender;
@@ -72,7 +72,7 @@ public class Campaign implements Serializable {
 		this.date = Calendar.getInstance().getTime();
 	}
 	
-	public Campaign(Type type, String subject, String text, User sender) {
+	public Campaign(String subject, String text, User sender) {
 		this.subject = subject;
 		this.text = text;
 		this.sender = sender;

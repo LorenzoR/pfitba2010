@@ -14,11 +14,11 @@ public interface MessageDao {
     //public CampaignDetail getMessageDetail(Message message, User receiver);
     public Long insert(Message message);
     public List<Message> getAllMessages(int first, int count);
+    public List<Message> getAllMessages(User user, int first, int count);
     public List<Message> getAllMessagesFrom(User sender, int first, int count);
     public List<Message> getAllMessagesTo(User receiver, int first, int count);
-    public List<Message> getAllCampaigns(int first, int count);
-    public int countCampaigns();
     public int countMessages();
+    public int countMessages(User user);
     public int countMessagesFrom(User sender);
     public int countMessagesTo(User receiver);
     public int countUnreadMessagesTo(User receiver);

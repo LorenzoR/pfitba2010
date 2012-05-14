@@ -2,6 +2,7 @@ package com.booktube.pages;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -18,6 +19,7 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
@@ -61,7 +63,9 @@ public class AnswerMessagePage extends BasePage {
 
 		user = WiaSession.get().getLoggedInUser();
 
-		Form<?> form = answerForm(parent);
+		List<Message> messageList = message.getAllAnswers();
+		
+		Form<?> form = answerForm(parent, messageList);
 		parent.add(form);
 
 		Label registerMessage = new Label("registerMessage",
@@ -73,20 +77,18 @@ public class AnswerMessagePage extends BasePage {
 		} else {
 			registerMessage.setVisible(false);
 		}
-
-		// List list = Arrays.asList(new String[] { "a", "b", "c" });
-		System.out.println("MESSAGE: " + message);
 		
-		List<Message> messageList = getAnswers();
-		
+		//Collections.reverse(messageList);
 		//messageList.add(message);
-		
-		//System.out.println("MESSAGE LIST: " + messageList.toString());
 
-		ListView<Message> listview = new ListView<Message>("messageList", messageList) {
+		PropertyListView<Message> propertyListView = new PropertyListView<Message>("messageList", messageList) {
 			protected void populateItem(ListItem<Message> item) {
 				final Message message = (Message) item.getModelObject();
 				CompoundPropertyModel<Message> model = new CompoundPropertyModel<Message>(message);
+				
+				message.setRead(true);
+				messageService.updateMessage(message);
+				
 				item.setDefaultModel(model);
 				
 				item.add(new Label("subject"));
@@ -132,7 +134,7 @@ public class AnswerMessagePage extends BasePage {
 			}
 		};
 		
-		parent.add(listview);
+		parent.add(propertyListView);
 
 		System.out.println("MSG FROM: "
 				+ messageService.countMessagesFrom(user));
@@ -142,7 +144,7 @@ public class AnswerMessagePage extends BasePage {
 
 	}
 	
-	private List<Message> getAnswers() {
+	/*private List<Message> getAnswers() {
 		
 		List<Message> messageList = new ArrayList<Message>();
 		Message auxMessage;
@@ -160,28 +162,29 @@ public class AnswerMessagePage extends BasePage {
 		
 		do {
 			
-			Iterator<Message> messageIterator = lastAnswer.getAnswer().iterator();
+			lastAnswer = message.getAnswer();
+			//Iterator<Message> messageIterator = lastAnswer.getAnswer().iterator();
 			
-			while ( messageIterator.hasNext() ) {
-				lastAnswer = messageIterator.next();
+			//while ( messageIterator.hasNext() ) {
+			//	lastAnswer = messageIterator.next();
 				System.out.println("ID: " + lastAnswer.getSender().getId());
 				
 				if ( lastAnswer.getSender().getId().equals(receiver.getId()) ) {
 					messageList.add(lastAnswer);
 				}
-			}
+			//}
 			
 			auxUser = sender;
 			sender = receiver;
 			receiver = auxUser;
 			
 		}
-		while ( lastAnswer != null && lastAnswer.getAnswer().size() > 0 );
+		while ( lastAnswer != null );
 		
 		return messageList;
-	}
+	}*/
 
-	private Form<?> answerForm(final WebMarkupContainer parent) {
+	private Form<?> answerForm(final WebMarkupContainer parent, final List<Message> messages) {
 		Form<?> form = new Form("form");
 
 		final TextArea editor = new TextArea("textArea", new Model());
@@ -197,22 +200,28 @@ public class AnswerMessagePage extends BasePage {
 
 				Type type;
 				
-				if ( message.getType() == Type.PRIVATE_MESSAGE || message.getType() == Type.CAMPAIGN  ) {
-					type = Type.FIRST_ANSWER;
-				}
-				else {
-					type = Type.ANSWER;
-				}
+//				if ( message.getType() == Type.PRIVATE_MESSAGE || message.getType() == Type.CAMPAIGN  ) {
+//					type = Type.FIRST_ANSWER;
+//				}
+//				else {
+//					type = Type.ANSWER;
+//				}
+				
+				type = Type.ANSWER;
 				
 				Message answer = new Message(type, "RE: " + message.getSubject(), editor
 						.getDefaultModelObjectAsString(), user, message.getSender());
 				
-				Set<Message> answers = new HashSet<Message>();
-				answers.add(answer);
+				//Set<Message> answers = new HashSet<Message>();
+				//answers.add(answer);
 				
-				message.setAnswer(answers);
+				message.getLastAnswer().setAnswer(answer);
 				
 				messageService.updateMessage(message);
+				
+				messages.add(0, answer);
+				
+				target.add(parent);
 
 			}
 

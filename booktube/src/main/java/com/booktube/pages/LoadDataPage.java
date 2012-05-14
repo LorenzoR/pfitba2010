@@ -151,7 +151,7 @@ public class LoadDataPage extends BasePage {
 
 	public void addCampaigns() {
 
-		Campaign campaign = new Campaign(Type.PRIVATE_MESSAGE, "subject", "text", admin);
+		Campaign campaign = new Campaign("subject", "text", admin);
 
 		Set<CampaignDetail> receiverSet = new HashSet<CampaignDetail>();
 
@@ -172,7 +172,7 @@ public class LoadDataPage extends BasePage {
 		
 		campaignService.insertCampaign(campaign);
 		
-		campaign = new Campaign(Type.PRIVATE_MESSAGE, "subject2", "text2", admin);
+		campaign = new Campaign("subject2", "text2", admin);
 
 		receiverSet = new HashSet<CampaignDetail>();
 
@@ -187,21 +187,21 @@ public class LoadDataPage extends BasePage {
 
 	public void addMessages() {
 		
-		Message message = new Message(Type.PRIVATE_MESSAGE, "subject 0", "text 1", admin, users.get(0));
+		Message message = new Message(Type.PRIVATE_MESSAGE, "subject 0", "text", admin, users.get(0));
 		messageService.insertMessage(message);
 		
 		message = new Message(Type.PRIVATE_MESSAGE, "subject 3", "text 1", admin, users.get(0));
 		messageService.insertMessage(message);
 		
-		message = new Message(Type.PRIVATE_MESSAGE, "subject 1", "text 1", admin, users.get(0));
+		message = new Message(Type.PRIVATE_MESSAGE, "subject 1", "texto de admin a user", admin, users.get(0));
 
-		Message answer = new Message(Type.FIRST_ANSWER, "RE: subject 1", "text answer", users.get(0), admin);
+		Message answer = new Message(Type.ANSWER, "RE: subject 1", "respuesta de user a admin", users.get(0), admin);
 		
-		message.addAnswer(answer);
+		message.setAnswer(answer);
 		
-		Message answer2 = new Message(Type.ANSWER, "RE: RE: subject 1", "text answer answer", admin, users.get(0));
+		Message answer2 = new Message(Type.ANSWER, "RE: RE: subject 1", "respuesta2 de admin a user", admin, users.get(0));
 		
-		answer.addAnswer(answer2);
+		answer.setAnswer(answer2);
 
 		//receiverSet.add(new MessageDetail(users.get(0), message));
 		//receiverSet.add(new MessageDetail(users.get(1), message));
@@ -219,6 +219,9 @@ public class LoadDataPage extends BasePage {
 		//receiverSet.add(new MessageDetail(users.get(3), message));
 		
 		//message.setReceiver(receiverSet);
+		messageService.insertMessage(message);
+		
+		message = new Message(Type.PRIVATE_MESSAGE, "subject 333", "text 333", users.get(0), admin);
 		messageService.insertMessage(message);
 		
 	}

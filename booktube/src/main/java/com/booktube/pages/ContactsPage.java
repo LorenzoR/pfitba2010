@@ -93,7 +93,8 @@ public class ContactsPage extends BasePage {
 				item.add(new Label("subject", message.getSubject()));
 				item.add(new Label("text", message.getText()));
 				
-				item.add(new PropertyListView<Object>("answers", new ArrayList<Message>(message.getAnswer())) {
+				//item.add(new PropertyListView<Object>("answers", new ArrayList<Message>(message.getAnswer())) {
+				item.add(new PropertyListView<Object>("answers", new ArrayList<Message>()) {	
 
 					protected void populateItem(ListItem<Object> item) {
 						Message message = (Message) item.getModelObject();

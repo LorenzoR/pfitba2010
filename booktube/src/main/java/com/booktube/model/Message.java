@@ -1,10 +1,14 @@
 package com.booktube.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Basic;
@@ -39,12 +43,13 @@ import com.booktube.model.User.Level;
 
 @Entity
 @Table(name = "MESSAGE")
-@NamedQueries({
-		@NamedQuery(name = "message.id", query = "from Message m where m.id = :id")})
+@NamedQueries({ @NamedQuery(name = "message.id", query = "from Message m where m.id = :id") })
 public class Message implements Serializable {
 
-	public enum Type { PRIVATE_MESSAGE, ANSWER, FIRST_ANSWER, CAMPAIGN };
-	
+	public enum Type {
+		PRIVATE_MESSAGE, ANSWER
+	};
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "MESSAGE_ID")
@@ -55,31 +60,53 @@ public class Message implements Serializable {
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User sender;
 
-	/*@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "MSG_RCV", joinColumns = { @JoinColumn(name = "MESSAGE_ID") }, inverseJoinColumns = { @JoinColumn(name = "USER_ID") })
-	private Set<User> receiver;
-	*/
-	
-	/*@OneToMany(mappedBy = "message", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@OnDelete(action=OnDeleteAction.CASCADE)
-	private Set<MessageDetail> receiver;
-	*/
-	
+	/*
+	 * @ManyToMany(cascade = CascadeType.ALL)
+	 * 
+	 * @JoinTable(name = "MSG_RCV", joinColumns = { @JoinColumn(name =
+	 * "MESSAGE_ID") }, inverseJoinColumns = { @JoinColumn(name = "USER_ID") })
+	 * private Set<User> receiver;
+	 */
+
+	/*
+	 * @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, fetch =
+	 * FetchType.LAZY)
+	 * 
+	 * @OnDelete(action=OnDeleteAction.CASCADE) private Set<MessageDetail>
+	 * receiver;
+	 */
+
 	@OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
 	@JoinColumn(name = "RECEIVER_ID")
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User receiver;
-	
-	/*@Basic
-	@Column(name = "REPLY_TO")
-	private Integer replyTo;
-	*/
-	
-	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-	@Cascade( org.hibernate.annotations.CascadeType.SAVE_UPDATE )
-	@JoinTable(name = "ANSWER", joinColumns = { @JoinColumn(name = "MESSAGE_ID") }, inverseJoinColumns = { @JoinColumn(name = "ANSWER_MESSAGE_ID") })
-	private Set<Message> answer = new HashSet<Message>();
-	
+
+	/*
+	 * @Basic
+	 * 
+	 * @Column(name = "REPLY_TO") private Integer replyTo;
+	 */
+
+	// NO SE BORRAN LAS RESPUESTAS CUANDO SE BORRA UN MENSAJE!!
+	/*
+	 * @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST,
+	 * CascadeType.MERGE, CascadeType.REFRESH })
+	 * 
+	 * @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+	 * 
+	 * @JoinTable(name = "ANSWER", joinColumns = { @JoinColumn(name =
+	 * "MESSAGE_ID") }, inverseJoinColumns = { @JoinColumn(name =
+	 * "ANSWER_MESSAGE_ID") }) private Set<Message> answer = new
+	 * HashSet<Message>();
+	 */
+
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST,
+			CascadeType.MERGE, CascadeType.REFRESH })
+	@Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+	@JoinColumn(name = "ANSWER_ID")
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	private Message answer;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "DATE")
 	private Date date;
@@ -91,47 +118,58 @@ public class Message implements Serializable {
 	@Basic
 	@Column(name = "TEXT", columnDefinition = "LONGTEXT")
 	private String text;
-	
+
 	@Enumerated(EnumType.ORDINAL)
 	@Column(name = "TYPE", nullable = false)
 	private Type type;
-	
+
 	@Basic
 	@Column(name = "IS_READ")
-	private boolean isRead = false;	
+	private boolean isRead = false;
+
+	private static Comparator<Message> dateComparator = new Comparator<Message>() {
+		public int compare(Message o1, Message o2) {
+			return o2.getDate().compareTo(o1.getDate());
+		}
+	};
 	
-	public Message () {
-		
+	private static Comparator<Message> answerDateComparator = new Comparator<Message>() {
+		public int compare(Message o1, Message o2) {
+			return o2.getLastAnswer().getDate().compareTo(o1.getLastAnswer().getDate());
+		}
+	};
+
+	public Message() {
+
 	}
-	
-	public Message (Type type, String subject, String text, User sender) {
+
+	public Message(Type type, String subject, String text, User sender) {
 		this.subject = subject;
 		this.text = text;
 		this.sender = sender;
 		this.date = Calendar.getInstance().getTime();
-		//this.receiver = new HashSet<MessageDetail>();
+		// this.receiver = new HashSet<MessageDetail>();
 		this.setType(type);
 	}
-	
-	public Message (Type type, String subject, String text, User sender, User receiver) {
+
+	public Message(Type type, String subject, String text, User sender,
+			User receiver) {
 		this.subject = subject;
 		this.text = text;
 		this.sender = sender;
 		this.date = Calendar.getInstance().getTime();
-		//this.receiver = new HashSet<MessageDetail>();
-		//this.receiver.add(new MessageDetail(receiver, this));
+		// this.receiver = new HashSet<MessageDetail>();
+		// this.receiver.add(new MessageDetail(receiver, this));
 		this.receiver = receiver;
 		this.setType(type);
 	}
-	
-	/*public Message (Type type, String subject, String text, User sender, Set<MessageDetail> receiver) {
-		this.subject = subject;
-		this.text = text;
-		this.sender = sender;
-		this.receiver = receiver;
-		this.date = Calendar.getInstance().getTime();
-		this.setType(type);
-	}*/
+
+	/*
+	 * public Message (Type type, String subject, String text, User sender,
+	 * Set<MessageDetail> receiver) { this.subject = subject; this.text = text;
+	 * this.sender = sender; this.receiver = receiver; this.date =
+	 * Calendar.getInstance().getTime(); this.setType(type); }
+	 */
 
 	public Long getId() {
 		return id;
@@ -152,22 +190,20 @@ public class Message implements Serializable {
 	public User getReceiver() {
 		return receiver;
 	}
-	
+
 	public void setReceiver(User receiver) {
 		this.receiver = receiver;
 	}
-	
-	/*public Set<MessageDetail> getReceiver() {
-		return receiver;
-	}
 
-	public void setReceiver(Set<MessageDetail> receiver) {
-		this.receiver = receiver;
-	}
-	
-	public void addReceiver(User receiver) {
-		this.receiver.add(new MessageDetail(receiver, this));
-	}*/
+	/*
+	 * public Set<MessageDetail> getReceiver() { return receiver; }
+	 * 
+	 * public void setReceiver(Set<MessageDetail> receiver) { this.receiver =
+	 * receiver; }
+	 * 
+	 * public void addReceiver(User receiver) { this.receiver.add(new
+	 * MessageDetail(receiver, this)); }
+	 */
 
 	public Date getDate() {
 		return date;
@@ -193,29 +229,27 @@ public class Message implements Serializable {
 		this.text = text;
 	}
 
-	public void setAnswer(Set<Message> answer) {
+	public void setAnswer(Message answer) {
 		this.answer = answer;
 	}
-	
-	public void addAnswer(Message answer) {
-		this.answer.add(answer);
-	}
 
-	public Set<Message> getAnswer() {
+	/*
+	 * public void addAnswer(Message answer) { this.answer.add(answer); }
+	 */
+
+	public Message getAnswer() {
 		return answer;
 	}
-	
-	/*public void setIsRead(User user) {
-		Iterator<MessageDetail> iterator = this.receiver.iterator();
-		
-		while ( iterator.hasNext() ) {
-			MessageDetail messageDetail = iterator.next();
-			if ( user.getId().equals(messageDetail.getReceiver().getId()) ) {
-				messageDetail.setRead(true);
-				break;
-			}
-		}
-	}*/
+
+	/*
+	 * public void setIsRead(User user) { Iterator<MessageDetail> iterator =
+	 * this.receiver.iterator();
+	 * 
+	 * while ( iterator.hasNext() ) { MessageDetail messageDetail =
+	 * iterator.next(); if (
+	 * user.getId().equals(messageDetail.getReceiver().getId()) ) {
+	 * messageDetail.setRead(true); break; } } }
+	 */
 
 	@Override
 	public int hashCode() {
@@ -278,7 +312,7 @@ public class Message implements Serializable {
 			return false;
 		return true;
 	}
-	
+
 	public String toString() {
 		return subject + ": " + text + " by: " + sender;
 	}
@@ -298,6 +332,50 @@ public class Message implements Serializable {
 	public void setRead(boolean isRead) {
 		this.isRead = isRead;
 	}
+
+	public static Comparator<Message> getDateComparator() {
+		return dateComparator;
+	}
 	
+	public static Comparator<Message> getAnswerDateComparator() {
+		return answerDateComparator;
+	}
+
+	public List<Message> getAllAnswers() {
+
+		List<Message> messageList = new ArrayList<Message>();
+
+		messageList.add(this);
+
+		Message lastAnswer = this.getAnswer();
+
+		while (lastAnswer != null) {
+			lastAnswer.setRead(true);
+			messageList.add(lastAnswer);
+
+			lastAnswer = lastAnswer.getAnswer();
+		}
+
+		Collections.sort(messageList, getDateComparator());
+		
+		return messageList;
+	}
+	
+	public Message getLastAnswer() {
+		
+		Message lastAnswer = this;
+		boolean done = false;
+		
+		while ( !done ) {
+			if ( lastAnswer.getAnswer() == null ) {
+				done = true;
+			}
+			else {
+				lastAnswer = lastAnswer.getAnswer();
+			}
+		}
+		
+		return lastAnswer;
+	}
 
 }

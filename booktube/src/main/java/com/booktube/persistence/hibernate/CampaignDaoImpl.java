@@ -8,11 +8,13 @@ import org.hibernate.criterion.Restrictions;
 
 import com.booktube.model.Campaign;
 import com.booktube.model.CampaignDetail;
+import com.booktube.model.Message;
 import com.booktube.model.User;
 import com.booktube.persistence.CampaignDao;
 
-public class CampaignDaoImpl extends AbstractDaoHibernate<Campaign> implements CampaignDao {
-	
+public class CampaignDaoImpl extends AbstractDaoHibernate<Campaign> implements
+		CampaignDao {
+
 	protected CampaignDaoImpl() {
 		super(Campaign.class);
 	}
@@ -23,7 +25,7 @@ public class CampaignDaoImpl extends AbstractDaoHibernate<Campaign> implements C
 	}
 
 	public void updateCampaign(Campaign campaign) {
-		super.saveOrUpdate(campaign);		
+		super.saveOrUpdate(campaign);
 	}
 
 	public void deleteCampaign(Campaign campaign) {
@@ -52,6 +54,37 @@ public class CampaignDaoImpl extends AbstractDaoHibernate<Campaign> implements C
 		Criteria criteria = getSession().createCriteria(Campaign.class);
 		criteria.setProjection(Projections.rowCount());
 		return ((Number) criteria.uniqueResult()).intValue();
+	}
+
+	public List<Campaign> getAllCampaignsTo(User user, int first, int count) {
+		return (List<Campaign>) getSession().createCriteria(Campaign.class)
+				.createCriteria("receiver")
+				.add(Restrictions.eq("receiver", user)).setFirstResult(first)
+				.setMaxResults(count).list();
+	}
+
+	public int countCampaignsTo(User user) {
+		Criteria criteria = getSession().createCriteria(Campaign.class)
+				.createCriteria("receiver")
+				.add(Restrictions.eq("receiver", user));
+		criteria.setProjection(Projections.rowCount());
+		return ((Number) criteria.uniqueResult()).intValue();
+	}
+
+	public int countUnreadCampaignsTo(User user) {
+		Criteria criteria = getSession().createCriteria(Campaign.class)
+				.createCriteria("receiver")
+				.add(Restrictions.eq("receiver", user))
+				.add(Restrictions.eq("isRead", false));
+		criteria.setProjection(Projections.rowCount());
+		return ((Number) criteria.uniqueResult()).intValue();
+	}
+
+	public void sendCampaign(Campaign campaign, List<User> receivers) {
+		for (User aUser : receivers) {
+			campaign.addReceiver(new CampaignDetail(aUser, campaign));
+		}
+		insertCampaign(campaign);
 	}
 
 }

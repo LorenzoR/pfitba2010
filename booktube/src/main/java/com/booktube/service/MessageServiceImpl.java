@@ -54,14 +54,6 @@ public class MessageServiceImpl implements MessageService {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	public List<Message> getAllCampaigns(int first, int count) {
-		return itemDao.getAllCampaigns(first, count);
-	}
-	
-	public int countCampaigns() {
-		return itemDao.countCampaigns();
-	}
 
 	public int countMessages() {
 		return itemDao.countMessages();
@@ -89,6 +81,14 @@ public class MessageServiceImpl implements MessageService {
 
 	public void sendMessages(Message message, List<User> receivers) {
 		itemDao.sendMessages(message, receivers);
+	}
+
+	public List<Message> getAllMessages(User user, int first, int count) {
+		return itemDao.getAllMessages(user, first, count);
+	}
+
+	public int countMessages(User user) {
+		return itemDao.countMessages(user);
 	}
 
 }
