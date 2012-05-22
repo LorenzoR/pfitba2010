@@ -20,6 +20,7 @@ import com.booktube.pages.EditBookPage;
 import com.booktube.pages.HomePage;
 import com.booktube.pages.RegisterPage;
 import com.booktube.pages.ShowBookPage;
+import com.booktube.pages.ShowUserPage;
 import com.booktube.pages.WritersPage;
 import com.booktube.service.BookService;
 import com.booktube.service.UserService;
@@ -60,6 +61,7 @@ public class WicketApplication extends WebApplication {
 		mountPage("addBook", AddBookPage.class);
 		mountPage("register", RegisterPage.class);
 		mountPage("showBook", ShowBookPage.class);
+		mountPage("showUser", ShowUserPage.class);
 //		mount(new QueryStringUrlCodingStrategy("booktube", HomePage.class));
 //		mount(new QueryStringUrlCodingStrategy("writers", WritersPage.class));
 //		mount(new QueryStringUrlCodingStrategy("editBook", EditBookPage.class));

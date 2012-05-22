@@ -252,7 +252,10 @@ public abstract class BasePage extends WebPage {
 		// Robert: Ya no es necesario
 		// add(new BookmarkablePageLink<String>("title", HomePage.class));
 
-		add(new BookmarkablePageLink<String>("addBook", AddBookPage.class));
+		WebMarkupContainer addBookLi = new WebMarkupContainer("addBook_li");
+		addBookLi.add(new BookmarkablePageLink<String>("addBook", AddBookPage.class));
+		add(addBookLi);
+		
 		add(new BookmarkablePageLink<String>("showBooks", BooksPage.class));
 		/*
 		 * add(new Link("showBooks") { public void onClick() {
@@ -262,6 +265,7 @@ public abstract class BasePage extends WebPage {
 		
 		WebMarkupContainer contactLi = new WebMarkupContainer("contact_li");
 		contactLi.add(new BookmarkablePageLink<String>("contact", NewContact.class));
+		contactLi.setVisible(false);
 		add(contactLi);
 		
 		WebMarkupContainer newCampaignsLi = new WebMarkupContainer("new_campaign_li");
@@ -271,12 +275,15 @@ public abstract class BasePage extends WebPage {
 		
 		WebMarkupContainer campaignsLi = new WebMarkupContainer("campaigns_li");
 		campaignsLi.add(new BookmarkablePageLink<String>("campaignsLink", CampaignsPage.class));
+		campaignsLi.setVisible(false);
 		add(campaignsLi);
 		
 		add(new BookmarkablePageLink<String>("loadDataLink", LoadDataPage.class));
-		add(new BookmarkablePageLink<String>("messagesLink", MessagesPage.class));
-
 		
+		WebMarkupContainer messagesLi = new WebMarkupContainer("messages_li");
+		messagesLi.add(new BookmarkablePageLink<String>("messagesLink", MessagesPage.class));
+		messagesLi.setVisible(false);
+		add(messagesLi);
 		
 		WebMarkupContainer administrationLi = new WebMarkupContainer("administration_li");
 		administrationLi.add(new MenuLink("adminTools", AdministrationPage.class));
@@ -292,7 +299,12 @@ public abstract class BasePage extends WebPage {
 		add(registerLink);
 
 		if (WiaSession.get().isAuthenticated()) {
-			add(new Label("unreadMessages", "( "
+			
+			contactLi.setVisible(true);
+			campaignsLi.setVisible(true);
+			messagesLi.setVisible(true);
+			
+			messagesLi.add(new Label("unreadMessages", "( "
 					+ Integer.toString(messageService
 							.countUnreadMessagesTo(WiaSession.get()
 									.getLoggedInUser())) + " )"));
@@ -312,7 +324,7 @@ public abstract class BasePage extends WebPage {
 			}
 			
 		} else {
-			add(new Label("unreadMessages", " "));
+			messagesLi.add(new Label("unreadMessages", " "));
 			campaignsLi.add(new Label("unreadCampaigns", " "));
 		}
 

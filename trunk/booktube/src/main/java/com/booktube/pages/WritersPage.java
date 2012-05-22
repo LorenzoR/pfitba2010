@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
@@ -67,12 +68,13 @@ public class WritersPage extends BasePage {
 				item.add(new Label("username"));
 				item.add(new Label("firstname"));
 				item.add(new Label("lastname"));
-				item.add(new Link("detailsLink", item.getModel()) {
+				item.add(new BookmarkablePageLink<Object>("detailsLink", ShowUserPage.class, parameters));
+				/*item.add(new Link("detailsLink", item.getModel()) {
 					public void onClick() {
 						setResponsePage(ShowUserPage.class, parameters);
 					}
 
-				});
+				});*/
 				item.add(new Link("editLink", item.getModel()) {
 					public void onClick() {
 						setResponsePage(new EditWriterPage(user.getId(),

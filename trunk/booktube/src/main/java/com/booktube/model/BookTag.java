@@ -48,6 +48,10 @@ public class BookTag implements Serializable {
 		this.value = value;
 		this.book = book;
 	}
+	
+	public BookTag(String value) {
+		this.value = value;
+	}
 
 	public String getValue() {
 		return value;

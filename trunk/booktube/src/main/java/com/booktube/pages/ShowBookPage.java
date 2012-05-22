@@ -134,23 +134,23 @@ public class ShowBookPage extends BasePage {
 //			}
 //		});
 
-		List<Comment> comments = new ArrayList<Comment>(book.getComments());
+		//List<Comment> comments = new ArrayList<Comment>(book.getComments());
 
-		parent.add(commentList("comments", comments));
+		//parent.add(commentList("comments", comments));
 
-		Form<Object> commentForm = commentForm(parent, book, comments);
+		//Form<Object> commentForm = commentForm(parent, book, comments);
 
-		parent.add(commentForm);
+		//parent.add(commentForm);
 
-		Label registerMessage = new Label("registerMessage",
+		/*Label registerMessage = new Label("registerMessage",
 				"Debe registrarse para poder enviar comentarios.");
 		parent.add(registerMessage);
-
-		if (user == null) {
+*/
+		/*if (user == null) {
 			commentForm.setVisible(false);
 		} else {
 			registerMessage.setVisible(false);
-		}
+		}*/
 		
 		//final String currentURL = RequestCycle.get().getUrlRenderer().renderFullUrl(
 		//	    Url.parse(urlFor(ShowBookPage.class,null).toString()));
@@ -159,7 +159,7 @@ public class ShowBookPage extends BasePage {
 				   Url.parse(urlFor(ShowBookPage.class,pageParameters).toString()));
 		
 		//final Model<String> url = Model.of(currentURL);
-		final Comments facebookComments = new Comments("facebookComments", "http://example.com");
+		final Comments facebookComments = new Comments("facebookComments", url);
 		parent.add(facebookComments);
 		
 		final IModel<String> twitterUrl = Model.of("https://github.com/tfreier/wicketstuff-core/tree/master/jdk-1.5-parent/twitter-parent");
@@ -311,6 +311,7 @@ public class ShowBookPage extends BasePage {
 			rating.setNrOfVotes(0);
 			rating.setRating(0);
 			rating.setSumOfRatings(0);
+			rating.setBook(book);
 		}
 	}
 

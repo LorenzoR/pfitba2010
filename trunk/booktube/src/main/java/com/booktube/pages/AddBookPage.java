@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -17,6 +18,8 @@ import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -54,8 +57,24 @@ public class AddBookPage extends BasePage {
 
 		user = WiaSession.get().getLoggedInUser();
 
-		Label registerMessage = new Label("registerMessage",
-				"Debe registrarse para poder publicar.");
+//		Label registerMessage = new Label("registerMessage",
+//				"Debe registrarse para poder publicar.");
+//		parent.add(registerMessage);
+		
+		final Dialog loginDialog = loginDialog();
+				
+		parent.add(loginDialog);
+		
+		WebMarkupContainer registerMessage = new WebMarkupContainer("registerMessage");
+		registerMessage.add(new BookmarkablePageLink<String>("registerLink", RegisterPage.class));
+		AjaxLink loginLink = new AjaxLink("loginLink") {
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				loginDialog.open(target);
+			}
+			
+		};
+		registerMessage.add(loginLink);
 		parent.add(registerMessage);
 
 		Form<?> form = addBookForm(parent);
@@ -237,6 +256,31 @@ public class AddBookPage extends BasePage {
 		});
 
 		return form;
+	}
+	
+	private Dialog loginDialog() {
+
+		Dialog dialog = new Dialog("login_dialog");
+		
+		dialog.add(new Label("username_text", "Username: "));
+		dialog.add(new Label("password_text", "Password: "));
+		
+		AjaxDialogButton ok = new AjaxDialogButton("Login") {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onButtonClicked(AjaxRequestTarget target) {
+				setResponsePage(MessagesAdministrationPage.class);
+
+			}
+		};
+
+		dialog.setButtons(ok);
+		dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
+		
+		return dialog;
+
 	}
 
 	@Override

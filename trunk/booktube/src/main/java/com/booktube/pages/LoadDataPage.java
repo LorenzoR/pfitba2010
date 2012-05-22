@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -59,6 +60,28 @@ public class LoadDataPage extends BasePage {
 
 	public void addUsers() {
 
+		List<String> countries = new ArrayList<String>();
+		countries.add("Country 1");
+		countries.add("Country 2");
+		countries.add("Country 3");
+		countries.add("Country 4");
+		countries.add("Country 5");
+		countries.add("Country 6");
+		
+		Gender gender = Gender.MALE;
+		
+		for ( int i = 0; i < 100; i++ ) {
+			User user = new User("user" + i, "user" + i, "nombre" + i, "apellido" + i,
+					User.Level.USER);
+			user.setBirthdate(new Date());
+			user.setGender(gender);
+			user.setCountry(countries.get(i % countries.size()));
+			userService.insertUser(user);
+			users.add(user);
+			
+			gender = gender == Gender.MALE ? Gender.FEMALE : Gender.MALE;
+		}
+		
 		User user = new User("user", "pass", "nombre", "apellido",
 				User.Level.USER);
 		user.setBirthdate(new Date());
@@ -74,77 +97,84 @@ public class LoadDataPage extends BasePage {
 		users.add(user);
 		userService.insertUser(this.admin);
 
-		user = new User("user2", "user2", "user2", "user2",
-				User.Level.USER);
-		user.setBirthdate(new Date());
-		user.setGender(Gender.FEMALE);
-		user.setCountry("Country 2");
-		userService.insertUser(user);
-		users.add(user);
-
-		user = new User("user3", "user3", "user3", "user3",
-				User.Level.USER);
-		user.setBirthdate(new Date());
-		user.setGender(Gender.MALE);
-		user.setCountry("Country 3");
-		userService.insertUser(user);
-		users.add(user);
-
-		user = new User("user4", "user4", "user4", "user4",
-				User.Level.USER);
-		user.setBirthdate(new Date());
-		user.setGender(Gender.MALE);
-		user.setCountry("Country 2");
-		userService.insertUser(user);
-		users.add(user);
-
 	}
 
 	public void addBooks() {
-		System.out.println("Adding books");
-		Book book = new Book("titulo", "textoooooooooooooo", this.users.get(0));
-
-		book.setCategory("category");
-		book.setSubCategory("subcategory");
-
-		book.addComment(users.get(0), "comentario1");
-		book.addComment(users.get(0), "comentario2");
-		book.addComment(users.get(0), "comentario3");
-		book.addComment(users.get(0), "comentario4");
-
-		book.addTag("tag1");
-		book.addTag("tag2");
-		book.addTag("tag3");
-
-		bookService.insertBook(book);
-
-		book = new Book("titulo2", "textoooooooooooooo2", users.get(0));
-
-		book.setCategory("category2");
-		book.setSubCategory("subcategory2");
-
-		book.addComment(users.get(1), "comentario21");
-		book.addComment(users.get(2), "comentario22");
-		book.addComment(users.get(3), "comentario23");
-		book.addComment(users.get(0), "comentario24");
-
-		book.addTag("tag1");
-		book.addTag("tag22");
-		book.addTag("tag23");
-
-		bookService.insertBook(book);
 		
-		book = new Book("titulo3", "textoooooooooooooo3", users.get(1));
+		List<BookTag> bookTags = new ArrayList<BookTag>();
+		bookTags.add(new BookTag("tag1"));
+		bookTags.add(new BookTag("tag1"));
+		bookTags.add(new BookTag("tag1"));
+		bookTags.add(new BookTag("tag1"));
+		bookTags.add(new BookTag("tag1"));
+		bookTags.add(new BookTag("tag1"));
+		bookTags.add(new BookTag("tag1"));
+		bookTags.add(new BookTag("tag1"));
+		
+		Random randomGenerator = new Random(System.currentTimeMillis());
+		
+		System.out.println("Adding books");
+		
+		for ( int i = 0; i < 1000; i++ ) {
+			
+			Book book = new Book("titulo"+i, "texto"+i, this.users.get(randomGenerator.nextInt(this.users.size())));
 
-		book.setCategory("category2");
-		book.setSubCategory("subcategory2");
+			book.setCategory("category" + randomGenerator.nextInt(10));
+			book.setSubCategory("subcategory" + randomGenerator.nextInt(50));
 
-		book.addComment(users.get(1), "comentario21");
-		book.addComment(users.get(2), "comentario22");
-		book.addComment(users.get(3), "comentario23");
-		book.addComment(users.get(0), "comentario24");
+			int cantTags = randomGenerator.nextInt(10);
+			
+			for ( int j = 0; j < cantTags; j++ ) {
+				book.addTag("tag" + randomGenerator.nextInt(20));
+			}
 
-		bookService.insertBook(book);
+			bookService.insertBook(book);
+			
+		}
+		
+//		Book book = new Book("titulo", "textoooooooooooooo", this.users.get(0));
+//
+//		book.setCategory("category");
+//		book.setSubCategory("subcategory");
+//
+//		book.addComment(users.get(0), "comentario1");
+//		book.addComment(users.get(0), "comentario2");
+//		book.addComment(users.get(0), "comentario3");
+//		book.addComment(users.get(0), "comentario4");
+//
+//		book.addTag("tag1");
+//		book.addTag("tag2");
+//		book.addTag("tag3");
+//
+//		bookService.insertBook(book);
+//
+//		book = new Book("titulo2", "textoooooooooooooo2", users.get(0));
+//
+//		book.setCategory("category2");
+//		book.setSubCategory("subcategory2");
+//
+//		book.addComment(users.get(1), "comentario21");
+//		book.addComment(users.get(2), "comentario22");
+//		book.addComment(users.get(3), "comentario23");
+//		book.addComment(users.get(0), "comentario24");
+//
+//		book.addTag("tag1");
+//		book.addTag("tag22");
+//		book.addTag("tag23");
+//
+//		bookService.insertBook(book);
+//		
+//		book = new Book("titulo3", "textoooooooooooooo3", users.get(1));
+//
+//		book.setCategory("category2");
+//		book.setSubCategory("subcategory2");
+//
+//		book.addComment(users.get(1), "comentario21");
+//		book.addComment(users.get(2), "comentario22");
+//		book.addComment(users.get(3), "comentario23");
+//		book.addComment(users.get(0), "comentario24");
+//
+//		bookService.insertBook(book);
 		
 		
 	}
