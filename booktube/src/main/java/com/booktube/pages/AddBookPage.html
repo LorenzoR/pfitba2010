@@ -7,12 +7,20 @@
 <wicket:extend>
 <div wicket:id="books">
 
+	<p wicket:id="login_dialog">
+		<span wicket:id="username_text">Username label goes here</span>
+		<span wicket:id="password_text">Password label goes here</span>
+	</p>
+
 	<p wicket:id="success_dialog">
     	Obra agragada con exito!
     </p>
 
 	<h2>New Book</h2>
-	<span wicket:id="registerMessage"></span>
+	<p wicket:id="registerMessage">
+		Debe <a href="#" wicket:id="registerLink">registrarse</a> o <a href="#" wicket:id="loginLink">iniciar sesion</a> para poder publicar.
+	</p>
+<!-- 	<span wicket:id="registerMessage"></span> -->
 	<form wicket:id="form">
 		<p>Title: <input type="text" wicket:id="title" value=""/></p>
 		<br/>

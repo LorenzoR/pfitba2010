@@ -28,6 +28,7 @@ import org.mortbay.jetty.security.SSORealm;
 import com.booktube.WicketApplication;
 import com.booktube.model.Book;
 import com.booktube.model.BookTag;
+import com.booktube.model.Campaign;
 import com.booktube.model.Message;
 import com.booktube.model.CampaignDetail;
 import com.booktube.model.User;
@@ -90,13 +91,12 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 	}
 
 	public List<Book> findBookByTag(String tag, int first, int count) {
-
-		return (List<Book>) getSession()
-				.createQuery(
-						"from Book book " + "where :x in elements(book.tags)")
-				.setString("x", tag).setFirstResult(first).setMaxResults(count)
+		return (List<Book>) getSession().createCriteria(Book.class)
+				.createCriteria("tags")
+				.add(Restrictions.eq("value", tag))
+				.setFirstResult(first)
+				.setMaxResults(count)
 				.list();
-
 	}
 
 	public List<Book> findBookByAuthor(String author, int first, int count) {
@@ -116,11 +116,11 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 
 		switch (type) {
 		case TAG:
-			return ((Long) getSession()
-					.createQuery(
-							"select count(*) from Book book "
-									+ "where :x in elements(book.tags)")
-					.setString("x", parameter).uniqueResult()).intValue();
+			
+			return ((Number) getSession().createCriteria(Book.class)
+			.createCriteria("tags")
+			.add(Restrictions.eq("value", parameter)).setProjection(Projections.rowCount()).uniqueResult()).intValue();
+
 		case TITLE:
 			return ((Long) getSession()
 					.createQuery(

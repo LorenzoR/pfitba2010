@@ -146,7 +146,7 @@ public class Book implements Serializable {
 		this.text = text;
 		this.author = author;
 		this.publishDate = Calendar.getInstance().getTime();
-		this.rating = new Rating();
+		this.rating = new Rating(this);
 		this.tags = new HashSet<BookTag>();
 		this.comments = new HashSet<Comment>();
 		this.userVotes = new HashSet<User>();
@@ -157,7 +157,7 @@ public class Book implements Serializable {
 		this.text = text;
 		this.author = author;
 		this.publishDate = Calendar.getInstance().getTime();
-		this.rating = new Rating();
+		this.rating = new Rating(this);
 		this.tags = new HashSet<BookTag>();
 		this.comments = new HashSet<Comment>();
 		this.userVotes = new HashSet<User>();

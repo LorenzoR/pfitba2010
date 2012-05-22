@@ -3,14 +3,21 @@ package com.booktube.model;
 import java.io.Serializable;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.apache.wicket.IClusterable;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "RATING")
@@ -29,6 +36,11 @@ public class Rating implements IClusterable, Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "RATING_ID")
 	private Long id;
+	
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "BOOK_ID")
+	@OnDelete(action=OnDeleteAction.CASCADE)
+	private Book book;
 
 	@Basic
 	@Column(name = "NR_OF_VOTES")
@@ -46,17 +58,23 @@ public class Rating implements IClusterable, Serializable {
 		
 	}
 	
-	public Rating (Long id, Integer sumOfRatings, Integer nrOfVotes, Double rating) {
+	public Rating(Book book) {
+		this.book = book;
+	}
+	
+	public Rating (Long id, Integer sumOfRatings, Integer nrOfVotes, Double rating, Book book) {
 		this.id = id;
 		this.sumOfRatings = sumOfRatings;
 		this.nrOfVotes = nrOfVotes;
 		this.rating = rating;
+		this.book = book;
 	}
 	
-	public Rating (Integer sumOfRatings, Integer nrOfVotes, Double rating) {
+	public Rating (Integer sumOfRatings, Integer nrOfVotes, Double rating, Book book) {
 		this.sumOfRatings = sumOfRatings;
 		this.nrOfVotes = nrOfVotes;
 		this.rating = rating;
+		this.book = book;
 	}
 	
 	public void setNrOfVotes(int nrOfVotes) {
@@ -173,6 +191,14 @@ public class Rating implements IClusterable, Serializable {
 		} else if (!sumOfRatings.equals(other.sumOfRatings))
 			return false;
 		return true;
+	}
+
+	public Book getBook() {
+		return book;
+	}
+
+	public void setBook(Book book) {
+		this.book = book;
 	}
 	
 	

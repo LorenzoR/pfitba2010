@@ -37,31 +37,12 @@
 
 			<hr />
 			<h2>Comments</h2>
-
-			<div wicket:id="comments"
-				style="margin-bottom: 5px; padding-left: 2px;">
-				Sent by <b><span wicket:id="user.username">Author goes
-						here</span></b> on <b><span wicket:id="date">Date goes here</span></b> <span
-					wicket:id="text">Comment goes here</span>
-				<hr />
-			</div>
-
-			<h2>Add Comment</h2>
-			<span wicket:id="registerMessage"></span>
-			<form wicket:id="form">
-				<p>
-					<textarea wicket:id="textArea"></textarea>
-				</p>
-				<input type="button" wicket:id="save" value="Add Comment" />
-			</form>
-
-			<hr />
+			<div wicket:id="facebookComments"></div>
+			
 			<p>
 				<a href="#" wicket:id="goBack">Back</a>
 			</p>
-			<hr />
-			<h2>Facebook Comments</h2>
-			<div wicket:id="facebookComments"></div>
+			
 		</div>
 	</wicket:extend>
 </body>
