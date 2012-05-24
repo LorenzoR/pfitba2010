@@ -68,6 +68,9 @@ public class ShowCampaignPage extends BasePage {
 		
 		parent.add(listview);
 		
+		campaignService.getCampaignDetail(campaign, user).setRead(true);
+		campaignService.updateCampaign(campaign);
+		
 		//campaign.setRead(true);
 		//messageService.updateMessage(message);
 		

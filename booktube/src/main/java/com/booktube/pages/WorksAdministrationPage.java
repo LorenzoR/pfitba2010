@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.Page;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -17,19 +19,52 @@ import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.StringValue;
+import org.odlabs.wiquery.core.javascript.JsScope;
+import org.odlabs.wiquery.ui.core.JsScopeUiEvent;
+import org.odlabs.wiquery.ui.dialog.AjaxDialogButton;
+import org.odlabs.wiquery.ui.dialog.Dialog;
+import org.odlabs.wiquery.ui.dialog.DialogButton;
 
 import com.booktube.model.Book;
 import com.booktube.model.BookTag;
+import com.booktube.model.User;
 import com.booktube.pages.BooksPage.BookProvider;
 import com.booktube.service.BookService.SearchType;
 
 public class WorksAdministrationPage extends AdministrationPage {
 	private static final long serialVersionUID = 7512914721917619810L;
-	public Page backPage;
 
-	// public AdministrationPage(final PageParameters parameters) {
+	private static Dialog deleteDialog;
+	private static Dialog deleteConfirmationDialog;
+
+	private static Long bookId;
+
+	private static Book deleteBook;
+
+	private static String deleteBookTitle;
+
+	private Label deleteConfirmationLabel = new Label(
+			"delete_confirmation_dialog_text", new PropertyModel(this,
+					"deleteConfirmationText")) {
+		{
+			setOutputMarkupId(true);
+		}
+	};
+
+	private String deleteConfirmationText;
+
+	private Label successDialogLabel = new Label("success_dialog_text",
+			new PropertyModel(this, "successDialogText")) {
+		{
+			setOutputMarkupId(true);
+		}
+	};
+
+	private String successDialogText;
+
 	public WorksAdministrationPage() {
 		super();
 		final WebMarkupContainer parent = new WebMarkupContainer(
@@ -45,7 +80,7 @@ public class WorksAdministrationPage extends AdministrationPage {
 
 		if (typeString != null) {
 
-			//parameter = parameters.get(typeString).toString();
+			// parameter = parameters.get(typeString).toString();
 
 			if (typeString.equals("tag")) {
 				type = SearchType.TAG;
@@ -59,15 +94,21 @@ public class WorksAdministrationPage extends AdministrationPage {
 
 		DataView<Book> dataView = bookList("bookList", type, parameter);
 
-		//StringValue currentPage = parameters.get("currentPage");
-		
-//		if ( !currentPage.isEmpty() ) {
-//			dataView.setCurrentPage(currentPage.toInt());
-//		}
-		
+		// StringValue currentPage = parameters.get("currentPage");
+
+		// if ( !currentPage.isEmpty() ) {
+		// dataView.setCurrentPage(currentPage.toInt());
+		// }
+
 		parent.add(dataView);
 		parent.add(new PagingNavigator("footerPaginator", dataView));
-		
+
+		deleteDialog = deleteDialog();
+		parent.add(deleteDialog);
+
+		deleteConfirmationDialog = deleteConfirmationDialog();
+		parent.add(deleteConfirmationDialog);
+
 		String newTitle = "Booktube - Works Administration";
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 
@@ -150,23 +191,27 @@ public class WorksAdministrationPage extends AdministrationPage {
 				item.add(new BookmarkablePageLink<Object>("detailsLink",
 						ShowBookPage.class, detailsParameter));
 
-				item.add(new Link<Book>("deleteLink", item.getModel()) {
+				item.add(new AjaxLink<Book>("deleteLink", item.getModel()) {
 					private static final long serialVersionUID = -7155146615720218460L;
 
-					public void onClick() {
+					@Override
+					public void onClick(AjaxRequestTarget target) {
 
-						Book book = (Book) getModelObject();
-						Long bookId = book.getId();
+						//deleteBook = (Book) getModelObject();
+						
+						bookId = book.getId();
+						deleteBook = bookService.getBook(bookId);
+						System.out.println("Book ID " + bookId);
+						System.out.println("BOOK ES : " + deleteBook);
 
-						Book bookDelete = bookService.getBook(bookId);
+						deleteConfirmationDialog.open(target);
 
-						System.out.println("BOOk es : " + bookDelete);
+						deleteBookTitle = deleteBook.getTitle();
 
-						// bookService.deleteBook(book);
-						bookService.deleteBook(bookDelete);
-						System.out.println("Book " + bookId + " deleted.");
+						deleteConfirmationText = "Esta seguro que desea eliminar la obra "
+								+ deleteBookTitle + " ?";
 
-						setResponsePage(WorksAdministrationPage.this);
+						target.add(deleteConfirmationLabel);
 					}
 
 				});
@@ -174,6 +219,76 @@ public class WorksAdministrationPage extends AdministrationPage {
 		};
 
 		return dataView;
+	}
+
+	private Dialog deleteDialog() {
+
+		Dialog dialog = new Dialog("success_dialog");
+
+		dialog.add(successDialogLabel);
+
+		AjaxDialogButton ok = new AjaxDialogButton("OK") {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onButtonClicked(AjaxRequestTarget target) {
+				setResponsePage(WorksAdministrationPage.class);
+
+			}
+		};
+
+		dialog.setButtons(ok);
+		dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
+
+		return dialog;
+
+	}
+
+	private Dialog deleteConfirmationDialog() {
+
+		final Dialog dialog = new Dialog("delete_confirmation_dialog");
+
+		// labelText = "original2";
+		// dialog.add(new Label("delete_confirmation_dialog_text",
+		// "Esta seguro que desea eliminar el usuario?"));
+		dialog.add(deleteConfirmationLabel);
+		System.out.println("USERID " + bookId);
+		// System.out.println("USER: " + user);
+		// labelText = "original3";
+
+		AjaxDialogButton yesButton = new AjaxDialogButton("Si") {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onButtonClicked(AjaxRequestTarget target) {
+
+				System.out.println("Borro Boook");
+
+				System.out.println("USER ES : " + deleteBook);
+				bookService.deleteBook(deleteBook);
+
+				successDialogText = "Obra " + deleteBookTitle
+						+ " eliminada.";
+				target.add(successDialogLabel);
+				// JsScopeUiEvent.quickScope(deleteConfirmationdialog.close().render());
+				JsScope.quickScope(dialog.close().render());
+				// deleteConfirmationdialog.close(target);
+				deleteDialog.open(target);
+				// setResponsePage(MessagesAdministrationPage.class);
+
+			}
+		};
+
+		DialogButton noButton = new DialogButton("No",
+				JsScope.quickScope(dialog.close().render()));
+
+		dialog.setButtons(yesButton, noButton);
+		dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close()));
+
+		return dialog;
+
 	}
 
 	class BookProvider implements IDataProvider<Book> {

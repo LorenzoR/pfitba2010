@@ -42,37 +42,41 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 
 	}
 
-	public List<User> getUsers(int first, int count, Gender gender, Integer lowerAge, Integer higherAge, String country) {
-		
+	public List<User> getUsers(int first, int count, Gender gender,
+			Integer lowerAge, Integer higherAge, String country) {
+
 		Criteria criteria = getSession().createCriteria(User.class);
-		
-		if ( lowerAge != null ) {
-			criteria.add(Expression.sql("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 >= " + lowerAge));
+
+		if (lowerAge != null) {
+			criteria.add(Expression
+					.sql("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 >= "
+							+ lowerAge));
 		}
-		
-		if ( higherAge != null ) {
-			criteria.add(Expression.sql("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 <= " + higherAge));
+
+		if (higherAge != null) {
+			criteria.add(Expression
+					.sql("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 <= "
+							+ higherAge));
 		}
-		
-		if ( gender != null ) {
+
+		if (gender != null) {
 			criteria.add(Restrictions.eq("gender", gender));
 		}
-		
-		if ( country != null ) {
+
+		if (country != null) {
 			criteria.add(Restrictions.eq("country", country));
 		}
-		
-		return (List<User>) criteria.setFirstResult(first)
-				.setMaxResults(count).list();
+
+		return (List<User>) criteria.setFirstResult(first).setMaxResults(count)
+				.list();
 	}
-	
+
 	public List<User> getUsersByCountry(int first, int count, String country) {
 		return (List<User>) getSession().createCriteria(User.class)
-				.add(Restrictions.eq("country", country))
-				.setFirstResult(first)
+				.add(Restrictions.eq("country", country)).setFirstResult(first)
 				.setMaxResults(count).list();
 	}
-	
+
 	public List<User> getUsers(int first, int count, Level level) {
 		List<User> users = (List<User>) getSession().createCriteria(User.class)
 				.add(Restrictions.eq("level", level)).setFirstResult(first)
@@ -80,7 +84,7 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 
 		return users;
 	}
-	
+
 	public List<User> getUsersByGender(int first, int count, Gender gender) {
 		List<User> users = (List<User>) getSession().createCriteria(User.class)
 				.add(Restrictions.eq("gender", gender)).setFirstResult(first)
@@ -92,13 +96,17 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 	public List<User> getUsersByAge(int first, int count, int lowerAge,
 			int higherAge) {
 
-		List<User> users = (List<User>) getSession().createCriteria(User.class)
-				.add(Expression.sql("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 >= " + lowerAge))
-				.add(Expression.sql("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 <= " + higherAge))
-				//.add(Restrictions.gt("age", lowerAge))
-				//.add(Restrictions.lt("age", higherAge))
-				.setFirstResult(first)
-				.setMaxResults(count).list();
+		List<User> users = (List<User>) getSession()
+				.createCriteria(User.class)
+				.add(Expression
+						.sql("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 >= "
+								+ lowerAge))
+				.add(Expression
+						.sql("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 <= "
+								+ higherAge))
+				// .add(Restrictions.gt("age", lowerAge))
+				// .add(Restrictions.lt("age", higherAge))
+				.setFirstResult(first).setMaxResults(count).list();
 		return users;
 
 		// SQLQuery query =
@@ -108,8 +116,12 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 	}
 
 	public User getUser(Long id) {
-		return (User) getSession().getNamedQuery("user.id").setLong("id", id)
-				.setMaxResults(1).uniqueResult();
+		if (id == null) {
+			return null;
+		} else {
+			return (User) getSession().getNamedQuery("user.id")
+					.setLong("id", id).setMaxResults(1).uniqueResult();
+		}
 	}
 
 	public User getUser(String username) {
@@ -120,28 +132,29 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 
 	public void update(User user) {
 		super.update(user);
-		//getSession().merge(user);
-		//getSession().flush();
+		// getSession().merge(user);
+		// getSession().flush();
 
 	}
 
 	public Long insert(User user) {
-		/*Long id = (Long) getSession().save(user);
-		getSession().flush();
-		return id;*/
+		/*
+		 * Long id = (Long) getSession().save(user); getSession().flush();
+		 * return id;
+		 */
 		return super.insert(user);
 	}
 
 	public void delete(User user) {
 		super.delete(user);
-		//getSession().delete(user);
-		//getSession().flush();
+		// getSession().delete(user);
+		// getSession().flush();
 	}
 
 	public int getCount() {
-//		Criteria criteria = getSession().createCriteria(User.class);
-//		criteria.setProjection(Projections.rowCount());
-//		return ((Number) criteria.uniqueResult()).intValue();
+		// Criteria criteria = getSession().createCriteria(User.class);
+		// criteria.setProjection(Projections.rowCount());
+		// return ((Number) criteria.uniqueResult()).intValue();
 		return super.getCount();
 	}
 

@@ -68,26 +68,20 @@ public class CampaignsPage extends BasePage {
 				final PageParameters parameters = new PageParameters();
 				parameters.set("campaignId", campaign.getId());
 				//item.add(new Label("id"));
-				/*if ( campaign.isRead() ) {
+				if ( campaignService.getCampaignDetail(campaign, user).isRead() ) {
 					item.add(new Label("subject"));
 					item.add(new Label("sender"));
 					item.add(new Label("date"));
 				}
-				else {*/
+				else {
 					item.add(new Label("subject", "<b>" + campaign.getSubject() + "</b>").setEscapeModelStrings(false));
 					item.add(new Label("sender", "<b>" + campaign.getSender() + "</b>").setEscapeModelStrings(false));
 					item.add(new Label("date", "<b>" + campaign.getDate() + "</b>").setEscapeModelStrings(false));
-				//}
+				}
 				
 				item.add(new Link("detailsLink", item.getModel()) {
 					public void onClick() {
 						setResponsePage(ShowCampaignPage.class, parameters);
-					}
-
-				});
-				item.add(new Link("answerLink", item.getModel()) {
-					public void onClick() {
-						setResponsePage(AnswerMessagePage.class, parameters);
 					}
 
 				});
