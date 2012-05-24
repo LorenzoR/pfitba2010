@@ -7,7 +7,15 @@
 <body>
 
 <wicket:extend>
-	<div wicket:id="worksContainer">	
+	<div wicket:id="worksContainer">
+	
+		<p wicket:id="success_dialog">
+	    	 <span wicket:id="success_dialog_text">Success dialog goes here</span>
+	    </p>
+	    <p wicket:id="delete_confirmation_dialog">
+	    	<span wicket:id="delete_confirmation_dialog_text">Delete confirmation dialog goes here</span>
+	    </p>
+		
 		<h3 wicket:id="pageTitle"></h3>
 	
 		<div wicket:id="bookList"  style="border: 1px black solid; margin-bottom: 5px; padding-left: 2px;">

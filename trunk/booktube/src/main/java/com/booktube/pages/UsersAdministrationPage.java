@@ -8,6 +8,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.markup.repeater.Item;
@@ -15,12 +16,16 @@ import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.odlabs.wiquery.core.javascript.JsScope;
 import org.odlabs.wiquery.ui.core.JsScopeUiEvent;
 import org.odlabs.wiquery.ui.dialog.AjaxDialogButton;
 import org.odlabs.wiquery.ui.dialog.Dialog;
+import org.odlabs.wiquery.ui.dialog.DialogButton;
 
+import com.booktube.model.Campaign;
 import com.booktube.model.User;
 import com.booktube.pages.WritersPage.WriterProvider;
 import com.booktube.service.UserService;
@@ -32,10 +37,35 @@ public class UsersAdministrationPage extends AdministrationPage {
 	UserService userService;
 
 	public static final int WRITERS_PER_PAGE = 5;
-	
-	private static Dialog dialog;
 
-	// public AdministrationPage(final PageParameters parameters) {
+	private static Dialog deleteDialog;
+	private static Dialog deleteConfirmationDialog;
+
+	private static Long userId;
+
+	private static User deleteUser;
+
+	private static String deleteUsername;
+
+	private Label deleteConfirmationLabel = new Label(
+			"delete_confirmation_dialog_text", new PropertyModel(this,
+					"deleteConfirmationText")) {
+		{
+			setOutputMarkupId(true);
+		}
+	};
+	
+	private String deleteConfirmationText;
+	
+	private Label successDialogLabel = new Label("success_dialog_text", new PropertyModel(this, "successDialogText")) {
+		{
+			setOutputMarkupId(true);
+		}
+	};
+
+	private String successDialogText;
+	
+
 	public UsersAdministrationPage() {
 		super();
 		final WebMarkupContainer parent = new WebMarkupContainer(
@@ -50,23 +80,12 @@ public class UsersAdministrationPage extends AdministrationPage {
 		parent.add(dataView);
 		parent.add(new PagingNavigator("footerPaginator", dataView));
 
-		AjaxDialogButton ok = new AjaxDialogButton("OK") {
+		deleteDialog = deleteDialog();
+		parent.add(deleteDialog);
 
-			private static final long serialVersionUID = 1L;
+		deleteConfirmationDialog = deleteConfirmationDialog();
+		parent.add(deleteConfirmationDialog);
 
-			@Override
-			protected void onButtonClicked(AjaxRequestTarget target) {
-				setResponsePage(UsersAdministrationPage.class);
-
-			}
-		};
-
-		dialog = new Dialog("success_dialog");
-		dialog.setButtons(ok);
-		dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
-
-		parent.add(dialog);
-		
 		String newTitle = "Booktube - Users Administration";
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 
@@ -76,8 +95,8 @@ public class UsersAdministrationPage extends AdministrationPage {
 
 		IDataProvider<User> dataProvider = new WriterProvider();
 
-		DataView<User> dataView = new DataView<User>(label,
-				dataProvider, WRITERS_PER_PAGE) {
+		DataView<User> dataView = new DataView<User>(label, dataProvider,
+				WRITERS_PER_PAGE) {
 
 			protected void populateItem(Item<User> item) {
 				final User user = (User) item.getModelObject();
@@ -85,11 +104,13 @@ public class UsersAdministrationPage extends AdministrationPage {
 						user);
 				item.setDefaultModel(model);
 				final PageParameters parameters = new PageParameters();
-				parameters.set("user", user.getId());
+				parameters.set("userId", user.getId());
 				item.add(new Label("id"));
 				item.add(new Label("username"));
 				item.add(new Label("firstname"));
 				item.add(new Label("lastname"));
+				item.add(new BookmarkablePageLink<Object>("detailsLink",
+						ShowUserPage.class, parameters));
 				item.add(new Link("editLink", item.getModel()) {
 					public void onClick() {
 						setResponsePage(new EditWriterPage(user.getId(),
@@ -101,39 +122,115 @@ public class UsersAdministrationPage extends AdministrationPage {
 
 					@Override
 					public void onClick(AjaxRequestTarget target) {
-						// TODO Auto-generated method stub
-						User user = (User) getModelObject();
-						Long userId = user.getId();
+						
+						//userId = user.getId();
+						deleteUser = user;
+						System.out.println("USERIDDDD " + userId);
+						System.out.println("USER ES : " + deleteUser);
 
-						userService.deleteUser(user);
-						System.out.println("User " + userId + " deleted.");
+						deleteConfirmationDialog.open(target);
 
-						dialog.open(target);
+						deleteUsername = deleteUser.getUsername();
+
+						deleteConfirmationText = "Esta seguro que desea eliminar el usuario "
+								+ deleteUsername + " ?";
+
+						target.add(deleteConfirmationLabel);
 					}
-					
+
 				});
-//				item.add(new Link<User>("deleteLink", item.getModel()) {
-//					private static final long serialVersionUID = -7155146615720218460L;
-//
-//					public void onClick() {
-//
-//						User user = (User) getModelObject();
-//						Long userId = user.getId();
-//
-//						userService.deleteUser(user);
-//						System.out.println("User " + userId + " deleted.");
-//
-//						dialog.open(target);
-//						
-//						//setResponsePage(UsersAdministrationPage.this);
-//					}
-//
-//				});
+				// item.add(new Link<User>("deleteLink", item.getModel()) {
+				// private static final long serialVersionUID =
+				// -7155146615720218460L;
+				//
+				// public void onClick() {
+				//
+				// User user = (User) getModelObject();
+				// Long userId = user.getId();
+				//
+				// userService.deleteUser(user);
+				// System.out.println("User " + userId + " deleted.");
+				//
+				// dialog.open(target);
+				//
+				// //setResponsePage(UsersAdministrationPage.this);
+				// }
+				//
+				// });
 			}
 
 		};
 
 		return dataView;
+	}
+
+	private Dialog deleteDialog() {
+
+		Dialog dialog = new Dialog("success_dialog");
+
+		dialog.add(successDialogLabel);
+
+		AjaxDialogButton ok = new AjaxDialogButton("OK") {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onButtonClicked(AjaxRequestTarget target) {
+				setResponsePage(UsersAdministrationPage.class);
+
+			}
+		};
+
+		dialog.setButtons(ok);
+		dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
+
+		return dialog;
+
+	}
+
+	private Dialog deleteConfirmationDialog() {
+
+		final Dialog dialog = new Dialog("delete_confirmation_dialog");
+
+		// labelText = "original2";
+		// dialog.add(new Label("delete_confirmation_dialog_text",
+		// "Esta seguro que desea eliminar el usuario?"));
+		dialog.add(deleteConfirmationLabel);
+		System.out.println("USERID " + userId);
+		// System.out.println("USER: " + user);
+		// labelText = "original3";
+
+		AjaxDialogButton yesButton = new AjaxDialogButton("Si") {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onButtonClicked(AjaxRequestTarget target) {
+
+				System.out.println("Borro user");
+
+				System.out.println("USER ES : " + deleteUser);
+				userService.deleteUser(deleteUser);
+				
+				successDialogText = "Usuario " + deleteUsername + " eliminado.";
+				target.add(successDialogLabel);
+				// JsScopeUiEvent.quickScope(deleteConfirmationdialog.close().render());
+				JsScope.quickScope(dialog.close().render());
+				// deleteConfirmationdialog.close(target);
+				deleteDialog.open(target);
+				// setResponsePage(MessagesAdministrationPage.class);
+
+			}
+		};
+
+		DialogButton noButton = new DialogButton("No",
+				JsScope.quickScope(dialog.close().render()));
+
+		dialog.setButtons(yesButton, noButton);
+		dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close()));
+
+		return dialog;
+
 	}
 
 	class WriterProvider implements IDataProvider<User> {

@@ -217,14 +217,9 @@ public class Book implements Serializable {
 		System.out.println(this.tags.toString());
 		return tag;
 	}
-
+	
 	public String toString() {
-		if ( tags != null ) {
-			return getTitle() + " by " + this.getAuthor() + "Tags: " + Arrays.toString(tags.toArray());
-		}
-		else {
-			return getTitle() + " by " + this.getAuthor();
-		}
+		return title + " by " + author;
 	}
 
 	public Date getPublishDate() {

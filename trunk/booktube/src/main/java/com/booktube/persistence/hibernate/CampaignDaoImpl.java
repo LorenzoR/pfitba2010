@@ -8,7 +8,6 @@ import org.hibernate.criterion.Restrictions;
 
 import com.booktube.model.Campaign;
 import com.booktube.model.CampaignDetail;
-import com.booktube.model.Message;
 import com.booktube.model.User;
 import com.booktube.persistence.CampaignDao;
 
@@ -25,7 +24,8 @@ public class CampaignDaoImpl extends AbstractDaoHibernate<Campaign> implements
 	}
 
 	public void updateCampaign(Campaign campaign) {
-		super.saveOrUpdate(campaign);
+		//super.saveOrUpdate(campaign);
+		super.update(campaign);
 	}
 
 	public void deleteCampaign(Campaign campaign) {
@@ -35,7 +35,7 @@ public class CampaignDaoImpl extends AbstractDaoHibernate<Campaign> implements
 	public CampaignDetail getCampaignDetail(Campaign campaign, User receiver) {
 		Criteria criteria = getSession().createCriteria(CampaignDetail.class)
 				.add(Restrictions.eq("receiver", receiver))
-				.add(Restrictions.eq("message", campaign));
+				.add(Restrictions.eq("campaign", campaign));
 
 		return (CampaignDetail) criteria.setMaxResults(1).uniqueResult();
 	}
