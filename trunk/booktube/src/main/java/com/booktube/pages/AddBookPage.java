@@ -13,13 +13,16 @@ import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -262,8 +265,9 @@ public class AddBookPage extends BasePage {
 
 		Dialog dialog = new Dialog("login_dialog");
 		
-		dialog.add(new Label("username_text", "Username: "));
-		dialog.add(new Label("password_text", "Password: "));
+		final Form<Object> form = loginForm("login_dialog_form");
+		
+		dialog.add(form);
 		
 		AjaxDialogButton ok = new AjaxDialogButton("Login") {
 
@@ -281,6 +285,66 @@ public class AddBookPage extends BasePage {
 		
 		return dialog;
 
+	}
+	
+	private Form<Object> loginForm(String label) {
+		final Form<Object> form = new Form<Object>(label);
+		final TextField<String> username = new TextField<String>("username",
+				new Model<String>(""));
+		final PasswordTextField password = new PasswordTextField("password",
+				new Model<String>(""));
+
+		username.setRequired(true);
+
+		/*
+		 * final Label loginMsg = new Label("loginMsg",
+		 * "Nombre de usuario o password incorrecto");
+		 * loginMsg.setVisible(false); form.add(loginMsg);
+		 */
+
+		// Add a FeedbackPanel for displaying our messages
+		//final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
+		//feedbackPanel.setOutputMarkupId(true);
+		//form.add(feedbackPanel);
+
+		form.add(username);
+		form.add(password);
+
+		form.add(new Button("button1", new Model<String>("")) {
+			private static final long serialVersionUID = 6743737357599494567L;
+
+			@Override
+			public void onSubmit() {
+				String userString = username.getDefaultModelObjectAsString();
+				String passwordString = User.hash(
+						password.getDefaultModelObjectAsString(), "SHA-1");
+
+				username.setModel(new Model<String>(""));
+
+				System.out.println("User: " + userString + " Pass: "
+						+ passwordString);
+
+				User user = userService.getUser(userString);
+
+				if (user != null && user.getPassword().equals(passwordString)) {
+					WiaSession.get().logInUser(user);
+				} else {
+					/* TERMINAR MENSAJE DE LOGIN INCORRECTO */
+					System.out.println("Login failed!");
+					info("aaaaaaaaaaaa");
+					// loginMsg.setVisible(true);
+				}
+
+				if (!continueToOriginalDestination()) {
+					setResponsePage(HomePage.class);
+				}
+
+				// setResponsePage(BasePage.this);
+
+			}
+		});
+
+		return form;
 	}
 
 	@Override

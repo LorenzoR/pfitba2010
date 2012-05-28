@@ -17,7 +17,7 @@ public class HomePage extends BasePage {
 		
 		parent.add(new Label("content", "Aca va el contenido de la Home Page."));
 		
-		final LikeBox likeBox = new LikeBox("likeBox", Model.of("https://www.facebook.com/apps/application.php?id=142662635778399"));
+		final LikeBox likeBox = new LikeBox("likeBox", Model.of("https://www.facebook.com/booktube123"));
 		parent.add(likeBox);
 		
 	}
