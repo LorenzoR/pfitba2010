@@ -7,10 +7,13 @@
 <wicket:extend>
 <div wicket:id="books">
 
-	<p wicket:id="login_dialog">
-		<span wicket:id="username_text">Username label goes here</span>
-		<span wicket:id="password_text">Password label goes here</span>
-	</p>
+	<div wicket:id="login_dialog">
+	<form wicket:id="login_dialog_form">
+		Username: <input type="text" wicket:id="username" value=""/> <br />
+		Password: <input type="password" wicket:id="password" value=""/> <br />
+		<input type="submit" value="Login" wicket:id="button1" />
+	</form>
+	</div>
 
 	<p wicket:id="success_dialog">
     	Obra agragada con exito!
