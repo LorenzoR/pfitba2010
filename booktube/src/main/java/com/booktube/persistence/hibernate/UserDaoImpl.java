@@ -1,6 +1,7 @@
 package com.booktube.persistence.hibernate;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
@@ -20,6 +22,7 @@ import com.booktube.WicketApplication;
 import com.booktube.model.Book;
 import com.booktube.model.Message;
 import com.booktube.model.User;
+import com.booktube.model.Message.Type;
 import com.booktube.model.User.Gender;
 import com.booktube.persistence.UserDao;
 import com.booktube.model.User.Level;
@@ -43,10 +46,18 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 	}
 
 	public List<User> getUsers(int first, int count, Gender gender,
-			Integer lowerAge, Integer higherAge, String country) {
+			Integer lowerAge, Integer higherAge, String country, Date lowDate, Date highDate) {
 
 		Criteria criteria = getSession().createCriteria(User.class);
 
+		if ( lowDate != null ) {
+			criteria.add(Restrictions.ge("registrationDate", lowDate));
+		}
+		
+		if ( highDate != null ) {
+			criteria.add(Restrictions.le("registrationDate", highDate));
+		}
+		
 		if (lowerAge != null) {
 			criteria.add(Expression
 					.sql("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 >= "
@@ -161,5 +172,17 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 	public Iterator<User> iterator(int first, int count) {
 		return (Iterator<User>) getSession().createCriteria(User.class)
 				.setFirstResult(first).setMaxResults(count).list().iterator();
+	}
+
+	public List<User> getUsersByRegistrationDate(int first, int count,
+			Date lowDate, Date highDate) {
+		Criteria criteria = getSession()
+				.createCriteria(User.class)
+				.add(Restrictions.and(
+						Restrictions.le("registrationDate", highDate),
+						Restrictions.ge("registrationDate", lowDate)))
+				.setMaxResults(count);
+
+		return (List<User>) criteria.list();
 	}
 }

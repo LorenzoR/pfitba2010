@@ -1,5 +1,6 @@
 package com.booktube.service;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,8 +24,8 @@ public class UserServiceImpl implements UserService {
         return itemDao.getAllUsers(first, count);
     }
     
-    public List<User> getUsers(int first, int count, Gender gender, Integer lowerAge, Integer higherAge, String country) {
-    	return itemDao.getUsers(first, count, gender, lowerAge, higherAge, country);
+    public List<User> getUsers(int first, int count, Gender gender, Integer lowerAge, Integer higherAge, String country, Date lowDate, Date highDate) {
+    	return itemDao.getUsers(first, count, gender, lowerAge, higherAge, country, lowDate, highDate);
     }
     
     public List<User> getUsersByCountry(int first, int count, String country) {
@@ -77,5 +78,11 @@ public class UserServiceImpl implements UserService {
 
 	public Iterator<User> iterator(int first, int count) {
 		return itemDao.iterator(first, count);
+	}
+
+	public List<User> getUsersByRegistrationDate(int first, int count,
+			Date lowDate, Date highDate) {
+		return itemDao.getUsersByRegistrationDate(first, count,
+				lowDate, highDate);
 	}
 }
