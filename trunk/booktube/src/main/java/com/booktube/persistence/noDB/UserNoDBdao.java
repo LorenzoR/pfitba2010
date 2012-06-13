@@ -1,6 +1,7 @@
 package com.booktube.persistence.noDB;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -136,12 +137,23 @@ public class UserNoDBdao implements UserDao {
 		return null;
 	}
 	public List<User> getUsers(int first, int count, Gender gender,
-			int lowerAge, int higherAge, String country) {
+			int lowerAge, int higherAge, String country, Date low, Date high) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	public List<User> getUsers(int first, int count, Gender gender,
 			Integer lowerAge, Integer higherAge, String country) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public List<User> getUsersByRegistrationDate(int first, int count,
+			Date lowDaysNumber, Date highDaysNumber) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public List<User> getUsers(int first, int count, Gender gender,
+			Integer lowerAge, Integer higherAge, String country, Date lowDate,
+			Date highDate) {
 		// TODO Auto-generated method stub
 		return null;
 	}

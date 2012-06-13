@@ -1,5 +1,6 @@
 package com.booktube.pages;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -105,6 +106,16 @@ public class NewCampaign extends BasePage {
 
 		form.add(highAgeField);
 
+		final TextField<String> lowRegistrationDateField = new TextField<String>(
+				"lowRegistrationDate", new Model<String>(""));
+
+		form.add(lowRegistrationDateField);
+
+		final TextField<String> highRegistrationDateField = new TextField<String>(
+				"highRegistrationDate", new Model<String>(""));
+
+		form.add(highRegistrationDateField);
+
 		List<String> countryList = Arrays.asList(new String[] { "Country 1",
 				"...", "Country 2" });
 
@@ -184,78 +195,33 @@ public class NewCampaign extends BasePage {
 					gender = null;
 				}
 
-				int lowAge = Integer.valueOf(lowAgeField
-						.getDefaultModelObjectAsString());
-				int highAge = Integer.valueOf(highAgeField
-						.getDefaultModelObjectAsString());
-
-				List<User> receivers = userService.getUsers(0, Integer.MAX_VALUE, gender,
-						lowAge, highAge, country);
+				Integer lowAge;
 				
-				campaignService.sendCampaign(campaign, receivers);
+				if ( lowAgeField != null ) {
+					lowAge = Integer.valueOf(lowAgeField
+						.getDefaultModelObjectAsString());
+				}
+				else {
+					lowAge = null;
+				}
+				
+				Integer highAge;
+				
+				highAge = Integer.valueOf(highAgeField
+						.getDefaultModelObjectAsString());
+				
+				Date lowDate = Date.valueOf(lowRegistrationDateField.getDefaultModelObjectAsString());
+				Date highDate = Date.valueOf(highRegistrationDateField.getDefaultModelObjectAsString());
+				
+				System.out.println("HIGHDATESTRING: " + highRegistrationDateField.getDefaultModelObjectAsString());
+				System.out.println("HIDHDATE: " + highDate);
+				
+				List<User> receivers = userService.getUsers(0,
+						Integer.MAX_VALUE, gender, lowAge, highAge, country, lowDate, highDate);
 
-				// if ( gender == null ) {
-				// receivers = userService.getUsersByAge(0, Integer.MAX_VALUE,
-				// lowAge, highAge);
-				// }
-				// else {
-				// receivers = userService.getUsers(0, Integer.MAX_VALUE,
-				// gender, lowAge, highAge);
-				// }
-				campaignService.insertCampaign(campaign);
-				//messageService.sendMessages(message, receivers);
+				//campaignService.sendCampaign(campaign, receivers);
 
-				/*
-				 * Set<MessageDetail> receiverSet = new
-				 * HashSet<MessageDetail>();
-				 * 
-				 * // Si el usuario es Admin if (true) { List<User> users =
-				 * (List<User>) group .getDefaultModelObject();
-				 * 
-				 * for (User receiver : users) { System.out.println("User: " +
-				 * receiver); //message.addReceiver(receiver);
-				 * receiverSet.add(new MessageDetail(receiver, message)); } }
-				 * else { User admin = userService.getUser("admin");
-				 * receiverSet.add(new MessageDetail(admin, null)); }
-				 * 
-				 * System.out.println("Receiver: " + receiverSet.toString());
-				 * message.setReceiver(receiverSet);
-				 * messageService.insertMessage(message);
-				 */
-
-				// message.addReceiver(user1);
-
-				// message.addReceiver(user2);
-
-				// messageService.updateMessage(message);
-
-				// comments.add(new Comment(new
-				// User(ddc.getDefaultModelObjectAsString()),
-				// editor.getDefaultModelObjectAsString()));
-				// editor.setModel(new Model(""));
-				// target.addComponent(parent);
-				// target.focusComponent(editor);
-				// System.out.println("ACA 1");
-				/*
-				 * String text = editor.getDefaultModelObjectAsString(); String
-				 * username = user.getUsername(); String title =
-				 * titleField.getDefaultModelObjectAsString();
-				 * 
-				 * //User user = userService.getUser(username); Book book = new
-				 * Book(title, text, user);
-				 * 
-				 * 
-				 * bookService.insertBook(book);
-				 * System.out.println("Book inserted.");
-				 * System.out.println("Title: " + title);
-				 * System.out.println("Author: " + username);
-				 * System.out.println("Text: " + text);
-				 * 
-				 * 
-				 * editor.setModel(new Model("")); titleField.setModel(new
-				 * Model("")); target.addComponent(parent);
-				 * setResponsePage(HomePage.class);
-				 */
+				//campaignService.insertCampaign(campaign);
 			}
 
 			@Override

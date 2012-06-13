@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Basic;
@@ -65,6 +66,10 @@ public class User implements Serializable {
 	@Column(name = "BIRTHDATE", nullable = false)
 	private Date birthdate;
 	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "REGISTRATION_DATE", nullable = false)
+	private Date registrationDate;
+	
 	@Enumerated(EnumType.ORDINAL)
 	@Column(name = "LEVEL", nullable = false)
 	private Level level;
@@ -81,6 +86,7 @@ public class User implements Serializable {
 		this.lastname = lastname;
 		this.id = id;
 		this.level = level;
+		this.registrationDate = Calendar.getInstance().getTime();
 	}
 
 	public User(String username, String password, String firstname,
@@ -90,6 +96,7 @@ public class User implements Serializable {
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.level = level;
+		this.registrationDate = Calendar.getInstance().getTime();
 	}
 
 	public Long getId() {
@@ -198,6 +205,14 @@ public class User implements Serializable {
 
 	public void setBirthdate(Date birthdate) {
 		this.birthdate = birthdate;
+	}
+
+	public Date getRegistrationDate() {
+		return registrationDate;
+	}
+
+	public void setRegistrationDate(Date registrationDate) {
+		this.registrationDate = registrationDate;
 	}
 
 	public static String hash(String s, String hashFunction) {

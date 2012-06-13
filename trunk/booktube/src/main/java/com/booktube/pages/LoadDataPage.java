@@ -2,6 +2,7 @@ package com.booktube.pages;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -59,7 +60,7 @@ public class LoadDataPage extends BasePage {
 	}
 
 	public void addUsers() {
-
+		
 		List<String> countries = new ArrayList<String>();
 		countries.add("Country 1");
 		countries.add("Country 2");
@@ -71,9 +72,16 @@ public class LoadDataPage extends BasePage {
 		Gender gender = Gender.MALE;
 		
 		for ( int i = 0; i < 100; i++ ) {
+			
+			int year = randBetween(1900, 2010);
+	        int month = randBetween(0, 11);
+	        GregorianCalendar gc = new GregorianCalendar(year, month, 1);
+	        int day = randBetween(1, gc.getActualMaximum(gc.DAY_OF_MONTH));
+	        gc.set(year, month, day);
+			
 			User user = new User("user" + i, "user" + i, "nombre" + i, "apellido" + i,
 					User.Level.USER);
-			user.setBirthdate(new Date());
+			user.setBirthdate(new Date(gc.getTimeInMillis()));
 			user.setGender(gender);
 			user.setCountry(countries.get(i % countries.size()));
 			userService.insertUser(user);
@@ -262,5 +270,9 @@ public class LoadDataPage extends BasePage {
 		String newTitle = "Booktube - Load Data";
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
+	
+	private static int randBetween(int start, int end) {
+        return start + (int)Math.round(Math.random() * (end - start));
+    }
 
 }

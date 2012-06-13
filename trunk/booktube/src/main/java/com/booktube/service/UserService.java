@@ -1,5 +1,6 @@
 package com.booktube.service;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -13,7 +14,8 @@ public interface UserService {
     public List<User> getUsersByGender(int first, int count, Gender gender);
     public List<User> getUsersByAge(int first, int count, int lowerAge, int higherAge);
     public List<User> getUsersByCountry(int first, int count, String country);
-    public List<User> getUsers(int first, int count, Gender gender, Integer lowerAge, Integer higherAge, String country);
+    public List<User> getUsersByRegistrationDate(int first, int count, Date lowDate, Date highDate);
+    public List<User> getUsers(int first, int count, Gender gender, Integer lowerAge, Integer higherAge, String country, Date lowDate, Date highDate);
     public List<User> getUsers(int first, int count, Level level);
     public void updateUser(User user);
     public void deleteUser(User user);
