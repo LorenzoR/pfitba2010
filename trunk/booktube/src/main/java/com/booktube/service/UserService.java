@@ -17,6 +17,7 @@ public interface UserService {
     public List<User> getUsersByRegistrationDate(int first, int count, Date lowDate, Date highDate);
     public List<User> getUsers(int first, int count, Gender gender, Integer lowerAge, Integer higherAge, String country, Date lowDate, Date highDate);
     public List<User> getUsers(int first, int count, Level level);
+    public List<String> getAllCountries();
     public void updateUser(User user);
     public void deleteUser(User user);
     public User getUser(Long id);

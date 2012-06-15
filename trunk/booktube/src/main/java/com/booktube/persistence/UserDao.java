@@ -17,6 +17,7 @@ public interface UserDao {
     public List<User> getUsersByRegistrationDate(int first, int count, Date lowDaysNumber, Date highDaysNumber);
     public List<User> getUsers(int first, int count, Gender gender, Integer lowerAge, Integer higherAge, String country, Date lowDate, Date highDate);
     public List<User> getUsers(int first, int count, Level level);
+    public List<String> getAllCountries();
     public User getUser(Long id);
     public User getUser(String username);
     public void update(User user);

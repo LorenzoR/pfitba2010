@@ -85,4 +85,8 @@ public class UserServiceImpl implements UserService {
 		return itemDao.getUsersByRegistrationDate(first, count,
 				lowDate, highDate);
 	}
+
+	public List<String> getAllCountries() {
+		return itemDao.getAllCountries();
+	}
 }
