@@ -1,0 +1,121 @@
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<head>
+<title>Books</title>
+</head>
+<body>
+	<wicket:extend>
+		<div wicket:id="searchPage">
+			<h2>Search User</h2>
+			<form wicket:id="searchUserForm">
+				<p>
+					ID: <input type="text" wicket:id="userId" value="" />
+				</p>
+				<p>
+					Username: <input type="text" wicket:id="username" value="" />
+				</p>
+				<p>
+					<b>Gender: </b> &nbsp;
+					<select wicket:id="gender">
+						<option value="optionValue">OptionValue</option>
+					</select>
+				</p>
+				<p>
+					<b>Age:</b> &nbsp;
+					Desde: <input type="text" wicket:id="lowAge" value="" />
+					Hasta: <input type="text" wicket:id="highAge" value="" />
+				</p>
+				<p><b>Country:</b>
+					<select name="country" wicket:id="country">
+					</select>
+				</p>
+				<p>
+					<b>Fecha Registracion:</b> &nbsp;
+					Desde: <input type="text" wicket:id="lowRegistrationDate" value="" />
+					Hasta: <input type="text" wicket:id="highRegistrationDate" value="" />
+				</p>
+				<p>
+					<input type="button" wicket:id="searchUser" value="Search" />
+				</p>
+			</form>
+			
+			<hr />
+			<h2>Search Book</h2>
+			<form wicket:id="searchBookForm">
+				<p>
+					ID: <input type="text" wicket:id="bookId" value="" />
+				</p>
+				<p>
+					Author: <input type="text" wicket:id="author" value="" />
+				</p>
+				<p>
+					Title: <input type="text" wicket:id="title" value="" />
+				</p>
+				<p>
+					Category: <input type="text" wicket:id="category" value="" />
+				</p>
+				<p>
+					Subcategory: <input type="text" wicket:id="subcategory" value="" />
+				</p>
+				<p>
+					Tag: <input type="text" wicket:id="tag" value="" />
+				</p>
+				<p>
+					<b>Fecha Publicacion:</b> &nbsp;
+					Desde: <input type="text" wicket:id="lowPublishDate" value="" />
+					Hasta: <input type="text" wicket:id="highPublishDate" value="" />
+				</p>
+				<p>
+					<input type="button" wicket:id="searchBook" value="Search" />
+				</p>
+			</form>
+			
+			<div wicket:id="bookResultList"  style="border: 1px black solid; margin-bottom: 5px; padding-left: 2px;">
+				<p>BookId: <span wicket:id="id">Sender goes here</span></p>
+				<p>Title: <span wicket:id="title">Subject goes here</span></p>
+			</div>
+			
+			<hr />
+			<h2>Search Message</h2>
+			<form wicket:id="searchMessageForm">
+				<p>
+					ID: <input type="text" wicket:id="messageId" value="" />
+				</p>
+				<p>
+					Subject: <input type="text" wicket:id="subject" value="" />
+				</p>
+				<p>
+					Sender: <input type="text" wicket:id="sender" value="" />
+				</p>
+				<p>
+					Receiver: <input type="text" wicket:id="receiver" value="" />
+				</p>
+				<p>
+					<input type="button" wicket:id="searchMessage" value="Search" />
+				</p>
+			</form>
+			
+			<hr />
+			<h2>Search Campaign</h2>
+			<form wicket:id="searchCampaignForm">
+				<p>
+					ID: <input type="text" wicket:id="campaignId" value="" />
+				</p>
+				<p>
+					Subject: <input type="text" wicket:id="subject" value="" />
+				</p>
+				<p>
+					Sender: <input type="text" wicket:id="sender" value="" />
+				</p>
+				<p>
+					Receiver: <input type="text" wicket:id="receiver" value="" />
+				</p>
+				<p>
+					<input type="button" wicket:id="searchCampaign" value="Search" />
+				</p>
+			</form>
+
+		</div>
+	</wicket:extend>
+</body>
+</html>

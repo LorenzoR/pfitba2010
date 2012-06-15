@@ -185,4 +185,13 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 
 		return (List<User>) criteria.list();
 	}
+
+	public List<String> getAllCountries() {
+		return (List<String>) getSession()
+				.createCriteria(User.class)
+				.setProjection(
+						Projections.distinct(Projections.projectionList().add(
+								Projections.property("country"), "country")))
+				.list();
+	}
 }

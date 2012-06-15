@@ -157,4 +157,8 @@ public class UserNoDBdao implements UserDao {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	public List<String> getAllCountries() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -1,12 +1,16 @@
 package com.booktube.pages;
 
-import java.sql.Date;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
@@ -29,6 +33,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.value.ValueMap;
+import org.odlabs.wiquery.ui.datepicker.DatePicker;
 
 import com.booktube.WiaSession;
 import com.booktube.model.Book;
@@ -64,7 +69,7 @@ public class NewCampaign extends BasePage {
 
 		user = WiaSession.get().getLoggedInUser();
 
-		Form<?> form = newContactForm(parent);
+		Form<?> form = newContactForm();
 		parent.add(form);
 
 		Label registerMessage = new Label("registerMessage",
@@ -85,7 +90,7 @@ public class NewCampaign extends BasePage {
 
 	}
 
-	private Form<?> newContactForm(final WebMarkupContainer parent) {
+	private Form<?> newContactForm() {
 		Form<?> form = new Form<Object>("form");
 
 		List<String> genders = Arrays.asList(new String[] { "Todos",
@@ -106,18 +111,15 @@ public class NewCampaign extends BasePage {
 
 		form.add(highAgeField);
 
-		final TextField<String> lowRegistrationDateField = new TextField<String>(
-				"lowRegistrationDate", new Model<String>(""));
-
+		final DatePicker<Date> lowRegistrationDateField = new DatePicker<Date>(
+				"lowRegistrationDate", new Model<Date>(), Date.class);
 		form.add(lowRegistrationDateField);
 
-		final TextField<String> highRegistrationDateField = new TextField<String>(
-				"highRegistrationDate", new Model<String>(""));
-
+		final DatePicker<Date> highRegistrationDateField = new DatePicker<Date>(
+				"highRegistrationDate", new Model<Date>(), Date.class);
 		form.add(highRegistrationDateField);
 
-		List<String> countryList = Arrays.asList(new String[] { "Country 1",
-				"...", "Country 2" });
+		List<String> countryList = userService.getAllCountries();
 
 		final DropDownChoice<String> countrySelect = new DropDownChoice<String>(
 				"country", new PropertyModel<String>(this, ""), countryList);
@@ -180,10 +182,24 @@ public class NewCampaign extends BasePage {
 						.getDefaultModelObjectAsString(), text
 						.getDefaultModelObjectAsString(), user);
 
-				String country = countrySelect.getDefaultModelObjectAsString();
+				String country;
+
+				if (!countrySelect.getDefaultModelObjectAsString().isEmpty()) {
+					country = countrySelect.getDefaultModelObjectAsString();
+				} else {
+					country = null;
+				}
 
 				String genderString = genderSelect
 						.getDefaultModelObjectAsString();
+
+				// if (!genderSelect.getDefaultModelObjectAsString().isEmpty())
+				// {
+				// genderString = genderSelect.getDefaultModelObjectAsString();
+				// }
+				// else {
+				// genderString = null;
+				// }
 
 				Gender gender;
 
@@ -196,32 +212,82 @@ public class NewCampaign extends BasePage {
 				}
 
 				Integer lowAge;
-				
-				if ( lowAgeField != null ) {
+
+				try {
 					lowAge = Integer.valueOf(lowAgeField
-						.getDefaultModelObjectAsString());
-				}
-				else {
+							.getDefaultModelObjectAsString());
+				} catch (NumberFormatException nfe) {
 					lowAge = null;
 				}
-				
+
 				Integer highAge;
-				
-				highAge = Integer.valueOf(highAgeField
-						.getDefaultModelObjectAsString());
-				
-				Date lowDate = Date.valueOf(lowRegistrationDateField.getDefaultModelObjectAsString());
-				Date highDate = Date.valueOf(highRegistrationDateField.getDefaultModelObjectAsString());
-				
-				System.out.println("HIGHDATESTRING: " + highRegistrationDateField.getDefaultModelObjectAsString());
+
+				try {
+					highAge = Integer.valueOf(highAgeField
+							.getDefaultModelObjectAsString());
+				} catch (NumberFormatException nfe) {
+					highAge = null;
+				}
+
+				DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
+				Date lowDate = null;
+
+				 if (!lowRegistrationDateField.getDefaultModelObjectAsString()
+				 .isEmpty()) {
+				 try {
+				 lowDate = (Date) formatter
+				 .parse(lowRegistrationDateField
+				 .getDefaultModelObjectAsString());
+				 } catch (ParseException e) {
+				 lowDate = null;
+				 }
+				 } else {
+				 lowDate = null;
+				 }
+
+				Date highDate = null;
+
+				if (!lowRegistrationDateField.getDefaultModelObjectAsString()
+						.isEmpty()) {
+					try {
+						highDate = (Date) formatter
+								.parse(highRegistrationDateField
+										.getDefaultModelObjectAsString());
+					} catch (ParseException e) {
+						highDate = null;
+					}
+				} else {
+					highDate = null;
+				}
+
+				// Component datePicker = getForm().get( "lowRegistrationDate"
+				// );
+				// System.out.println("DATE PICKER: " + datePicker);
+
+				System.out.println("HIGHDATESTRING: "
+						+ highRegistrationDateField
+								.getDefaultModelObjectAsString());
 				System.out.println("HIDHDATE: " + highDate);
 				
+				System.out.println("LOW DATE STRING: "
+						+ lowRegistrationDateField
+								.getDefaultModelObjectAsString());
+				System.out.println("LOWDATE: " + lowDate);
+
+				System.out.println("LowAge: " + lowAge);
+				System.out.println("HighAge: " + highAge);
+
 				List<User> receivers = userService.getUsers(0,
-						Integer.MAX_VALUE, gender, lowAge, highAge, country, lowDate, highDate);
+						Integer.MAX_VALUE, gender, lowAge, highAge, country,
+						lowDate, highDate);
 
-				//campaignService.sendCampaign(campaign, receivers);
+				System.out.println("RECEIVERS: ");
+				System.out.println(receivers.toString());
 
-				//campaignService.insertCampaign(campaign);
+				campaignService.sendCampaign(campaign, receivers);
+
+				campaignService.insertCampaign(campaign);
 			}
 
 			@Override
