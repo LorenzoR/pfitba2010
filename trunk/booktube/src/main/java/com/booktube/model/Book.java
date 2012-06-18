@@ -288,8 +288,6 @@ public class Book implements Serializable {
 		result = prime * result + ((author == null) ? 0 : author.hashCode());
 		result = prime * result
 				+ ((category == null) ? 0 : category.hashCode());
-		result = prime * result
-				+ ((comments == null) ? 0 : comments.hashCode());
 		result = prime * result + ((hits == null) ? 0 : hits.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result
@@ -321,11 +319,6 @@ public class Book implements Serializable {
 			if (other.category != null)
 				return false;
 		} else if (!category.equals(other.category))
-			return false;
-		if (comments == null) {
-			if (other.comments != null)
-				return false;
-		} else if (!comments.equals(other.comments))
 			return false;
 		if (hits == null) {
 			if (other.hits != null)

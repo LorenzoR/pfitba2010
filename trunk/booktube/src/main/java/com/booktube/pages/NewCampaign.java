@@ -233,18 +233,18 @@ public class NewCampaign extends BasePage {
 
 				Date lowDate = null;
 
-				 if (!lowRegistrationDateField.getDefaultModelObjectAsString()
-				 .isEmpty()) {
-				 try {
-				 lowDate = (Date) formatter
-				 .parse(lowRegistrationDateField
-				 .getDefaultModelObjectAsString());
-				 } catch (ParseException e) {
-				 lowDate = null;
-				 }
-				 } else {
-				 lowDate = null;
-				 }
+				if (!lowRegistrationDateField.getDefaultModelObjectAsString()
+						.isEmpty()) {
+					try {
+						lowDate = (Date) formatter
+								.parse(lowRegistrationDateField
+										.getDefaultModelObjectAsString());
+					} catch (ParseException e) {
+						lowDate = null;
+					}
+				} else {
+					lowDate = null;
+				}
 
 				Date highDate = null;
 
@@ -269,7 +269,7 @@ public class NewCampaign extends BasePage {
 						+ highRegistrationDateField
 								.getDefaultModelObjectAsString());
 				System.out.println("HIDHDATE: " + highDate);
-				
+
 				System.out.println("LOW DATE STRING: "
 						+ lowRegistrationDateField
 								.getDefaultModelObjectAsString());

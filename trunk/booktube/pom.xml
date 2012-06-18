@@ -228,11 +228,20 @@
 			<version>1.5-SNAPSHOT</version>
 		</dependency>
 
+		<!-- Wiquery -->
 		<dependency>
 			<groupId>org.odlabs.wiquery</groupId>
 			<artifactId>wiquery-jquery-ui</artifactId>
 			<version>1.5.4</version>
 		</dependency>
+
+		<!-- Apache commons -->
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.3</version>
+		</dependency>
+
 
 	</dependencies>
 	<build>

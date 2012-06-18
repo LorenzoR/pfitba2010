@@ -1,5 +1,6 @@
 package com.booktube.service;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -76,5 +77,17 @@ public class BookServiceImpl implements BookService {
 
 	public List<String> getSubcategories(int first, int count) {
 		return itemDao.getSubcategories(first, count);
+	}
+
+	public List<Book> getBooks(int first, int count, String author, String title, String tag,
+			String category, String subcategory, Date lowPublishDate,
+			Date highPublishDate) {
+		return itemDao.getBooks(first, count, author, title, tag, category, subcategory, lowPublishDate, highPublishDate);
+	}
+
+	public int getCount(String author, String title, String tag,
+			String category, String subcategory, Date lowPublishDate,
+			Date highPublishDate) {
+		return itemDao.getCount(author, title, tag, category, subcategory, lowPublishDate, highPublishDate);
 	}
 }
