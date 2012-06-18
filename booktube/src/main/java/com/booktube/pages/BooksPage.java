@@ -149,7 +149,6 @@ public class BooksPage extends BasePage {
 				item.add(new BookmarkablePageLink<Object>("detailsLink", ShowBookPage.class, detailsParameter));
 				
 				item.add(new Link<Book>("deleteLink", item.getModel()) {
-					private static final long serialVersionUID = -7155146615720218460L;
 
 					public void onClick() {
 

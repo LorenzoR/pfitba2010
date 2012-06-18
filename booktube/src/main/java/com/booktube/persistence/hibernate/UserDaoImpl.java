@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
@@ -74,7 +75,7 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 			criteria.add(Restrictions.eq("gender", gender));
 		}
 
-		if (country != null) {
+		if ( StringUtils.isNotBlank(country) ) {
 			criteria.add(Restrictions.eq("country", country));
 		}
 

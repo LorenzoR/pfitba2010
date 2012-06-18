@@ -1,8 +1,15 @@
 package com.booktube;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import javax.servlet.ServletContext;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.ConverterLocator;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 
@@ -10,6 +17,7 @@ import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebApplication;
 
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
+import org.apache.wicket.util.convert.IConverter;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -24,7 +32,6 @@ import com.booktube.pages.ShowUserPage;
 import com.booktube.pages.WritersPage;
 import com.booktube.service.BookService;
 import com.booktube.service.UserService;
-
 
 /**
  * Application object for your web application. If you want to run this
@@ -62,12 +69,17 @@ public class WicketApplication extends WebApplication {
 		mountPage("register", RegisterPage.class);
 		mountPage("showBook", ShowBookPage.class);
 		mountPage("showUser", ShowUserPage.class);
-//		mount(new QueryStringUrlCodingStrategy("booktube", HomePage.class));
-//		mount(new QueryStringUrlCodingStrategy("writers", WritersPage.class));
-//		mount(new QueryStringUrlCodingStrategy("editBook", EditBookPage.class));
-//		mount(new QueryStringUrlCodingStrategy("addBook", AddBookPage.class));
-//		mount(new QueryStringUrlCodingStrategy("register", RegisterPage.class));
-		//mount(new QueryStringUrlCodingStrategy("showBook", ShowBookPage.class));
+		// mount(new QueryStringUrlCodingStrategy("booktube", HomePage.class));
+		// mount(new QueryStringUrlCodingStrategy("writers",
+		// WritersPage.class));
+		// mount(new QueryStringUrlCodingStrategy("editBook",
+		// EditBookPage.class));
+		// mount(new QueryStringUrlCodingStrategy("addBook",
+		// AddBookPage.class));
+		// mount(new QueryStringUrlCodingStrategy("register",
+		// RegisterPage.class));
+		// mount(new QueryStringUrlCodingStrategy("showBook",
+		// ShowBookPage.class));
 		// mount(new IndexedParamUrlCodingStrategy("editBook",
 		// EditBookPage.class));
 		// mount(new IndexedHybridUrlCodingStrategy("editBook",
@@ -77,12 +89,33 @@ public class WicketApplication extends WebApplication {
 		applicationContext = WebApplicationContextUtils
 				.getWebApplicationContext(servletContext);
 
-		/*org.apache.wicket.util.lang.Objects
-				.setObjectStreamFactory(new IObjectStreamFactory.DefaultObjectStreamFactory());
-		
-		Objects.setObjectStreamFactory(new WicketObjectStreamFactory());
-		*/
+		/*
+		 * org.apache.wicket.util.lang.Objects .setObjectStreamFactory(new
+		 * IObjectStreamFactory.DefaultObjectStreamFactory());
+		 * 
+		 * Objects.setObjectStreamFactory(new WicketObjectStreamFactory());
+		 */
 
+		((ConverterLocator) getConverterLocator()).set(Date.class,
+				new IConverter<Date>() {
+					private static final long serialVersionUID = 1L;
+					private final DateFormat mFormat = new SimpleDateFormat(
+							"dd/MM/yyyy");
+
+					public Date convertToObject(String value, Locale locale) {
+						try {
+							return mFormat.parse(value);
+						} catch (ParseException e) {
+							e.printStackTrace();
+						}
+						return null;
+					}
+
+					public String convertToString(Date value, Locale locale) {
+						return mFormat.format(value);
+					}
+
+				});
 
 	}
 

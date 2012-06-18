@@ -1,5 +1,6 @@
 package com.booktube.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.booktube.model.Campaign;
@@ -65,6 +66,11 @@ public class CampaignServiceImpl implements CampaignService {
 
 	public void sendCampaign(Campaign campaign, List<User> receivers) {
 		itemDao.sendCampaign(campaign, receivers);
+	}
+
+	public List<Campaign> getCampaigns(int first, int count, String subject,
+			User sender, User receiver, Date lowDate, Date highDate) {
+		return itemDao.getCampaings(first, count, subject, sender, receiver, lowDate, highDate);
 	}
 
 }

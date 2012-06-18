@@ -36,7 +36,15 @@ public class EditBookPage extends BasePage {
 	public EditBookPage(PageParameters pageParameters) {
 
 		Long bookId = pageParameters.get("book").toLong();
-		int currentPage = pageParameters.get("currentPage").toInt();
+		int currentPage;
+		
+		if ( pageParameters.get("currentPage").isEmpty() ) {
+			currentPage = 0;
+		}
+		else {
+			currentPage = pageParameters.get("currentPage").toInt();
+		}
+		
 		// this.backPage = backPage;
 		//Integer bookId = book.getId();
 
@@ -219,13 +227,15 @@ public class EditBookPage extends BasePage {
 		// titleField.setMarkupId(getId());
 		form.add(titleField);
 
-		final TextField<Book> tagsField = new TextField<Book>("tags",
-				new Model(book.getTags().toString().substring(1, book.getTags().toString().length() - 1).replace(",", "")));
+		String tags = book.getTags().toString().substring(1, book.getTags().toString().length() - 1).replace(",", "");
+		
+		final TextField<String> tagsField = new TextField<String>("tags",
+				new Model<String>(tags));
 		// titleField.setOutputMarkupId(true);
 		// titleField.setMarkupId(getId());
 		form.add(tagsField);
 		
-		final TextArea<String> editor = new TextArea<String>("text", new Model(
+		final TextArea<String> editor = new TextArea<String>("text", new Model<String>(
 				book.getText()));
 		editor.setOutputMarkupId(true);
 

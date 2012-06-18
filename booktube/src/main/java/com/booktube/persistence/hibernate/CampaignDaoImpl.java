@@ -1,7 +1,9 @@
 package com.booktube.persistence.hibernate;
 
+import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -24,7 +26,7 @@ public class CampaignDaoImpl extends AbstractDaoHibernate<Campaign> implements
 	}
 
 	public void updateCampaign(Campaign campaign) {
-		//super.saveOrUpdate(campaign);
+		// super.saveOrUpdate(campaign);
 		super.update(campaign);
 	}
 
@@ -85,6 +87,27 @@ public class CampaignDaoImpl extends AbstractDaoHibernate<Campaign> implements
 			campaign.addReceiver(new CampaignDetail(aUser, campaign));
 		}
 		insertCampaign(campaign);
+	}
+
+	public List<Campaign> getCampaings(int first, int count, String subject,
+			User sender, User receiver, Date lowDate, Date highDate) {
+		Criteria criteria = getSession().createCriteria(Campaign.class);
+
+		if (!StringUtils.isBlank(subject)) {
+			criteria.add(Restrictions.ilike("subject", "%" + subject + "%"));
+		}
+
+		if (sender != null) {
+			criteria.add(Restrictions.eq("sender", sender));
+		}
+
+		if (receiver != null) {
+			criteria.createCriteria("receiver").add(
+					Restrictions.eq("receiver", receiver));
+		}
+
+		return (List<Campaign>) criteria.setFirstResult(first)
+				.setMaxResults(count).list();
 	}
 
 }

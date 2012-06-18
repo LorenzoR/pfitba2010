@@ -321,7 +321,7 @@ public class ShowBookPage extends BasePage {
 	 * @return <code>true</code> when the user has already voted.
 	 */
 	public Boolean getHasVoted() {
-		return this.book.getUserVotes().contains(user);
+		return WiaSession.get().getLoggedInUser() == null || this.book.getUserVotes().contains(user);
 	}
 
 	@Override

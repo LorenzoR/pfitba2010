@@ -1,5 +1,6 @@
 package com.booktube.persistence;
 
+import java.util.Date;
 import java.util.List;
 
 import com.booktube.model.Campaign;
@@ -19,4 +20,6 @@ public interface CampaignDao {
 	public int countCampaignsTo(User user);
 	public int countUnreadCampaignsTo(User user);
 	public void sendCampaign(Campaign campaign, List<User> receivers);
+	public List<Campaign> getCampaings(int first, int count, String subject,
+			User sender, User receiver, Date lowDate, Date highDate);
 }

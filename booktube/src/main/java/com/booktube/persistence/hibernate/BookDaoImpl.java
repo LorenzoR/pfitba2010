@@ -1,11 +1,13 @@
 package com.booktube.persistence.hibernate;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.FlushMode;
@@ -218,6 +220,96 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 								Projections.property("subcategory"),
 								"subcategory"))).setFirstResult(first)
 				.setMaxResults(count).list();
+	}
+
+	public List<Book> getBooks(int first, int count, String author, String title, String tag,
+			String category, String subcategory, Date lowPublishDate,
+			Date highPublishDate) {
+		Criteria criteria = getSession().createCriteria(Book.class);
+
+		if ( lowPublishDate != null ) {
+			System.out.println("**LOW " + lowPublishDate);
+			criteria.add(Restrictions.ge("publishDate", lowPublishDate));
+		}
+		
+		if ( highPublishDate != null ) {
+			System.out.println("**HIGH " + highPublishDate);
+			criteria.add(Restrictions.le("publishDate", highPublishDate));
+		}
+
+		if ( StringUtils.isNotBlank(title) ) {
+			criteria.add(Restrictions.ilike("title", "%" + title + "%"));
+		}
+		
+		if ( StringUtils.isNotBlank(category) ) {
+			criteria.add(Restrictions.eq("category", category));
+		}
+		
+		if ( StringUtils.isNotBlank(subcategory) ) {
+			criteria.add(Restrictions.eq("subcategory", subcategory));
+		}
+		
+		if ( StringUtils.isNotBlank(author) ) {
+			System.out.println("*** author> " + author);
+			criteria.createCriteria("author")
+			.add(Restrictions.eq("username", author));
+		}
+		
+		if ( StringUtils.isNotBlank(tag) ) {
+			System.out.println("*** tag> " + tag);
+			criteria.createCriteria("tags").add(Restrictions.eq("value", tag));
+		}
+
+		return (List<Book>) criteria.setFirstResult(first).setMaxResults(count).list();
+	}
+
+	public int getCount(String author, String title, String tag,
+			String category, String subcategory, Date lowPublishDate,
+			Date highPublishDate) {
+		Criteria criteria = createCriteria(author, title, tag, category, subcategory, lowPublishDate, highPublishDate);
+		criteria.setProjection(Projections.rowCount());
+		return ((Number) criteria.uniqueResult()).intValue();
+	}
+	
+	private Criteria createCriteria(String author, String title, String tag,
+			String category, String subcategory, Date lowPublishDate,
+			Date highPublishDate) {
+		Criteria criteria = getSession().createCriteria(Book.class);
+
+		if ( lowPublishDate != null ) {
+			System.out.println("**LOW " + lowPublishDate);
+			criteria.add(Restrictions.ge("publishDate", lowPublishDate));
+		}
+		
+		if ( highPublishDate != null ) {
+			System.out.println("**HIGH " + highPublishDate);
+			criteria.add(Restrictions.le("publishDate", highPublishDate));
+		}
+
+		if ( StringUtils.isNotBlank(title) ) {
+			criteria.add(Restrictions.ilike("title", "%" + title + "%"));
+		}
+		
+		if ( StringUtils.isNotBlank(category) ) {
+			criteria.add(Restrictions.eq("category", category));
+		}
+		
+		if ( StringUtils.isNotBlank(subcategory) ) {
+			criteria.add(Restrictions.eq("subcategory", subcategory));
+		}
+		
+		if ( StringUtils.isNotBlank(author) ) {
+			System.out.println("*** author> " + author);
+			criteria.createCriteria("author")
+			.add(Restrictions.eq("username", author));
+		}
+		
+		if ( StringUtils.isNotBlank(tag) ) {
+			System.out.println("*** tag> " + tag);
+			criteria.createCriteria("tags").add(Restrictions.eq("value", tag));
+		}
+
+		return criteria;
 	}
 
 }
