@@ -2,10 +2,12 @@ package com.booktube.persistence.hibernate;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.Order;
@@ -170,6 +172,50 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 				.add(Restrictions.eq("type", Type.PRIVATE_MESSAGE));
 		criteria.setProjection(Projections.rowCount());
 		return ((Number) criteria.uniqueResult()).intValue();
+	}
+
+	public int getCount(Long messageId, String subject, String sender,
+			String receiver, Date lowDate, Date highDate) {
+		Criteria criteria = createCriteria(messageId, subject, sender, receiver, lowDate, highDate);
+		criteria.setProjection(Projections.rowCount());
+		return ((Number) criteria.uniqueResult()).intValue();
+	}
+
+	public List<Message> getMessages(int first, int count, Long messageId,
+			String subject, String sender, String receiver, Date lowDate,
+			Date highDate) {
+		Criteria criteria = createCriteria(messageId, subject, sender, receiver, lowDate, highDate);
+		
+		return (List<Message>) criteria.setFirstResult(first)
+				.setMaxResults(count).list();
+	}
+	
+	private Criteria createCriteria(Long messageId,
+			String subject, String sender, String receiver, Date lowDate,
+			Date highDate) {
+		
+		Criteria criteria = getSession().createCriteria(Message.class);
+		
+		if (messageId != null) {
+			criteria.add(Restrictions.eq("id", messageId));
+		}
+
+		if (!StringUtils.isBlank(subject)) {
+			criteria.add(Restrictions.ilike("subject", "%" + subject + "%"));
+		}
+		
+		if (StringUtils.isNotBlank(sender)) {
+			criteria.createCriteria("sender").add(
+					Restrictions.eq("username", sender));
+		}
+		
+		if (StringUtils.isNotBlank(receiver)) {
+			criteria.createCriteria("receiver").add(
+					Restrictions.eq("username", receiver));
+		}
+		
+		return criteria;
+		
 	}
 
 }

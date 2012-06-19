@@ -89,25 +89,67 @@ public class CampaignDaoImpl extends AbstractDaoHibernate<Campaign> implements
 		insertCampaign(campaign);
 	}
 
-	public List<Campaign> getCampaings(int first, int count, String subject,
-			User sender, User receiver, Date lowDate, Date highDate) {
+	public List<Campaign> getCampaings(int first, int count, Long campaignId,
+			String subject, String sender, String receiver, Date lowDate,
+			Date highDate) {
+//		Criteria criteria = getSession().createCriteria(Campaign.class);
+//
+//		if (campaignId != null) {
+//			criteria.add(Restrictions.eq("id", campaignId));
+//		}
+//
+//		if (!StringUtils.isBlank(subject)) {
+//			criteria.add(Restrictions.ilike("subject", "%" + subject + "%"));
+//		}
+//
+//		if (StringUtils.isNotBlank(sender)) {
+//			criteria.createCriteria("sender").add(
+//					Restrictions.eq("username", sender));
+//		}
+//
+//		if (StringUtils.isNotBlank(receiver)) {
+//			criteria.createCriteria("receiver").add(
+//					Restrictions.eq("username", receiver));
+//		}
+		Criteria criteria = createCriteria(campaignId, subject, sender,
+				receiver, lowDate, highDate);
+		return (List<Campaign>) criteria.setFirstResult(first)
+				.setMaxResults(count).list();
+	}
+
+	public int getCount(Long campaignId, String subject, String sender,
+			String receiver, Date lowDate, Date highDate) {
+		Criteria criteria = createCriteria(campaignId, subject, sender,
+				receiver, lowDate, highDate);
+		criteria.setProjection(Projections.rowCount());
+		return ((Number) criteria.uniqueResult()).intValue();
+	}
+
+	private Criteria createCriteria(Long campaignId, String subject,
+			String sender, String receiver, Date lowDate, Date highDate) {
 		Criteria criteria = getSession().createCriteria(Campaign.class);
+
+		if (campaignId != null) {
+			criteria.add(Restrictions.eq("id", campaignId));
+		}
 
 		if (!StringUtils.isBlank(subject)) {
 			criteria.add(Restrictions.ilike("subject", "%" + subject + "%"));
 		}
 
-		if (sender != null) {
-			criteria.add(Restrictions.eq("sender", sender));
+		if (StringUtils.isNotBlank(sender)) {
+			System.out.println("*** sender> " + sender);
+			criteria.createCriteria("sender").add(
+					Restrictions.eq("username", sender));
 		}
 
-		if (receiver != null) {
-			criteria.createCriteria("receiver").add(
-					Restrictions.eq("receiver", receiver));
+		if (StringUtils.isNotBlank(receiver)) {
+			System.out.println("*** receiver> " + receiver);
+			criteria.createCriteria("receiver").createCriteria("receiver")
+					.add(Restrictions.eq("username", receiver));
 		}
 
-		return (List<Campaign>) criteria.setFirstResult(first)
-				.setMaxResults(count).list();
+		return criteria;
 	}
 
 }

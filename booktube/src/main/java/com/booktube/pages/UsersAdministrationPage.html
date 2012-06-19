@@ -15,21 +15,66 @@
 	    	<span wicket:id="delete_confirmation_dialog_text">Delete confirmation dialog goes here</span>
 	    </p>
 	    
-		<h3 wicket:id="pageTitle"></h3>
-		
-		<div wicket:id="writerList"  style="border: 1px black solid; margin-bottom: 5px; padding-left: 2px;">
-		<p>User Id: <span wicket:id="id">User Id goes here</span></p>
-		<p>Username: <span wicket:id="username">Username goes here</span></p>
-		<p>Name: <span wicket:id="firstname">Firstname goes here</span></p>
-		<p>Lastname: <span wicket:id="lastname">Lastname goes here</span></p>
-		<p>
-			<a href="#" wicket:id="detailsLink">Detalles</a> | 
-			<a href="#" wicket:id="deleteLink">Eliminar</a> | 
-			<a href="#" wicket:id="editLink">Editar</a>
-		</p>
-	</div>
+	    <h3 wicket:id="pageTitle"></h3>
+	    
+		<h2><a href="#" wicket:id="searchUserLink" onclick="return false;">Buscar</a></h2>
+			<form id="searchUserFormId" wicket:id="searchUserForm">
+				<div id="searchFields" wicket:id="searchFields">
+					<p>
+					<b>ID:</b> <input type="text" wicket:id="userId" value="" />
+				</p>
+				<p>
+					<b>Username:</b> <input type="text" wicket:id="username" value="" />
+				</p>
+				<p>
+					<b>Gender:</b> &nbsp;
+					<select wicket:id="gender">
+						<option value="optionValue">OptionValue</option>
+					</select>
+				</p>
+				<p>
+					<b>Age:</b> &nbsp;
+					Desde: <input type="text" wicket:id="lowAge" value="" />
+					Hasta: <input type="text" wicket:id="highAge" value="" />
+				</p>
+				<p><b>Country:</b>
+					<select name="country" wicket:id="country">
+					</select>
+				</p>
+				<p>
+					<b>Fecha Registracion:</b> &nbsp;
+					Desde: <input type="text" wicket:id="lowRegistrationDate" value="" />
+					Hasta: <input type="text" wicket:id="highRegistrationDate" value="" />
+				</p>
+				<p>
+					<input type="button" wicket:id="searchUser" value="Search" />
+				</p>
+				</div>
+	
+				<div wicket:id="group">
+				<table border="1" cellspacing="0" class="dataview">
+					<tbody>
+						<tr wicket:id="writerList">
+							<td><input type="checkbox" wicket:id="checkbox" /></td>
+							<td>User Id: <span wicket:id="id">User Id goes here</span></td>
+							<td>Username: <span wicket:id="username">Username goes here</span></td>
+							<td>Name: <span wicket:id="firstname">Firstname goes here</span></td>
+							<td>Lastname: <span wicket:id="lastname">Lastname goes here</span></td>
+							<td>
+								<a href="#" wicket:id="detailsLink">Ver</a> | 
+								<a href="#" wicket:id="deleteLink">Eliminar</a> | 
+								<a href="#" wicket:id="editLink">Editar</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				</div>
+				
+				<input type="button" wicket:id="deleteUser" value="Delete Selected Users" />
 
-	<div wicket:id="footerPaginator"></div>  
+			</form>
+
+		<div wicket:id="footerPaginator"></div>  
 		
 	</div>
 </wicket:extend>

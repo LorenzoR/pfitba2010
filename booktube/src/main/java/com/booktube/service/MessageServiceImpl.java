@@ -1,5 +1,6 @@
 package com.booktube.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.booktube.model.Message;
@@ -89,6 +90,17 @@ public class MessageServiceImpl implements MessageService {
 
 	public int countMessages(User user) {
 		return itemDao.countMessages(user);
+	}
+
+	public int getCount(Long messageId, String subject, String sender,
+			String receiver, Date lowDate, Date highDate) {
+		return itemDao.getCount(messageId, subject, sender, receiver, lowDate, highDate);
+	}
+
+	public List<Message> getMessages(int first, int count, Long messageId,
+			String subject, String sender, String receiver, Date lowDate,
+			Date highDate) {
+		return itemDao.getMessages(first, count, messageId, subject, sender, receiver, lowDate, highDate);
 	}
 
 }

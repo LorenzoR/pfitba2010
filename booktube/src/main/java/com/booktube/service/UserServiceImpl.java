@@ -24,8 +24,8 @@ public class UserServiceImpl implements UserService {
         return itemDao.getAllUsers(first, count);
     }
     
-    public List<User> getUsers(int first, int count, Gender gender, Integer lowerAge, Integer higherAge, String country, Date lowDate, Date highDate) {
-    	return itemDao.getUsers(first, count, gender, lowerAge, higherAge, country, lowDate, highDate);
+    public List<User> getUsers(int first, int count, Long userId, String username, Gender gender, Integer lowerAge, Integer higherAge, String country, Date lowDate, Date highDate) {
+    	return itemDao.getUsers(first, count, userId, username, gender, lowerAge, higherAge, country, lowDate, highDate);
     }
     
     public List<User> getUsersByCountry(int first, int count, String country) {
@@ -88,5 +88,11 @@ public class UserServiceImpl implements UserService {
 
 	public List<String> getAllCountries() {
 		return itemDao.getAllCountries();
+	}
+
+	public int getCount(Long userId, String username, Gender gender,
+			Integer lowerAge, Integer higherAge, String country, Date lowDate,
+			Date highDate) {
+		return itemDao.getCount(userId, username, gender, lowerAge, higherAge, country, lowDate, highDate);
 	}
 }

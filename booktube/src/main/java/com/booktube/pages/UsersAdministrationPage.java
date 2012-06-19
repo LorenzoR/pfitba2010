@@ -1,13 +1,25 @@
 package com.booktube.pages;
 
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Check;
+import org.apache.wicket.markup.html.form.CheckGroup;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
@@ -16,17 +28,23 @@ import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.odlabs.wiquery.core.effects.sliding.SlideToggle;
 import org.odlabs.wiquery.core.javascript.JsScope;
 import org.odlabs.wiquery.ui.core.JsScopeUiEvent;
+import org.odlabs.wiquery.ui.datepicker.DatePicker;
 import org.odlabs.wiquery.ui.dialog.AjaxDialogButton;
 import org.odlabs.wiquery.ui.dialog.Dialog;
 import org.odlabs.wiquery.ui.dialog.DialogButton;
 
+import com.booktube.model.Book;
 import com.booktube.model.Campaign;
 import com.booktube.model.User;
+import com.booktube.model.User.Gender;
 import com.booktube.pages.WritersPage.WriterProvider;
 import com.booktube.service.UserService;
 
@@ -54,17 +72,37 @@ public class UsersAdministrationPage extends AdministrationPage {
 			setOutputMarkupId(true);
 		}
 	};
-	
+
 	private String deleteConfirmationText;
-	
-	private Label successDialogLabel = new Label("success_dialog_text", new PropertyModel(this, "successDialogText")) {
+
+	private Label successDialogLabel = new Label("success_dialog_text",
+			new PropertyModel(this, "successDialogText")) {
 		{
 			setOutputMarkupId(true);
 		}
 	};
 
 	private String successDialogText;
-	
+
+	private Long searchUserId;
+	private String searchUsername;
+	private Gender searchGender;
+	private Integer searchLowAge;
+	private Integer searchHighAge;
+	private Date searchLowRegistrationDate;
+	private Date searchHighRegistrationDate;
+	private String searchCountry;
+
+	private final CheckGroup group;
+
+	private final DataView<User> dataView;
+	private final PagingNavigator footerNavigator;
+
+	final LoadableDetachableModel<List<User>> resultsModel = new LoadableDetachableModel<List<User>>() {
+		protected List<User> load() {
+			return null;
+		}
+	};
 
 	public UsersAdministrationPage() {
 		super();
@@ -75,16 +113,30 @@ public class UsersAdministrationPage extends AdministrationPage {
 
 		parent.add(new Label("pageTitle", "Users Administration Page"));
 
-		DataView<User> dataView = writerList("writerList");
+		group = new CheckGroup("group", new ArrayList());
 
-		parent.add(dataView);
-		parent.add(new PagingNavigator("footerPaginator", dataView));
+		dataView = writerList("writerList");
+
+		group.add(dataView);
+
+		footerNavigator = new PagingNavigator("footerPaginator", dataView);
+		parent.add(footerNavigator);
 
 		deleteDialog = deleteDialog();
 		parent.add(deleteDialog);
 
 		deleteConfirmationDialog = deleteConfirmationDialog();
 		parent.add(deleteConfirmationDialog);
+
+		final Form searchUserForm = searchUserForm(parent);
+
+		parent.add(searchUserForm);
+
+		searchUserForm.add(group);
+
+		WebMarkupContainer searchButton = createButtonWithEffect(
+				"searchUserLink", "searchFields", new SlideToggle());
+		parent.add(searchButton);
 
 		String newTitle = "Booktube - Users Administration";
 		super.get("pageTitle").setDefaultModelObject(newTitle);
@@ -103,6 +155,7 @@ public class UsersAdministrationPage extends AdministrationPage {
 				CompoundPropertyModel<User> model = new CompoundPropertyModel<User>(
 						user);
 				item.setDefaultModel(model);
+				item.add(new Check("checkbox", item.getModel()));
 				final PageParameters parameters = new PageParameters();
 				parameters.set("userId", user.getId());
 				item.add(new Label("id"));
@@ -122,8 +175,8 @@ public class UsersAdministrationPage extends AdministrationPage {
 
 					@Override
 					public void onClick(AjaxRequestTarget target) {
-						
-						//userId = user.getId();
+
+						// userId = user.getId();
 						deleteUser = user;
 						System.out.println("USERIDDDD " + userId);
 						System.out.println("USER ES : " + deleteUser);
@@ -211,7 +264,7 @@ public class UsersAdministrationPage extends AdministrationPage {
 
 				System.out.println("USER ES : " + deleteUser);
 				userService.deleteUser(deleteUser);
-				
+
 				successDialogText = "Usuario " + deleteUsername + " eliminado.";
 				target.add(successDialogLabel);
 				// JsScopeUiEvent.quickScope(deleteConfirmationdialog.close().render());
@@ -233,22 +286,214 @@ public class UsersAdministrationPage extends AdministrationPage {
 
 	}
 
-	class WriterProvider implements IDataProvider<User> {
+	private Form<?> searchUserForm(final WebMarkupContainer parent) {
 
-		private List<User> users;
+		Form<?> form = new Form<Object>("searchUserForm");
+
+		final WebMarkupContainer searchFields = new WebMarkupContainer(
+				"searchFields");
+		searchFields.add(AttributeModifier.replace("style", "display: none;"));
+		form.add(searchFields);
+
+		final TextField<String> userId = new TextField<String>("userId",
+				new Model<String>(""));
+		searchFields.add(userId);
+
+		final TextField<String> username = new TextField<String>("username",
+				new Model<String>(""));
+		searchFields.add(username);
+
+		List<String> genderList = Arrays.asList(new String[] { "Masculino",
+				"Femenino" });
+
+		final DropDownChoice<String> gender = new DropDownChoice<String>(
+				"gender", new Model<String>(), genderList);
+
+		searchFields.add(gender);
+
+		final DropDownChoice<String> country = new DropDownChoice<String>(
+				"country", new Model<String>(), userService.getAllCountries());
+
+		searchFields.add(country);
+
+		final TextField<Integer> lowAge = new TextField<Integer>("lowAge",
+				new Model<Integer>());
+		searchFields.add(lowAge);
+
+		final TextField<Integer> highAge = new TextField<Integer>("highAge",
+				new Model<Integer>());
+		searchFields.add(highAge);
+
+		final DatePicker<Date> lowRegistrationDate = createDatePicker(
+				"lowRegistrationDate", dateFormat);
+		searchFields.add(lowRegistrationDate);
+
+		final DatePicker<Date> highRegistrationDate = createDatePicker(
+				"highRegistrationDate", dateFormat);
+		searchFields.add(highRegistrationDate);
+
+		final AjaxSubmitLink deleteUser = new AjaxSubmitLink("deleteUser") {
+
+			@Override
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+				System.out.println("selected user(s): "
+						+ group.getDefaultModelObjectAsString());
+				List<User> removedUsers = (List<User>) group
+						.getDefaultModelObject();
+
+				for (User aUser : removedUsers) {
+					userService.deleteUser(aUser);
+				}
+
+				if (dataView.getItemCount() <= 0) {
+					this.setVisible(false);
+					footerNavigator.setVisible(false);
+				} else {
+					this.setVisible(true);
+					footerNavigator.setVisible(true);
+				}
+
+				target.add(parent);
+
+				// System.out.println("BOOKS: " + books);
+
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form) {
+				// TODO Auto-generated method stub
+
+			}
+
+		};
+
+		form.add(deleteUser);
+
+		searchFields.add(new AjaxSubmitLink("searchUser") {
+
+			@Override
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+				System.out.println("viewfalse");
+				// dataView.setVisible(false);
+				// footerNavigator.setVisible(false);
+
+				searchFields.add(AttributeModifier.replace("style",
+						"display: block;"));
+				// String bookIdString =
+				try {
+					searchUserId = new Long(userId
+							.getDefaultModelObjectAsString());
+				} catch (NumberFormatException ex) {
+					searchUserId = null;
+				}
+
+//				if (!StringUtils.isBlank(userId.getDefaultModelObjectAsString())) {
+//					searchUserId = Long.valueOf(userId
+//							.getDefaultModelObjectAsString());
+//				} else {
+//					searchUserId = null;
+//				}
+
+				searchCountry = new String(country
+						.getDefaultModelObjectAsString());
+				searchUsername = new String(username
+						.getDefaultModelObjectAsString());
+
+				if (gender.getDefaultModelObjectAsString().equals("Masculino")) {
+					searchGender = Gender.MALE;
+				} else if (gender.getDefaultModelObjectAsString().equals(
+						"Femenino")) {
+					searchGender = Gender.FEMALE;
+				} else {
+					searchGender = null;
+				}
+
+				try {
+					searchLowAge = new Integer(lowAge
+							.getDefaultModelObjectAsString());
+				} catch (NumberFormatException ex) {
+					searchLowAge = null;
+				}
+
+				try {
+					searchHighAge = new Integer(highAge
+							.getDefaultModelObjectAsString());
+				} catch (NumberFormatException ex) {
+					searchHighAge = null;
+				}
+
+				if (!StringUtils.isBlank(lowRegistrationDate
+						.getDefaultModelObjectAsString())) {
+					System.out.println("lowRegistrationDate: "
+							+ lowRegistrationDate
+									.getDefaultModelObjectAsString());
+					try {
+						searchLowRegistrationDate = (Date) formatter
+								.parse(lowRegistrationDate
+										.getDefaultModelObjectAsString());
+					} catch (ParseException e) {
+						searchLowRegistrationDate = null;
+					}
+				} else {
+					searchLowRegistrationDate = null;
+				}
+
+				if (!StringUtils.isBlank(highRegistrationDate
+						.getDefaultModelObjectAsString())) {
+					try {
+						searchHighRegistrationDate = (Date) formatter
+								.parse(highRegistrationDate
+										.getDefaultModelObjectAsString());
+					} catch (ParseException e) {
+						searchHighRegistrationDate = null;
+					}
+				} else {
+					searchHighRegistrationDate = null;
+				}
+
+				if (dataView.getItemCount() <= 0) {
+					deleteUser.setVisible(false);
+					footerNavigator.setVisible(false);
+				} else {
+					deleteUser.setVisible(true);
+					footerNavigator.setVisible(true);
+				}
+
+				dataView.setCurrentPage(0);
+				target.add(parent);
+
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form) {
+				// TODO Auto-generated method stub
+
+			}
+
+		});
+
+		return form;
+
+	}
+
+	class WriterProvider implements IDataProvider<User> {
 
 		public WriterProvider() {
 		}
 
 		public Iterator<User> iterator(int first, int count) {
-
-			this.users = userService.getAllUsers(first, count);
-
-			return this.users.iterator();
+			// this.users = userService.getAllUsers(first, count);
+			// return this.users.iterator();
+			return userService.getUsers(first, count, searchUserId,
+					searchUsername, searchGender, searchLowAge, searchHighAge,
+					searchCountry, searchLowRegistrationDate,
+					searchHighRegistrationDate).iterator();
 		}
 
 		public int size() {
-			return userService.getCount();
+			return userService.getCount(searchUserId, searchUsername,
+					searchGender, searchLowAge, searchHighAge, searchCountry,
+					searchLowRegistrationDate, searchHighRegistrationDate);
 		}
 
 		public IModel<User> model(User user) {

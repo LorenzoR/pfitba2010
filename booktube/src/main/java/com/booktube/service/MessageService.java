@@ -1,5 +1,6 @@
 package com.booktube.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.booktube.model.Message;
@@ -22,6 +23,8 @@ public interface MessageService {
     public int countMessagesFrom(User sender);
     public int countMessagesTo(User receiver);
     public int countUnreadMessagesTo(User receiver);
+    public List<Message> getMessages(int first, int count, Long messageId, String subject, String sender, String receiver, Date lowDate, Date highDate);
+    public int getCount(Long messageId, String subject, String sender, String receiver, Date lowDate, Date highDate);
     public void setMessageRead(CampaignDetail messageDetail);
     public void sendMessages(Message message, List<User> receivers);
 }

@@ -39,7 +39,7 @@ import com.booktube.model.User.Level;
 import com.booktube.service.MessageService;
 import com.booktube.service.UserService;
 
-public class NewContact extends BasePage {
+public class NewContactPage extends BasePage {
 
 	@SpringBean
 	MessageService messageService;
@@ -49,7 +49,7 @@ public class NewContact extends BasePage {
 
 	User user;
 
-	public NewContact() {
+	public NewContactPage() {
 
 		// User user = new User("username", "firstname", "lastname");
 		// userService.insertUser(user);
