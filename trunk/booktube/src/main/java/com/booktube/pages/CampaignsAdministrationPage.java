@@ -1,13 +1,23 @@
 package com.booktube.pages;
 
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Check;
+import org.apache.wicket.markup.html.form.CheckGroup;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.markup.repeater.Item;
@@ -15,16 +25,21 @@ import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.odlabs.wiquery.core.effects.sliding.SlideToggle;
 import org.odlabs.wiquery.core.javascript.JsScope;
 import org.odlabs.wiquery.ui.core.JsScopeUiEvent;
+import org.odlabs.wiquery.ui.datepicker.DatePicker;
 import org.odlabs.wiquery.ui.dialog.AjaxDialogButton;
 import org.odlabs.wiquery.ui.dialog.Dialog;
 import org.odlabs.wiquery.ui.dialog.DialogButton;
 
 import com.booktube.model.Campaign;
 import com.booktube.model.CampaignDetail;
+import com.booktube.model.Message;
+import com.booktube.model.User;
 import com.booktube.pages.MessagesAdministrationPage.MessageProvider;
 import com.booktube.service.CampaignService;
 import com.booktube.service.MessageService;
@@ -38,9 +53,21 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 	private static Dialog deleteDialog;
 	private static Dialog deleteConfirmationDialog;
 
+	private final DataView<Campaign> dataView;
+	private final PagingNavigator footerNavigator;
+	
+	private final CheckGroup group;
+	
 	public static final int MESSAGES_PER_PAGE = 5;
 	
 	private static Long campaignId;
+	
+	private Long searchCampaignId;
+	private String searchSubject;
+	private String searchSender;
+	private String searchReceiver;
+	private Date searchLowCampaignDate;
+	private Date searchHighCampaignDate;
 
 	public CampaignsAdministrationPage() {
 		super();
@@ -51,10 +78,22 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 
 		parent.add(new Label("pageTitle", "Campaigns Administration Page"));
 
-		DataView<Campaign> dataView = campaignList("campaignsList");
+		dataView = campaignList("campaignsList");
 
-		parent.add(dataView);
-		parent.add(new PagingNavigator("footerPaginator", dataView));
+		group = new CheckGroup("group", new ArrayList());
+		group.add(dataView);
+		
+		footerNavigator = new PagingNavigator("footerPaginator", dataView);
+		parent.add(footerNavigator);
+		
+		Form searchForm = searchCampaignForm(parent);
+		parent.add(searchForm);
+		
+		searchForm.add(group);
+		
+		WebMarkupContainer searchButton = createButtonWithEffect(
+				"searchCampaignLink", "searchFields", new SlideToggle());
+		parent.add(searchButton);
 		
 		deleteDialog = deleteDialog();
 		parent.add(deleteDialog);
@@ -140,9 +179,12 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 				CompoundPropertyModel<Campaign> model = new CompoundPropertyModel<Campaign>(
 						campaign);
 				item.setDefaultModel(model);
+				
+				
 				final PageParameters parameters = new PageParameters();
 				parameters.set("messageId", campaign.getId());
 				// item.add(new Label("id"));
+				item.add(new Check("checkbox", item.getModel()));
 				item.add(new Label("subject"));
 				item.add(new Label("sender"));
 				item.add(new Label("receiver", receivers));
@@ -186,6 +228,147 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 
 		return dataView;
 	}
+	
+	private Form<?> searchCampaignForm(final WebMarkupContainer parent) {
+
+		Form<?> form = new Form<Object>("searchCampaignForm");
+		
+		final WebMarkupContainer searchFields = new WebMarkupContainer("searchFields");
+		searchFields.add(AttributeModifier.replace("style", "display: none;"));	
+		form.add(searchFields);
+
+		final TextField<String> campaignId = new TextField<String>("campaignId",
+				new Model<String>(""));
+		searchFields.add(campaignId);
+
+		final TextField<String> subject = new TextField<String>("subject",
+				new Model<String>(""));
+		searchFields.add(subject);
+
+		final TextField<String> sender = new TextField<String>("sender",
+				new Model<String>(""));
+		searchFields.add(sender);
+
+		final TextField<String> receiver = new TextField<String>("receiver",
+				new Model<String>(""));
+		searchFields.add(receiver);
+
+		final DatePicker<Date> lowCampaignDate = createDatePicker(
+				"lowCampaignDate", dateFormat);
+		searchFields.add(lowCampaignDate);
+
+		final DatePicker<Date> highCampaignDate = createDatePicker(
+				"highCampaignDate", dateFormat);
+		searchFields.add(highCampaignDate);
+
+		final AjaxSubmitLink deleteCampaign = new AjaxSubmitLink("deleteCampaign") {
+
+			@Override
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+				System.out.println("selected Campaign(s): "
+						+ group.getDefaultModelObjectAsString());
+				List<Campaign> removedCampaigns = (List<Campaign>) group
+						.getDefaultModelObject();
+
+				for (Campaign aCampaign : removedCampaigns) {
+					campaignService.deleteCampaign(aCampaign);
+				}
+
+				if (dataView.getItemCount() <= 0) {
+					this.setVisible(false);
+					footerNavigator.setVisible(false);
+				} else {
+					this.setVisible(true);
+					footerNavigator.setVisible(true);
+				}
+
+				target.add(parent);
+
+				// System.out.println("BOOKS: " + books);
+
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form) {
+				// TODO Auto-generated method stub
+
+			}
+
+		};
+		
+		form.add(deleteCampaign);
+		
+		searchFields.add(new AjaxSubmitLink("searchCampaign") {
+
+			@Override
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+				searchFields.add(AttributeModifier.replace("style", "display: block;"));
+				// String bookIdString =
+				try {
+					searchCampaignId = new Long(campaignId.getDefaultModelObjectAsString());
+				} catch (NumberFormatException ex) {
+					searchCampaignId = null;
+				}
+
+				searchSubject = new String(subject.getDefaultModelObjectAsString());
+				searchSender = new String(sender
+						.getDefaultModelObjectAsString());
+				searchReceiver = new String(receiver.getDefaultModelObjectAsString());
+
+				if (!StringUtils.isBlank(lowCampaignDate
+						.getDefaultModelObjectAsString())) {
+					System.out.println("lowCampaignDate: "
+							+ lowCampaignDate.getDefaultModelObjectAsString());
+					try {
+						searchLowCampaignDate = (Date) formatter
+								.parse(lowCampaignDate
+										.getDefaultModelObjectAsString());
+					} catch (ParseException e) {
+						searchLowCampaignDate = null;
+					}
+				} else {
+					searchLowCampaignDate = null;
+				}
+
+				if (!StringUtils.isBlank(highCampaignDate
+						.getDefaultModelObjectAsString())) {
+					try {
+						searchHighCampaignDate = (Date) formatter
+								.parse(highCampaignDate
+										.getDefaultModelObjectAsString());
+					} catch (ParseException e) {
+						searchHighCampaignDate = null;
+					}
+				} else {
+					searchHighCampaignDate = null;
+				}
+				
+				if ( dataView.getItemCount() <= 0 ) {
+					deleteCampaign.setVisible(false);
+					footerNavigator.setVisible(false);
+				}
+				else {
+					deleteCampaign.setVisible(true);
+					footerNavigator.setVisible(true);
+				}
+				
+
+				dataView.setCurrentPage(0);
+				target.add(parent);
+
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form) {
+				// TODO Auto-generated method stub
+
+			}
+
+		});
+
+		return form;
+
+	}
 
 	private String getReceivers(Campaign campaign) {
 		String receivers = "";
@@ -199,19 +382,15 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 
 	class CampaignProvider implements IDataProvider<Campaign> {
 
-		private List<Campaign> campaigns;
-
 		public CampaignProvider() {
 		}
 
 		public Iterator<Campaign> iterator(int first, int count) {
-
-			this.campaigns = campaignService.getAllCampaigns(first, count);
-			return this.campaigns.iterator();
+			return campaignService.getCampaigns(first, count, searchCampaignId, searchSubject, searchSender, searchReceiver, searchLowCampaignDate, searchHighCampaignDate).iterator();
 		}
 
 		public int size() {
-			return campaignService.countCampaigns();
+			return campaignService.getCount(searchCampaignId, searchSubject, searchSender, searchReceiver, searchLowCampaignDate, searchHighCampaignDate);
 		}
 
 		public IModel<Campaign> model(Campaign campaign) {

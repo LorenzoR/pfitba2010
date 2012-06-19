@@ -17,17 +17,54 @@
 	    
 		<h3 wicket:id="pageTitle"></h3>
 		
-		<div wicket:id="campaignsList"  style="border: 1px black solid; margin-bottom: 5px; padding-left: 2px;">
-		<p><b>Sender: </b><span wicket:id="sender">Sender goes here</span></p>
-		<p><b>Receivers: </b><span wicket:id="receiver">Receiver goes here</span></p>
-		<p><b>Subject: </b><span wicket:id="subject">Subject goes here</span></p>
-		<p><b>Date: </b><span wicket:id="date">Date goes here</span></p>
-		<p>
-			<a href="#" wicket:id="detailsLink">Detalles</a> | 
-			<a href="#" wicket:id="deleteLink">Eliminar</a> | 
-			<a href="#" wicket:id="editLink">Editar</a>
-		</p>
+		<h2><a href="#" wicket:id="searchCampaignLink" onclick="return false;">Buscar</a></h2>
+		
+		<form id="searchCampaignForm" wicket:id="searchCampaignForm">
+			<div id="searchFields" wicket:id="searchFields">
+			<p>
+				<b>ID:</b> <input type="text" wicket:id="campaignId" value="" />
+			</p>
+			<p>
+				<b>Subject:</b> <input type="text" wicket:id="subject" value="" />
+			</p>
+			<p>
+				<b>Sender:</b> <input type="text" wicket:id="sender" value="" />
+			</p>
+			<p>
+				<b>Receiver:</b> <input type="text" wicket:id="receiver" value="" />
+			</p>
+			<p>
+				<b>Fecha Envio:</b> &nbsp;
+				Desde: <input type="text" wicket:id="lowCampaignDate" value="" />
+				Hasta: <input type="text" wicket:id="highCampaignDate" value="" />
+			</p>
+			<p>
+				<input type="button" wicket:id="searchCampaign" value="Search" />
+			</p>
+			</div>
+		
+		<div wicket:id="group">
+		<table border="1" cellspacing="0" class="dataview">
+			<tbody>
+				<tr wicket:id="campaignsList">
+					<td><input type="checkbox" wicket:id="checkbox" /></td>
+					<td><b>Sender: </b><span wicket:id="sender">Sender goes here</span></td>
+					<td><b>Receivers: </b><span wicket:id="receiver">Receiver goes here</span></td>
+					<td><b>Subject: </b><span wicket:id="subject">Subject goes here</span></td>
+					<td><b>Date: </b><span wicket:id="date">Date goes here</span></td>
+					<td>
+						<a href="#" wicket:id="detailsLink">Ver</a> | 
+						<a href="#" wicket:id="deleteLink">Eliminar</a> | 
+						<a href="#" wicket:id="editLink">Editar</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 		</div>
+		
+		<input type="button" wicket:id="deleteCampaign" value="Delete Selected Campaigns" />
+		
+		</form>
 
 		<div wicket:id="footerPaginator"></div>  
 		

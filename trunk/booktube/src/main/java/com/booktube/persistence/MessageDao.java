@@ -1,5 +1,6 @@
 package com.booktube.persistence;
 
+import java.util.Date;
 import java.util.List;
 
 import com.booktube.model.Message;
@@ -22,6 +23,8 @@ public interface MessageDao {
     public int countMessagesFrom(User sender);
     public int countMessagesTo(User receiver);
     public int countUnreadMessagesTo(User receiver);
+    public int getCount(Long messageId, String subject, String sender, String receiver, Date lowDate, Date highDate);
     public void setMessageRead(CampaignDetail messageDetail);
     public void sendMessages(Message message, List<User> receivers);
+    public List<Message> getMessages(int first, int count, Long messageId, String subject, String sender, String receiver, Date lowDate, Date highDate);
 }

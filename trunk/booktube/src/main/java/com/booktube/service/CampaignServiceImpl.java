@@ -68,9 +68,14 @@ public class CampaignServiceImpl implements CampaignService {
 		itemDao.sendCampaign(campaign, receivers);
 	}
 
-	public List<Campaign> getCampaigns(int first, int count, String subject,
-			User sender, User receiver, Date lowDate, Date highDate) {
-		return itemDao.getCampaings(first, count, subject, sender, receiver, lowDate, highDate);
+	public List<Campaign> getCampaigns(int first, int count, Long campaignId, String subject,
+			String sender, String receiver, Date lowDate, Date highDate) {
+		return itemDao.getCampaings(first, count, campaignId, subject, sender, receiver, lowDate, highDate);
+	}
+
+	public int getCount(Long campaignId, String subject, String sender,
+			String receiver, Date lowDate, Date highDate) {
+		return itemDao.getCount(campaignId, subject, sender, receiver, lowDate, highDate);
 	}
 
 }

@@ -246,8 +246,8 @@ public class SearchPage extends BasePage {
 				}
 
 				List<Campaign> campaigns = campaignService.getCampaigns(0,
-						Integer.MAX_VALUE, campaignSubject, campaignSender,
-						campaignReceiver, lowCampaignDate, highCampaignDate);
+						Integer.MAX_VALUE, null, null, campaignSubject, null,
+						null, lowCampaignDate);
 
 				if (campaigns.size() > 0) {
 
@@ -479,7 +479,7 @@ public class SearchPage extends BasePage {
 						System.out.println("Book " + bookId + " deleted.");
 
 						List<Book> books = bookService.getBooks(0,
-								Integer.MAX_VALUE, authorString, titleString,
+								Integer.MAX_VALUE, null, authorString, titleString,
 								tagString, categoryString, subcategoryString,
 								lowPublishDateString, highPublishDateString);
 
@@ -567,7 +567,7 @@ public class SearchPage extends BasePage {
 				// .valueOf(bookIdString)));
 
 				List<Book> books = bookService.getBooks(0, Integer.MAX_VALUE,
-						authorString, titleString, tagString, categoryString,
+						null, authorString, titleString, tagString, categoryString,
 						subcategoryString, lowPublishDateString,
 						highPublishDateString);
 
@@ -616,7 +616,7 @@ public class SearchPage extends BasePage {
 
 				// removedBooks.remove(books.size()-1);
 				List<Book> books = bookService.getBooks(0, Integer.MAX_VALUE,
-						authorString, titleString, tagString, categoryString,
+						null, authorString, titleString, tagString, categoryString,
 						subcategoryString, lowPublishDateString,
 						highPublishDateString);
 

@@ -1,13 +1,23 @@
 package com.booktube.pages;
 
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Check;
+import org.apache.wicket.markup.html.form.CheckGroup;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.markup.repeater.Item;
@@ -15,10 +25,13 @@ import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.odlabs.wiquery.core.effects.sliding.SlideToggle;
 import org.odlabs.wiquery.core.javascript.JsScope;
 import org.odlabs.wiquery.ui.core.JsScopeUiEvent;
+import org.odlabs.wiquery.ui.datepicker.DatePicker;
 import org.odlabs.wiquery.ui.dialog.AjaxDialogButton;
 import org.odlabs.wiquery.ui.dialog.Dialog;
 import org.odlabs.wiquery.ui.dialog.DialogButton;
@@ -40,7 +53,19 @@ public class MessagesAdministrationPage extends AdministrationPage {
 
 	public static final int MESSAGES_PER_PAGE = 5;
 	
+	private final DataView<Message> dataView;
+	private final PagingNavigator footerNavigator;
+	
+	private final CheckGroup group;
+	
 	private static Long messageId;
+	
+	private Long searchMessageId;
+	private String searchSubject;
+	private String searchSender;
+	private String searchReceiver;
+	private Date searchLowMessageDate;
+	private Date searchHighMessageDate;
 
 	public MessagesAdministrationPage() {
 		super();
@@ -51,10 +76,22 @@ public class MessagesAdministrationPage extends AdministrationPage {
 
 		parent.add(new Label("pageTitle", "Messages Administration Page"));
 
-		DataView<Message> dataView = messageList("messageList");
-
-		parent.add(dataView);
-		parent.add(new PagingNavigator("footerPaginator", dataView));
+		dataView = messageList("messageList");
+		
+		footerNavigator = new PagingNavigator("footerPaginator", dataView);
+		parent.add(footerNavigator);
+		
+		Form searchForm = searchMessageForm(parent);
+		parent.add(searchForm);
+		
+		group = new CheckGroup("group", new ArrayList());
+		group.add(dataView);
+		
+		searchForm.add(group);
+		
+		WebMarkupContainer searchButton = createButtonWithEffect(
+				"searchMessageLink", "searchFields", new SlideToggle());
+		parent.add(searchButton);
 		
 		deleteDialog = deleteDialog();
 		parent.add(deleteDialog);
@@ -155,6 +192,7 @@ public class MessagesAdministrationPage extends AdministrationPage {
 				final PageParameters parameters = new PageParameters();
 				parameters.set("messageId", message.getId());
 				// item.add(new Label("id"));
+				item.add(new Check("checkbox", item.getModel()));
 				item.add(new Label("subject"));
 				item.add(new Label("sender"));
 				item.add(new Label("receiver"));
@@ -198,6 +236,147 @@ public class MessagesAdministrationPage extends AdministrationPage {
 
 		return dataView;
 	}
+	
+	private Form<?> searchMessageForm(final WebMarkupContainer parent) {
+
+		Form<?> form = new Form<Object>("searchMessageForm");
+		
+		final WebMarkupContainer searchFields = new WebMarkupContainer("searchFields");
+		searchFields.add(AttributeModifier.replace("style", "display: none;"));	
+		form.add(searchFields);
+
+		final TextField<String> messageId = new TextField<String>("messageId",
+				new Model<String>(""));
+		searchFields.add(messageId);
+
+		final TextField<String> subject = new TextField<String>("subject",
+				new Model<String>(""));
+		searchFields.add(subject);
+
+		final TextField<String> sender = new TextField<String>("sender",
+				new Model<String>(""));
+		searchFields.add(sender);
+
+		final TextField<String> receiver = new TextField<String>("receiver",
+				new Model<String>(""));
+		searchFields.add(receiver);
+
+		final DatePicker<Date> lowMessageDate = createDatePicker(
+				"lowMessageDate", dateFormat);
+		searchFields.add(lowMessageDate);
+
+		final DatePicker<Date> highMessageDate = createDatePicker(
+				"highMessageDate", dateFormat);
+		searchFields.add(highMessageDate);
+
+		final AjaxSubmitLink deleteMessage = new AjaxSubmitLink("deleteMessage") {
+
+			@Override
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+				System.out.println("selected Message(s): "
+						+ group.getDefaultModelObjectAsString());
+				List<Message> removedMessages = (List<Message>) group
+						.getDefaultModelObject();
+
+				for (Message aMessage : removedMessages) {
+					messageService.deleteMessage(aMessage);
+				}
+
+				if (dataView.getItemCount() <= 0) {
+					this.setVisible(false);
+					footerNavigator.setVisible(false);
+				} else {
+					this.setVisible(true);
+					footerNavigator.setVisible(true);
+				}
+
+				target.add(parent);
+
+				// System.out.println("BOOKS: " + books);
+
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form) {
+				// TODO Auto-generated method stub
+
+			}
+
+		};
+		
+		form.add(deleteMessage);
+		
+		searchFields.add(new AjaxSubmitLink("searchMessage") {
+
+			@Override
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+				searchFields.add(AttributeModifier.replace("style", "display: block;"));
+				// String bookIdString =
+				try {
+					searchMessageId = new Long(messageId.getDefaultModelObjectAsString());
+				} catch (NumberFormatException ex) {
+					searchMessageId = null;
+				}
+
+				searchSubject = new String(subject.getDefaultModelObjectAsString());
+				searchSender = new String(sender
+						.getDefaultModelObjectAsString());
+				searchReceiver = new String(receiver.getDefaultModelObjectAsString());
+
+				if (!StringUtils.isBlank(lowMessageDate
+						.getDefaultModelObjectAsString())) {
+					System.out.println("LowDate: "
+							+ lowMessageDate.getDefaultModelObjectAsString());
+					try {
+						searchLowMessageDate = (Date) formatter
+								.parse(lowMessageDate
+										.getDefaultModelObjectAsString());
+					} catch (ParseException e) {
+						searchLowMessageDate = null;
+					}
+				} else {
+					searchLowMessageDate = null;
+				}
+
+				if (!StringUtils.isBlank(highMessageDate
+						.getDefaultModelObjectAsString())) {
+					try {
+						searchHighMessageDate = (Date) formatter
+								.parse(highMessageDate
+										.getDefaultModelObjectAsString());
+					} catch (ParseException e) {
+						searchHighMessageDate = null;
+					}
+				} else {
+					searchHighMessageDate = null;
+				}
+				
+				if ( dataView.getItemCount() <= 0 ) {
+					deleteMessage.setVisible(false);
+					footerNavigator.setVisible(false);
+				}
+				else {
+					deleteMessage.setVisible(true);
+					footerNavigator.setVisible(true);
+				}
+				
+
+				dataView.setCurrentPage(0);
+				target.add(parent);
+
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form) {
+				// TODO Auto-generated method stub
+
+			}
+
+		});
+
+		return form;
+
+	}
 
 	/*private String getReceivers(Message message) {
 		String receivers = "";
@@ -217,13 +396,11 @@ public class MessagesAdministrationPage extends AdministrationPage {
 		}
 
 		public Iterator<Message> iterator(int first, int count) {
-
-			this.messages = messageService.getAllMessages(first, count);
-			return this.messages.iterator();
+			return messageService.getMessages(first, count, searchMessageId, searchSubject, searchSender, searchReceiver, searchLowMessageDate, searchHighMessageDate).iterator();
 		}
 
 		public int size() {
-			return messageService.countMessages();
+			return messageService.getCount(searchMessageId, searchSubject, searchSender, searchReceiver, searchLowMessageDate, searchHighMessageDate);
 		}
 
 		public IModel<Message> model(Message message) {

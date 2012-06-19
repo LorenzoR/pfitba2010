@@ -46,38 +46,12 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 
 	}
 
-	public List<User> getUsers(int first, int count, Gender gender,
-			Integer lowerAge, Integer higherAge, String country, Date lowDate, Date highDate) {
+	public List<User> getUsers(int first, int count, Long userId,
+			String username, Gender gender, Integer lowerAge,
+			Integer higherAge, String country, Date lowDate, Date highDate) {
 
-		Criteria criteria = getSession().createCriteria(User.class);
-
-		if ( lowDate != null ) {
-			criteria.add(Restrictions.ge("registrationDate", lowDate));
-		}
-		
-		if ( highDate != null ) {
-			criteria.add(Restrictions.le("registrationDate", highDate));
-		}
-		
-		if (lowerAge != null) {
-			criteria.add(Expression
-					.sql("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 >= "
-							+ lowerAge));
-		}
-
-		if (higherAge != null) {
-			criteria.add(Expression
-					.sql("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 <= "
-							+ higherAge));
-		}
-
-		if (gender != null) {
-			criteria.add(Restrictions.eq("gender", gender));
-		}
-
-		if ( StringUtils.isNotBlank(country) ) {
-			criteria.add(Restrictions.eq("country", country));
-		}
+		Criteria criteria = createCriteria(userId, username, gender, lowerAge,
+				higherAge, country, lowDate, highDate);
 
 		return (List<User>) criteria.setFirstResult(first).setMaxResults(count)
 				.list();
@@ -194,5 +168,59 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 						Projections.distinct(Projections.projectionList().add(
 								Projections.property("country"), "country")))
 				.list();
+	}
+
+	public int getCount(Long userId, String username, Gender gender,
+			Integer lowerAge, Integer higherAge, String country, Date lowDate,
+			Date highDate) {
+		Criteria criteria = createCriteria(userId, username, gender, lowerAge,
+				higherAge, country, lowDate, highDate);
+		criteria.setProjection(Projections.rowCount());
+		return ((Number) criteria.uniqueResult()).intValue();
+	}
+
+	private Criteria createCriteria(Long userId, String username,
+			Gender gender, Integer lowerAge, Integer higherAge, String country,
+			Date lowDate, Date highDate) {
+
+		Criteria criteria = getSession().createCriteria(User.class);
+
+		if (userId != null) {
+			criteria.add(Restrictions.eq("id", userId));
+		}
+
+		if (StringUtils.isNotBlank(username)) {
+			criteria.add(Restrictions.ilike("username", "%" + username + "%"));
+		}
+
+		if (lowDate != null) {
+			criteria.add(Restrictions.ge("registrationDate", lowDate));
+		}
+
+		if (highDate != null) {
+			criteria.add(Restrictions.le("registrationDate", highDate));
+		}
+
+		if (lowerAge != null) {
+			criteria.add(Expression
+					.sql("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 >= "
+							+ lowerAge));
+		}
+
+		if (higherAge != null) {
+			criteria.add(Expression
+					.sql("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 <= "
+							+ higherAge));
+		}
+
+		if (gender != null) {
+			criteria.add(Restrictions.eq("gender", gender));
+		}
+
+		if (StringUtils.isNotBlank(country)) {
+			criteria.add(Restrictions.eq("country", country));
+		}
+
+		return criteria;
 	}
 }

@@ -266,12 +266,12 @@ public abstract class BasePage extends WebPage {
 		add(new BookmarkablePageLink<String>("showWriters", WritersPage.class));
 		
 		WebMarkupContainer contactLi = new WebMarkupContainer("contact_li");
-		contactLi.add(new BookmarkablePageLink<String>("contact", NewContact.class));
+		contactLi.add(new BookmarkablePageLink<String>("contact", NewContactPage.class));
 		contactLi.setVisible(false);
 		add(contactLi);
 		
 		WebMarkupContainer newCampaignsLi = new WebMarkupContainer("new_campaign_li");
-		newCampaignsLi.add(new BookmarkablePageLink<String>("new_campaign", NewCampaign.class));
+		newCampaignsLi.add(new BookmarkablePageLink<String>("new_campaign", NewCampaignPage.class));
 		newCampaignsLi.setVisible(false);
 		add(newCampaignsLi);
 		

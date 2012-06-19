@@ -46,7 +46,7 @@ import com.booktube.model.User.Gender;
 import com.booktube.service.MessageService;
 import com.booktube.service.UserService;
 
-public class NewCampaign extends BasePage {
+public class NewCampaignPage extends BasePage {
 
 	@SpringBean
 	MessageService messageService;
@@ -56,7 +56,7 @@ public class NewCampaign extends BasePage {
 
 	User user;
 
-	public NewCampaign() {
+	public NewCampaignPage() {
 
 		// User user = new User("username", "firstname", "lastname");
 		// userService.insertUser(user);
@@ -279,7 +279,7 @@ public class NewCampaign extends BasePage {
 				System.out.println("HighAge: " + highAge);
 
 				List<User> receivers = userService.getUsers(0,
-						Integer.MAX_VALUE, gender, lowAge, highAge, country,
+						Integer.MAX_VALUE, null, null, gender, lowAge, highAge, country,
 						lowDate, highDate);
 
 				System.out.println("RECEIVERS: ");

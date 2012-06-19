@@ -15,7 +15,7 @@ public interface UserDao {
     public List<User> getUsersByAge(int first, int count, int lowerAge, int higherAge);
     public List<User> getUsersByCountry(int first, int count, String country);
     public List<User> getUsersByRegistrationDate(int first, int count, Date lowDaysNumber, Date highDaysNumber);
-    public List<User> getUsers(int first, int count, Gender gender, Integer lowerAge, Integer higherAge, String country, Date lowDate, Date highDate);
+    public List<User> getUsers(int first, int count, Long userId, String username,Gender gender, Integer lowerAge, Integer higherAge, String country, Date lowDate, Date highDate);
     public List<User> getUsers(int first, int count, Level level);
     public List<String> getAllCountries();
     public User getUser(Long id);
@@ -24,5 +24,6 @@ public interface UserDao {
     public Long insert(User user);
     public void delete(User user);
     public int getCount();
+    public int getCount(Long userId, String username, Gender gender, Integer lowerAge, Integer higherAge, String country, Date lowDate, Date highDate);
     public Iterator<User> iterator(int first, int count);
 }
