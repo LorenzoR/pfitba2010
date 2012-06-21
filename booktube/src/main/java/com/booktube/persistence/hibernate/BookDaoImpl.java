@@ -18,6 +18,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.CriteriaQuery;
 import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -210,12 +211,21 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 				.setProjection(
 						Projections.distinct(Projections.projectionList().add(
 								Projections.property("category"), "category")))
-				.setFirstResult(first).setMaxResults(count).list();
+				.setFirstResult(first).setMaxResults(count)
+				.addOrder(Order.asc("category"))
+				.list();
 	}
 
-	public List<String> getSubcategories(int first, int count) {
-		return (List<String>) getSession()
-				.createCriteria(Book.class)
+	public List<String> getSubcategories(int first, int count, String category) {
+		
+		Criteria criteria = getSession()
+				.createCriteria(Book.class);
+		
+		if ( StringUtils.isNotBlank(category) ) {
+			criteria.add(Restrictions.eq("category", category));
+		}
+		
+		return (List<String>) criteria
 				.setProjection(
 						Projections.distinct(Projections.projectionList().add(
 								Projections.property("subcategory"),
