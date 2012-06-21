@@ -75,8 +75,8 @@ public class BookServiceImpl implements BookService {
 		return itemDao.getCategories(first, count);
 	}
 
-	public List<String> getSubcategories(int first, int count) {
-		return itemDao.getSubcategories(first, count);
+	public List<String> getSubcategories(int first, int count, String category) {
+		return itemDao.getSubcategories(first, count, category);
 	}
 
 	public List<Book> getBooks(int first, int count, Long bookId, String author, String title, String tag,

@@ -26,5 +26,5 @@ public interface BookService {
     public Iterator<Book> iterator(int first, int count);
     public List<BookTag> getAllTags();
     public List<String> getCategories(int first, int count);
-    public List<String> getSubcategories(int first, int count);
+    public List<String> getSubcategories(int first, int count, String category);
 }

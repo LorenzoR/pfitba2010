@@ -24,6 +24,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.booktube.pages.AddBookPage;
 import com.booktube.pages.BooksPage;
+import com.booktube.pages.CategoryMenu;
 import com.booktube.pages.EditBookPage;
 import com.booktube.pages.HomePage;
 import com.booktube.pages.RegisterPage;
@@ -69,6 +70,7 @@ public class WicketApplication extends WebApplication {
 		mountPage("register", RegisterPage.class);
 		mountPage("showBook", ShowBookPage.class);
 		mountPage("showUser", ShowUserPage.class);
+		mountPage("categoryMenu", CategoryMenu.class);
 		// mount(new QueryStringUrlCodingStrategy("booktube", HomePage.class));
 		// mount(new QueryStringUrlCodingStrategy("writers",
 		// WritersPage.class));

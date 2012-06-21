@@ -177,7 +177,7 @@ public class AddBookPage extends BasePage {
 
 				List<String> choices = new ArrayList<String>(10);
 
-				List<String> subcategories = bookService.getSubcategories(0, Integer.MAX_VALUE);
+				List<String> subcategories = bookService.getSubcategories(0, Integer.MAX_VALUE, null);
 
 				for (final String aSubcategory : subcategories ) {
 
