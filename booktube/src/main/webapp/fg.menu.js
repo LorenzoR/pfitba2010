@@ -19,6 +19,8 @@ $.fn.menu = function(options){
 	var m = new Menu(caller, options);	
 	allUIMenus.push(m);
 	
+	m.showMenu();
+	
 	$(this)
 	.mousedown(function(){
 		if (!m.menuOpen) { m.showLoading(); };
@@ -33,7 +35,8 @@ $.fn.menu = function(options){
 function Menu(caller, options){
 	var menu = this;
 	var caller = $(caller);
-	var container = $('<div class="fg-menu-container ui-widget ui-widget-content ui-corner-all">'+options.content+'</div>');
+
+	var container = $('<div id="categoryMenu" class="fg-menu-container ui-widget ui-widget-content ui-corner-all">'+options.content+'</div>');
 	
 	this.menuOpen = false;
 	this.menuExists = false;
@@ -81,15 +84,15 @@ function Menu(caller, options){
 			.removeClass(options.loadingState)
 			.removeClass('fg-menu-open')
 			.removeClass(options.callerOnState);	
-		container.find('li').removeClass(options.linkHoverSecondary).find('a').removeClass(options.linkHover);		
+		//container.find('li').removeClass(options.linkHoverSecondary).find('a').removeClass(options.linkHover);		
 		if (options.flyOutOnState) { container.find('li a').removeClass(options.flyOutOnState); };	
 		if (options.callerOnState) { 	caller.removeClass(options.callerOnState); };			
 		if (container.is('.fg-menu-ipod')) { menu.resetDrilldownMenu(); };
-		if (container.is('.fg-menu-flyout')) { menu.resetFlyoutMenu(); };	
-		container.parent().hide();	
-		menu.menuOpen = false;
-		$(document).unbind('click', killAllMenus);
-		$(document).unbind('keydown');
+		//if (container.is('.fg-menu-flyout')) { menu.resetFlyoutMenu(); };	
+		//container.parent().hide();	
+		//menu.menuOpen = false;
+		//$(document).unbind('click', killAllMenus);
+		//$(document).unbind('keydown');
 	};
 	
 	this.showLoading = function(){
@@ -244,7 +247,8 @@ function Menu(caller, options){
 	this.chooseItem = function(item){
 		menu.kill();
 		// edit this for your own custom function/callback:
-		$('#menuSelection').text($(item).text());	
+		$('#menuSelection').text($(item).text());
+			//alert($(item).text());
 		location.href = $(item).attr('href');
 	};
 };
@@ -303,6 +307,7 @@ Menu.prototype.flyout = function(container, options) {
 		menu.chooseItem(this);
 		return false;
 	});
+
 };
 
 
@@ -465,8 +470,10 @@ Menu.prototype.setPosition = function(widget, caller, options) {
 	var dims = {
 		refX: referrer.offset().left,
 		refY: referrer.offset().top,
-		refW: referrer.getTotalWidth(),
-		refH: referrer.getTotalHeight()
+		//refW: referrer.getTotalWidth(),
+		//refH: referrer.getTotalHeight()
+		refW: 100,
+		refH: 200
 	};	
 	var options = options;
 	var xVal, yVal;

@@ -83,6 +83,14 @@ public abstract class BasePage extends WebPage {
 
 	public BasePage() {
 		
+		final String newUrl = RequestCycle.get().getUrlRenderer().renderFullUrl(
+				   Url.parse(urlFor(CategoryMenu.class, null).toString()));
+		
+		Label myScript = new Label("myScript", "url = '"
+				+ newUrl + "';");
+		myScript.setEscapeModelStrings(false);
+		add(myScript);
+		
 		if (WiaSession.get().isAuthenticated()) {
 			add(new Label("welcome", "Bienvenido "
 					+ WiaSession.get().getLoggedInUser().getUsername() + " | "));
@@ -528,18 +536,18 @@ public abstract class BasePage extends WebPage {
 					final PageParameters parameters = new PageParameters();
 
 					if (radioGroup.getValue().equals("author")) {
-						parameters.set("type", "author");
+						//parameters.set("type", "author");
 						parameters.set("author", bookTitleString);
 					} else if (radioGroup.getValue().equals("rating")) {
-						parameters.set("type", "rating");
+						//parameters.set("type", "rating");
 						parameters.set("rating", bookTitleString);
 					} else if (radioGroup.getValue().equals("tag")) {
-						parameters.set("type", "tag");
+						//parameters.set("type", "tag");
 						parameters.set("tag", bookTitleString);
 					} else {
 						System.out.println("Radio Button: "
 								+ radioGroup.getValue());
-						parameters.set("type", "title");
+						//parameters.set("type", "title");
 						parameters.set("title", bookTitleString);
 					}
 

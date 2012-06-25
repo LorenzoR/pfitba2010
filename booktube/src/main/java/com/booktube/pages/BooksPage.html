@@ -2,10 +2,15 @@
 	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
 <head>
 <title>Books</title>
+
 </head>
 <body>
 <wicket:extend>
-<div wicket:id="books">
+
+<div id="categoryButton">
+<span id="flyout"><span></span>&nbsp;</span>
+</div>
+<div wicket:id="books" style="width: 700px; float: right; min-height: 500px;">
 
 	<h2>Book List</h2>
 	
@@ -26,6 +31,7 @@
 			<a href="#" wicket:id="editLink">Editar</a>
 		</p>
 	</div>
+	<div wicket:id="feedbackMessage"></div>
 
 <div wicket:id="footerPaginator"></div>  
 
