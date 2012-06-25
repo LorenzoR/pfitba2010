@@ -58,6 +58,7 @@ public class CampaignDaoImpl extends AbstractDaoHibernate<Campaign> implements
 		return ((Number) criteria.uniqueResult()).intValue();
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Campaign> getAllCampaignsTo(User user, int first, int count) {
 		return (List<Campaign>) getSession().createCriteria(Campaign.class)
 				.createCriteria("receiver")
@@ -89,31 +90,12 @@ public class CampaignDaoImpl extends AbstractDaoHibernate<Campaign> implements
 		insertCampaign(campaign);
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Campaign> getCampaings(int first, int count, Long campaignId,
 			String subject, String sender, String receiver, Date lowDate,
 			Date highDate) {
-//		Criteria criteria = getSession().createCriteria(Campaign.class);
-//
-//		if (campaignId != null) {
-//			criteria.add(Restrictions.eq("id", campaignId));
-//		}
-//
-//		if (!StringUtils.isBlank(subject)) {
-//			criteria.add(Restrictions.ilike("subject", "%" + subject + "%"));
-//		}
-//
-//		if (StringUtils.isNotBlank(sender)) {
-//			criteria.createCriteria("sender").add(
-//					Restrictions.eq("username", sender));
-//		}
-//
-//		if (StringUtils.isNotBlank(receiver)) {
-//			criteria.createCriteria("receiver").add(
-//					Restrictions.eq("username", receiver));
-//		}
-		Criteria criteria = createCriteria(campaignId, subject, sender,
-				receiver, lowDate, highDate);
-		return (List<Campaign>) criteria.setFirstResult(first)
+		return (List<Campaign>) createCriteria(campaignId, subject, sender,
+				receiver, lowDate, highDate).setFirstResult(first)
 				.setMaxResults(count).list();
 	}
 

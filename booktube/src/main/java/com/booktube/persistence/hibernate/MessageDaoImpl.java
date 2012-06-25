@@ -1,20 +1,15 @@
 package com.booktube.persistence.hibernate;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
-import org.hibernate.Query;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
-import com.booktube.model.Book;
 import com.booktube.model.Message;
 import com.booktube.model.Message.Type;
 import com.booktube.model.CampaignDetail;
@@ -56,6 +51,7 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 		return super.insert(message);
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Message> getAllMessages(int first, int count) {
 		return (List<Message>) getSession().createCriteria(Message.class)
 				.add(Restrictions.eq("type", Type.PRIVATE_MESSAGE))
@@ -63,6 +59,7 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 				.setFirstResult(first).setMaxResults(count).list();
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Message> getAllMessagesFrom(User sender, int first, int count) {
 		return (List<Message>) getSession().createCriteria(Message.class)
 				.add(Restrictions.eq("sender", sender)).setFirstResult(first)
@@ -70,18 +67,14 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 				.setMaxResults(count).list();
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Message> getAllMessagesTo(User receiver, int first, int count) {
-		Criteria criteria = getSession()
+		return  (List<Message>) getSession()
 				.createCriteria(Message.class)
-				// .add(Restrictions.or(Restrictions.eq("type",
-				// Type.PRIVATE_MESSAGE), Restrictions.eq("type",
-				// Type.FIRST_ANSWER)))
 				.add(Restrictions.eq("type", Type.PRIVATE_MESSAGE))
 				.add(Restrictions.eq("receiver", receiver))
 				.addOrder(Order.desc("date")).setFirstResult(first)
-				.setMaxResults(count);
-
-		return (List<Message>) criteria.list();
+				.setMaxResults(count).list();
 	}
 
 	public int countMessages() {
@@ -181,12 +174,11 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 		return ((Number) criteria.uniqueResult()).intValue();
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Message> getMessages(int first, int count, Long messageId,
 			String subject, String sender, String receiver, Date lowDate,
 			Date highDate) {
-		Criteria criteria = createCriteria(messageId, subject, sender, receiver, lowDate, highDate);
-		
-		return (List<Message>) criteria.setFirstResult(first)
+		return (List<Message>) createCriteria(messageId, subject, sender, receiver, lowDate, highDate).setFirstResult(first)
 				.setMaxResults(count).list();
 	}
 	

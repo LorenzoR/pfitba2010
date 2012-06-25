@@ -17,15 +17,13 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import com.booktube.WiaSession;
 import com.booktube.model.Campaign;
-import com.booktube.model.Message;
 import com.booktube.model.User;
-import com.booktube.pages.WritersPage.WriterProvider;
 import com.booktube.service.CampaignService;
-import com.booktube.service.MessageService;
-import com.booktube.service.UserService;
 
 public class CampaignsPage extends BasePage {
 	
+	private static final long serialVersionUID = 1L;
+
 	@SpringBean
 	CampaignService campaignService;
 	
@@ -60,6 +58,8 @@ public class CampaignsPage extends BasePage {
 		DataView<Campaign> dataView = new DataView<Campaign>(label, dataProvider,
 				MESSAGES_PER_PAGE) {
 			
+					private static final long serialVersionUID = 1L;
+
 			protected void populateItem(Item<Campaign> item) {
 				final Campaign campaign = (Campaign) item.getModelObject();
 				System.out.println("MESSAGE: " + campaign.getText());

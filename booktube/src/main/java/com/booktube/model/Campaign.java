@@ -26,7 +26,6 @@ import javax.persistence.TemporalType;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import com.booktube.model.Message.Type;
 
 @Entity
 @Table(name = "CAMPAIGN")
@@ -34,6 +33,8 @@ import com.booktube.model.Message.Type;
 	@NamedQuery(name = "campaign.id", query = "from Campaign c where c.id = :id")})
 public class Campaign implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "MESSAGE_ID")

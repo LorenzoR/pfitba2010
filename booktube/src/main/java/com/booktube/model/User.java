@@ -21,8 +21,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import javax.persistence.EnumType.*;
-
 @Entity
 @Table(name = "USER")
 @NamedQueries({
@@ -30,6 +28,8 @@ import javax.persistence.EnumType.*;
 		@NamedQuery(name = "user.id", query = "from User u where u.id = :id") })
 public class User implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	public enum Level { ADMIN, USER }
 	public enum Gender { MALE, FEMALE }
 

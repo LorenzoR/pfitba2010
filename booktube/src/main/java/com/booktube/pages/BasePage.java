@@ -1,19 +1,11 @@
 package com.booktube.pages;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import org.apache.wicket.MetaDataKey;
-import org.apache.wicket.Page;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -33,22 +25,10 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
-import org.odlabs.wiquery.core.events.Event;
-import org.odlabs.wiquery.core.events.MouseEvent;
-import org.odlabs.wiquery.core.events.WiQueryEventBehavior;
-import org.odlabs.wiquery.core.javascript.JsScope;
-import org.odlabs.wiquery.ui.dialog.Dialog;
 import org.wicketstuff.facebook.FacebookSdk;
-import org.wicketstuff.facebook.plugins.Comments;
-import org.wicketstuff.facebook.plugins.LikeBox;
-import org.wicketstuff.facebook.plugins.LikeButton;
-import org.wicketstuff.facebook.plugins.LikeButton.LikeButtonAction;
-import org.wicketstuff.facebook.plugins.LikeButton.LikeButtonLayoutStyle;
 
 import com.booktube.WiaSession;
 import com.booktube.model.Book;
@@ -61,6 +41,8 @@ import com.booktube.service.MessageService;
 import com.booktube.service.UserService;
 
 public abstract class BasePage extends WebPage {
+
+	private static final long serialVersionUID = 1L;
 
 	@SpringBean
 	UserService userService;
@@ -98,115 +80,7 @@ public abstract class BasePage extends WebPage {
 			add(new Label("welcome"));
 		}
 
-		String[][] quoteArray = {
-				{
-						"The difficulty of literature is not to write, but to write what you mean",
-						"Robert Louis Stevenson" },
-				{ "Just don't take any class where you have to read BEOWULF.",
-						"Woody Allen" },
-				{ "Books are humanity in print.", "Barbara W. Tuchman" },
-
-				{
-						"Literature adds to reality, it does not simply describe it. It enriches the necessary competencies that daily life requires and provides; and in this respect, it irrigates the deserts that our lives have already become.",
-						"C.S. Lewis" },
-
-				{
-						"Books are the carriers of civilization. Without books, history is silent, literature dumb, science crippled, thought and speculation at a standstill.",
-						"Barbara W. Tuchman" },
-
-				{
-						"What is wonderful about great literature is that it transforms the man who reads it towards the condition of the man who wrote.",
-						"E. M. Forster" },
-
-				{ "Every man's memory is his private literature.",
-						"Aldous Huxley" },
-
-				{
-						"The decline of literature indicates the decline of a nation.",
-						"Johann Wolfgang von Goethe" },
-
-				{
-						"The difficulty of literature is not to write, but to write what you mean; not to affect your reader, but to affect him precisely as you wish.",
-						"Robert Louis Stevenson" },
-
-				{
-						"The difference between literature and journalism is that journalism is unreadable and literature is not read.",
-						"Oscar Wilde" },
-
-				{
-						"Literature adds to reality, it does not simply describe it. It enriches the necessary competencies that daily life requires and provides; and in this respect, it irrigates the deserts that our lives have already become.",
-						"C. S. Lewis" },
-
-				{
-						"Even in literature and art, no man who bothers about originality will ever be original: whereas if you simply try to tell the truth (without caring twopence how often it has been told before) you will, nine times out of ten, become original without ever having noticed it.",
-						"C. S. Lewis" },
-
-				{
-						"Literature is my Utopia. Here I am not disenfranchised. No barrier of the senses shuts me out from the sweet, gracious discourses of my book friends. They talk to me without embarrassment or awkwardness.",
-						"Helen Keller" },
-
-				{
-						"All modern American literature comes from one book by Mark Twain called Huckleberry Finn.",
-						"Ernest Hemingway" },
-
-				{
-						"We know too much, and are convinced of too little. Our literature is a substitute for religion, and so is our religion.",
-						"T. S. Eliot" },
-
-				{
-						"I am an Anglo-Catholic in religion, a classicist in literature and a royalist in politics.",
-						"T. S. Eliot" },
-
-				{
-						"Our high respect for a well read person is praise enough for literature.",
-						"T. S. Eliot" },
-
-				{
-						"The reason that fiction is more interesting than any other form of literature, to those who really like to study people, is that in fiction the author can really tell the truth without humiliating himself.",
-						"Jim Rohn" },
-
-				{
-						"The decline of literature indicates the decline of a nation.",
-						"Johann Wolfgang von Goethe" },
-
-				{
-						"He knew everything about literature except how to enjoy it.",
-						"Joseph Heller" },
-
-				{
-						"The atmosphere of orthodoxy is always damaging to prose, and above all it is completely ruinous to the novel, the most anarchical of all forms of literature.",
-						"George Orwell" },
-
-				{ "Every man's memory is his private literature.",
-						"Aldous Huxley" },
-
-				{
-						"If literature isn't everything, it's not worth a single hour of someone's trouble.",
-						"Jean-Paul Sartre" },
-
-				{
-						"It is the nature of the artist to mind excessively what is said about him. Literature is strewn with the wreckage of men who have minded beyond reason the opinions of others.",
-						"Virginia Woolf" },
-
-				{
-						"This is not writing at all. Indeed, I could say that Shakespeare surpasses literature altogether, if I knew what I meant.",
-						"Virginia Woolf" },
-
-				{
-						"Literature is strewn with the wreckage of men who have minded beyond reason the opinions of others.",
-						"Virginia Woolf" },
-
-				{
-						"The greatest advances of civilization, whether in architecture or painting, in science and literature, in industry or agriculture, have never come from centralized government.",
-						"Milton Friedman" },
-
-				{
-						"I hold that a writer who does not passionately believe in the perfectibility of man has no dedication nor any membership in literature.",
-						"John Steinbeck" },
-
-				{
-						"Develop an interest in life as you see it; the people, things, literature, music - the world is so rich, simply throbbing with rich treasures, beautiful souls and interesting people. Forget yourself.",
-						"Henry Miller" } };
+		String[][] quoteArray = getQuoteArray();
 
 		Random generator = new Random(System.currentTimeMillis());
 
@@ -217,35 +91,13 @@ public abstract class BasePage extends WebPage {
 				+ quoteArray[randomNumber][1]);
 		add(quote);
 
-		// Label welcomeLabel = new Label("welcome");
-		// add(welcomeLabel);
-		// welcomeLabel.set
-		// group.add(new Label("welcome", "Welcome " +
-		// WiaSession.get().getLoggedInUser().getUsername()));
-		// add(group);
-		// group.setVisible(false);
-
-		// final String url = RequestCycle.get().getUrlRenderer().renderFullUrl(
-		// Url.parse(urlFor(ShowBookPage.class,null).toString()));
-
 		add(new Label("pageTitle", "Booktube"));
+		
 		// LINK PARA EL LOGO
 		add(new BookmarkablePageLink<String>("logoLink", HomePage.class));
 
 		add(new FacebookSdk("fbRoot"));
 
-		final IModel<String> url = Model.of("http://localhost:8080");
-		// final LikeBox likeBox = new LikeBox("likeBox",
-		// Model.of("https://www.facebook.com/apps/application.php?id=142662635778399"));
-		// add(likeBox);
-		// final LikeButton likeButton = new LikeButton("likeButton", url);
-		// likeButton.setLayoutStyle(LikeButtonLayoutStyle.BUTTON_COUNT);
-		// likeButton.setAction(LikeButtonAction.LIKE);
-		// add(likeButton);
-
-		// LINKS EN EL FOOTER
-		// add(new Label("footer",
-		// "Ayuda | Acerca de | Contacto | Términos y Condiciones"));
 		MenuLink homeLink = new MenuLink("home", HomePage.class);
 		add(homeLink);
 		MenuLink helpLink = new MenuLink("ayuda", HelpPage.class);
@@ -388,6 +240,9 @@ public abstract class BasePage extends WebPage {
 
 		radioGroup.add(new Radio<String>("author", new Model<String>("author"))
 				.add(new AjaxEventBehavior("onclick") {
+
+					private static final long serialVersionUID = 1L;
+
 					protected void onEvent(AjaxRequestTarget target) {
 						// add your favorite component.
 						System.out.println("CLICK EN AUTHOR!!!");
@@ -398,6 +253,9 @@ public abstract class BasePage extends WebPage {
 
 		radioGroup.add(new Radio<String>("rating", new Model<String>("rating"))
 				.add(new AjaxEventBehavior("onclick") {
+
+					private static final long serialVersionUID = 1L;
+
 					protected void onEvent(AjaxRequestTarget target) {
 						// add your favorite component.
 						System.out.println("CLICK EN RATING!!!");
@@ -408,6 +266,9 @@ public abstract class BasePage extends WebPage {
 
 		radioGroup.add(new Radio<String>("title", new Model<String>("title"))
 				.add(new AjaxEventBehavior("onclick") {
+
+					private static final long serialVersionUID = 1L;
+
 					protected void onEvent(AjaxRequestTarget target) {
 						// add your favorite component.
 						System.out.println("CLICK EN TITLE!!!");
@@ -418,6 +279,9 @@ public abstract class BasePage extends WebPage {
 
 		radioGroup.add(new Radio<String>("tag", new Model<String>("tag"))
 				.add(new AjaxEventBehavior("onclick") {
+
+					private static final long serialVersionUID = 1L;
+
 					protected void onEvent(AjaxRequestTarget target) {
 						// add your favorite component.
 						System.out.println("CLICK EN TAG!!!");
@@ -618,6 +482,120 @@ public abstract class BasePage extends WebPage {
 		});
 
 		return form;
+	}
+	
+	private String[][] getQuoteArray() {
+		String[][] quoteArray = {
+			{
+				"The difficulty of literature is not to write, but to write what you mean",
+				"Robert Louis Stevenson" },
+		{ "Just don't take any class where you have to read BEOWULF.",
+				"Woody Allen" },
+		{ "Books are humanity in print.", "Barbara W. Tuchman" },
+
+		{
+				"Literature adds to reality, it does not simply describe it. It enriches the necessary competencies that daily life requires and provides; and in this respect, it irrigates the deserts that our lives have already become.",
+				"C.S. Lewis" },
+
+		{
+				"Books are the carriers of civilization. Without books, history is silent, literature dumb, science crippled, thought and speculation at a standstill.",
+				"Barbara W. Tuchman" },
+
+		{
+				"What is wonderful about great literature is that it transforms the man who reads it towards the condition of the man who wrote.",
+				"E. M. Forster" },
+
+		{ "Every man's memory is his private literature.",
+				"Aldous Huxley" },
+
+		{
+				"The decline of literature indicates the decline of a nation.",
+				"Johann Wolfgang von Goethe" },
+
+		{
+				"The difficulty of literature is not to write, but to write what you mean; not to affect your reader, but to affect him precisely as you wish.",
+				"Robert Louis Stevenson" },
+
+		{
+				"The difference between literature and journalism is that journalism is unreadable and literature is not read.",
+				"Oscar Wilde" },
+
+		{
+				"Literature adds to reality, it does not simply describe it. It enriches the necessary competencies that daily life requires and provides; and in this respect, it irrigates the deserts that our lives have already become.",
+				"C. S. Lewis" },
+
+		{
+				"Even in literature and art, no man who bothers about originality will ever be original: whereas if you simply try to tell the truth (without caring twopence how often it has been told before) you will, nine times out of ten, become original without ever having noticed it.",
+				"C. S. Lewis" },
+
+		{
+				"Literature is my Utopia. Here I am not disenfranchised. No barrier of the senses shuts me out from the sweet, gracious discourses of my book friends. They talk to me without embarrassment or awkwardness.",
+				"Helen Keller" },
+
+		{
+				"All modern American literature comes from one book by Mark Twain called Huckleberry Finn.",
+				"Ernest Hemingway" },
+
+		{
+				"We know too much, and are convinced of too little. Our literature is a substitute for religion, and so is our religion.",
+				"T. S. Eliot" },
+
+		{
+				"I am an Anglo-Catholic in religion, a classicist in literature and a royalist in politics.",
+				"T. S. Eliot" },
+
+		{
+				"Our high respect for a well read person is praise enough for literature.",
+				"T. S. Eliot" },
+
+		{
+				"The reason that fiction is more interesting than any other form of literature, to those who really like to study people, is that in fiction the author can really tell the truth without humiliating himself.",
+				"Jim Rohn" },
+
+		{
+				"The decline of literature indicates the decline of a nation.",
+				"Johann Wolfgang von Goethe" },
+
+		{
+				"He knew everything about literature except how to enjoy it.",
+				"Joseph Heller" },
+
+		{
+				"The atmosphere of orthodoxy is always damaging to prose, and above all it is completely ruinous to the novel, the most anarchical of all forms of literature.",
+				"George Orwell" },
+
+		{ "Every man's memory is his private literature.",
+				"Aldous Huxley" },
+
+		{
+				"If literature isn't everything, it's not worth a single hour of someone's trouble.",
+				"Jean-Paul Sartre" },
+
+		{
+				"It is the nature of the artist to mind excessively what is said about him. Literature is strewn with the wreckage of men who have minded beyond reason the opinions of others.",
+				"Virginia Woolf" },
+
+		{
+				"This is not writing at all. Indeed, I could say that Shakespeare surpasses literature altogether, if I knew what I meant.",
+				"Virginia Woolf" },
+
+		{
+				"Literature is strewn with the wreckage of men who have minded beyond reason the opinions of others.",
+				"Virginia Woolf" },
+
+		{
+				"The greatest advances of civilization, whether in architecture or painting, in science and literature, in industry or agriculture, have never come from centralized government.",
+				"Milton Friedman" },
+
+		{
+				"I hold that a writer who does not passionately believe in the perfectibility of man has no dedication nor any membership in literature.",
+				"John Steinbeck" },
+
+		{
+				"Develop an interest in life as you see it; the people, things, literature, music - the world is so rich, simply throbbing with rich treasures, beautiful souls and interesting people. Forget yourself.",
+				"Henry Miller" } };
+		
+		return quoteArray;
 	}
 
 }

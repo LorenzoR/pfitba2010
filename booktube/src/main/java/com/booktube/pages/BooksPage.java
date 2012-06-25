@@ -26,10 +26,11 @@ import org.apache.wicket.util.string.StringValue;
 import com.booktube.model.Book;
 import com.booktube.model.BookTag;
 import com.booktube.service.BookService;
-import com.booktube.service.BookService.SearchType;
 import com.booktube.service.UserService;
 
 public class BooksPage extends BasePage {
+
+	private static final long serialVersionUID = 1L;
 
 	@SpringBean
 	BookService bookService;
@@ -51,22 +52,19 @@ public class BooksPage extends BasePage {
 	private Date highPublishDate = null;
 	
 	final LoadableDetachableModel<List<Book>> resultsModel = new LoadableDetachableModel<List<Book>>() {
+
+		private static final long serialVersionUID = 1L;
+
 		protected List<Book> load() {
 			return null;
 		}
 	};
 
 	public BooksPage(final PageParameters parameters) {
-		
-		System.out.println("--------- BOKSPAGE()");
 
 		final WebMarkupContainer parent = new WebMarkupContainer("books");
 		parent.setOutputMarkupId(true);
 		add(parent);
-
-		// String typeString = parameters.get("type").toString();
-		String parameter = null;
-		SearchType type = SearchType.ALL;
 
 		if (StringUtils.isNotBlank(parameters.get("author").toString())) {
 			author = parameters.get("author").toString();
@@ -92,7 +90,7 @@ public class BooksPage extends BasePage {
 			subcategory = parameters.get("subcategory").toString();
 		}
 
-		DataView<Book> dataView = bookList("bookList", type, parameter);
+		DataView<Book> dataView = bookList("bookList");
 
 		StringValue currentPage = parameters.get("currentPage");
 
@@ -104,8 +102,6 @@ public class BooksPage extends BasePage {
 		
 		footerNavigator = new PagingNavigator("footerPaginator", dataView);
 		parent.add(footerNavigator);
-
-		System.out.println("********** Category es " + category);
 		
 		Label feedbackMessage = new Label("feedbackMessage", "No se encontraron resultados.");
 		parent.add(feedbackMessage);
@@ -121,10 +117,9 @@ public class BooksPage extends BasePage {
 		
 	}
 
-	private DataView<Book> bookList(String label, SearchType type,
-			String parameter) {
+	private DataView<Book> bookList(String label) {
 
-		IDataProvider<Book> dataProvider = new BookProvider(type, parameter);
+		IDataProvider<Book> dataProvider = new BookProvider();
 
 		DataView<Book> dataView = new DataView<Book>("bookList", dataProvider,
 				BOOKS_PER_PAGE) {
@@ -141,7 +136,7 @@ public class BooksPage extends BasePage {
 
 				item.add(new PropertyListView<Object>("tagList", tagList) {
 
-					private static final long serialVersionUID = -7951435365391555660L;
+					private static final long serialVersionUID = 1L;
 
 					protected void populateItem(ListItem<Object> item) {
 						BookTag tag = (BookTag) item.getModelObject();
@@ -200,6 +195,8 @@ public class BooksPage extends BasePage {
 
 				item.add(new Link<Book>("deleteLink", item.getModel()) {
 
+					private static final long serialVersionUID = 1L;
+
 					public void onClick() {
 
 						Book book = (Book) getModelObject();
@@ -225,38 +222,12 @@ public class BooksPage extends BasePage {
 
 	class BookProvider implements IDataProvider<Book> {
 
-		private static final long serialVersionUID = 6050730502992812477L;
-		private List<Book> books;
-		private SearchType type;
-		private String parameter;
+		private static final long serialVersionUID = 1L;
 
-		public BookProvider(SearchType type, String parameter) {
-			this.type = type;
-			this.parameter = parameter;
+		public BookProvider() {
 		}
 
 		public Iterator<Book> iterator(int first, int count) {
-
-			// switch (type) {
-			// case ALL:
-			// this.books = bookService.getAllBooks(first, count);
-			// break;
-			// case TAG:
-			// this.books = bookService.findBookByTag(parameter, first, count);
-			// break;
-			// case TITLE:
-			// this.books = bookService.findBookByTitle(parameter, first,
-			// count);
-			// break;
-			// case AUTHOR:
-			// this.books = bookService.findBookByAuthor(parameter, first,
-			// count);
-			// break;
-			// default:
-			// this.books = bookService.getAllBooks(first, count);
-			// }
-			//
-			// return this.books.iterator();
 			return bookService
 					.getBooks(first, count, bookId, author, title, tag,
 							category, subcategory, lowPublishDate,

@@ -1,7 +1,6 @@
 package com.booktube.model;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -10,7 +9,6 @@ import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -27,14 +25,11 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.JoinColumn;
-import javax.persistence.Transient;
 
 import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.OrderBy;
-import org.hibernate.mapping.Value;
 
 @Entity
 @Table(name = "BOOK")
@@ -42,6 +37,8 @@ import org.hibernate.mapping.Value;
 		@NamedQuery(name = "book.id", query = "from Book b where b.id = :id"),
 		@NamedQuery(name = "book.getByTitle", query = "from Book b where b.title LIKE :title")})
 public class Book implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -108,11 +105,11 @@ public class Book implements Serializable {
 	
 	/* @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent") */
 	/* @OneToMany */
-	@OneToMany(mappedBy = "book", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
-	@Cascade( org.hibernate.annotations.CascadeType.SAVE_UPDATE )
-	@OnDelete(action=OnDeleteAction.CASCADE)
-	@OrderBy(clause = "DATE ASC")
-	private Set<Comment> comments;
+//	@OneToMany(mappedBy = "book", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+//	@Cascade( org.hibernate.annotations.CascadeType.SAVE_UPDATE )
+//	@OnDelete(action=OnDeleteAction.CASCADE)
+//	@OrderBy(clause = "DATE ASC")
+//	private Set<Comment> comments;
 	/*
 	 * @JoinTable(name = "BOOK_COMMENT", joinColumns = { @JoinColumn(name =
 	 * "BOOK_ID") }, inverseJoinColumns = { @JoinColumn(name = "COMMENT_ID") })
@@ -148,7 +145,6 @@ public class Book implements Serializable {
 		this.publishDate = Calendar.getInstance().getTime();
 		this.rating = new Rating(this);
 		this.tags = new HashSet<BookTag>();
-		this.comments = new HashSet<Comment>();
 		this.userVotes = new HashSet<User>();
 	}
 
@@ -159,7 +155,6 @@ public class Book implements Serializable {
 		this.publishDate = Calendar.getInstance().getTime();
 		this.rating = new Rating(this);
 		this.tags = new HashSet<BookTag>();
-		this.comments = new HashSet<Comment>();
 		this.userVotes = new HashSet<User>();
 	}
 
@@ -228,21 +223,6 @@ public class Book implements Serializable {
 
 	public void setPublishDate(Date date) {
 		this.publishDate = date;
-	}
-
-	public Comment addComment(User user, String text) {
-		Comment comment = new Comment(user, this, text);
-		this.comments.add(comment);
-		System.out.println(this.comments.toString());
-		return comment;
-	}
-
-	public void setComments(Set<Comment> comments) {
-		this.comments = comments;
-	}
-
-	public Set<Comment> getComments() {
-		return this.comments;
 	}
 
 	public void setCategory(String category) {
