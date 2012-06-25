@@ -3,6 +3,7 @@ Author:	Maggie Wachs, maggie@filamentgroup.com
 Date:		September 2008
 */
 
+#categoryMenu { bottom: auto !important; margin: 0 !important; top: -4px !important; position: absolute !important;}
 
 /* REQUIRED STYLES - the menus will only render correctly with these rules */	
 
@@ -72,7 +73,7 @@ Date:		September 2008
 .fg-menu a:link,
 .fg-menu a:visited,
 .fg-menu a:hover,
-.fg-menu a:active { float:left; width:92%; padding:.3em 3%; text-decoration:none; outline: 0 !important; }
+.fg-menu a:active { float:left; width:92%; padding:.3em 3%; text-decoration:none; outline: 0 !important; text-align: left; }
 
 .fg-menu a { border: 1px dashed transparent; }
 
