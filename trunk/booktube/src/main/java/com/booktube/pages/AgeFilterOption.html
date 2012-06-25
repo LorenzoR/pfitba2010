@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+	<wicket:head>
+		<wicket:link>
+			<link href="AgeFilterOption.css" rel="stylesheet"/>			 
+		</wicket:link>
+	</wicket:head>
+</head>
+<body>
+	<wicket:panel>
+		<fieldset id="ageFieldSet">
+		<legend>Edad</legend>
+			<p>
+				<label for="min" wicket:id="minLabel"></label>
+				<select id="min" wicket:id="minAge">
+					<option>option 1</option>			
+				</select>
+			</p>
+			
+			<p>
+				<label for="max" wicket:id="maxLabel"></label>
+				<select id="max" wicket:id="maxAge">
+					<option>option 1</option>			
+				</select>
+			</p>
+		</fieldset>
+	</wicket:panel>
+</body>
+</html>

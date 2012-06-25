@@ -26,4 +26,10 @@ public interface UserService {
     public int getCount();
     public int getCount(Long userId, String username, Gender gender, Integer lowerAge, Integer higherAge, String country, Date lowDate, Date highDate);
     public Iterator<User> iterator(int first, int count);
+    
+    // Para el filtro usado para generar reportes
+    //public List<String> getAllCountries();
+    public List<String> getAllCities();
+    public List<String> getAllAges();
+    public List<String> getAllGenders();
 }

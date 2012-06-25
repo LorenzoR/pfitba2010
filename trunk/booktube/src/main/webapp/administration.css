@@ -67,7 +67,7 @@ DIV.face {
 	POSITION: relative; WIDTH: 100%; HEIGHT: 100%; text-shadow: 2px 1px 2px #E0E0E0
 }
 DIV.glare {
-	Z-INDEX: 1; POSITION: absolute; FILTER: alpha(opacity:35); WIDTH: 100%; HEIGHT: 15px; COLOR: white; OVERFLOW: hidden; opacity: 0.35; -moz-opacity: 0.35; -webkit-opacity: 0.35
+	Z-INDEX: 1; POSITION: absolute; FILTER: alpha(opacity:35); WIDTH: 200px; HEIGHT: 15px; COLOR: white; OVERFLOW: hidden; opacity: 0.35; -moz-opacity: 0.35; -webkit-opacity: 0.35
 }
 DIV.shadow {
 	POSITION: absolute; FILTER: alpha(opacity:10); MARGIN-TOP: 1px; MARGIN-LEFT: 1px; opacity: 0; -moz-opacity: 0; -webkit-opacity: 0

@@ -3,13 +3,20 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
+	<wicket:head>
+		<wicket:link>
+			<link href="DropDownElement.css" rel="stylesheet"/>			 
+		</wicket:link>
+	</wicket:head>
 </head>
 <body>
-
-<wicket:extend>
-	<!-- No se agrega codigo html estatico. Si se agrega contenido dinamico -->
-</wicket:extend>
-	
-	
+	<wicket:panel>
+		<p>
+			<label for="label" wicket:id="label"></label>
+			<select id="list" wicket:id="list">
+				<option>option 1</option>			
+			</select>
+		</p>
+	</wicket:panel>
 </body>
 </html>

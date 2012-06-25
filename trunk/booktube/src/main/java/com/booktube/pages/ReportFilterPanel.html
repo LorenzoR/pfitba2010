@@ -3,13 +3,17 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
+	<wicket:head>
+		<wicket:link>
+			<link href="ReportFilterPanel.css" rel="stylesheet"/>			 
+		</wicket:link>
+	</wicket:head>
 </head>
 <body>
-
-<wicket:extend>
-	<!-- No se agrega codigo html estatico. Si se agrega contenido dinamico -->
-</wicket:extend>
-	
-	
+	<wicket:panel>			
+		<wicket:container wicket:id="components">
+			<wicket:container wicket:id="component"/>
+		</wicket:container> 
+	</wicket:panel>
 </body>
 </html>
