@@ -11,7 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -23,10 +22,8 @@ import org.hibernate.annotations.OnDeleteAction;
 @Table(name = "RATING")
 public class Rating implements IClusterable, Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3044456736050790746L;
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Rating model for storing the ratings, typically this comes from a
 	 * database.

@@ -1,20 +1,10 @@
 package com.booktube.persistence.hibernate;
 
-/**
- * @author <a href="mailto:gcastro@mysticcoders.com">Guillermo Castro</a>
- * @version $Revision$ $Date$
- */
-
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
-
-import com.booktube.model.Message;
-import com.booktube.model.User;
 
 /**
  * AbstractDaoHibernate
@@ -52,10 +42,9 @@ public class AbstractDaoHibernate<T> extends HibernateDaoSupport {
 		return persistedObject;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<T> loadAll() {
-		List<T> resp = new ArrayList<T>();
-		resp = getSession().createCriteria(entityClass).list();
-		return resp;
+		return getSession().createCriteria(entityClass).list();
 	}
 	
 	public void merge(T detachedObject) {

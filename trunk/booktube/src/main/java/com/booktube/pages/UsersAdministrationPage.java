@@ -54,8 +54,6 @@ public class UsersAdministrationPage extends AdministrationPage {
 	@SpringBean
 	UserService userService;
 
-	public static final int WRITERS_PER_PAGE = 5;
-
 	private static Dialog deleteDialog;
 	private static Dialog deleteConfirmationDialog;
 
@@ -148,7 +146,7 @@ public class UsersAdministrationPage extends AdministrationPage {
 		IDataProvider<User> dataProvider = new WriterProvider();
 
 		DataView<User> dataView = new DataView<User>(label, dataProvider,
-				WRITERS_PER_PAGE) {
+				ITEMS_PER_PAGE) {
 
 			protected void populateItem(Item<User> item) {
 				final User user = (User) item.getModelObject();

@@ -4,7 +4,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.Model;
@@ -33,21 +32,13 @@ public class AdministrationPage extends BasePage {
 	@SpringBean
 	UserService userService;
 
-	public static final int BOOKS_PER_PAGE = 5;
+	protected static final int ITEMS_PER_PAGE = 5;
 	
 	final protected String dateFormat = "dd/mm/yy";
 	final protected DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
-	//public AdministrationPage(final PageParameters parameters) {
 	public AdministrationPage() {
 			super();
-//			final WebMarkupContainer parent2 = new WebMarkupContainer("adminContainer"){			
-//				private static final long serialVersionUID = -3147289158931550124L;
-//
-//				public boolean isTransparentResolver(){
-//					return true;
-//				}
-//			};
 			
 			final TransparentWebMarkupContainer parent = new TransparentWebMarkupContainer("adminContainer");
 			
@@ -55,9 +46,6 @@ public class AdministrationPage extends BasePage {
 			add(parent);
 			
 			parent.add(new LeftMenuPanel("leftPaneDiv"));
-			
-			
-			//parent.add(new Label("aContent", "Aca va el contenido de la Admin Page."));
 			
 			
 		}

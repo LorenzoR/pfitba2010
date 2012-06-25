@@ -50,8 +50,6 @@ public class MessagesAdministrationPage extends AdministrationPage {
 
 	private static Dialog deleteDialog;
 	private static Dialog deleteConfirmationDialog;
-
-	public static final int MESSAGES_PER_PAGE = 5;
 	
 	private final DataView<Message> dataView;
 	private final PagingNavigator footerNavigator;
@@ -180,7 +178,7 @@ public class MessagesAdministrationPage extends AdministrationPage {
 		IDataProvider<Message> dataProvider = new MessageProvider();
 
 		DataView<Message> dataView = new DataView<Message>(label,
-				dataProvider, MESSAGES_PER_PAGE) {
+				dataProvider, ITEMS_PER_PAGE) {
 
 			protected void populateItem(Item<Message> item) {
 				final Message message = (Message) item.getModelObject();

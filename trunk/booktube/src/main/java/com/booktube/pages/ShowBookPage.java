@@ -203,69 +203,6 @@ public class ShowBookPage extends BasePage {
 
 	}
 
-	private Form<Object> commentForm(final WebMarkupContainer parent,
-			final Book book, final List<Comment> comments) {
-
-		Form<Object> form = new Form<Object>("form");
-
-		final TextArea<Object> editor = new TextArea<Object>("textArea", new Model());
-		editor.setOutputMarkupId(true);
-
-		form.add(editor);
-		form.add(new AjaxSubmitLink("save") {
-
-			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-				// comments.add(new Comment(new
-				// User(ddc.getDefaultModelObjectAsString()),
-				// editor.getDefaultModelObjectAsString()));
-				// editor.setModel(new Model(""));
-				// target.addComponent(parent);
-				// target.focusComponent(editor);
-				// System.out.println("ACA 1");
-				String text = editor.getDefaultModelObjectAsString();
-				// String username = user.getUsername();
-
-				// User user =
-				// WicketApplication.instance().getUserService().getUser(username);
-				// Book book = new Book(title, text, user);
-
-				// User user = userService.getUser(username);
-				// User user = new User("usuario", "nombre", "apellido");
-				System.out.println("user es " + user);
-				// Comment comment = new Comment(user, book, text);
-
-				Comment comment = book.addComment(user, text);
-				// bookService.insertComment(comment);
-				bookService.updateBook(book);
-				// setResponsePage(HomePage.class);
-
-				/* Insert comment */
-				// WicketApplication.instance().getBookService().insertBook(book);
-				System.out.println("Comment inserted.");
-				System.out.println("Author: " + user.getUsername());
-				System.out.println("Comment: " + text);
-
-				comments.add(comment);
-
-				/* Clear values */
-				editor.setModel(new Model(""));
-
-				target.add(parent);
-
-			}
-
-			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-
-		return form;
-
-	}
-
 	/**
 	 * Star image for no selected star
 	 */

@@ -8,22 +8,19 @@ import com.booktube.service.UserService;
 
 public class UniqueUsernameValidator extends StringValidator {
 
+	private static final long serialVersionUID = 1L;
+
 	@SpringBean
 	UserService userService;
 
 	@Override
 	protected void onValidate(IValidatable<String> validatable) {
-		// TODO Auto-generated method stub
+
 		boolean userExists = userService.usernameExists(validatable.getValue());
 
 		if (userExists) {
 			error(validatable);
 		}
-
-		// if(location != null && location.getId().longValue() !=
-		// locationIdToIgnore) {
-		// error(validatable);
-		// }
 
 	}
 

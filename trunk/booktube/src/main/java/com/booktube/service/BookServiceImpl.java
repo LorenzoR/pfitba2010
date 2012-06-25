@@ -59,10 +59,6 @@ public class BookServiceImpl implements BookService {
 		return itemDao.getCount();
 	}
 
-	public int getCount(SearchType type, String parameter) {
-		return itemDao.getCount(type, parameter);
-	}
-
 	public Iterator<Book> iterator(int first, int count) {
 		return itemDao.iterator(first, count);
 	}

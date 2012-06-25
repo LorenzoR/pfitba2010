@@ -58,8 +58,6 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 	
 	private final CheckGroup group;
 	
-	public static final int MESSAGES_PER_PAGE = 5;
-	
 	private static Long campaignId;
 	
 	private Long searchCampaignId;
@@ -170,7 +168,7 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 		IDataProvider<Campaign> dataProvider = new CampaignProvider();
 
 		DataView<Campaign> dataView = new DataView<Campaign>("campaignsList",
-				dataProvider, MESSAGES_PER_PAGE) {
+				dataProvider, ITEMS_PER_PAGE) {
 
 			protected void populateItem(Item<Campaign> item) {
 				final Campaign campaign = (Campaign) item.getModelObject();

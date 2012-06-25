@@ -12,6 +12,8 @@ import com.booktube.service.BookService;
 
 public class CategoryMenu extends WebPage {
 
+	private static final long serialVersionUID = 1L;
+	
 	@SpringBean
 	BookService bookService;
 

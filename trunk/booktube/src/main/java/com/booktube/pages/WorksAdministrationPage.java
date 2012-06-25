@@ -152,7 +152,7 @@ public class WorksAdministrationPage extends AdministrationPage {
 		IDataProvider<Book> dataProvider = new BookProvider();
 
 		DataView<Book> dataView = new DataView<Book>(label, dataProvider,
-				BOOKS_PER_PAGE) {
+				ITEMS_PER_PAGE) {
 
 			private static final long serialVersionUID = -869452866439034394L;
 

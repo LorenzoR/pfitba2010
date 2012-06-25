@@ -1,10 +1,13 @@
 package com.booktube.pages;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -14,19 +17,18 @@ import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTe
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
-import org.apache.wicket.markup.html.form.ChoiceRenderer;
-import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.util.convert.ConversionException;
+import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
 import org.odlabs.wiquery.ui.core.JsScopeUiEvent;
@@ -41,6 +43,8 @@ import com.booktube.service.BookService;
 import com.booktube.service.UserService;
 
 public class AddBookPage extends BasePage {
+
+	private static final long serialVersionUID = 1L;
 
 	@SpringBean
 	UserService userService;
@@ -60,27 +64,32 @@ public class AddBookPage extends BasePage {
 
 		user = WiaSession.get().getLoggedInUser();
 
-//		Label registerMessage = new Label("registerMessage",
-//				"Debe registrarse para poder publicar.");
-//		parent.add(registerMessage);
-		
+		// Label registerMessage = new Label("registerMessage",
+		// "Debe registrarse para poder publicar.");
+		// parent.add(registerMessage);
+
 		final Dialog loginDialog = loginDialog();
-				
+
 		parent.add(loginDialog);
-		
-		WebMarkupContainer registerMessage = new WebMarkupContainer("registerMessage");
-		registerMessage.add(new BookmarkablePageLink<String>("registerLink", RegisterPage.class));
-		AjaxLink loginLink = new AjaxLink("loginLink") {
+
+		WebMarkupContainer registerMessage = new WebMarkupContainer(
+				"registerMessage");
+		registerMessage.add(new BookmarkablePageLink<String>("registerLink",
+				RegisterPage.class));
+		AjaxLink<Void> loginLink = new AjaxLink<Void>("loginLink") {
+
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void onClick(AjaxRequestTarget target) {
 				loginDialog.open(target);
 			}
-			
+
 		};
 		registerMessage.add(loginLink);
 		parent.add(registerMessage);
 
-		Form<?> form = addBookForm(parent);
+		Form<Book> form = addBookForm(parent);
 		parent.add(form);
 
 		if (user == null) {
@@ -117,24 +126,36 @@ public class AddBookPage extends BasePage {
 
 	}
 
-	private Form<?> addBookForm(final WebMarkupContainer parent) {
-		Form<?> form = new Form("form");
+	private Form<Book> addBookForm(final WebMarkupContainer parent) {
+		Form<Book> form = new Form<Book>("form");
 
-		final TextField titleField = new TextField("title", new Model(""));
+		final TextField<Book> titleField = new TextField<Book>("title");
 
 		form.add(titleField);
 
-		final TextField tagField = new TextField("tag", new Model(""));
+		// final TextField<Book> tagField = new TextField<Book>("tags");
+
+//		final TextField<Book> tagField = new TextField<Book>("tags") {
+//			private static final long serialVersionUID = 1L;
+//
+//			@SuppressWarnings("unchecked")
+//			@Override
+//			public IConverter getConverter(Class type) {
+//				return new SetToStringConverter();
+//			}
+//
+//		};
+		final CustomTextField tagField = new CustomTextField("tags", null, new SetToStringConverter());
 
 		form.add(tagField);
 
-		final TextArea editor = new TextArea("textArea");
+		final TextArea<Book> editor = new TextArea<Book>("text");
 		editor.setOutputMarkupId(true);
 
 		final AutoCompleteTextField<String> category = new AutoCompleteTextField<String>(
 				"category", new Model<String>("")) {
 
-			private static final long serialVersionUID = 2977239698122401133L;
+			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected Iterator<String> getChoices(String input) {
@@ -145,9 +166,10 @@ public class AddBookPage extends BasePage {
 
 				List<String> choices = new ArrayList<String>(10);
 
-				List<String> categories = bookService.getCategories(0, Integer.MAX_VALUE);
+				List<String> categories = bookService.getCategories(0,
+						Integer.MAX_VALUE);
 
-				for (final String aCategory : categories ) {
+				for (final String aCategory : categories) {
 
 					if (aCategory.toUpperCase().startsWith(input.toUpperCase())) {
 						choices.add(aCategory);
@@ -160,13 +182,13 @@ public class AddBookPage extends BasePage {
 				return choices.iterator();
 			}
 		};
-		
+
 		form.add(category);
-		
+
 		final AutoCompleteTextField<String> subcategory = new AutoCompleteTextField<String>(
 				"subcategory", new Model<String>("")) {
 
-			private static final long serialVersionUID = 2977239698122401133L;
+			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected Iterator<String> getChoices(String input) {
@@ -177,11 +199,13 @@ public class AddBookPage extends BasePage {
 
 				List<String> choices = new ArrayList<String>(10);
 
-				List<String> subcategories = bookService.getSubcategories(0, Integer.MAX_VALUE, null);
+				List<String> subcategories = bookService.getSubcategories(0,
+						Integer.MAX_VALUE, null);
 
-				for (final String aSubcategory : subcategories ) {
+				for (final String aSubcategory : subcategories) {
 
-					if (aSubcategory.toUpperCase().startsWith(input.toUpperCase())) {
+					if (aSubcategory.toUpperCase().startsWith(
+							input.toUpperCase())) {
 						choices.add(aSubcategory);
 						if (choices.size() == 10) {
 							break;
@@ -192,44 +216,38 @@ public class AddBookPage extends BasePage {
 				return choices.iterator();
 			}
 		};
-		
+
 		form.add(subcategory);
 
-		ValueMap myParameters = new ValueMap();
+		CompoundPropertyModel<Book> model = new CompoundPropertyModel<Book>(
+				new Book());
 
-		form.setModel(new CompoundPropertyModel(myParameters));
+		form.setDefaultModel(model);
 
 		form.add(editor);
 		form.add(new AjaxSubmitLink("save") {
 
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-				// comments.add(new Comment(new
-				// User(ddc.getDefaultModelObjectAsString()),
-				// editor.getDefaultModelObjectAsString()));
-				// editor.setModel(new Model(""));
-				// target.addComponent(parent);
-				// target.focusComponent(editor);
-				// System.out.println("ACA 1");
 				String text = editor.getDefaultModelObjectAsString();
 				String username = user.getUsername();
 				String title = titleField.getDefaultModelObjectAsString();
-				String tagString = tagField.getDefaultModelObjectAsString();
-				String tags[] = tagString.split(" ");
-				System.out.println("Tags: " + tags.toString());
+				Set<String> tagSet = (Set<String>) tagField
+						.getDefaultModelObject();
 
-				// User user = userService.getUser(username);
+				System.out.println("Tags: " + tagSet.toString());
+
 				Book book = new Book(title, text, user);
 
-				Set<BookTag> tagsSet = new HashSet<BookTag>();
+				Set<BookTag> bookTagSet = new HashSet<BookTag>();
 
-				for (String tag : tags) {
-					System.out.println("Tag: " + tag);
-					// book.addTag(tag);
-					tagsSet.add(new BookTag(tag, book));
+				for (String aTag : tagSet) {
+					bookTagSet.add(new BookTag(aTag, book));
 				}
 
-				book.setTags(tagsSet);
+				book.setTags(bookTagSet);
 				book.setCategory("categoria");
 				book.setSubCategory("subcategoria");
 
@@ -243,8 +261,8 @@ public class AddBookPage extends BasePage {
 				System.out.println("SubCategory: " + book.getSubCategory());
 
 				/* Clear values */
-				editor.setModel(new Model(""));
-				titleField.setModel(new Model(""));
+				editor.setModel(new Model<Book>());
+				titleField.setModel(new Model<Book>());
 				target.add(parent);
 
 				dialog.open(target);
@@ -254,21 +272,20 @@ public class AddBookPage extends BasePage {
 			@Override
 			protected void onError(AjaxRequestTarget target, Form<?> form) {
 				// TODO Auto-generated method stub
-
 			}
 		});
 
 		return form;
 	}
-	
+
 	private Dialog loginDialog() {
 
 		Dialog dialog = new Dialog("login_dialog");
-		
+
 		final Form<Object> form = loginForm("login_dialog_form");
-		
+
 		dialog.add(form);
-		
+
 		AjaxDialogButton ok = new AjaxDialogButton("Login") {
 
 			private static final long serialVersionUID = 1L;
@@ -282,11 +299,11 @@ public class AddBookPage extends BasePage {
 
 		dialog.setButtons(ok);
 		dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
-		
+
 		return dialog;
 
 	}
-	
+
 	private Form<Object> loginForm(String label) {
 		final Form<Object> form = new Form<Object>(label);
 		final TextField<String> username = new TextField<String>("username",
@@ -303,9 +320,9 @@ public class AddBookPage extends BasePage {
 		 */
 
 		// Add a FeedbackPanel for displaying our messages
-		//final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
-		//feedbackPanel.setOutputMarkupId(true);
-		//form.add(feedbackPanel);
+		// final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
+		// feedbackPanel.setOutputMarkupId(true);
+		// form.add(feedbackPanel);
 
 		form.add(username);
 		form.add(password);
@@ -329,6 +346,7 @@ public class AddBookPage extends BasePage {
 				if (user != null && user.getPassword().equals(passwordString)) {
 					WiaSession.get().logInUser(user);
 				} else {
+					// TODO Auto-generated method stub
 					/* TERMINAR MENSAJE DE LOGIN INCORRECTO */
 					System.out.println("Login failed!");
 					info("aaaaaaaaaaaa");
@@ -349,9 +367,62 @@ public class AddBookPage extends BasePage {
 
 	@Override
 	protected void setPageTitle() {
-		// TODO Auto-generated method stub
 		String newTitle = "Booktube - New Book";
 		super.get("pageTitle").setDefaultModelObject(newTitle);
+	}
+
+	public class CustomTextField extends TextField {
+
+		private final IConverter converter;
+
+		/**
+		 * @param id
+		 * @param label
+		 */
+		public CustomTextField(String id, IModel labelModel,
+				IConverter converter) {
+			super(id, labelModel);
+			this.converter = converter;
+		}
+
+		@Override
+		public IConverter getConverter(Class type) {
+
+			return this.converter;
+		}
+
+	}
+
+	public class SetToStringConverter implements IConverter {
+
+		private static final long serialVersionUID = 1L;
+
+		public SetToStringConverter() {
+		}
+
+		public void setLocale(Locale locale) {
+		}
+
+		public Locale getLocale() {
+			return Locale.getDefault();
+		}
+
+		public Object convertToObject(String value, Locale locale) {
+			String tags[] = value.split(" ");
+			Set<String> tagsSet = new HashSet<String>();
+
+			for (String tag : tags) {
+				tagsSet.add(tag);
+			}
+
+			return tagsSet;
+		}
+
+		public String convertToString(Object value, Locale locale) {
+			System.out.println("convertToString");
+			// TODO Auto-generated method stub
+			return null;
+		}
 	}
 
 }

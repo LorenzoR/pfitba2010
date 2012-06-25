@@ -21,6 +21,8 @@ import org.hibernate.annotations.OnDeleteAction;
 @Table(name = "CAMPAIGN_DETAIL")
 public class CampaignDetail implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "CAMPAIGN_DETAIL_ID")
