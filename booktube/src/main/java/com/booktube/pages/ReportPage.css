@@ -1,0 +1,47 @@
+@CHARSET "ISO-8859-1";
+
+div.filterDiv{background-color:yellow;width:650px; height:110px;
+	padding-top:10px; margin-top:0px;
+	border-bottom: 1px solid #E0E0E0;
+}
+	
+div.filterDiv FORM{font-size: 11px;}
+
+/*  Estilo por default para los componentes del filtro.
+	Para cada componente dinamico se puede customizar el estilo en su CSS
+	correspondiente
+*/
+div.filterDiv option,select {	
+	font-size:11px;
+	color:#777777;
+	margin: 0px;
+	padding:0px 0px 0px 0px;  
+    -moz-border-radius: 1px;  
+    -webkit-border-radius: 1px;
+}
+
+div.filterDiv fieldset{
+	width:140px; float:left;
+	margin-left:10px;
+	-moz-border-radius: 5px;  
+    -webkit-border-radius: 5px;
+}
+/*  FIn del estilo por defecto para los componentes del filtro */
+
+div.filterDiv div#submitDownload{
+	background-color:blue;
+	width: 80px; height: 80px;
+	float:left; margin-left: 555px; margin-top:-100px;
+	padding: 10px;
+}
+
+div.filterDiv div#submitDownload input{
+	font-size: 14px;
+	margin: 10px auto 20px 8px ;
+	padding: 4px;
+}
+
+div.filterDiv div#submitDownload a{
+	font-size: 12px;
+}
+

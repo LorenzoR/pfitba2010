@@ -95,4 +95,19 @@ public class UserServiceImpl implements UserService {
 			Date highDate) {
 		return itemDao.getCount(userId, username, gender, lowerAge, higherAge, country, lowDate, highDate);
 	}
+	
+	 // Para el filtro usado para generar reportes
+//	public List<String> getAllCountries() {
+//		return itemDao.getAllCountries();		
+//	}
+	public List<String> getAllCities() {
+		return itemDao.getAllCities();		
+	}
+	public List<String> getAllAges() {
+		return itemDao.getAllAges();		
+	}
+
+	public List<String> getAllGenders() {
+		return itemDao.getAllGenders();
+	}
 }

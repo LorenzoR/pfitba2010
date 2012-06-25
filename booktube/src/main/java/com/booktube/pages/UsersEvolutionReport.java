@@ -3,49 +3,57 @@ package com.booktube.pages;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import com.booktube.service.UserService;
 
 
 public class UsersEvolutionReport extends ReportPage {
 	private static final long serialVersionUID = 6051762145219128009L;
 	
-	private static final List<String> COUNTRIES = Arrays.asList(new String[] {"Argentina", "Uruguay", "Paraguay" });
-	private static final List<String> CITIES = Arrays.asList(new String[] {"Buenos Aires", "Montevideo", "Cordoba", "Asunción", "Rosario" });
-	private static final List<String> SEXES = Arrays.asList(new String[] {"Masculino", "Femenino" });
-	private static final List<String> MIN_AGES = Arrays.asList(new String[] {"6", "7", "8", "9", "10" });
-	private static final List<String> MAX_AGES = Arrays.asList(new String[] {"6", "7", "8", "9", "10" });
-	private static final List<String> YEARS = Arrays.asList(new String[] {"2009", "2010", "2011", "2012" });
-	
+	protected AgeFilterOption ageFilter;
+	protected OriginFilterOption originFilter;
+	protected MiscFilterOption customizedMisc;
+	DropDownElementPanel genderDropDownElement;
+	@SpringBean
+	UserService userService;
+	private List<String> allGendersList = userService.getAllGenders();
+		
 	public UsersEvolutionReport(){
 		super();
-		final WebMarkupContainer parent = new WebMarkupContainer("usersEvolutionReportContainer");
-		parent.setOutputMarkupId(true);
-		add(parent);
+		// No es necesario WebMarkupContainer pues esta subclase no agrega codigo estatico HTML a la superclase(ReportPage)
+
+		//Agrego las opciones de filtrado segun que reporte se quiere generar
+		originFilter = new OriginFilterOption("component");
+		reportFilter.addFilterOption(originFilter);
+		
+		ageFilter = new AgeFilterOption("component");
+		reportFilter.addFilterOption(ageFilter);
+	
+		customizedMisc = new MiscFilterOption("component");
+		genderDropDownElement = new DropDownElementPanel("element", "Sex", allGendersList); 
+		customizedMisc.addElement(genderDropDownElement);
+		reportFilter.addFilterOption(customizedMisc);
 		
 		String newTitle = "Booktube - Users Evolution Report"; 
-		super.get("pageTitle").setDefaultModelObject(newTitle);		
+		super.get("pageTitle").setDefaultModelObject(newTitle);	
 		
-		parent.add(new Label("countryLabel", "País"));
-		parent.add(new DropDownChoice<Object>("country", COUNTRIES));
-		
-		parent.add(new Label("cityLabel", "Ciudad"));
-		parent.add(new DropDownChoice<Object>("city", CITIES));
-		
-		parent.add(new Label("sexLabel", "Sexo"));
-		parent.add(new DropDownChoice<Object>("sex", SEXES));
-		
-		parent.add(new Label("minLabel", "Min"));
-		parent.add(new DropDownChoice<Object>("minAge", MIN_AGES));
-		
-		parent.add(new Label("maxLabel", "Max"));
-		parent.add(new DropDownChoice<Object>("maxAge", MAX_AGES));
-		
-		parent.add(new Label("yearLabel", "Año"));
-		parent.add(new DropDownChoice<Object>("year", YEARS));
-		
+		// En esta clase se agrega el boton submit y el evento onSubmit pues cada Reporte
+		// necesitara informacion diferente y ejecutara graficos diferentes
+		form.add(new Button("renderReport", new Model<String>("Graficar")) {
+			private static final long serialVersionUID = 6743737357599494567L;
+
+			@Override
+			public void onSubmit() {
+				System.out.println("min="+ageFilter.getSelectedMinAge()+" Max="+ageFilter.getSelectedMaxAge());
+				System.out.println("pais="+originFilter.getSelectedCountry()+" ciudad="+originFilter.getSelectedCity());
+				System.out.println("sexo="+genderDropDownElement.getSelectedGender());
+			}
+		});
+
+
 	}
 	
 }
