@@ -12,9 +12,13 @@
 		
 		<div class="filterDiv">
 			<form wicket:id="filterForm">
+        <div wicket:id="reportFilterPanel"> Reemplazado por un panel especifico para cada reporte</div>
 				<wicket:child />  
-				<input type="submit" value="Graficar"/>
-				<a href="#" > Bajar Reporte</a>
+            
+        <div id="submitDownload">
+              <input type="submit" value="Graficar"/>
+          <p><a href="#" > Bajar Reporte</a></p>
+        </div>
 			</form>
 		</div>
 		
