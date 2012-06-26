@@ -91,7 +91,18 @@ public class LoadDataPage extends BasePage {
 	        gc.set(year, month, day);
 	        Date birthdate = new Date(gc.getTimeInMillis());
 	        
-	        year = randBetween(1900, 2010);
+	        //year = randBetween(1900, 2010);	        
+	        if( i <=11 )
+	        	year = 2008;
+	        else if( i>11 && i <=28 )
+	        	year = 2009;
+	        else if( i>28 && i<=50 )
+	        	year = 2010;	        
+	        else if( i>50 && i<=80 )
+	        	year = 2011;
+	        else
+	        	year = 2012;
+	        
 	        month = randBetween(0, 11);
 	        gc = new GregorianCalendar(year, month, 1);
 	        day = randBetween(1, gc.getActualMaximum(gc.DAY_OF_MONTH));
