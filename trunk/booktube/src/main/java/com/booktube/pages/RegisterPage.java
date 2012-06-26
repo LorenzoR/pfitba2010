@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -128,6 +129,8 @@ public class RegisterPage extends BasePage {
 		final DropDownChoice<String> genderSelect = new DropDownChoice<String>("gender",
 				new PropertyModel<String>(this, ""), genderList);
 		
+		final TextField<String> cityField = new TextField<String>(
+				"city", new Model<String>(""));
 		
 		
 		usernameField.setRequired(true);
@@ -150,6 +153,7 @@ public class RegisterPage extends BasePage {
 		form.add(passwordField2);
 		form.add(countrySelect);
 		form.add(genderSelect);
+		form.add(cityField);
 
 		form.add(new AjaxSubmitLink("save") {
 
@@ -173,6 +177,7 @@ public class RegisterPage extends BasePage {
 				String country = countrySelect.getDefaultModelObjectAsString();
 				String gender = genderSelect.getDefaultModelObjectAsString();
 				String birthdate = birthdateField.getDefaultModelObjectAsString();
+				String city = cityField.getDefaultModelObjectAsString();
 
 				User user = new User(username, password, firstname, lastname,
 						User.Level.USER);
@@ -184,6 +189,10 @@ public class RegisterPage extends BasePage {
 				}
 				else {
 					user.setGender(Gender.FEMALE);
+				}
+				
+				if ( StringUtils.isNotBlank(city) ) {
+					user.setCity(city);
 				}
 				
 				user.setCountry(country);
@@ -206,6 +215,7 @@ public class RegisterPage extends BasePage {
 				System.out.println("Firstname: " + firstname);
 				System.out.println("Lastname: " + lastname);
 				System.out.println("Country: " + country);
+				System.out.println("City: " + city);
 				System.out.println("Gender: " + gender);
 
 				target.add(parent);
