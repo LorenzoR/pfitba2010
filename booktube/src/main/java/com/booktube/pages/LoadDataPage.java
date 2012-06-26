@@ -69,6 +69,17 @@ public class LoadDataPage extends BasePage {
 		countries.add("Country 5");
 		countries.add("Country 6");
 		
+		List<String> cities = new ArrayList<String>();
+		cities.add("City 1");
+		cities.add("City 2");
+		cities.add("City 3");
+		cities.add("City 4");
+		cities.add("City 5");
+		cities.add("City 6");
+		cities.add("City 7");
+		cities.add("City 8");
+		cities.add("City 9");
+		
 		Gender gender = Gender.MALE;
 		
 		for ( int i = 0; i < 100; i++ ) {
@@ -78,10 +89,20 @@ public class LoadDataPage extends BasePage {
 	        GregorianCalendar gc = new GregorianCalendar(year, month, 1);
 	        int day = randBetween(1, gc.getActualMaximum(gc.DAY_OF_MONTH));
 	        gc.set(year, month, day);
+	        Date birthdate = new Date(gc.getTimeInMillis());
+	        
+	        year = randBetween(1900, 2010);
+	        month = randBetween(0, 11);
+	        gc = new GregorianCalendar(year, month, 1);
+	        day = randBetween(1, gc.getActualMaximum(gc.DAY_OF_MONTH));
+	        gc.set(year, month, day);
+	        Date registrationDate = new Date(gc.getTimeInMillis());
 			
 			User user = new User("user" + i, "user" + i, "nombre" + i, "apellido" + i,
 					User.Level.USER);
-			user.setBirthdate(new Date(gc.getTimeInMillis()));
+			
+			user.setBirthdate(birthdate);
+			user.setRegistrationDate(registrationDate);
 			user.setGender(gender);
 			user.setCountry(countries.get(i % countries.size()));
 			userService.insertUser(user);
@@ -95,6 +116,7 @@ public class LoadDataPage extends BasePage {
 		user.setBirthdate(new Date());
 		user.setGender(Gender.MALE);
 		user.setCountry("Country 1");
+		user.setRegistrationDate(new Date());
 		this.admin = new User("admin", "admin", "nombre", "apellido",
 				User.Level.ADMIN);
 		this.admin.setBirthdate(new Date());

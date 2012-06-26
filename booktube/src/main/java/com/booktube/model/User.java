@@ -58,6 +58,10 @@ public class User implements Serializable {
 	@Column(name = "COUNTRY", nullable = false)
 	private String country;
 	
+	@Basic
+	@Column(name = "CITY", nullable = false)
+	private String city;
+	
 	@Enumerated(EnumType.ORDINAL)
 	@Column(name = "GENDER", nullable = false)
 	private Gender gender;
@@ -213,6 +217,14 @@ public class User implements Serializable {
 
 	public void setRegistrationDate(Date registrationDate) {
 		this.registrationDate = registrationDate;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
 	}
 
 	public static String hash(String s, String hashFunction) {
