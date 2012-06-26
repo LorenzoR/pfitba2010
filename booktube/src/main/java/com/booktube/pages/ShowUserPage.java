@@ -50,7 +50,9 @@ public class ShowUserPage extends BasePage {
 		parent.add(new Label("gender"));
 		parent.add(new Label("birthdate"));
 		parent.add(new Label("country"));
+		parent.add(new Label("city"));
 		parent.add(new Label("level"));
+		parent.add(new Label("registrationDate"));
 
 	}
 

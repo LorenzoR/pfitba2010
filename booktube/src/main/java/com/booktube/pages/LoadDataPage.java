@@ -105,6 +105,7 @@ public class LoadDataPage extends BasePage {
 			user.setRegistrationDate(registrationDate);
 			user.setGender(gender);
 			user.setCountry(countries.get(i % countries.size()));
+			user.setCity(cities.get(i % cities.size()));
 			userService.insertUser(user);
 			users.add(user);
 			
@@ -116,12 +117,14 @@ public class LoadDataPage extends BasePage {
 		user.setBirthdate(new Date());
 		user.setGender(Gender.MALE);
 		user.setCountry("Country 1");
+		user.setCity("City 10");
 		user.setRegistrationDate(new Date());
 		this.admin = new User("admin", "admin", "nombre", "apellido",
 				User.Level.ADMIN);
 		this.admin.setBirthdate(new Date());
 		this.admin.setGender(Gender.MALE);
 		this.admin.setCountry("Country 1");
+		this.admin.setCity("City 1");
 
 		userService.insertUser(user);
 		users.add(user);
