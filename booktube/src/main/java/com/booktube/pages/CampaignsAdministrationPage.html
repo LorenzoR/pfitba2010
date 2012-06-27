@@ -21,8 +21,9 @@
 		
 		<form id="searchCampaignForm" wicket:id="searchCampaignForm">
 			<div id="searchFields" wicket:id="searchFields">
+			
 			<p>
-				<b>ID:</b> <input type="text" wicket:id="campaignId" value="" />
+				<b>ID:</b> <input type="text" wicket:id="id" value="" />
 			</p>
 			<p>
 				<b>Subject:</b> <input type="text" wicket:id="subject" value="" />
@@ -48,6 +49,7 @@
 			<tbody>
 				<tr wicket:id="campaignsList">
 					<td><input type="checkbox" wicket:id="checkbox" /></td>
+					<td><b>ID: </b><span wicket:id="id">ID goes here</span></td>
 					<td><b>Sender: </b><span wicket:id="sender">Sender goes here</span></td>
 					<td><b>Receivers: </b><span wicket:id="receiver">Receiver goes here</span></td>
 					<td><b>Subject: </b><span wicket:id="subject">Subject goes here</span></td>

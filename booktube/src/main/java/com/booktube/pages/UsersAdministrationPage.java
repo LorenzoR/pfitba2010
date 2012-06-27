@@ -9,7 +9,6 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
@@ -41,11 +40,8 @@ import org.odlabs.wiquery.ui.dialog.AjaxDialogButton;
 import org.odlabs.wiquery.ui.dialog.Dialog;
 import org.odlabs.wiquery.ui.dialog.DialogButton;
 
-import com.booktube.model.Book;
-import com.booktube.model.Campaign;
 import com.booktube.model.User;
 import com.booktube.model.User.Gender;
-import com.booktube.pages.WritersPage.WriterProvider;
 import com.booktube.service.UserService;
 
 public class UsersAdministrationPage extends AdministrationPage {
@@ -66,6 +62,8 @@ public class UsersAdministrationPage extends AdministrationPage {
 	private Label deleteConfirmationLabel = new Label(
 			"delete_confirmation_dialog_text", new PropertyModel(this,
 					"deleteConfirmationText")) {
+						private static final long serialVersionUID = 1L;
+
 		{
 			setOutputMarkupId(true);
 		}
@@ -75,6 +73,8 @@ public class UsersAdministrationPage extends AdministrationPage {
 
 	private Label successDialogLabel = new Label("success_dialog_text",
 			new PropertyModel(this, "successDialogText")) {
+				private static final long serialVersionUID = 1L;
+
 		{
 			setOutputMarkupId(true);
 		}
@@ -91,12 +91,14 @@ public class UsersAdministrationPage extends AdministrationPage {
 	private Date searchHighRegistrationDate;
 	private String searchCountry;
 
-	private final CheckGroup group;
+	private final CheckGroup<User> group;
 
 	private final DataView<User> dataView;
 	private final PagingNavigator footerNavigator;
 
 	final LoadableDetachableModel<List<User>> resultsModel = new LoadableDetachableModel<List<User>>() {
+		private static final long serialVersionUID = 1L;
+
 		protected List<User> load() {
 			return null;
 		}
@@ -111,7 +113,7 @@ public class UsersAdministrationPage extends AdministrationPage {
 
 		parent.add(new Label("pageTitle", "Users Administration Page"));
 
-		group = new CheckGroup("group", new ArrayList());
+		group = new CheckGroup<User>("group", new ArrayList<User>());
 
 		dataView = writerList("writerList");
 
@@ -148,12 +150,14 @@ public class UsersAdministrationPage extends AdministrationPage {
 		DataView<User> dataView = new DataView<User>(label, dataProvider,
 				ITEMS_PER_PAGE) {
 
+					private static final long serialVersionUID = 1L;
+
 			protected void populateItem(Item<User> item) {
 				final User user = (User) item.getModelObject();
 				CompoundPropertyModel<User> model = new CompoundPropertyModel<User>(
 						user);
 				item.setDefaultModel(model);
-				item.add(new Check("checkbox", item.getModel()));
+				item.add(new Check<User>("checkbox", item.getModel()));
 				final PageParameters parameters = new PageParameters();
 				parameters.set("userId", user.getId());
 				item.add(new Label("id"));
@@ -162,7 +166,10 @@ public class UsersAdministrationPage extends AdministrationPage {
 				item.add(new Label("lastname"));
 				item.add(new BookmarkablePageLink<Object>("detailsLink",
 						ShowUserPage.class, parameters));
-				item.add(new Link("editLink", item.getModel()) {
+				item.add(new Link<User>("editLink", item.getModel()) {
+
+					private static final long serialVersionUID = 1L;
+
 					public void onClick() {
 						setResponsePage(new EditWriterPage(user.getId(),
 								UsersAdministrationPage.this));
@@ -170,6 +177,8 @@ public class UsersAdministrationPage extends AdministrationPage {
 
 				});
 				item.add(new AjaxLink<User>("deleteLink", item.getModel()) {
+
+					private static final long serialVersionUID = 1L;
 
 					@Override
 					public void onClick(AjaxRequestTarget target) {
@@ -332,6 +341,8 @@ public class UsersAdministrationPage extends AdministrationPage {
 
 		final AjaxSubmitLink deleteUser = new AjaxSubmitLink("deleteUser") {
 
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				System.out.println("selected user(s): "
@@ -368,6 +379,8 @@ public class UsersAdministrationPage extends AdministrationPage {
 		form.add(deleteUser);
 
 		searchFields.add(new AjaxSubmitLink("searchUser") {
+
+			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
@@ -475,6 +488,8 @@ public class UsersAdministrationPage extends AdministrationPage {
 	}
 
 	class WriterProvider implements IDataProvider<User> {
+
+		private static final long serialVersionUID = 1L;
 
 		public WriterProvider() {
 		}
