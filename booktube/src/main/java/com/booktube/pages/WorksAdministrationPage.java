@@ -166,10 +166,10 @@ public class WorksAdministrationPage extends AdministrationPage {
 
 				item.add(new Check("checkbox", item.getModel()));
 
-				List<BookTag> tagList = null;
+				List<String> tagList = null;
 
 				if (book.getTags() != null) {
-					tagList = new ArrayList<BookTag>(book.getTags());
+					tagList = new ArrayList<String>(book.getTags());
 				}
 
 				item.add(new PropertyListView<Object>("tagList", tagList) {

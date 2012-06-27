@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -66,6 +68,13 @@ public class BooksPage extends BasePage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
+		final String newUrl = RequestCycle.get().getUrlRenderer().renderFullUrl(
+				   Url.parse(urlFor(CategoryMenu.class, null).toString()));
+		Label myScript = new Label("myScript", "url = '"
+				+ newUrl + "';");
+		myScript.setEscapeModelStrings(false);
+		add(myScript);
+		
 		if (StringUtils.isNotBlank(parameters.get("author").toString())) {
 			author = parameters.get("author").toString();
 		}
@@ -128,10 +137,10 @@ public class BooksPage extends BasePage {
 
 			protected void populateItem(Item<Book> item) {
 				final Book book = (Book) item.getModelObject();
-				List<BookTag> tagList = null;
+				List<String> tagList = null;
 
 				if (book.getTags() != null) {
-					tagList = new ArrayList<BookTag>(book.getTags());
+					tagList = new ArrayList<String>(book.getTags());
 				}
 
 				item.add(new PropertyListView<Object>("tagList", tagList) {
@@ -139,14 +148,14 @@ public class BooksPage extends BasePage {
 					private static final long serialVersionUID = 1L;
 
 					protected void populateItem(ListItem<Object> item) {
-						BookTag tag = (BookTag) item.getModelObject();
+						String tag = (String) item.getModelObject();
 						final PageParameters parameters = new PageParameters();
-						parameters.set("tag", tag.getValue());
+						parameters.set("tag", tag);
 						parameters.set("type", "tag");
 
 						BookmarkablePageLink<Object> bpl = new BookmarkablePageLink<Object>(
 								"tagLink", BooksPage.class, parameters);
-						bpl.add(new Label("tagName", tag.getValue()));
+						bpl.add(new Label("tagName", tag));
 						item.add(bpl);
 
 					}

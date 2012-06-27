@@ -60,7 +60,7 @@ public class UsersAdministrationPage extends AdministrationPage {
 	private static String deleteUsername;
 
 	private Label deleteConfirmationLabel = new Label(
-			"delete_confirmation_dialog_text", new PropertyModel(this,
+			"delete_confirmation_dialog_text", new PropertyModel<String>(this,
 					"deleteConfirmationText")) {
 						private static final long serialVersionUID = 1L;
 
@@ -72,7 +72,7 @@ public class UsersAdministrationPage extends AdministrationPage {
 	private String deleteConfirmationText;
 
 	private Label successDialogLabel = new Label("success_dialog_text",
-			new PropertyModel(this, "successDialogText")) {
+			new PropertyModel<String>(this, "successDialogText")) {
 				private static final long serialVersionUID = 1L;
 
 		{
@@ -154,7 +154,7 @@ public class UsersAdministrationPage extends AdministrationPage {
 
 			protected void populateItem(Item<User> item) {
 				final User user = (User) item.getModelObject();
-				CompoundPropertyModel<User> model = new CompoundPropertyModel<User>(
+				final CompoundPropertyModel<User> model = new CompoundPropertyModel<User>(
 						user);
 				item.setDefaultModel(model);
 				item.add(new Check<User>("checkbox", item.getModel()));
@@ -171,8 +171,7 @@ public class UsersAdministrationPage extends AdministrationPage {
 					private static final long serialVersionUID = 1L;
 
 					public void onClick() {
-						setResponsePage(new EditWriterPage(user.getId(),
-								UsersAdministrationPage.this));
+						setResponsePage(new EditWriterPage(model, UsersAdministrationPage.this));
 					}
 
 				});
@@ -286,7 +285,7 @@ public class UsersAdministrationPage extends AdministrationPage {
 		DialogButton noButton = new DialogButton("No",
 				JsScope.quickScope(dialog.close().render()));
 
-		dialog.setButtons(yesButton, noButton);
+		dialog.setButtons(noButton, yesButton);
 		dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close()));
 
 		return dialog;
@@ -347,8 +346,9 @@ public class UsersAdministrationPage extends AdministrationPage {
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				System.out.println("selected user(s): "
 						+ group.getDefaultModelObjectAsString());
-				List<User> removedUsers = (List<User>) group
-						.getDefaultModelObject();
+				
+				@SuppressWarnings("unchecked")
+				List<User> removedUsers = (List<User>) group.getDefaultModelObject();
 
 				for (User aUser : removedUsers) {
 					userService.deleteUser(aUser);

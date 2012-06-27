@@ -6,23 +6,30 @@ import java.util.Set;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.util.convert.IConverter;
+
 import com.booktube.model.Book;
 import com.booktube.model.BookTag;
 import com.booktube.model.User;
+import com.booktube.pages.AddBookPage.CustomTextField;
+import com.booktube.pages.customConverters.TagSetToString;
 import com.booktube.service.BookService;
 import com.booktube.service.UserService;
 
 public class EditBookPage extends BasePage {
+
+	private static final long serialVersionUID = 1L;
 
 	@SpringBean
 	BookService bookService;
@@ -32,21 +39,17 @@ public class EditBookPage extends BasePage {
 
 	private List<User> users = userService.getAllUsers(0, Integer.MAX_VALUE);
 	private final Book book;
-	
+
 	public EditBookPage(PageParameters pageParameters) {
 
 		Long bookId = pageParameters.get("book").toLong();
 		int currentPage;
-		
-		if ( pageParameters.get("currentPage").isEmpty() ) {
+
+		if (pageParameters.get("currentPage").isEmpty()) {
 			currentPage = 0;
-		}
-		else {
+		} else {
 			currentPage = pageParameters.get("currentPage").toInt();
 		}
-		
-		// this.backPage = backPage;
-		//Integer bookId = book.getId();
 
 		book = bookService.getBook(bookId);
 
@@ -59,192 +62,60 @@ public class EditBookPage extends BasePage {
 
 		add(editBookForm(book, currentPage));
 
-		String newTitle = "Booktube - Edit " + book.getTitle(); 
+		String newTitle = "Booktube - Edit " + book.getTitle();
 		super.get("pageTitle").setDefaultModelObject(newTitle);
-		
-		//setResponsePage(backPage);
-		//goToLastPage();
+
 	}
 
-	/*
-	private Page getPreviousPage() {
-		PageMap defaultPageMap = (PageMap) getSession().getDefaultPageMap();
-		ArrayListStack accessStack = ((AccessStackPageMap) defaultPageMap).getAccessStack();
-		Access access = (Access) accessStack
-				.get(accessStack.size() - 2);
-		Page page = defaultPageMap.getEntry(access.getId()).getPage();
-		return page;
-	}
-	*/
+	private Form<Book> editBookForm(final Book book, final int currentPage) {
+		Form<Book> form = new Form<Book>("editBookForm");
 
-	/*
-	 * public EditBookPage(Page backPage) { //this(backPage, new Book());
-	 * this(backPage, new PageParameters()); }
-	 */
-	/*
-	 * public EditBookPage(final PageParameters parameters) {
-	 * 
-	 * //this.backPage = backPage; Integer bookId =
-	 * parameters.getAsInteger("book");
-	 * 
-	 * final Book book = bookService.getBook(bookId);
-	 * 
-	 * if ( book == null ) { setResponsePage(HomePage.class); return ; }
-	 * 
-	 * add(new Label("bookId", book.getId().toString()));
-	 * 
-	 * add(editBookForm(book));
-	 * 
-	 * }
-	 */
+		CompoundPropertyModel<Book> model = new CompoundPropertyModel<Book>(
+				book);
 
-	/*
-	 * public EditBookPage(final Page backPage, final PageParameters parameters)
-	 * {
-	 * 
-	 * //this.backPage = backPage; System.out.println("************* ACA 3");
-	 * Integer bookId = parameters.getAsInteger("book");
-	 * 
-	 * final Book book = bookService.getBook(bookId);
-	 * 
-	 * add(new Label("bookId", book.getId().toString()));
-	 * 
-	 * Form<Object> form = new Form<Object>("editBookForm");
-	 * 
-	 * final TextField<Book> titleField = new TextField<Book>("title", new
-	 * Model(book.getTitle())); // titleField.setOutputMarkupId(true); //
-	 * titleField.setMarkupId(getId()); form.add(titleField);
-	 * 
-	 * final TextArea<String> editor = new TextArea<String>("text", new Model(
-	 * book.getText())); editor.setOutputMarkupId(true);
-	 * 
-	 * // final DropDownChoice ddc2 = new DropDownChoice("usernameList", //
-	 * users);
-	 * 
-	 * final DropDownChoice ddc = new DropDownChoice("usernameList", new
-	 * Model(book.getAuthor()), users, new ChoiceRenderer( "username", "id"));
-	 * 
-	 * // ValueMap myParameters = new ValueMap(); //
-	 * myParameters.put("usernameList", users.get(0)); // form.setModel(new
-	 * CompoundPropertyModel(myParameters)); form.add(ddc);
-	 * 
-	 * form.add(editor); form.add(new AjaxSubmitLink("save") {
-	 * 
-	 * @Override protected void onSubmit(AjaxRequestTarget target, Form<?> form)
-	 * { // comments.add(new Comment(new //
-	 * User(ddc.getDefaultModelObjectAsString()), //
-	 * editor.getDefaultModelObjectAsString())); // editor.setModel(new
-	 * Model("")); // target.addComponent(parent); //
-	 * target.focusComponent(editor); String text =
-	 * editor.getDefaultModelObjectAsString(); String username =
-	 * ddc.getDefaultModelObjectAsString(); String title =
-	 * titleField.getDefaultModelObjectAsString();
-	 * 
-	 * User user = userService.getUser(username); Book newBook = new
-	 * Book(book.getId(), title, text, user); book.setText(text);
-	 * book.setTitle(title); book.setAuthor(user);
-	 * 
-	 * // Edit book bookService.updateBook(book);
-	 * //bookService.editBook(book.getId(), newBook);
-	 * 
-	 * System.out.println("Book edited."); System.out.println("Title: " +
-	 * title); System.out.println("Author: " + username);
-	 * System.out.println("Text: " + text);
-	 * 
-	 * // Previous page //setResponsePage(backPage);
-	 * setResponsePage(BooksPage.class);
-	 * 
-	 * } });
-	 * 
-	 * add(form);
-	 * 
-	 * }
-	 */
+		form.setDefaultModel(model);
 
-	/*
-	 * public EditBookPage(final Page backPage, final Book book) {
-	 * 
-	 * this.backPage = backPage;
-	 * 
-	 * add(new Label("bookId", book.getId().toString()));
-	 * 
-	 * Form<Object> form = new Form<Object>("editBookForm");
-	 * 
-	 * final TextField<Book> titleField = new TextField<Book>("title", new
-	 * Model(book.getTitle())); // titleField.setOutputMarkupId(true); //
-	 * titleField.setMarkupId(getId()); form.add(titleField);
-	 * 
-	 * final TextArea<String> editor = new TextArea<String>("text", new Model(
-	 * book.getText())); editor.setOutputMarkupId(true);
-	 * 
-	 * // final DropDownChoice ddc2 = new DropDownChoice("usernameList", //
-	 * users);
-	 * 
-	 * final DropDownChoice ddc = new DropDownChoice("usernameList", new
-	 * Model(book.getAuthor()), users, new ChoiceRenderer( "username", "id"));
-	 * 
-	 * // ValueMap myParameters = new ValueMap(); //
-	 * myParameters.put("usernameList", users.get(0)); // form.setModel(new
-	 * CompoundPropertyModel(myParameters)); form.add(ddc);
-	 * 
-	 * form.add(editor); form.add(new AjaxSubmitLink("save") {
-	 * 
-	 * @Override protected void onSubmit(AjaxRequestTarget target, Form<?> form)
-	 * { // comments.add(new Comment(new //
-	 * User(ddc.getDefaultModelObjectAsString()), //
-	 * editor.getDefaultModelObjectAsString())); // editor.setModel(new
-	 * Model("")); // target.addComponent(parent); //
-	 * target.focusComponent(editor); String text =
-	 * editor.getDefaultModelObjectAsString(); String username =
-	 * ddc.getDefaultModelObjectAsString(); String title =
-	 * titleField.getDefaultModelObjectAsString();
-	 * 
-	 * User user = WicketApplication.instance().getUserService()
-	 * .getUser(username); Book newBook = new Book(book.getId(), title, text,
-	 * user);
-	 * 
-	 * // Edit book WicketApplication.instance().getBookService()
-	 * .editBook(book.getId(), newBook); System.out.println("Book edited.");
-	 * System.out.println("Title: " + title); System.out.println("Author: " +
-	 * username); System.out.println("Text: " + text);
-	 * 
-	 * // Previous page setResponsePage(backPage);
-	 * 
-	 * } });
-	 * 
-	 * add(form);
-	 * 
-	 * 
-	 * }
-	 */
-
-	private Form editBookForm(final Book book, final int currentPage) {
-		Form<Object> form = new Form<Object>("editBookForm");
-
-		final TextField<Book> titleField = new TextField<Book>("title",
-				new Model(book.getTitle()));
-		// titleField.setOutputMarkupId(true);
-		// titleField.setMarkupId(getId());
+		final TextField<Book> titleField = new TextField<Book>("title");
 		form.add(titleField);
 
-		String tags = book.getTags().toString().substring(1, book.getTags().toString().length() - 1).replace(",", "");
-		
-		final TextField<String> tagsField = new TextField<String>("tags",
-				new Model<String>(tags));
-		// titleField.setOutputMarkupId(true);
-		// titleField.setMarkupId(getId());
+		String tags = book.getTags().toString()
+				.substring(1, book.getTags().toString().length() - 1)
+				.replace(",", "");
+
+		// final TextField<String> tagsField = new TextField<String>("tags",
+		// new Model<String>(tags));
+		// form.add(tagsField);
+
+		// final CustomTextField tagsField = new CustomTextField("tags",
+		// book.getTags(),
+		// new TagSetToString());
+		// form.add(tagsField);
+
+		final TextField<Book> tagsField = new TextField<Book>("tags") {
+			private static final long serialVersionUID = 1L;
+
+			@SuppressWarnings("unchecked")
+			@Override
+			public IConverter getConverter(Class type) {
+				return new TagSetToString(book);
+			}
+
+		};
 		form.add(tagsField);
-		
-		final TextArea<String> editor = new TextArea<String>("text", new Model<String>(
-				book.getText()));
+
+		final TextArea<Book> editor = new TextArea<Book>("text");
 		editor.setOutputMarkupId(true);
 
 		// final DropDownChoice ddc2 = new DropDownChoice("usernameList",
 		// users);
 
-		final DropDownChoice ddc = new DropDownChoice("usernameList",
-				new Model(book.getAuthor()), users, new ChoiceRenderer(
-						"username", "id"));
+		final DropDownChoice<User> ddc = new DropDownChoice<User>("author",
+				new Model<User>(book.getAuthor()), users);
+
+		// final DropDownChoice<User> ddc = new
+		// DropDownChoice<User>("usernameList",
+		// new Model<User>(book.getAuthor()), users, new ChoiceRenderer<User>(
+		// "username", "id"));
 
 		// ValueMap myParameters = new ValueMap();
 		// myParameters.put("usernameList", users.get(0));
@@ -254,6 +125,8 @@ public class EditBookPage extends BasePage {
 		form.add(editor);
 		form.add(new AjaxSubmitLink("save") {
 
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				// comments.add(new Comment(new
@@ -262,28 +135,32 @@ public class EditBookPage extends BasePage {
 				// editor.setModel(new Model(""));
 				// target.addComponent(parent);
 				// target.focusComponent(editor);
+				System.out.println("****** NEW BOOK: " + book.getTitle());
+				System.out.println("****** NEW BOOK: " + book.getAuthor());
+				System.out.println("****** NEW BOOK: " + book.getTags().toString());
+
 				String text = editor.getDefaultModelObjectAsString();
 				String username = ddc.getDefaultModelObjectAsString();
 				String title = titleField.getDefaultModelObjectAsString();
 				String tagString = tagsField.getDefaultModelObjectAsString();
 				String tags[] = tagString.split(" ");
 				System.out.println("Tags: " + tags.toString());
-				
+
 				User user = userService.getUser(username);
-				book.setText(text);
-				book.setAuthor(user);
-				book.setTitle(title);
-				
-				Set<BookTag> tagsSet = new HashSet<BookTag>();
-				
-				for ( String tag : tags ) {
-					System.out.println("Tag: " + tag);
-					//book.addTag(tag);
-					tagsSet.add(new BookTag(tag, book));
-				}
-				
-				book.setTags(tagsSet);
-				
+				//book.setText(text);
+				//book.setAuthor(user);
+				//book.setTitle(title);
+
+//				Set<BookTag> tagsSet = new HashSet<BookTag>();
+//
+//				for (String tag : tags) {
+//					System.out.println("Tag: " + tag);
+//					// book.addTag(tag);
+//					tagsSet.add(new BookTag(tag, book));
+//				}
+//
+//				book.setTags(tagsSet);
+
 				// Book newBook = new Book(book.getId(), title, text, user);
 
 				// Edit book
@@ -306,7 +183,7 @@ public class EditBookPage extends BasePage {
 			@Override
 			protected void onError(AjaxRequestTarget target, Form<?> form) {
 				// TODO Auto-generated method stub
-				
+
 			}
 		});
 
@@ -316,8 +193,31 @@ public class EditBookPage extends BasePage {
 	@Override
 	protected void setPageTitle() {
 		// TODO Auto-generated method stub
-//		String newTitle = "Booktube - Edit " + book.getTitle(); 
-//		super.get("pageTitle").setDefaultModelObject(newTitle);
+		// String newTitle = "Booktube - Edit " + book.getTitle();
+		// super.get("pageTitle").setDefaultModelObject(newTitle);
+	}
+
+	public class CustomTextField extends TextField {
+
+		private static final long serialVersionUID = 1L;
+
+		private final IConverter converter;
+
+		/**
+		 * @param id
+		 * @param label
+		 */
+		public CustomTextField(String id, IModel labelModel,
+				IConverter converter) {
+			super(id, labelModel);
+			this.converter = converter;
+		}
+
+		@Override
+		public IConverter getConverter(Class type) {
+			return this.converter;
+		}
+
 	}
 
 }

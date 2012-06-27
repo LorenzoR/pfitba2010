@@ -39,6 +39,7 @@ import com.booktube.WiaSession;
 import com.booktube.model.Book;
 import com.booktube.model.BookTag;
 import com.booktube.model.User;
+import com.booktube.pages.customConverters.TagSetToString;
 import com.booktube.service.BookService;
 import com.booktube.service.UserService;
 
@@ -153,7 +154,7 @@ public class AddBookPage extends BasePage {
 		//
 		// };
 		final CustomTextField tagField = new CustomTextField("tags", null,
-				new SetToStringConverter());
+				new TagSetToString(newBook));
 
 		form.add(tagField);
 
@@ -243,20 +244,23 @@ public class AddBookPage extends BasePage {
 				String title = titleField.getDefaultModelObjectAsString();
 				Set<String> tagSet = (Set<String>) tagField
 						.getDefaultModelObject();
+				String subcategoryString = subcategory.getDefaultModelObjectAsString();
+				String categoryString = category.getDefaultModelObjectAsString();
 
 				System.out.println("Tags: " + tagSet.toString());
 
 				Book book = new Book(title, text, user);
 
-				Set<BookTag> bookTagSet = new HashSet<BookTag>();
+				Set<String> bookTagSet = new HashSet<String>();
 
 				for (String aTag : tagSet) {
-					bookTagSet.add(new BookTag(aTag, book));
+					//aTag.setBook(book);
+					bookTagSet.add(aTag);
 				}
 
 				book.setTags(bookTagSet);
-				book.setCategory("categoria");
-				book.setSubCategory("subcategoria");
+				book.setCategory(categoryString);
+				book.setSubCategory(subcategoryString);
 
 				/* Insert book */
 				lastInsertedId = bookService.insertBook(book);
@@ -380,6 +384,8 @@ public class AddBookPage extends BasePage {
 
 	public class CustomTextField extends TextField {
 
+		private static final long serialVersionUID = 1L;
+		
 		private final IConverter converter;
 
 		/**
@@ -394,42 +400,9 @@ public class AddBookPage extends BasePage {
 
 		@Override
 		public IConverter getConverter(Class type) {
-
 			return this.converter;
 		}
 
-	}
-
-	public class SetToStringConverter implements IConverter {
-
-		private static final long serialVersionUID = 1L;
-
-		public SetToStringConverter() {
-		}
-
-		public void setLocale(Locale locale) {
-		}
-
-		public Locale getLocale() {
-			return Locale.getDefault();
-		}
-
-		public Object convertToObject(String value, Locale locale) {
-			String tags[] = value.split(" ");
-			Set<String> tagsSet = new HashSet<String>();
-
-			for (String tag : tags) {
-				tagsSet.add(tag);
-			}
-
-			return tagsSet;
-		}
-
-		public String convertToString(Object value, Locale locale) {
-			System.out.println("convertToString");
-			// TODO Auto-generated method stub
-			return null;
-		}
 	}
 
 }
