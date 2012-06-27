@@ -9,6 +9,7 @@ import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -27,6 +28,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.JoinColumn;
 
 import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.OrderBy;
@@ -97,11 +99,12 @@ public class Book implements Serializable {
 	@JoinTable(name = "USERVOTES", joinColumns = { @JoinColumn(name = "BOOK_ID") }, inverseJoinColumns = { @JoinColumn(name = "USER_ID") })
 	private Set<User> userVotes;
 	
-	@OneToMany(mappedBy = "book", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
-	@Cascade( org.hibernate.annotations.CascadeType.SAVE_UPDATE )
-	@OnDelete(action=OnDeleteAction.CASCADE)
-	@OrderBy(clause = "TEXT ASC")
-	private Set<BookTag> tags;
+//	@OneToMany(mappedBy = "book", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+//	@Cascade( org.hibernate.annotations.CascadeType.SAVE_UPDATE )
+//	@OnDelete(action=OnDeleteAction.CASCADE)
+//	@OrderBy(clause = "TEXT ASC")
+	@ElementCollection
+	private Set<String> tags;
 	
 	/* @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent") */
 	/* @OneToMany */
@@ -144,7 +147,7 @@ public class Book implements Serializable {
 		this.author = author;
 		this.publishDate = Calendar.getInstance().getTime();
 		this.rating = new Rating(this);
-		this.tags = new HashSet<BookTag>();
+		this.tags = new HashSet<String>();
 		this.userVotes = new HashSet<User>();
 	}
 
@@ -154,7 +157,7 @@ public class Book implements Serializable {
 		this.author = author;
 		this.publishDate = Calendar.getInstance().getTime();
 		this.rating = new Rating(this);
-		this.tags = new HashSet<BookTag>();
+		this.tags = new HashSet<String>();
 		this.userVotes = new HashSet<User>();
 	}
 
@@ -198,17 +201,17 @@ public class Book implements Serializable {
 		this.author = author;
 	}
 
-	public Set<BookTag> getTags() {
+	public Set<String> getTags() {
 		return tags;
 	}
 
-	public void setTags(Set<BookTag> tags) {
+	public void setTags(Set<String> tags) {
 		this.tags = tags;
 	}
 
 	public BookTag addTag(String text) {
 		BookTag tag = new BookTag(text, this);
-		this.tags.add(tag);
+		this.tags.add(text);
 		System.out.println(this.tags.toString());
 		return tag;
 	}

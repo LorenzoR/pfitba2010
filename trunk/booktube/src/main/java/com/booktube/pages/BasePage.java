@@ -65,14 +65,6 @@ public abstract class BasePage extends WebPage {
 
 	public BasePage() {
 		
-		final String newUrl = RequestCycle.get().getUrlRenderer().renderFullUrl(
-				   Url.parse(urlFor(CategoryMenu.class, null).toString()));
-		
-		Label myScript = new Label("myScript", "url = '"
-				+ newUrl + "';");
-		myScript.setEscapeModelStrings(false);
-		add(myScript);
-		
 		if (WiaSession.get().isAuthenticated()) {
 			add(new Label("welcome", "Bienvenido "
 					+ WiaSession.get().getLoggedInUser().getUsername() + " | "));

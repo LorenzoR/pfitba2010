@@ -6,6 +6,32 @@
 </head>
 <body>
 <wicket:extend>
+<script type="text/javascript" src="fg.menu.js"></script>
+<script type="text/javascript" wicket:id="myScript"></script>
+
+<script type="text/javascript">
+	(function($) {
+		// we can now rely on $ within the safety of our "bodyguard" function
+		$(document).ready(function() {
+			// BUTTONS
+			$('.fg-button').hover(function() {
+				$(this).removeClass('ui-state-default').addClass('ui-state-focus');
+			}, function() {
+				$(this).removeClass('ui-state-focus').addClass('ui-state-default');
+			});
+
+			$.get(url, function(data) { // grab content from another page
+				$('#flyout').menu({
+					content : data,
+					flyOut : true
+				});
+			});
+
+		});
+	})(jQuery);
+
+</script>
+
 
 <div id="categoryButton">
 <span id="flyout"><span></span>&nbsp;</span>

@@ -1,7 +1,6 @@
 package com.booktube.pages;
 
 import java.util.Iterator;
-import java.util.List;
 
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -79,13 +78,17 @@ public class CampaignsPage extends BasePage {
 					item.add(new Label("date", "<b>" + campaign.getDate() + "</b>").setEscapeModelStrings(false));
 				}
 				
-				item.add(new Link("detailsLink", item.getModel()) {
+				item.add(new Link<Campaign>("detailsLink", item.getModel()) {
+					private static final long serialVersionUID = 1L;
+
 					public void onClick() {
 						setResponsePage(ShowCampaignPage.class, parameters);
 					}
 
 				});
-				item.add(new Link("editLink", item.getModel()) {
+				item.add(new Link<Campaign>("editLink", item.getModel()) {
+					private static final long serialVersionUID = 1L;
+
 					public void onClick() {
 						setResponsePage(ShowMessagePage.class, parameters);
 						//setResponsePage(new EditWriterPage(user.getId(),
@@ -99,9 +102,9 @@ public class CampaignsPage extends BasePage {
 					public void onClick() {
 
 						Campaign campaign = (Campaign) getModelObject();
-						Long campaignId = campaign.getId();
+						//Long campaignId = campaign.getId();
 
-						//userService.deleteUser(message);
+						campaignService.deleteCampaign(campaign);
 						//System.out.println("User " + messageId + " deleted.");
 
 						setResponsePage(CampaignsPage.this);
@@ -117,15 +120,13 @@ public class CampaignsPage extends BasePage {
 	
 	class CampaignProvider implements IDataProvider<Campaign> {
 
-		private List<Campaign> campaigns;
+		private static final long serialVersionUID = 1L;
 
 		public CampaignProvider() {
 		}
 
 		public Iterator<Campaign> iterator(int first, int count) {
-
-			this.campaigns = campaignService.getAllCampaignsTo(user, first, count);
-			return this.campaigns.iterator();
+			return campaignService.getAllCampaignsTo(user, first, count).iterator();
 		}
 
 		public int size() {

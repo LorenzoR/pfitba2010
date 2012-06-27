@@ -53,7 +53,7 @@ public class WritersPage extends BasePage {
 
 			protected void populateItem(Item<User> item) {
 				final User user = (User) item.getModelObject();
-				CompoundPropertyModel<User> model = new CompoundPropertyModel<User>(user);
+				final CompoundPropertyModel<User> model = new CompoundPropertyModel<User>(user);
 				item.setDefaultModel(model);
 				final PageParameters parameters = new PageParameters();
 				parameters.set("userId", user.getId());
@@ -72,8 +72,9 @@ public class WritersPage extends BasePage {
 					private static final long serialVersionUID = 1L;
 
 					public void onClick() {
-						setResponsePage(new EditWriterPage(user.getId(),
-								WritersPage.this));
+						//setResponsePage(new EditWriterPage(user.getId(),
+						//		WritersPage.this));
+						setResponsePage(new EditWriterPage(model, WritersPage.this));
 					}
 
 				});
