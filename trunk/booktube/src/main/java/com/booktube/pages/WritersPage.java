@@ -1,15 +1,12 @@
 package com.booktube.pages;
 
 import java.util.Iterator;
-import java.util.List;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
@@ -18,14 +15,13 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import com.booktube.model.Book;
 import com.booktube.model.User;
-import com.booktube.pages.BooksPage.BookProvider;
 import com.booktube.service.UserService;
-import com.booktube.service.BookService.SearchType;
 
 
 public class WritersPage extends BasePage {
+
+	private static final long serialVersionUID = 1L;
 
 	@SpringBean
     UserService userService;
@@ -34,11 +30,6 @@ public class WritersPage extends BasePage {
 	
 	public WritersPage() {
 
-		//User user = new User("username", "firstname", "lastname");
-		//userService.insertUser(user);
-		//WicketApplication.instance().getUserService().insertUser(user);
-		//List<User> users = WicketApplication.instance().getUserService()
-		List<User> users = userService.getAllUsers(0, Integer.MAX_VALUE);
 		final WebMarkupContainer parent = new WebMarkupContainer("writers");
 		parent.setOutputMarkupId(true);
 		add(parent);
@@ -58,6 +49,8 @@ public class WritersPage extends BasePage {
 		DataView<User> dataView = new DataView<User>("writerList", dataProvider,
 				WRITERS_PER_PAGE) {
 			
+					private static final long serialVersionUID = 1L;
+
 			protected void populateItem(Item<User> item) {
 				final User user = (User) item.getModelObject();
 				CompoundPropertyModel<User> model = new CompoundPropertyModel<User>(user);
@@ -75,7 +68,9 @@ public class WritersPage extends BasePage {
 					}
 
 				});*/
-				item.add(new Link("editLink", item.getModel()) {
+				item.add(new Link<User>("editLink", item.getModel()) {
+					private static final long serialVersionUID = 1L;
+
 					public void onClick() {
 						setResponsePage(new EditWriterPage(user.getId(),
 								WritersPage.this));
@@ -106,16 +101,14 @@ public class WritersPage extends BasePage {
 	
 	class WriterProvider implements IDataProvider<User> {
 
-		private List<User> users;
+		private static final long serialVersionUID = 1L;
 
 		public WriterProvider() {
 		}
 
 		public Iterator<User> iterator(int first, int count) {
-
-			this.users = userService.getAllUsers(first, count);
 			
-			return this.users.iterator();
+			return userService.getAllUsers(first, count).iterator();
 		}
 
 		public int size() {

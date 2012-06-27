@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
@@ -25,7 +24,6 @@ import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.odlabs.wiquery.core.effects.sliding.SlideToggle;
@@ -38,15 +36,11 @@ import org.odlabs.wiquery.ui.dialog.DialogButton;
 
 import com.booktube.model.Campaign;
 import com.booktube.model.CampaignDetail;
-import com.booktube.model.Message;
-import com.booktube.model.User;
-import com.booktube.pages.MessagesAdministrationPage.MessageProvider;
 import com.booktube.service.CampaignService;
-import com.booktube.service.MessageService;
 
-public class CampaignsAdministrationPage extends AdministrationPage{	
+public class CampaignsAdministrationPage extends AdministrationPage {
 	private static final long serialVersionUID = 3572068607555159574L;
-	
+
 	@SpringBean
 	CampaignService campaignService;
 
@@ -55,11 +49,11 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 
 	private final DataView<Campaign> dataView;
 	private final PagingNavigator footerNavigator;
-	
-	private final CheckGroup group;
-	
+
+	private final CheckGroup<Campaign> group;
+
 	private static Long campaignId;
-	
+
 	private Long searchCampaignId;
 	private String searchSubject;
 	private String searchSender;
@@ -78,24 +72,24 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 
 		dataView = campaignList("campaignsList");
 
-		group = new CheckGroup("group", new ArrayList());
+		group = new CheckGroup<Campaign>("group", new ArrayList<Campaign>());
 		group.add(dataView);
-		
+
 		footerNavigator = new PagingNavigator("footerPaginator", dataView);
 		parent.add(footerNavigator);
-		
-		Form searchForm = searchCampaignForm(parent);
+
+		Form<Campaign> searchForm = searchCampaignForm(parent);
 		parent.add(searchForm);
-		
+
 		searchForm.add(group);
-		
+
 		WebMarkupContainer searchButton = createButtonWithEffect(
 				"searchCampaignLink", "searchFields", new SlideToggle());
 		parent.add(searchButton);
-		
+
 		deleteDialog = deleteDialog();
 		parent.add(deleteDialog);
-		
+
 		deleteConfirmationDialog = deleteConfirmationDialog();
 		parent.add(deleteConfirmationDialog);
 
@@ -107,9 +101,9 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 	private Dialog deleteDialog() {
 
 		Dialog dialog = new Dialog("success_dialog");
-		
+
 		dialog.add(new Label("success_dialog_text", "Campaña eliminada!"));
-		
+
 		AjaxDialogButton ok = new AjaxDialogButton("OK") {
 
 			private static final long serialVersionUID = 1L;
@@ -123,7 +117,7 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 
 		dialog.setButtons(ok);
 		dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
-		
+
 		return dialog;
 
 	}
@@ -132,8 +126,9 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 
 		final Dialog dialog = new Dialog("delete_confirmation_dialog");
 
-		dialog.add(new Label("delete_confirmation_dialog_text", "Esta seguro que desea eliminar la campaña?"));
-		
+		dialog.add(new Label("delete_confirmation_dialog_text",
+				"Esta seguro que desea eliminar la campaña?"));
+
 		AjaxDialogButton yesButton = new AjaxDialogButton("Si") {
 
 			private static final long serialVersionUID = 1L;
@@ -152,9 +147,9 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 
 			}
 		};
-		
-		DialogButton noButton = new DialogButton("No", 
-                JsScope.quickScope(dialog.close().render()));
+
+		DialogButton noButton = new DialogButton("No",
+				JsScope.quickScope(dialog.close().render()));
 
 		dialog.setButtons(yesButton, noButton);
 		dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close()));
@@ -170,6 +165,8 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 		DataView<Campaign> dataView = new DataView<Campaign>("campaignsList",
 				dataProvider, ITEMS_PER_PAGE) {
 
+			private static final long serialVersionUID = 1L;
+
 			protected void populateItem(Item<Campaign> item) {
 				final Campaign campaign = (Campaign) item.getModelObject();
 				final String receivers = getReceivers(campaign);
@@ -177,24 +174,28 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 				CompoundPropertyModel<Campaign> model = new CompoundPropertyModel<Campaign>(
 						campaign);
 				item.setDefaultModel(model);
-				
-				
+
 				final PageParameters parameters = new PageParameters();
 				parameters.set("messageId", campaign.getId());
 				// item.add(new Label("id"));
-				item.add(new Check("checkbox", item.getModel()));
+				item.add(new Check<Campaign>("checkbox", item.getModel()));
+				item.add(new Label("id"));
 				item.add(new Label("subject"));
 				item.add(new Label("sender"));
 				item.add(new Label("receiver", receivers));
 				item.add(new Label("date"));
 
-				item.add(new Link("detailsLink", item.getModel()) {
+				item.add(new Link<Campaign>("detailsLink", item.getModel()) {
+					private static final long serialVersionUID = 1L;
+
 					public void onClick() {
 						setResponsePage(ShowMessagePage.class, parameters);
 					}
 
 				});
-				item.add(new Link("editLink", item.getModel()) {
+				item.add(new Link<Campaign>("editLink", item.getModel()) {
+					private static final long serialVersionUID = 1L;
+
 					public void onClick() {
 						setResponsePage(ShowMessagePage.class, parameters);
 						// setResponsePage(new EditWriterPage(user.getId(),
@@ -204,12 +205,14 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 				});
 				item.add(new AjaxLink<Campaign>("deleteLink", item.getModel()) {
 
+					private static final long serialVersionUID = 1L;
+
 					@Override
 					public void onClick(AjaxRequestTarget target) {
 
 						Campaign campaign = (Campaign) getModelObject();
 						campaignId = campaign.getId();
-						//campaignService.deleteCampaign(campaign);
+						// campaignService.deleteCampaign(campaign);
 						// userService.deleteUser(message);
 						// System.out.println("User " + messageId +
 						// " deleted.");
@@ -226,29 +229,31 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 
 		return dataView;
 	}
-	
-	private Form<?> searchCampaignForm(final WebMarkupContainer parent) {
 
-		Form<?> form = new Form<Object>("searchCampaignForm");
-		
-		final WebMarkupContainer searchFields = new WebMarkupContainer("searchFields");
-		searchFields.add(AttributeModifier.replace("style", "display: none;"));	
+	private Form<Campaign> searchCampaignForm(final WebMarkupContainer parent) {
+
+		Form<Campaign> form = new Form<Campaign>("searchCampaignForm");
+
+		CompoundPropertyModel<Campaign> model = new CompoundPropertyModel<Campaign>(
+				new Campaign());
+
+		form.setDefaultModel(model);
+
+		final WebMarkupContainer searchFields = new WebMarkupContainer(
+				"searchFields");
+		searchFields.add(AttributeModifier.replace("style", "display: none;"));
 		form.add(searchFields);
 
-		final TextField<String> campaignId = new TextField<String>("campaignId",
-				new Model<String>(""));
-		searchFields.add(campaignId);
-
-		final TextField<String> subject = new TextField<String>("subject",
-				new Model<String>(""));
+		final TextField<Campaign> subject = new TextField<Campaign>("subject");
 		searchFields.add(subject);
 
-		final TextField<String> sender = new TextField<String>("sender",
-				new Model<String>(""));
+		final TextField<Campaign> campaignId = new TextField<Campaign>("id");
+		searchFields.add(campaignId);
+
+		final TextField<Campaign> sender = new TextField<Campaign>("sender");
 		searchFields.add(sender);
 
-		final TextField<String> receiver = new TextField<String>("receiver",
-				new Model<String>(""));
+		final TextField<Campaign> receiver = new TextField<Campaign>("receiver");
 		searchFields.add(receiver);
 
 		final DatePicker<Date> lowCampaignDate = createDatePicker(
@@ -259,14 +264,18 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 				"highCampaignDate", dateFormat);
 		searchFields.add(highCampaignDate);
 
-		final AjaxSubmitLink deleteCampaign = new AjaxSubmitLink("deleteCampaign") {
+		final AjaxSubmitLink deleteCampaign = new AjaxSubmitLink(
+				"deleteCampaign") {
+
+			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				System.out.println("selected Campaign(s): "
 						+ group.getDefaultModelObjectAsString());
-				List<Campaign> removedCampaigns = (List<Campaign>) group
-						.getDefaultModelObject();
+
+				@SuppressWarnings("unchecked")
+				List<Campaign> removedCampaigns = (List<Campaign>) group.getDefaultModelObject();
 
 				for (Campaign aCampaign : removedCampaigns) {
 					campaignService.deleteCampaign(aCampaign);
@@ -293,25 +302,31 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 			}
 
 		};
-		
+
 		form.add(deleteCampaign);
-		
+
 		searchFields.add(new AjaxSubmitLink("searchCampaign") {
+
+			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-				searchFields.add(AttributeModifier.replace("style", "display: block;"));
+				searchFields.add(AttributeModifier.replace("style",
+						"display: block;"));
 				// String bookIdString =
 				try {
-					searchCampaignId = new Long(campaignId.getDefaultModelObjectAsString());
+					searchCampaignId = new Long(campaignId
+							.getDefaultModelObjectAsString());
 				} catch (NumberFormatException ex) {
 					searchCampaignId = null;
 				}
 
-				searchSubject = new String(subject.getDefaultModelObjectAsString());
+				searchSubject = new String(subject
+						.getDefaultModelObjectAsString());
 				searchSender = new String(sender
 						.getDefaultModelObjectAsString());
-				searchReceiver = new String(receiver.getDefaultModelObjectAsString());
+				searchReceiver = new String(receiver
+						.getDefaultModelObjectAsString());
 
 				if (!StringUtils.isBlank(lowCampaignDate
 						.getDefaultModelObjectAsString())) {
@@ -340,16 +355,14 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 				} else {
 					searchHighCampaignDate = null;
 				}
-				
-				if ( dataView.getItemCount() <= 0 ) {
+
+				if (dataView.getItemCount() <= 0) {
 					deleteCampaign.setVisible(false);
 					footerNavigator.setVisible(false);
-				}
-				else {
+				} else {
 					deleteCampaign.setVisible(true);
 					footerNavigator.setVisible(true);
 				}
-				
 
 				dataView.setCurrentPage(0);
 				target.add(parent);
@@ -371,7 +384,7 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 	private String getReceivers(Campaign campaign) {
 		String receivers = "";
 		for (CampaignDetail aCampaignDetail : campaign.getReceiver()) {
-			if ( aCampaignDetail.getReceiver() != null ) {
+			if (aCampaignDetail.getReceiver() != null) {
 				receivers += aCampaignDetail.getReceiver().getUsername() + ", ";
 			}
 		}
@@ -380,15 +393,21 @@ public class CampaignsAdministrationPage extends AdministrationPage{
 
 	class CampaignProvider implements IDataProvider<Campaign> {
 
+		private static final long serialVersionUID = 1L;
+
 		public CampaignProvider() {
 		}
 
 		public Iterator<Campaign> iterator(int first, int count) {
-			return campaignService.getCampaigns(first, count, searchCampaignId, searchSubject, searchSender, searchReceiver, searchLowCampaignDate, searchHighCampaignDate).iterator();
+			return campaignService.getCampaigns(first, count, searchCampaignId,
+					searchSubject, searchSender, searchReceiver,
+					searchLowCampaignDate, searchHighCampaignDate).iterator();
 		}
 
 		public int size() {
-			return campaignService.getCount(searchCampaignId, searchSubject, searchSender, searchReceiver, searchLowCampaignDate, searchHighCampaignDate);
+			return campaignService.getCount(searchCampaignId, searchSubject,
+					searchSender, searchReceiver, searchLowCampaignDate,
+					searchHighCampaignDate);
 		}
 
 		public IModel<Campaign> model(Campaign campaign) {

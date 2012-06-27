@@ -1,14 +1,10 @@
 package com.booktube.pages;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.basic.MultiLineLabel;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -16,13 +12,13 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import com.booktube.WiaSession;
-import com.booktube.model.Book;
 import com.booktube.model.Campaign;
-import com.booktube.model.CampaignDetail;
 import com.booktube.model.User;
 import com.booktube.service.CampaignService;
 
 public class ShowCampaignPage extends BasePage {
+
+	private static final long serialVersionUID = 1L;
 
 	@SpringBean
 	CampaignService campaignService;
@@ -54,6 +50,8 @@ public class ShowCampaignPage extends BasePage {
 		//Collections.sort(messageList, Message.getDateComparator());
 		
 		ListView<Campaign> listview = new ListView<Campaign>("campaignList", campaignList) {
+			private static final long serialVersionUID = 1L;
+
 			protected void populateItem(ListItem<Campaign> item) {
 				final Campaign campaign = (Campaign) item.getModelObject();
 				CompoundPropertyModel<Campaign> model = new CompoundPropertyModel<Campaign>(campaign);

@@ -1,38 +1,22 @@
 package com.booktube.pages;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Check;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.list.PropertyListView;
-import org.apache.wicket.markup.html.form.CheckGroup;
-import org.apache.wicket.markup.html.form.CheckGroupSelector;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.value.ValueMap;
 
 import com.booktube.WiaSession;
-import com.booktube.model.Book;
 import com.booktube.model.Message;
-import com.booktube.model.CampaignDetail;
 import com.booktube.model.User;
 import com.booktube.model.Message.Type;
 import com.booktube.model.User.Level;
@@ -40,6 +24,8 @@ import com.booktube.service.MessageService;
 import com.booktube.service.UserService;
 
 public class NewContactPage extends BasePage {
+
+	private static final long serialVersionUID = 1L;
 
 	@SpringBean
 	MessageService messageService;
@@ -84,8 +70,19 @@ public class NewContactPage extends BasePage {
 
 	}
 
-	private Form<?> newContactForm(final WebMarkupContainer parent) {
-		Form<?> form = new Form("form");
+	private Form<Message> newContactForm(final WebMarkupContainer parent) {
+		
+		/*Message message = new Message(Type.PRIVATE_MESSAGE,subject
+				.getDefaultModelObjectAsString(), editor
+				.getDefaultModelObjectAsString(), user);*/
+		final Message message = new Message();
+		
+		Form<Message> form = new Form<Message>("form");
+		
+		CompoundPropertyModel<Message> model = new CompoundPropertyModel<Message>(
+				message);
+
+		form.setDefaultModel(model);
 
 		List<String> subjects = Arrays.asList(new String[] { "subject1",
 				"subject2", "subject3" });
@@ -95,7 +92,7 @@ public class NewContactPage extends BasePage {
 
 		form.add(subject);
 
-		final TextArea editor = new TextArea("textArea", new Model());
+		final TextArea<Message> editor = new TextArea<Message>("text");
 		editor.setOutputMarkupId(true);
 
 		add(form);
@@ -103,18 +100,18 @@ public class NewContactPage extends BasePage {
 		form.add(editor);
 		form.add(new AjaxSubmitLink("save") {
 
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-
-				
-				Message message = new Message(Type.PRIVATE_MESSAGE,subject
-						.getDefaultModelObjectAsString(), editor
-						.getDefaultModelObjectAsString(), user);
 				
 				List<User> receivers = userService.getUsers(0, Integer.MAX_VALUE, Level.ADMIN);
 				
-				messageService.sendMessages(message, receivers);
+				message.setType(Type.PRIVATE_MESSAGE);
+				message.setSubject(subject.getDefaultModelObjectAsString());
+				message.setSender(user);
 				
+				messageService.sendMessages(message, receivers);
 				
 				//Set<MessageDetail> receiverSet = new HashSet<MessageDetail>();
 

@@ -129,23 +129,31 @@ public class AddBookPage extends BasePage {
 	private Form<Book> addBookForm(final WebMarkupContainer parent) {
 		Form<Book> form = new Form<Book>("form");
 
+		final Book newBook = new Book();
+
+		CompoundPropertyModel<Book> model = new CompoundPropertyModel<Book>(
+				newBook);
+
+		form.setDefaultModel(model);
+		
 		final TextField<Book> titleField = new TextField<Book>("title");
 
 		form.add(titleField);
 
 		// final TextField<Book> tagField = new TextField<Book>("tags");
 
-//		final TextField<Book> tagField = new TextField<Book>("tags") {
-//			private static final long serialVersionUID = 1L;
-//
-//			@SuppressWarnings("unchecked")
-//			@Override
-//			public IConverter getConverter(Class type) {
-//				return new SetToStringConverter();
-//			}
-//
-//		};
-		final CustomTextField tagField = new CustomTextField("tags", null, new SetToStringConverter());
+		// final TextField<Book> tagField = new TextField<Book>("tags") {
+		// private static final long serialVersionUID = 1L;
+		//
+		// @SuppressWarnings("unchecked")
+		// @Override
+		// public IConverter getConverter(Class type) {
+		// return new SetToStringConverter();
+		// }
+		//
+		// };
+		final CustomTextField tagField = new CustomTextField("tags", null,
+				new SetToStringConverter());
 
 		form.add(tagField);
 
@@ -153,7 +161,7 @@ public class AddBookPage extends BasePage {
 		editor.setOutputMarkupId(true);
 
 		final AutoCompleteTextField<String> category = new AutoCompleteTextField<String>(
-				"category", new Model<String>("")) {
+				"category", new Model("")) {
 
 			private static final long serialVersionUID = 1L;
 
@@ -203,12 +211,13 @@ public class AddBookPage extends BasePage {
 						Integer.MAX_VALUE, null);
 
 				for (final String aSubcategory : subcategories) {
-
-					if (aSubcategory.toUpperCase().startsWith(
-							input.toUpperCase())) {
-						choices.add(aSubcategory);
-						if (choices.size() == 10) {
-							break;
+					if (aSubcategory != null) {
+						if (aSubcategory.toUpperCase().startsWith(
+								input.toUpperCase())) {
+							choices.add(aSubcategory);
+							if (choices.size() == 10) {
+								break;
+							}
 						}
 					}
 				}
@@ -219,11 +228,6 @@ public class AddBookPage extends BasePage {
 
 		form.add(subcategory);
 
-		CompoundPropertyModel<Book> model = new CompoundPropertyModel<Book>(
-				new Book());
-
-		form.setDefaultModel(model);
-
 		form.add(editor);
 		form.add(new AjaxSubmitLink("save") {
 
@@ -231,6 +235,9 @@ public class AddBookPage extends BasePage {
 
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+
+				System.out.println("--- TITULO: " + newBook.getTitle());
+				System.out.println("--- CATEGORY: " + newBook.getCategory());
 				String text = editor.getDefaultModelObjectAsString();
 				String username = user.getUsername();
 				String title = titleField.getDefaultModelObjectAsString();

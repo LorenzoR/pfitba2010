@@ -132,7 +132,7 @@ public class Message implements Serializable {
 	};
 
 	public Message() {
-
+		this.date = Calendar.getInstance().getTime();
 	}
 
 	public Message(Type type, String subject, String text, User sender) {

@@ -1,29 +1,17 @@
 package com.booktube.pages;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.PropertyListView;
-import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -31,11 +19,12 @@ import com.booktube.WiaSession;
 import com.booktube.model.Message;
 import com.booktube.model.User;
 import com.booktube.model.Message.Type;
-import com.booktube.model.User.Level;
 import com.booktube.service.MessageService;
 import com.booktube.service.UserService;
 
 public class AnswerMessagePage extends BasePage {
+
+	private static final long serialVersionUID = 1L;
 
 	@SpringBean
 	MessageService messageService;
@@ -65,7 +54,7 @@ public class AnswerMessagePage extends BasePage {
 
 		List<Message> messageList = message.getAllAnswers();
 		
-		Form<?> form = answerForm(parent, messageList);
+		Form<Message> form = answerForm(parent, messageList);
 		parent.add(form);
 
 		Label registerMessage = new Label("registerMessage",
@@ -82,6 +71,9 @@ public class AnswerMessagePage extends BasePage {
 		//messageList.add(message);
 
 		PropertyListView<Message> propertyListView = new PropertyListView<Message>("messageList", messageList) {
+
+			private static final long serialVersionUID = 1L;
+
 			protected void populateItem(ListItem<Message> item) {
 				final Message message = (Message) item.getModelObject();
 				CompoundPropertyModel<Message> model = new CompoundPropertyModel<Message>(message);
@@ -95,19 +87,25 @@ public class AnswerMessagePage extends BasePage {
 				item.add(new Label("sender"));
 				item.add(new Label("date"));
 				item.add(new Label("text"));
-				item.add(new Link("detailsLink", item.getModel()) {
+				item.add(new Link<Message>("detailsLink", item.getModel()) {
+					private static final long serialVersionUID = 1L;
+
 					public void onClick() {
 						//setResponsePage(ShowMessagePage.class, parameters);
 					}
 
 				});
-				item.add(new Link("answerLink", item.getModel()) {
+				item.add(new Link<Message>("answerLink", item.getModel()) {
+					private static final long serialVersionUID = 1L;
+
 					public void onClick() {
 						//setResponsePage(AnswerMessagePage.class, parameters);
 					}
 
 				});
-				item.add(new Link("editLink", item.getModel()) {
+				item.add(new Link<Message>("editLink", item.getModel()) {
+					private static final long serialVersionUID = 1L;
+
 					public void onClick() {
 						//setResponsePage(ShowMessagePage.class, parameters);
 						// setResponsePage(new EditWriterPage(user.getId(),
@@ -121,9 +119,9 @@ public class AnswerMessagePage extends BasePage {
 					public void onClick() {
 
 						Message message = (Message) getModelObject();
-						Long messageId = message.getId();
+						//Long messageId = message.getId();
 
-						// userService.deleteUser(message);
+						messageService.deleteMessage(message);
 						// System.out.println("User " + messageId +
 						// " deleted.");
 
@@ -184,10 +182,17 @@ public class AnswerMessagePage extends BasePage {
 		return messageList;
 	}*/
 
-	private Form<?> answerForm(final WebMarkupContainer parent, final List<Message> messages) {
-		Form<?> form = new Form("form");
+	private Form<Message> answerForm(final WebMarkupContainer parent, final List<Message> messages) {
+		Form<Message> form = new Form<Message>("form");
 
-		final TextArea editor = new TextArea("textArea", new Model());
+		final Message answer = new Message();
+		
+		CompoundPropertyModel<Message> model = new CompoundPropertyModel<Message>(
+				answer);
+
+		form.setDefaultModel(model);
+		
+		final TextArea<Message> editor = new TextArea<Message>("text");
 		editor.setOutputMarkupId(true);
 
 		add(form);
@@ -195,22 +200,19 @@ public class AnswerMessagePage extends BasePage {
 		form.add(editor);
 		form.add(new AjaxSubmitLink("save") {
 
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 
-				Type type;
 				
-//				if ( message.getType() == Type.PRIVATE_MESSAGE || message.getType() == Type.CAMPAIGN  ) {
-//					type = Type.FIRST_ANSWER;
-//				}
-//				else {
-//					type = Type.ANSWER;
-//				}
 				
-				type = Type.ANSWER;
-				
-				Message answer = new Message(type, "RE: " + message.getSubject(), editor
-						.getDefaultModelObjectAsString(), user, message.getSender());
+				//Message answer = new Message(type, "RE: " + message.getSubject(), editor
+				//		.getDefaultModelObjectAsString(), user, message.getSender());
+				answer.setType(Type.ANSWER);
+				answer.setSubject("RE: " + message.getSubject());
+				answer.setSender(user);
+				answer.setReceiver(message.getSender());
 				
 				//Set<Message> answers = new HashSet<Message>();
 				//answers.add(answer);

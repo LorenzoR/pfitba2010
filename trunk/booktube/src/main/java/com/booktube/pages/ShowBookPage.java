@@ -1,41 +1,23 @@
 package com.booktube.pages;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.protocol.http.RequestUtils;
-import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.handler.render.WebPageRenderer;
-import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.extensions.rating.RatingPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.string.StringValue;
-import org.apache.wicket.util.value.ValueMap;
 import org.wicketstuff.facebook.plugins.Comments;
 import org.wicketstuff.facebook.plugins.LikeButton;
 import org.wicketstuff.facebook.plugins.LikeButton.LikeButtonAction;
@@ -44,7 +26,6 @@ import org.wicketstuff.twitter.TweetButton;
 
 import com.booktube.WiaSession;
 import com.booktube.model.Book;
-import com.booktube.model.Comment;
 import com.booktube.model.Rating;
 import com.booktube.model.User;
 import com.booktube.service.BookService;
@@ -106,6 +87,8 @@ public class ShowBookPage extends BasePage {
 		parent.add(new RatingPanel("rating1", new PropertyModel<Integer>(rating1,
 				"rating"), new Model<Integer>(5), new PropertyModel<Integer>(rating1, "nrOfVotes"),
 				new PropertyModel<Boolean>(this, "hasVoted"), true) {
+					private static final long serialVersionUID = 1L;
+
 			@Override
 			protected boolean onIsStarActive(int star) {
 				return rating1.isActive(star);
@@ -178,28 +161,6 @@ public class ShowBookPage extends BasePage {
 		//Label googlePlusOne = new Label("plusone");
 		//googlePlusOne.add(new AttributeModifier("href", true, new Model("http://localhost:8080")));
 		//parent.add(googlePlusOne);
-
-	}
-
-	private PropertyListView commentList(String label, List<Comment> comments) {
-
-		PropertyListView commentsPLV = new PropertyListView(label, comments) {
-
-			protected void populateItem(ListItem item) {
-				Comment comment = (Comment) item.getModelObject();
-				// item.add(new Label("author",
-				// comment.getUser().getUsername()));
-				// item.add(new Label("author", "este es el autor!!"));
-				// item.add(new MultiLineLabel("comment", comment.getText()));
-				CompoundPropertyModel<Comment> model = new CompoundPropertyModel<Comment>(comment);
-				item.setDefaultModel(model);
-				item.add(new Label("user.username"));
-				item.add(new MultiLineLabel("text"));
-				item.add(new Label("date"));
-			}
-		};
-
-		return commentsPLV;
 
 	}
 

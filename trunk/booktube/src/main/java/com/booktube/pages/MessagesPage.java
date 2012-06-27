@@ -19,12 +19,12 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import com.booktube.WiaSession;
 import com.booktube.model.Message;
 import com.booktube.model.User;
-import com.booktube.pages.WritersPage.WriterProvider;
 import com.booktube.service.MessageService;
-import com.booktube.service.UserService;
 
 public class MessagesPage extends BasePage {
 	
+	private static final long serialVersionUID = 1L;
+
 	@SpringBean
     MessageService messageService;
 	
@@ -58,6 +58,8 @@ public class MessagesPage extends BasePage {
 		DataView<Message> dataView = new DataView<Message>("messageList", dataProvider,
 				MESSAGES_PER_PAGE) {
 			
+					private static final long serialVersionUID = 1L;
+
 			protected void populateItem(Item<Message> item) {
 				final Message message = (Message) item.getModelObject();
 				System.out.println("MESSAGE: " + message.getText());
@@ -79,19 +81,25 @@ public class MessagesPage extends BasePage {
 					item.add(new Label("date", "<b>" + message.getDate() + "</b>").setEscapeModelStrings(false));
 				}
 				
-				item.add(new Link("detailsLink", item.getModel()) {
+				item.add(new Link<Message>("detailsLink", item.getModel()) {
+					private static final long serialVersionUID = 1L;
+
 					public void onClick() {
 						setResponsePage(ShowMessagePage.class, parameters);
 					}
 
 				});
-				item.add(new Link("answerLink", item.getModel()) {
+				item.add(new Link<Message>("answerLink", item.getModel()) {
+					private static final long serialVersionUID = 1L;
+
 					public void onClick() {
 						setResponsePage(AnswerMessagePage.class, parameters);
 					}
 
 				});
-				item.add(new Link("editLink", item.getModel()) {
+				item.add(new Link<Message>("editLink", item.getModel()) {
+					private static final long serialVersionUID = 1L;
+
 					public void onClick() {
 						setResponsePage(ShowMessagePage.class, parameters);
 						//setResponsePage(new EditWriterPage(user.getId(),
@@ -105,9 +113,9 @@ public class MessagesPage extends BasePage {
 					public void onClick() {
 
 						Message message = (Message) getModelObject();
-						Long messageId = message.getId();
+						//Long messageId = message.getId();
 
-						//userService.deleteUser(message);
+						messageService.deleteMessage(message);
 						//System.out.println("User " + messageId + " deleted.");
 
 						setResponsePage(MessagesPage.this);
@@ -123,6 +131,7 @@ public class MessagesPage extends BasePage {
 	
 	class MessageProvider implements IDataProvider<Message> {
 
+		private static final long serialVersionUID = 1L;
 		private List<Message> messages;
 
 		public MessageProvider() {
