@@ -159,7 +159,7 @@ public class LoadDataPage extends BasePage {
 		
 		System.out.println("Adding books");
 		
-		for ( int i = 0; i < 10; i++ ) {
+		for ( int i = 0; i < 100; i++ ) {
 			
 			Book book = new Book("titulo"+i, "texto"+i, this.users.get(randomGenerator.nextInt(this.users.size())));
 

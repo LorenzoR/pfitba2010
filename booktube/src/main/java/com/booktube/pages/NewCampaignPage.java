@@ -6,12 +6,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import org.apache.wicket.Component;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -21,32 +17,25 @@ import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.CheckGroupSelector;
-import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.value.ValueMap;
 import org.odlabs.wiquery.ui.datepicker.DatePicker;
 
 import com.booktube.WiaSession;
-import com.booktube.model.Book;
 import com.booktube.model.Campaign;
-import com.booktube.model.Message;
-import com.booktube.model.CampaignDetail;
 import com.booktube.model.User;
-import com.booktube.model.Message.Type;
 import com.booktube.model.User.Gender;
 import com.booktube.service.MessageService;
 import com.booktube.service.UserService;
 
 public class NewCampaignPage extends BasePage {
+
+	private static final long serialVersionUID = 1L;
 
 	@SpringBean
 	MessageService messageService;

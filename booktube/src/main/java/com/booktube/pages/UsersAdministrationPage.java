@@ -40,6 +40,7 @@ import org.odlabs.wiquery.ui.dialog.AjaxDialogButton;
 import org.odlabs.wiquery.ui.dialog.Dialog;
 import org.odlabs.wiquery.ui.dialog.DialogButton;
 
+import com.booktube.model.Book;
 import com.booktube.model.User;
 import com.booktube.model.User.Gender;
 import com.booktube.service.UserService;
@@ -59,28 +60,64 @@ public class UsersAdministrationPage extends AdministrationPage {
 
 	private static String deleteUsername;
 
-	private Label deleteConfirmationLabel = new Label(
-			"delete_confirmation_dialog_text", new PropertyModel<String>(this,
-					"deleteConfirmationText")) {
-						private static final long serialVersionUID = 1L;
+	// private Label deleteConfirmationLabel = new Label(
+	// "delete_confirmation_dialog_text", new PropertyModel<String>(this,
+	// "deleteConfirmationText")) {
+	// private static final long serialVersionUID = 1L;
+	//
+	// {
+	// setOutputMarkupId(true);
+	// }
+	// };
 
-		{
-			setOutputMarkupId(true);
+	Model<String> deleteConfirmationModel = new Model<String>() {
+
+		private static final long serialVersionUID = 1L;
+
+		private String text;
+
+		public String getObject() {
+			return text;
+		}
+
+		public void setObject(String value) {
+			this.text = value;
 		}
 	};
 
-	private String deleteConfirmationText;
+	private Label deleteConfirmationLabel = new Label(
+			"delete_confirmation_dialog_text", deleteConfirmationModel);
+
+	Model<String> successDialogModel = new Model<String>() {
+
+		private static final long serialVersionUID = 1L;
+
+		private String text;
+
+		public String getObject() {
+			return text;
+		}
+
+		public void setObject(String value) {
+			this.text = value;
+		}
+	};
 
 	private Label successDialogLabel = new Label("success_dialog_text",
-			new PropertyModel<String>(this, "successDialogText")) {
-				private static final long serialVersionUID = 1L;
+			successDialogModel);
 
-		{
-			setOutputMarkupId(true);
-		}
-	};
-
-	private String successDialogText;
+	// private String deleteConfirmationText;
+	//
+	// private Label successDialogLabel = new Label("success_dialog_text",
+	// new PropertyModel<String>(this, "successDialogText")) {
+	// private static final long serialVersionUID = 1L;
+	//
+	// {
+	// setOutputMarkupId(true);
+	// }
+	// };
+	//
+	// private String successDialogText;
 
 	private Long searchUserId;
 	private String searchUsername;
@@ -111,6 +148,9 @@ public class UsersAdministrationPage extends AdministrationPage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
+		deleteConfirmationLabel.setOutputMarkupId(true);
+		successDialogLabel.setOutputMarkupId(true);
+		
 		parent.add(new Label("pageTitle", "Users Administration Page"));
 
 		group = new CheckGroup<User>("group", new ArrayList<User>());
@@ -128,7 +168,7 @@ public class UsersAdministrationPage extends AdministrationPage {
 		deleteConfirmationDialog = deleteConfirmationDialog();
 		parent.add(deleteConfirmationDialog);
 
-		final Form searchUserForm = searchUserForm(parent);
+		final Form<User> searchUserForm = searchUserForm(parent);
 
 		parent.add(searchUserForm);
 
@@ -150,7 +190,7 @@ public class UsersAdministrationPage extends AdministrationPage {
 		DataView<User> dataView = new DataView<User>(label, dataProvider,
 				ITEMS_PER_PAGE) {
 
-					private static final long serialVersionUID = 1L;
+			private static final long serialVersionUID = 1L;
 
 			protected void populateItem(Item<User> item) {
 				final User user = (User) item.getModelObject();
@@ -171,7 +211,8 @@ public class UsersAdministrationPage extends AdministrationPage {
 					private static final long serialVersionUID = 1L;
 
 					public void onClick() {
-						setResponsePage(new EditWriterPage(model, UsersAdministrationPage.this));
+						setResponsePage(new EditWriterPage(model,
+								UsersAdministrationPage.this));
 					}
 
 				});
@@ -191,8 +232,9 @@ public class UsersAdministrationPage extends AdministrationPage {
 
 						deleteUsername = deleteUser.getUsername();
 
-						deleteConfirmationText = "Esta seguro que desea eliminar el usuario "
-								+ deleteUsername + " ?";
+						deleteConfirmationModel
+								.setObject("Esta seguro que desea eliminar el usuario "
+										+ deleteUsername + " ?");
 
 						target.add(deleteConfirmationLabel);
 					}
@@ -271,7 +313,7 @@ public class UsersAdministrationPage extends AdministrationPage {
 				System.out.println("USER ES : " + deleteUser);
 				userService.deleteUser(deleteUser);
 
-				successDialogText = "Usuario " + deleteUsername + " eliminado.";
+				successDialogModel.setObject("Usuario " + deleteUsername + " eliminado.");
 				target.add(successDialogLabel);
 				// JsScopeUiEvent.quickScope(deleteConfirmationdialog.close().render());
 				JsScope.quickScope(dialog.close().render());
@@ -292,10 +334,15 @@ public class UsersAdministrationPage extends AdministrationPage {
 
 	}
 
-	private Form<?> searchUserForm(final WebMarkupContainer parent) {
+	private Form<User> searchUserForm(final WebMarkupContainer parent) {
 
-		Form<?> form = new Form<Object>("searchUserForm");
+		Form<User> form = new Form<User>("searchUserForm");
 
+		CompoundPropertyModel<User> model = new CompoundPropertyModel<User>(
+				new User());
+
+		form.setDefaultModel(model);
+		
 		final WebMarkupContainer searchFields = new WebMarkupContainer(
 				"searchFields");
 		searchFields.add(AttributeModifier.replace("style", "display: none;"));
@@ -346,9 +393,10 @@ public class UsersAdministrationPage extends AdministrationPage {
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				System.out.println("selected user(s): "
 						+ group.getDefaultModelObjectAsString());
-				
+
 				@SuppressWarnings("unchecked")
-				List<User> removedUsers = (List<User>) group.getDefaultModelObject();
+				List<User> removedUsers = (List<User>) group
+						.getDefaultModelObject();
 
 				for (User aUser : removedUsers) {
 					userService.deleteUser(aUser);
@@ -398,12 +446,14 @@ public class UsersAdministrationPage extends AdministrationPage {
 					searchUserId = null;
 				}
 
-//				if (!StringUtils.isBlank(userId.getDefaultModelObjectAsString())) {
-//					searchUserId = Long.valueOf(userId
-//							.getDefaultModelObjectAsString());
-//				} else {
-//					searchUserId = null;
-//				}
+				// if
+				// (!StringUtils.isBlank(userId.getDefaultModelObjectAsString()))
+				// {
+				// searchUserId = Long.valueOf(userId
+				// .getDefaultModelObjectAsString());
+				// } else {
+				// searchUserId = null;
+				// }
 
 				searchCountry = new String(country
 						.getDefaultModelObjectAsString());
