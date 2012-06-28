@@ -2,12 +2,12 @@ package com.booktube.pages;
 
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.wicketstuff.facebook.plugins.LikeBox;
 
 public class HomePage extends BasePage {
 
+	private static final long serialVersionUID = 1L;
 
 	public HomePage() {
 

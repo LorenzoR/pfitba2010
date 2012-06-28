@@ -153,7 +153,7 @@ public class NewCampaignPage extends BasePage {
 
 			personsList.remove(currentUserIndex);
 		}
-		final CheckGroup group = new CheckGroup("group", new ArrayList());
+		final CheckGroup<Campaign> group = new CheckGroup<Campaign>("group", new ArrayList<Campaign>());
 
 		add(form);
 		form.add(group);

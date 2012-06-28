@@ -1,28 +1,22 @@
 package com.booktube.pages;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.convert.IConverter;
 
 import com.booktube.model.Book;
-import com.booktube.model.BookTag;
 import com.booktube.model.User;
-import com.booktube.pages.AddBookPage.CustomTextField;
+import com.booktube.pages.customComponents.CustomTextField;
 import com.booktube.pages.customConverters.TagSetToString;
 import com.booktube.service.BookService;
 import com.booktube.service.UserService;
@@ -78,9 +72,9 @@ public class EditBookPage extends BasePage {
 		final TextField<Book> titleField = new TextField<Book>("title");
 		form.add(titleField);
 
-		String tags = book.getTags().toString()
-				.substring(1, book.getTags().toString().length() - 1)
-				.replace(",", "");
+//		String tags = book.getTags().toString()
+//				.substring(1, book.getTags().toString().length() - 1)
+//				.replace(",", "");
 
 		// final TextField<String> tagsField = new TextField<String>("tags",
 		// new Model<String>(tags));
@@ -91,17 +85,21 @@ public class EditBookPage extends BasePage {
 		// new TagSetToString());
 		// form.add(tagsField);
 
-		final TextField<Book> tagsField = new TextField<Book>("tags") {
-			private static final long serialVersionUID = 1L;
-
-			@SuppressWarnings("unchecked")
-			@Override
-			public IConverter getConverter(Class type) {
-				return new TagSetToString(book);
-			}
-
-		};
-		form.add(tagsField);
+//		final TextField<Book> tagsField = new TextField<Book>("tags") {
+//			private static final long serialVersionUID = 1L;
+//
+//			@SuppressWarnings("unchecked")
+//			@Override
+//			public IConverter getConverter(Class type) {
+//				return new TagSetToString(book);
+//			}
+//
+//		};
+//		form.add(tagsField);
+		
+		final CustomTextField tagField = new CustomTextField("tags", null,
+				new TagSetToString());
+		form.add(tagField);
 
 		final TextArea<Book> editor = new TextArea<Book>("text");
 		editor.setOutputMarkupId(true);
@@ -139,32 +137,7 @@ public class EditBookPage extends BasePage {
 				System.out.println("****** NEW BOOK: " + book.getAuthor());
 				System.out.println("****** NEW BOOK: " + book.getTags().toString());
 
-				String text = editor.getDefaultModelObjectAsString();
-				String username = ddc.getDefaultModelObjectAsString();
-				String title = titleField.getDefaultModelObjectAsString();
-				String tagString = tagsField.getDefaultModelObjectAsString();
-				String tags[] = tagString.split(" ");
-				System.out.println("Tags: " + tags.toString());
 
-				User user = userService.getUser(username);
-				//book.setText(text);
-				//book.setAuthor(user);
-				//book.setTitle(title);
-
-//				Set<BookTag> tagsSet = new HashSet<BookTag>();
-//
-//				for (String tag : tags) {
-//					System.out.println("Tag: " + tag);
-//					// book.addTag(tag);
-//					tagsSet.add(new BookTag(tag, book));
-//				}
-//
-//				book.setTags(tagsSet);
-
-				// Book newBook = new Book(book.getId(), title, text, user);
-
-				// Edit book
-				// bookService.editBook(book.getId(), newBook);
 				bookService.updateBook(book);
 
 				System.out.println("Book edited.");
@@ -195,29 +168,6 @@ public class EditBookPage extends BasePage {
 		// TODO Auto-generated method stub
 		// String newTitle = "Booktube - Edit " + book.getTitle();
 		// super.get("pageTitle").setDefaultModelObject(newTitle);
-	}
-
-	public class CustomTextField extends TextField {
-
-		private static final long serialVersionUID = 1L;
-
-		private final IConverter converter;
-
-		/**
-		 * @param id
-		 * @param label
-		 */
-		public CustomTextField(String id, IModel labelModel,
-				IConverter converter) {
-			super(id, labelModel);
-			this.converter = converter;
-		}
-
-		@Override
-		public IConverter getConverter(Class type) {
-			return this.converter;
-		}
-
 	}
 
 }

@@ -137,10 +137,10 @@ public class BooksPage extends BasePage {
 
 			protected void populateItem(Item<Book> item) {
 				final Book book = (Book) item.getModelObject();
-				List<String> tagList = null;
+				List<BookTag> tagList = null;
 
 				if (book.getTags() != null) {
-					tagList = new ArrayList<String>(book.getTags());
+					tagList = new ArrayList<BookTag>(book.getTags());
 				}
 
 				item.add(new PropertyListView<Object>("tagList", tagList) {
@@ -148,14 +148,14 @@ public class BooksPage extends BasePage {
 					private static final long serialVersionUID = 1L;
 
 					protected void populateItem(ListItem<Object> item) {
-						String tag = (String) item.getModelObject();
+						BookTag tag = (BookTag) item.getModelObject();
 						final PageParameters parameters = new PageParameters();
 						parameters.set("tag", tag);
 						parameters.set("type", "tag");
 
 						BookmarkablePageLink<Object> bpl = new BookmarkablePageLink<Object>(
 								"tagLink", BooksPage.class, parameters);
-						bpl.add(new Label("tagName", tag));
+						bpl.add(new Label("tagName", tag.getValue()));
 						item.add(bpl);
 
 					}

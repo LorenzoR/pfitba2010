@@ -9,7 +9,6 @@ import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -28,16 +27,14 @@ import javax.persistence.TemporalType;
 import javax.persistence.JoinColumn;
 
 import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.annotations.OrderBy;
 
 @Entity
 @Table(name = "BOOK")
 @NamedQueries({
 		@NamedQuery(name = "book.id", query = "from Book b where b.id = :id"),
-		@NamedQuery(name = "book.getByTitle", query = "from Book b where b.title LIKE :title")})
+		@NamedQuery(name = "book.getByTitle", query = "from Book b where b.title LIKE :title") })
 public class Book implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -55,76 +52,110 @@ public class Book implements Serializable {
 	@Column(name = "TEXT", nullable = false, columnDefinition = "LONGTEXT")
 	private String text;
 
-	/*@Basic
-	@Column(name = "RATING")
-	*/
+	/*
+	 * @Basic
+	 * 
+	 * @Column(name = "RATING")
+	 */
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "RATING_ID")
-	@OnDelete(action=OnDeleteAction.CASCADE)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Rating rating;
 
-	//@ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+	// @ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="USER_ID")
-	@OnDelete(action=OnDeleteAction.CASCADE)
+	@JoinColumn(name = "USER_ID")
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User author;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "PUBLISH_DATE", nullable = false)
 	private Date publishDate;
 
-	/*@CollectionOfElements
-	@JoinTable(name = "BOOK_TAG", joinColumns = @JoinColumn(name = "BOOK_ID"))
-	@Cascade({org.hibernate.annotations.CascadeType.ALL, org.hibernate.annotations.CascadeType.DELETE})
-	@Column(name = "TAG")
-	@OrderBy(clause = "TAG")
-	private Set<String> tags;
-	*/
-	
-	/*@ElementCollection
-	@JoinTable(name = "BOOK_TAG", joinColumns = @JoinColumn(name = "BOOK_ID"))
-	@Cascade({org.hibernate.annotations.CascadeType.ALL, org.hibernate.annotations.CascadeType.DELETE_ORPHAN-})
-	@Column(name = "TAG")
-	@OrderBy(clause = "TAG")
-	*/
-	/* CASI ANDAAAAA
+	/*
+	 * @CollectionOfElements
+	 * 
+	 * @JoinTable(name = "BOOK_TAG", joinColumns = @JoinColumn(name =
+	 * "BOOK_ID"))
+	 * 
+	 * @Cascade({org.hibernate.annotations.CascadeType.ALL,
+	 * org.hibernate.annotations.CascadeType.DELETE})
+	 * 
+	 * @Column(name = "TAG")
+	 * 
+	 * @OrderBy(clause = "TAG") private Set<String> tags;
+	 */
+
+	/*
 	 * @ElementCollection
-	@OrderBy(clause = "TAGS ASC")
-	@Cascade({org.hibernate.annotations.CascadeType.ALL, org.hibernate.annotations.CascadeType.DELETE_ORPHAN})
-	private Set<String> tags;
-	*/
-	
-	@ManyToMany(fetch=FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-	@Cascade( org.hibernate.annotations.CascadeType.SAVE_UPDATE )
+	 * 
+	 * @JoinTable(name = "BOOK_TAG", joinColumns = @JoinColumn(name =
+	 * "BOOK_ID"))
+	 * 
+	 * @Cascade({org.hibernate.annotations.CascadeType.ALL,
+	 * org.hibernate.annotations.CascadeType.DELETE_ORPHAN-})
+	 * 
+	 * @Column(name = "TAG")
+	 * 
+	 * @OrderBy(clause = "TAG")
+	 */
+	/*
+	 * CASI ANDAAAAA
+	 * 
+	 * @ElementCollection
+	 * 
+	 * @OrderBy(clause = "TAGS ASC")
+	 * 
+	 * @Cascade({org.hibernate.annotations.CascadeType.ALL,
+	 * org.hibernate.annotations.CascadeType.DELETE_ORPHAN}) private Set<String>
+	 * tags;
+	 */
+
+	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST,
+			CascadeType.MERGE, CascadeType.REFRESH })
+	@Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
 	@JoinTable(name = "USERVOTES", joinColumns = { @JoinColumn(name = "BOOK_ID") }, inverseJoinColumns = { @JoinColumn(name = "USER_ID") })
 	private Set<User> userVotes;
-	
-//	@OneToMany(mappedBy = "book", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
-//	@Cascade( org.hibernate.annotations.CascadeType.SAVE_UPDATE )
-//	@OnDelete(action=OnDeleteAction.CASCADE)
-//	@OrderBy(clause = "TEXT ASC")
-	@ElementCollection
-	private Set<String> tags;
-	
+
+	// @OneToMany(mappedBy = "book", cascade = {CascadeType.PERSIST,
+	// CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+	// @Cascade( org.hibernate.annotations.CascadeType.SAVE_UPDATE )
+	// @OnDelete(action=OnDeleteAction.CASCADE)
+	// @OrderBy(clause = "TEXT ASC")
+	//@ElementCollection
+	// ESTE ANDA
+	//@OneToMany(cascade = CascadeType.ALL)
+	//@JoinTable(name = "BOOK_TAG", joinColumns = { @JoinColumn(name = "BOOK_ID") }, inverseJoinColumns = { @JoinColumn(name = "TAG_ID") })
+	//FIN ESTE ANDA
+	@OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST,
+			CascadeType.MERGE, CascadeType.REFRESH })
+	@Cascade(org.hibernate.annotations.CascadeType.ALL)
+	//@JoinTable(name = "BOOK_TAGS", joinColumns = { @JoinColumn(name = "BOOK_ID") }, inverseJoinColumns = { @JoinColumn(name = "text") })
+	@JoinColumn(name = "BOOK_ID")
+	private Set<BookTag> tags;
+
 	/* @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent") */
 	/* @OneToMany */
-//	@OneToMany(mappedBy = "book", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
-//	@Cascade( org.hibernate.annotations.CascadeType.SAVE_UPDATE )
-//	@OnDelete(action=OnDeleteAction.CASCADE)
-//	@OrderBy(clause = "DATE ASC")
-//	private Set<Comment> comments;
+	// @OneToMany(mappedBy = "book", cascade = {CascadeType.PERSIST,
+	// CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+	// @Cascade( org.hibernate.annotations.CascadeType.SAVE_UPDATE )
+	// @OnDelete(action=OnDeleteAction.CASCADE)
+	// @OrderBy(clause = "DATE ASC")
+	// private Set<Comment> comments;
 	/*
 	 * @JoinTable(name = "BOOK_COMMENT", joinColumns = { @JoinColumn(name =
 	 * "BOOK_ID") }, inverseJoinColumns = { @JoinColumn(name = "COMMENT_ID") })
 	 */
-	
-	/*@OneToMany(cascade=CascadeType.ALL, mappedBy="customer", fetch=FetchType.EAGER, targetEntity = String.class)
-    //@JoinTable(name = "BOOK_TAG", joinColumns = @JoinColumn(name = "BOOK_ID"))
-    //@Sort(type = SortType.COMPARATOR, comparator = TicketComparator.class)
-    @OnDelete(action=OnDeleteAction.CASCADE)
-    private Set<String> tags;
-*/
-	
+
+	/*
+	 * @OneToMany(cascade=CascadeType.ALL, mappedBy="customer",
+	 * fetch=FetchType.EAGER, targetEntity = String.class) //@JoinTable(name =
+	 * "BOOK_TAG", joinColumns = @JoinColumn(name = "BOOK_ID")) //@Sort(type =
+	 * SortType.COMPARATOR, comparator = TicketComparator.class)
+	 * 
+	 * @OnDelete(action=OnDeleteAction.CASCADE) private Set<String> tags;
+	 */
+
 	@Basic
 	@Column(name = "CATEGORY", nullable = false)
 	private String category;
@@ -136,29 +167,40 @@ public class Book implements Serializable {
 	@Basic
 	@Column(name = "HITS")
 	private Long hits;
-	
+
 	public Book() {
+		this.publishDate = Calendar.getInstance().getTime();
+		this.tags = new HashSet<BookTag>();
+		this.userVotes = new HashSet<User>();
+		this.rating = new Rating(this);
 	}
 
 	public Book(Long id, String title, String text, User author) {
+		this();
 		this.id = id;
 		this.title = title;
 		this.text = text;
 		this.author = author;
-		this.publishDate = Calendar.getInstance().getTime();
-		this.rating = new Rating(this);
-		this.tags = new HashSet<String>();
-		this.userVotes = new HashSet<User>();
+		//this.publishDate = Calendar.getInstance().getTime();
+		//this.rating = new Rating(this);
+		//this.tags = new HashSet<BookTag>();
+		//this.userVotes = new HashSet<User>();
 	}
 
 	public Book(String title, String text, User author) {
+		this();
 		this.title = title;
 		this.text = text;
 		this.author = author;
-		this.publishDate = Calendar.getInstance().getTime();
-		this.rating = new Rating(this);
-		this.tags = new HashSet<String>();
-		this.userVotes = new HashSet<User>();
+		//this.publishDate = Calendar.getInstance().getTime();
+		//this.rating = new Rating(this);
+		//this.tags = new HashSet<BookTag>();
+		//this.userVotes = new HashSet<User>();
+	}
+	
+	public Book(User author) {
+		this();
+		this.author = author;
 	}
 
 	public Long getId() {
@@ -201,21 +243,21 @@ public class Book implements Serializable {
 		this.author = author;
 	}
 
-	public Set<String> getTags() {
+	public Set<BookTag> getTags() {
 		return tags;
 	}
 
-	public void setTags(Set<String> tags) {
+	public void setTags(Set<BookTag> tags) {
 		this.tags = tags;
 	}
 
 	public BookTag addTag(String text) {
-		BookTag tag = new BookTag(text, this);
-		this.tags.add(text);
+		BookTag tag = new BookTag(text);
+		this.tags.add(tag);
 		System.out.println(this.tags.toString());
 		return tag;
 	}
-	
+
 	public String toString() {
 		return title + " by " + author;
 	}
@@ -255,7 +297,7 @@ public class Book implements Serializable {
 	public void addUserVote(User user) {
 		this.userVotes.add(user);
 	}
-	
+
 	public Set<User> getUserVotes() {
 		return userVotes;
 	}
@@ -345,7 +387,5 @@ public class Book implements Serializable {
 			return false;
 		return true;
 	}
-	
-	
-	
+
 }

@@ -159,14 +159,14 @@ public class LoadDataPage extends BasePage {
 		
 		System.out.println("Adding books");
 		
-		for ( int i = 0; i < 1000; i++ ) {
+		for ( int i = 0; i < 10; i++ ) {
 			
 			Book book = new Book("titulo"+i, "texto"+i, this.users.get(randomGenerator.nextInt(this.users.size())));
 
 			book.setCategory("category" + randomGenerator.nextInt(10));
 			book.setSubCategory("subcategory" + randomGenerator.nextInt(50));
 
-			int cantTags = randomGenerator.nextInt(10);
+			int cantTags = randomGenerator.nextInt(10) + 1;
 			
 			for ( int j = 0; j < cantTags; j++ ) {
 				book.addTag("tag" + randomGenerator.nextInt(20));
@@ -262,19 +262,20 @@ public class LoadDataPage extends BasePage {
 	public void addMessages() {
 		
 		Message message = new Message(Type.PRIVATE_MESSAGE, "subject 0", "text", admin, users.get(0));
+		message.setDate(new Date(System.currentTimeMillis() - 10000));
 		messageService.insertMessage(message);
 		
 		message = new Message(Type.PRIVATE_MESSAGE, "subject 3", "text 1", admin, users.get(0));
 		messageService.insertMessage(message);
 		
 		message = new Message(Type.PRIVATE_MESSAGE, "subject 1", "texto de admin a user", admin, users.get(0));
-
+		message.setDate(new Date(System.currentTimeMillis() - 1000000));
 		Message answer = new Message(Type.ANSWER, "RE: subject 1", "respuesta de user a admin", users.get(0), admin);
-		
+		answer.setDate(new Date(System.currentTimeMillis() - 1000));
 		message.setAnswer(answer);
 		
 		Message answer2 = new Message(Type.ANSWER, "RE: RE: subject 1", "respuesta2 de admin a user", admin, users.get(0));
-		
+		answer2.setDate(new Date(System.currentTimeMillis() - 1));
 		answer.setAnswer(answer2);
 
 		//receiverSet.add(new MessageDetail(users.get(0), message));
