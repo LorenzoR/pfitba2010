@@ -142,26 +142,34 @@ public class Message implements Serializable {
 	}
 
 	public Message(Type type, String subject, String text, User sender) {
+		this();
 		this.subject = subject;
 		this.text = text;
 		this.sender = sender;
-		this.date = Calendar.getInstance().getTime();
+		//this.date = Calendar.getInstance().getTime();
 		// this.receiver = new HashSet<MessageDetail>();
-		this.setType(type);
+		this.type = type;
 	}
 
 	public Message(Type type, String subject, String text, User sender,
 			User receiver) {
+		this();
 		this.subject = subject;
 		this.text = text;
 		this.sender = sender;
-		this.date = Calendar.getInstance().getTime();
+		//this.date = Calendar.getInstance().getTime();
 		// this.receiver = new HashSet<MessageDetail>();
 		// this.receiver.add(new MessageDetail(receiver, this));
 		this.receiver = receiver;
-		this.setType(type);
+		this.type = type;
 	}
 
+	public Message(Type type, User sender) {
+		this();
+		this.type = type;
+		this.sender = sender;
+	}
+	
 	/*
 	 * public Message (Type type, String subject, String text, User sender,
 	 * Set<MessageDetail> receiver) { this.subject = subject; this.text = text;

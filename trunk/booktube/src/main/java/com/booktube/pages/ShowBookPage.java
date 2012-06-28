@@ -66,6 +66,7 @@ public class ShowBookPage extends BasePage {
 		//user = WiaSession.get().getLoggedInUser();
 
 		book = bookService.getBook(bookId);
+		//book = bookModel.getObject();
 		
 		final WebMarkupContainer parent = new WebMarkupContainer("bookDetails");
 		parent.setOutputMarkupId(true);

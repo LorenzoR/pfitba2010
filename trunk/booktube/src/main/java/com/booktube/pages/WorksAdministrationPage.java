@@ -1,8 +1,6 @@
 package com.booktube.pages;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -10,7 +8,6 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
@@ -18,13 +15,10 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Check;
 import org.apache.wicket.markup.html.form.CheckGroup;
-import org.apache.wicket.markup.html.form.CheckGroupSelector;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.markup.repeater.Item;
@@ -34,16 +28,9 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.string.StringValue;
-import org.odlabs.wiquery.core.effects.Effect;
 import org.odlabs.wiquery.core.effects.sliding.SlideToggle;
-import org.odlabs.wiquery.core.events.Event;
-import org.odlabs.wiquery.core.events.MouseEvent;
-import org.odlabs.wiquery.core.events.WiQueryEventBehavior;
 import org.odlabs.wiquery.core.javascript.JsScope;
-import org.odlabs.wiquery.core.javascript.JsStatement;
 import org.odlabs.wiquery.ui.core.JsScopeUiEvent;
 import org.odlabs.wiquery.ui.datepicker.DatePicker;
 import org.odlabs.wiquery.ui.dialog.AjaxDialogButton;
@@ -52,10 +39,6 @@ import org.odlabs.wiquery.ui.dialog.DialogButton;
 
 import com.booktube.model.Book;
 import com.booktube.model.BookTag;
-import com.booktube.model.Campaign;
-import com.booktube.model.User;
-import com.booktube.pages.BooksPage.BookProvider;
-import com.booktube.service.BookService.SearchType;
 
 public class WorksAdministrationPage extends AdministrationPage {
 	private static final long serialVersionUID = 7512914721917619810L;
@@ -69,29 +52,67 @@ public class WorksAdministrationPage extends AdministrationPage {
 
 	private static String deleteBookTitle;
 
+//	private Label deleteConfirmationLabel = new Label(
+//			"delete_confirmation_dialog_text", new PropertyModel<String>(this,
+//					"deleteConfirmationText")) {
+//
+//		private static final long serialVersionUID = 1L;
+//
+//		{
+//			setOutputMarkupId(true);
+//		}
+//	};
+
+	Model<String> deleteConfirmationModel = new Model<String>() {
+
+		private static final long serialVersionUID = 1L;
+		
+		private String text;
+		
+		public String getObject() {
+			return text;
+		}
+		
+		public void setObject(String value) {
+			this.text = value;
+		}
+	};
+	
 	private Label deleteConfirmationLabel = new Label(
-			"delete_confirmation_dialog_text", new PropertyModel(this,
-					"deleteConfirmationText")) {
-		{
-			setOutputMarkupId(true);
+			"delete_confirmation_dialog_text", deleteConfirmationModel);
+
+	Model<String> successDialogModel = new Model<String>() {
+
+		private static final long serialVersionUID = 1L;
+		
+		private String text;
+		
+		public String getObject() {
+			return text;
+		}
+		
+		public void setObject(String value) {
+			this.text = value;
 		}
 	};
+	
+	private Label successDialogLabel = new Label("success_dialog_text", successDialogModel);
+	
+//	private Label successDialogLabel = new Label("success_dialog_text",
+//			new PropertyModel<String>(this, "successDialogText")) {
+//		private static final long serialVersionUID = 1L;
+//
+//		{
+//			setOutputMarkupId(true);
+//		}
+//	};
 
-	private String deleteConfirmationText;
-
-	private Label successDialogLabel = new Label("success_dialog_text",
-			new PropertyModel(this, "successDialogText")) {
-		{
-			setOutputMarkupId(true);
-		}
-	};
-
-	private String successDialogText;
+//	private String successDialogText;
 
 	private final DataView<Book> dataView;
 	private final PagingNavigator footerNavigator;
-	
-	private final CheckGroup group;
+
+	private final CheckGroup<Book> group;
 
 	private String searchAuthor = null;
 	private String searchTitle = null;
@@ -103,6 +124,8 @@ public class WorksAdministrationPage extends AdministrationPage {
 	private Date searchHighPublishDate = null;
 
 	final LoadableDetachableModel<List<Book>> resultsModel = new LoadableDetachableModel<List<Book>>() {
+		private static final long serialVersionUID = 1L;
+
 		protected List<Book> load() {
 			return null;
 		}
@@ -110,14 +133,18 @@ public class WorksAdministrationPage extends AdministrationPage {
 
 	public WorksAdministrationPage() {
 		super();
+		
 		final WebMarkupContainer parent = new WebMarkupContainer(
 				"worksContainer");
 		parent.setOutputMarkupId(true);
 		add(parent);
 
+		deleteConfirmationLabel.setOutputMarkupId(true);
+		successDialogLabel.setOutputMarkupId(true);
+		
 		parent.add(new Label("pageTitle", "Works Administration Page"));
 
-		group = new CheckGroup("group", new ArrayList());
+		group = new CheckGroup<Book>("group", new ArrayList<Book>());
 
 		dataView = bookList("bookList");
 
@@ -132,12 +159,12 @@ public class WorksAdministrationPage extends AdministrationPage {
 		deleteConfirmationDialog = deleteConfirmationDialog();
 		parent.add(deleteConfirmationDialog);
 
-		final Form searchBookForm = searchBookForm(parent);
-		
+		final Form<Book> searchBookForm = searchBookForm(parent);
+
 		parent.add(searchBookForm);
 
 		searchBookForm.add(group);
-		
+
 		WebMarkupContainer searchButton = createButtonWithEffect(
 				"searchBookLink", "searchFields", new SlideToggle());
 		parent.add(searchButton);
@@ -164,7 +191,7 @@ public class WorksAdministrationPage extends AdministrationPage {
 
 				item.setDefaultModel(model);
 
-				item.add(new Check("checkbox", item.getModel()));
+				item.add(new Check<Book>("checkbox", item.getModel()));
 
 				List<BookTag> tagList = null;
 
@@ -248,8 +275,10 @@ public class WorksAdministrationPage extends AdministrationPage {
 
 						deleteBookTitle = deleteBook.getTitle();
 
-						deleteConfirmationText = "Esta seguro que desea eliminar la obra "
-								+ deleteBookTitle + " ?";
+						//deleteConfirmationText = "Esta seguro que desea eliminar la obra "
+						//		+ deleteBookTitle + " ?";
+						deleteConfirmationModel.setObject("Esta seguro que desea eliminar la obra "
+								+ deleteBookTitle + " ?");
 
 						target.add(deleteConfirmationLabel);
 					}
@@ -309,7 +338,8 @@ public class WorksAdministrationPage extends AdministrationPage {
 				System.out.println("USER ES : " + deleteBook);
 				bookService.deleteBook(deleteBook);
 
-				successDialogText = "Obra " + deleteBookTitle + " eliminada.";
+				//successDialogText = "Obra " + deleteBookTitle + " eliminada.";
+				successDialogModel.setObject("Obra " + deleteBookTitle + " eliminada.");
 				target.add(successDialogLabel);
 				// JsScopeUiEvent.quickScope(deleteConfirmationdialog.close().render());
 				JsScope.quickScope(dialog.close().render());
@@ -323,19 +353,25 @@ public class WorksAdministrationPage extends AdministrationPage {
 		DialogButton noButton = new DialogButton("No",
 				JsScope.quickScope(dialog.close().render()));
 
-		dialog.setButtons(yesButton, noButton);
+		dialog.setButtons(noButton, yesButton);
 		dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close()));
 
 		return dialog;
 
 	}
 
-	private Form<?> searchBookForm(final WebMarkupContainer parent) {
+	private Form<Book> searchBookForm(final WebMarkupContainer parent) {
 
-		Form<?> form = new Form<Object>("searchBookForm");
-		
-		final WebMarkupContainer searchFields = new WebMarkupContainer("searchFields");
-		searchFields.add(AttributeModifier.replace("style", "display: none;"));	
+		Form<Book> form = new Form<Book>("searchBookForm");
+
+		CompoundPropertyModel<Book> model = new CompoundPropertyModel<Book>(
+				new Book());
+
+		form.setDefaultModel(model);
+
+		final WebMarkupContainer searchFields = new WebMarkupContainer(
+				"searchFields");
+		searchFields.add(AttributeModifier.replace("style", "display: none;"));
 		form.add(searchFields);
 
 		final TextField<String> bookId = new TextField<String>("bookId",
@@ -362,125 +398,24 @@ public class WorksAdministrationPage extends AdministrationPage {
 				new Model<String>(""));
 		searchFields.add(tag);
 
-		/*
-		 * final DatePicker<Date> lowPublishDate = new DatePicker<Date>(
-		 * "lowPublishDate", new Model<Date>(), Date.class);
-		 * lowPublishDate.setAltFormat("dd/mm/yy");
-		 * lowPublishDate.setAltField("dd/mm/yy");
-		 * lowPublishDate.setDateFormat("dd/mm/yy"); form.add(lowPublishDate);
-		 */
 		final DatePicker<Date> lowPublishDate = createDatePicker(
 				"lowPublishDate", dateFormat);
 		searchFields.add(lowPublishDate);
-		// final DatePicker<Date> lowPublishDate = new
-		// org.apache.wicket.extensions.yui.calendar.DatePicker<Date>()
 
-		// final DatePicker<Date> highPublishDate = new DatePicker<Date>(
-		// "highPublishDate", new Model<Date>(), Date.class);
-		// highPublishDate.setAltFormat("dd/mm/yy");
-		// highPublishDate.setAltField("dd/mm/yy");
-		// highPublishDate.setDateFormat("dd/mm/yy");
-		// form.add(highPublishDate);
 		final DatePicker<Date> highPublishDate = createDatePicker(
 				"highPublishDate", dateFormat);
 		searchFields.add(highPublishDate);
 
-		// final LoadableDetachableModel<List<Book>> resultsModel = new
-		// LoadableDetachableModel<List<Book>>() {
-		// protected List<Book> load() {
-		// return null;
-		// }
-		// };
-		//
-		// final CheckGroup group = new CheckGroup("group", new ArrayList());
-		// group.setVisible(false);
-		// form.add(group);
-		//
-		// final CheckGroupSelector checkGroupSelector = new CheckGroupSelector(
-		// "groupSelector");
-		// checkGroupSelector.setVisible(false);
-		// group.add(checkGroupSelector);
-		//
-		// final WebMarkupContainer bookResultListTable = new
-		// WebMarkupContainer(
-		// "bookResultListTable");
-		// bookResultListTable.setVisible(false);
-		//
-		// group.add(bookResultListTable);
-		//
-		// ListView<Book> booksLV = new ListView<Book>("bookResultList",
-		// resultsModel) {
-		//
-		// @Override
-		// protected void populateItem(ListItem<Book> item) {
-		// final Book book = (Book) item.getModelObject();
-		// CompoundPropertyModel<Book> model = new CompoundPropertyModel<Book>(
-		// book);
-		//
-		// PageParameters detailsParameter = new PageParameters();
-		// detailsParameter.set("book", book.getId());
-		//
-		// item.setDefaultModel(model);
-		// item.add(new Check("checkbox", item.getModel()));
-		// item.add(new Label("id"));
-		// item.add(new Label("title"));
-		// item.add(new Label("author"));
-		//
-		// item.add(new BookmarkablePageLink<Book>("editLink",
-		// EditBookPage.class, detailsParameter));
-		// item.add(new BookmarkablePageLink<Book>("detailsLink",
-		// ShowBookPage.class, detailsParameter));
-		//
-		// item.add(new AjaxLink<Book>("deleteLink", item.getModel()) {
-		//
-		// @Override
-		// public void onClick(AjaxRequestTarget target) {
-		// System.out.println("BOOk es : " + book);
-		//
-		// // bookService.deleteBook(book);
-		// bookService.deleteBook(book);
-		// System.out.println("Book " + bookId + " deleted.");
-		//
-		// List<Book> books = bookService.getBooks(0,
-		// Integer.MAX_VALUE, authorString, titleString,
-		// tagString, categoryString, subcategoryString,
-		// lowPublishDateString, highPublishDateString);
-		//
-		// if (books.size() > 0) {
-		//
-		// resultsModel.setObject(books);
-		// System.out.println("DETACHABLE: "
-		// + resultsModel.getObject().toString());
-		// group.setVisible(true);
-		// checkGroupSelector.setVisible(true);
-		// bookResultListTable.setVisible(true);
-		//
-		// target.add(parent);
-		// } else {
-		// resultsModel.setObject(null);
-		// group.setVisible(false);
-		// checkGroupSelector.setVisible(false);
-		// bookResultListTable.setVisible(false);
-		// System.out.println("NO HAY NADA");
-		// }
-		//
-		// target.add(parent);
-		// }
-		//
-		// });
-		// }
-		//
-		// };
-		//
-		// bookResultListTable.add(booksLV);
-		//
-		
 		final AjaxSubmitLink deleteBook = new AjaxSubmitLink("deleteBook") {
+
+			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				System.out.println("selected book(s): "
 						+ group.getDefaultModelObjectAsString());
+
+				@SuppressWarnings("unchecked")
 				List<Book> removedBooks = (List<Book>) group
 						.getDefaultModelObject();
 
@@ -489,22 +424,21 @@ public class WorksAdministrationPage extends AdministrationPage {
 				}
 
 				// removedBooks.remove(books.size()-1);
-//				List<Book> books = bookService.getBooks(0, Integer.MAX_VALUE,
-//						authorString, titleString, tagString, categoryString,
-//						subcategoryString, lowPublishDateString,
-//						highPublishDateString);
+				// List<Book> books = bookService.getBooks(0, Integer.MAX_VALUE,
+				// authorString, titleString, tagString, categoryString,
+				// subcategoryString, lowPublishDateString,
+				// highPublishDateString);
 
-//				if (books.size() > 0) {
-//					resultsModel.setObject(books);
-//				} else {
-//					resultsModel.setObject(null);
-//					group.setVisible(false);
-//				}
-				if ( dataView.getItemCount() <= 0 ) {
+				// if (books.size() > 0) {
+				// resultsModel.setObject(books);
+				// } else {
+				// resultsModel.setObject(null);
+				// group.setVisible(false);
+				// }
+				if (dataView.getItemCount() <= 0) {
 					this.setVisible(false);
 					footerNavigator.setVisible(false);
-				}
-				else {
+				} else {
 					this.setVisible(true);
 					footerNavigator.setVisible(true);
 				}
@@ -524,27 +458,33 @@ public class WorksAdministrationPage extends AdministrationPage {
 		};
 
 		form.add(deleteBook);
-		
+
 		searchFields.add(new AjaxSubmitLink("searchBook") {
+
+			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 
-				searchFields.add(AttributeModifier.replace("style", "display: block;"));
+				searchFields.add(AttributeModifier.replace("style",
+						"display: block;"));
 				// String bookIdString =
-				
+
 				try {
-					searchBookId = new Long(bookId.getDefaultModelObjectAsString());
+					searchBookId = new Long(bookId
+							.getDefaultModelObjectAsString());
 				} catch (NumberFormatException ex) {
 					searchBookId = null;
 				}
 
-//				if (!StringUtils.isBlank(bookId.getDefaultModelObjectAsString())) {
-//					searchBookId = Long.valueOf(bookId
-//							.getDefaultModelObjectAsString());
-//				} else {
-//					searchBookId = null;
-//				}
+				// if
+				// (!StringUtils.isBlank(bookId.getDefaultModelObjectAsString()))
+				// {
+				// searchBookId = Long.valueOf(bookId
+				// .getDefaultModelObjectAsString());
+				// } else {
+				// searchBookId = null;
+				// }
 
 				searchTag = new String(tag.getDefaultModelObjectAsString());
 				searchAuthor = new String(author
@@ -586,10 +526,10 @@ public class WorksAdministrationPage extends AdministrationPage {
 				// System.out.println(bookService.getBook(Long
 				// .valueOf(bookIdString)));
 
-//				List<Book> books = bookService.getBooks(0, Integer.MAX_VALUE,
-//						searchAuthor, searchTitle, searchTag, searchCategory,
-//						searchSubcategory, searchLowPublishDate,
-//						searchHighPublishDate);
+				// List<Book> books = bookService.getBooks(0, Integer.MAX_VALUE,
+				// searchAuthor, searchTitle, searchTag, searchCategory,
+				// searchSubcategory, searchLowPublishDate,
+				// searchHighPublishDate);
 
 				/*
 				 * if (books.size() > 0) {
@@ -606,16 +546,14 @@ public class WorksAdministrationPage extends AdministrationPage {
 				 * bookResultListTable.setVisible(false);
 				 * System.out.println("NO HAY NADA"); }
 				 */
-				
-				if ( dataView.getItemCount() <= 0 ) {
+
+				if (dataView.getItemCount() <= 0) {
 					deleteBook.setVisible(false);
 					footerNavigator.setVisible(false);
-				}
-				else {
+				} else {
 					deleteBook.setVisible(true);
 					footerNavigator.setVisible(true);
 				}
-				
 
 				dataView.setCurrentPage(0);
 				target.add(parent);
@@ -636,22 +574,25 @@ public class WorksAdministrationPage extends AdministrationPage {
 
 	class BookProvider implements IDataProvider<Book> {
 
+		private static final long serialVersionUID = 1L;
+
 		public BookProvider() {
 		}
 
 		public Iterator<Book> iterator(int first, int count) {
 			// return bookService.getAllBooks(first, count).iterator();
-			return bookService.getBooks(first, count, searchBookId, searchAuthor,
-					searchTitle, searchTag, searchCategory, searchSubcategory,
-					searchLowPublishDate, searchHighPublishDate).iterator();
+			return bookService.getBooks(first, count, searchBookId,
+					searchAuthor, searchTitle, searchTag, searchCategory,
+					searchSubcategory, searchLowPublishDate,
+					searchHighPublishDate).iterator();
 		}
 
 		public int size() {
 			// return bookService.getCount(type, parameter);
 			// return this.books.size();
-			return bookService.getCount(searchBookId, searchAuthor, searchTitle, searchTag,
-					searchCategory, searchSubcategory, searchLowPublishDate,
-					searchHighPublishDate);
+			return bookService.getCount(searchBookId, searchAuthor,
+					searchTitle, searchTag, searchCategory, searchSubcategory,
+					searchLowPublishDate, searchHighPublishDate);
 		}
 
 		public IModel<Book> model(Book book) {

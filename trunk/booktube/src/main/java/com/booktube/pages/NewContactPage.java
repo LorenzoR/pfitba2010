@@ -12,7 +12,6 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import com.booktube.WiaSession;
@@ -75,7 +74,7 @@ public class NewContactPage extends BasePage {
 		/*Message message = new Message(Type.PRIVATE_MESSAGE,subject
 				.getDefaultModelObjectAsString(), editor
 				.getDefaultModelObjectAsString(), user);*/
-		final Message message = new Message();
+		final Message message = new Message(Type.PRIVATE_MESSAGE, user);
 		
 		Form<Message> form = new Form<Message>("form");
 		
@@ -87,11 +86,15 @@ public class NewContactPage extends BasePage {
 		List<String> subjects = Arrays.asList(new String[] { "subject1",
 				"subject2", "subject3" });
 
-		final DropDownChoice subject = new DropDownChoice("subject",
-				new PropertyModel(this, ""), subjects);
+//		final DropDownChoice<String> subject = new DropDownChoice<String>("subject",
+//				new PropertyModel<String>(this, ""), subjects);
+//
+//		form.add(subject);
 
+		final DropDownChoice<String> subject = new DropDownChoice<String>(
+				"subject", subjects);
 		form.add(subject);
-
+		
 		final TextArea<Message> editor = new TextArea<Message>("text");
 		editor.setOutputMarkupId(true);
 
@@ -107,9 +110,11 @@ public class NewContactPage extends BasePage {
 				
 				List<User> receivers = userService.getUsers(0, Integer.MAX_VALUE, Level.ADMIN);
 				
-				message.setType(Type.PRIVATE_MESSAGE);
-				message.setSubject(subject.getDefaultModelObjectAsString());
-				message.setSender(user);
+				//message.setType(Type.PRIVATE_MESSAGE);
+				//message.setSubject(subject.getDefaultModelObjectAsString());
+				//message.setSender(user);
+				
+				System.out.println("+++++++ SUBJECT: " + message.getSubject());
 				
 				messageService.sendMessages(message, receivers);
 				
