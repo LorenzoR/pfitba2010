@@ -1,21 +1,11 @@
 package com.booktube.pages;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
-import java.util.Set;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
-import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.PasswordTextField;
@@ -23,22 +13,19 @@ import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.convert.ConversionException;
-import org.apache.wicket.util.convert.IConverter;
-import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.util.value.ValueMap;
 import org.odlabs.wiquery.ui.core.JsScopeUiEvent;
 import org.odlabs.wiquery.ui.dialog.AjaxDialogButton;
 import org.odlabs.wiquery.ui.dialog.Dialog;
 
 import com.booktube.WiaSession;
 import com.booktube.model.Book;
-import com.booktube.model.BookTag;
 import com.booktube.model.User;
+import com.booktube.pages.customComponents.AbstractAutoCompleteTextField;
+import com.booktube.pages.customComponents.CustomTextField;
 import com.booktube.pages.customConverters.TagSetToString;
 import com.booktube.service.BookService;
 import com.booktube.service.UserService;
@@ -130,13 +117,13 @@ public class AddBookPage extends BasePage {
 	private Form<Book> addBookForm(final WebMarkupContainer parent) {
 		Form<Book> form = new Form<Book>("form");
 
-		final Book newBook = new Book();
+		final Book newBook = new Book(user);
 
 		CompoundPropertyModel<Book> model = new CompoundPropertyModel<Book>(
 				newBook);
 
 		form.setDefaultModel(model);
-		
+
 		final TextField<Book> titleField = new TextField<Book>("title");
 
 		form.add(titleField);
@@ -154,80 +141,113 @@ public class AddBookPage extends BasePage {
 		//
 		// };
 		final CustomTextField tagField = new CustomTextField("tags", null,
-				new TagSetToString(newBook));
+				new TagSetToString());
 
 		form.add(tagField);
 
 		final TextArea<Book> editor = new TextArea<Book>("text");
 		editor.setOutputMarkupId(true);
 
-		final AutoCompleteTextField<String> category = new AutoCompleteTextField<String>(
-				"category", new Model("")) {
-
+		final AbstractAutoCompleteTextField<String> category = new AbstractAutoCompleteTextField<String>(
+				"category", new PropertyModel<Book>(newBook, "category")) {
 			private static final long serialVersionUID = 1L;
 
-			@Override
-			protected Iterator<String> getChoices(String input) {
-				if (Strings.isEmpty(input)) {
-					List<String> emptyList = Collections.emptyList();
-					return emptyList.iterator();
-				}
+			protected final List<String> getChoiceList(final String input) {
+				return bookService.getCategories(0, Integer.MAX_VALUE);
+			}
 
-				List<String> choices = new ArrayList<String>(10);
-
-				List<String> categories = bookService.getCategories(0,
-						Integer.MAX_VALUE);
-
-				for (final String aCategory : categories) {
-
-					if (aCategory.toUpperCase().startsWith(input.toUpperCase())) {
-						choices.add(aCategory);
-						if (choices.size() == 10) {
-							break;
-						}
-					}
-				}
-
-				return choices.iterator();
+			protected final String getChoiceValue(final String choice)
+					throws Throwable {
+				return choice;
 			}
 		};
 
 		form.add(category);
 
-		final AutoCompleteTextField<String> subcategory = new AutoCompleteTextField<String>(
-				"subcategory", new Model<String>("")) {
-
+		final AbstractAutoCompleteTextField<String> subcategory = new AbstractAutoCompleteTextField<String>(
+				"subcategory", new PropertyModel<Book>(newBook, "subcategory")) {
 			private static final long serialVersionUID = 1L;
 
-			@Override
-			protected Iterator<String> getChoices(String input) {
-				if (Strings.isEmpty(input)) {
-					List<String> emptyList = Collections.emptyList();
-					return emptyList.iterator();
-				}
+			protected final List<String> getChoiceList(final String input) {
+				return bookService.getSubcategories(0, Integer.MAX_VALUE, null);
+			}
 
-				List<String> choices = new ArrayList<String>(10);
-
-				List<String> subcategories = bookService.getSubcategories(0,
-						Integer.MAX_VALUE, null);
-
-				for (final String aSubcategory : subcategories) {
-					if (aSubcategory != null) {
-						if (aSubcategory.toUpperCase().startsWith(
-								input.toUpperCase())) {
-							choices.add(aSubcategory);
-							if (choices.size() == 10) {
-								break;
-							}
-						}
-					}
-				}
-
-				return choices.iterator();
+			protected final String getChoiceValue(final String choice)
+					throws Throwable {
+				return choice;
 			}
 		};
 
 		form.add(subcategory);
+		
+		// final AutoCompleteTextField<String> category = new
+		// AutoCompleteTextField<String>(
+		// "category", new Model("")) {
+		//
+		// private static final long serialVersionUID = 1L;
+		//
+		// @Override
+		// protected Iterator<String> getChoices(String input) {
+		// if (Strings.isEmpty(input)) {
+		// List<String> emptyList = Collections.emptyList();
+		// return emptyList.iterator();
+		// }
+		//
+		// List<String> choices = new ArrayList<String>(10);
+		//
+		// List<String> categories = bookService.getCategories(0,
+		// Integer.MAX_VALUE);
+		//
+		// for (final String aCategory : categories) {
+		//
+		// if (aCategory.toUpperCase().startsWith(input.toUpperCase())) {
+		// choices.add(aCategory);
+		// if (choices.size() == 10) {
+		// break;
+		// }
+		// }
+		// }
+		//
+		// return choices.iterator();
+		// }
+		// };
+		//
+		// form.add(category);
+
+//		final AutoCompleteTextField<String> subcategory = new AutoCompleteTextField<String>(
+//				"subcategory", new Model<String>("")) {
+//
+//			private static final long serialVersionUID = 1L;
+//
+//			@Override
+//			protected Iterator<String> getChoices(String input) {
+//				if (Strings.isEmpty(input)) {
+//					List<String> emptyList = Collections.emptyList();
+//					return emptyList.iterator();
+//				}
+//
+//				List<String> choices = new ArrayList<String>(10);
+//
+//				List<String> subcategories = bookService.getSubcategories(0,
+//						Integer.MAX_VALUE, null);
+//
+//				for (final String aSubcategory : subcategories) {
+//					if (aSubcategory != null) {
+//						if (aSubcategory.toUpperCase().startsWith(
+//								input.toUpperCase())) {
+//							choices.add(aSubcategory);
+//							if (choices.size() == 10) {
+//								break;
+//							}
+//						}
+//					}
+//				}
+//
+//				return choices.iterator();
+//			}
+//		};
+//
+//		form.add(subcategory);
 
 		form.add(editor);
 		form.add(new AjaxSubmitLink("save") {
@@ -239,37 +259,42 @@ public class AddBookPage extends BasePage {
 
 				System.out.println("--- TITULO: " + newBook.getTitle());
 				System.out.println("--- CATEGORY: " + newBook.getCategory());
-				String text = editor.getDefaultModelObjectAsString();
-				String username = user.getUsername();
-				String title = titleField.getDefaultModelObjectAsString();
-				Set<String> tagSet = (Set<String>) tagField
-						.getDefaultModelObject();
-				String subcategoryString = subcategory.getDefaultModelObjectAsString();
-				String categoryString = category.getDefaultModelObjectAsString();
-
-				System.out.println("Tags: " + tagSet.toString());
-
-				Book book = new Book(title, text, user);
-
-				Set<String> bookTagSet = new HashSet<String>();
-
-				for (String aTag : tagSet) {
-					//aTag.setBook(book);
-					bookTagSet.add(aTag);
-				}
-
-				book.setTags(bookTagSet);
-				book.setCategory(categoryString);
-				book.setSubCategory(subcategoryString);
+				System.out.println("--- SUBCATEGORY: "
+						+ newBook.getSubCategory());
+				System.out.println("--- TAGS: " + newBook.getTags().toString());
+//				String text = editor.getDefaultModelObjectAsString();
+//				String username = user.getUsername();
+//				String title = titleField.getDefaultModelObjectAsString();
+//				Set<BookTag> tagSet = (Set<BookTag>) tagField
+//						.getDefaultModelObject();
+//				String subcategoryString = subcategory
+//						.getDefaultModelObjectAsString();
+//				String categoryString = category
+//						.getDefaultModelObjectAsString();
+//
+//				System.out.println("Tags: " + tagSet.toString());
+//
+//				Book book = new Book(title, text, user);
+//
+//				Set<String> bookTagSet = new HashSet<String>();
+//
+//				// for (String aTag : tagSet) {
+//				// //aTag.setBook(book);
+//				// bookTagSet.add(aTag);
+//				// }
+//
+//				// book.setTags(bookTagSet);
+//				book.setCategory(categoryString);
+//				book.setSubCategory(subcategoryString);
 
 				/* Insert book */
-				lastInsertedId = bookService.insertBook(book);
+				lastInsertedId = bookService.insertBook(newBook);
 				System.out.println("Book inserted.");
-				System.out.println("Title: " + title);
-				System.out.println("Author: " + username);
-				System.out.println("Text: " + text);
-				System.out.println("Category: " + book.getCategory());
-				System.out.println("SubCategory: " + book.getSubCategory());
+				System.out.println("Title: " + newBook.getTitle());
+				System.out.println("Author: " + newBook.getAuthor());
+				System.out.println("Text: " + newBook.getText());
+				System.out.println("Category: " + newBook.getCategory());
+				System.out.println("SubCategory: " + newBook.getSubCategory());
 
 				/* Clear values */
 				editor.setModel(new Model<Book>());
@@ -380,29 +405,6 @@ public class AddBookPage extends BasePage {
 	protected void setPageTitle() {
 		String newTitle = "Booktube - New Book";
 		super.get("pageTitle").setDefaultModelObject(newTitle);
-	}
-
-	public class CustomTextField extends TextField {
-
-		private static final long serialVersionUID = 1L;
-		
-		private final IConverter converter;
-
-		/**
-		 * @param id
-		 * @param label
-		 */
-		public CustomTextField(String id, IModel labelModel,
-				IConverter converter) {
-			super(id, labelModel);
-			this.converter = converter;
-		}
-
-		@Override
-		public IConverter getConverter(Class type) {
-			return this.converter;
-		}
-
 	}
 
 }

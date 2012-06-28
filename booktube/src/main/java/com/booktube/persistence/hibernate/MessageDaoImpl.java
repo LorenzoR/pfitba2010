@@ -152,7 +152,7 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 		List<Message> messages = getAllMessagesFrom(user, first, count);
 		messages.addAll(getAllMessagesTo(user, first, count));
 
-		Collections.sort(messages, Message.getDateComparator());
+		Collections.sort(messages, Message.getDateComparatorAsc());
 
 		return messages;
 	}

@@ -3,6 +3,8 @@ package com.booktube.pages;
 
 import org.apache.wicket.markup.html.panel.Panel;
 
+import com.booktube.pages.customComponents.MenuLink;
+
 public class LeftMenuPanel extends Panel{	
 	private static final long serialVersionUID = 6320824482508912135L;
 

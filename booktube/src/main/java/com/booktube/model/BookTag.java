@@ -3,38 +3,28 @@ package com.booktube.model;
 import java.io.Serializable;
 
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 @Entity
-@Table(name = "BOOKTAG")
+@Table(name = "BOOK_TAG")
 public class BookTag implements Serializable {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2096592853926570874L;
+
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "TAG_ID")
 	private Long id;
 	
-	@ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name="BOOK_ID", updatable = true, nullable = false)
-	@OnDelete(action=OnDeleteAction.CASCADE)
-	private Book book;
+//	@ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+//	@JoinColumn(name="BOOK_ID", updatable = true, nullable = false)
+//	@OnDelete(action=OnDeleteAction.CASCADE)
+//	private Book book;
 	
 	@Basic
 	@Column(name = "TEXT")
@@ -42,11 +32,6 @@ public class BookTag implements Serializable {
 	
 	public BookTag() {
 		
-	}
-	
-	public BookTag(String value, Book book) {
-		this.value = value;
-		this.book = book;
 	}
 	
 	public BookTag(String value) {
@@ -90,13 +75,13 @@ public class BookTag implements Serializable {
 		return this.value;
 	}*/
 
-	public Book getBook() {
-		return book;
-	}
-
-	public void setBook(Book book) {
-		this.book = book;
-	}
+//	public Book getBook() {
+//		return book;
+//	}
+//
+//	public void setBook(Book book) {
+//		this.book = book;
+//	}
 
 	public Long getId() {
 		return id;

@@ -6,16 +6,13 @@ import java.util.Set;
 
 import org.apache.wicket.util.convert.IConverter;
 
-import com.booktube.model.Book;
 import com.booktube.model.BookTag;
 
-public class TagSetToString implements IConverter<Set<String>> {
+public class TagSetToString implements IConverter<Set<BookTag>> {
 
 	private static final long serialVersionUID = 1L;
-	private final Book book;
 
-	public TagSetToString(Book book) {
-		this.book = book;
+	public TagSetToString() {
 	}
 
 	public void setLocale(Locale locale) {
@@ -25,13 +22,13 @@ public class TagSetToString implements IConverter<Set<String>> {
 		return Locale.getDefault();
 	}
 
-	public Set<String> convertToObject(String value, Locale locale) {
+	public Set<BookTag> convertToObject(String value, Locale locale) {
 		String tags[] = value.split(" ");
-		Set<String> tagsSet = new HashSet<String>();
+		Set<BookTag> tagsSet = new HashSet<BookTag>();
 
 		for (String aTag : tags) {
 			//tagsSet.add(new BookTag(aTag, this.book));
-			tagsSet.add(aTag);
+			tagsSet.add(new BookTag(aTag));
 		}
 
 		System.out.println("newTagSET: " + tagsSet.toString());
@@ -39,14 +36,14 @@ public class TagSetToString implements IConverter<Set<String>> {
 		return tagsSet;
 	}
 
-	public String convertToString(Set<String> value, Locale locale) {
+	public String convertToString(Set<BookTag> value, Locale locale) {
 
-		Set<String> tagSet = (Set<String>) value;
+		Set<BookTag> tagSet = (Set<BookTag>) value;
 		if (tagSet.size() > 0) {
 			String tags = "";
 
-			for (String aTag : tagSet) {
-				tags += aTag + " ";
+			for (BookTag aTag : tagSet) {
+				tags += aTag.getValue() + " ";
 			}
 
 			return tags.substring(0, tags.length() - 1);

@@ -119,9 +119,15 @@ public class Message implements Serializable {
 	@Column(name = "IS_READ")
 	private boolean isRead = false;
 
-	private static Comparator<Message> dateComparator = new Comparator<Message>() {
+	private static Comparator<Message> dateComparatorAsc = new Comparator<Message>() {
 		public int compare(Message o1, Message o2) {
 			return o2.getDate().compareTo(o1.getDate());
+		}
+	};
+	
+	private static Comparator<Message> dateComparatorDesc = new Comparator<Message>() {
+		public int compare(Message o1, Message o2) {
+			return o1.getDate().compareTo(o2.getDate());
 		}
 	};
 	
@@ -325,8 +331,12 @@ public class Message implements Serializable {
 		this.isRead = isRead;
 	}
 
-	public static Comparator<Message> getDateComparator() {
-		return dateComparator;
+	public static Comparator<Message> getDateComparatorAsc() {
+		return dateComparatorAsc;
+	}
+	
+	public static Comparator<Message> getDateComparatorDesc() {
+		return dateComparatorDesc;
 	}
 	
 	public static Comparator<Message> getAnswerDateComparator() {
@@ -348,7 +358,7 @@ public class Message implements Serializable {
 			lastAnswer = lastAnswer.getAnswer();
 		}
 
-		Collections.sort(messageList, getDateComparator());
+		Collections.sort(messageList, getDateComparatorAsc());
 		
 		return messageList;
 	}
