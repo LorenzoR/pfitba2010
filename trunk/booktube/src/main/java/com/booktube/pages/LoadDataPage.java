@@ -27,6 +27,8 @@ import com.booktube.service.UserService;
 
 public class LoadDataPage extends BasePage {
 
+	private static final long serialVersionUID = 1L;
+
 	@SpringBean
 	UserService userService;
 
