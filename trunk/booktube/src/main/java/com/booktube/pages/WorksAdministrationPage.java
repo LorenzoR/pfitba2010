@@ -31,7 +31,6 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.odlabs.wiquery.core.effects.sliding.SlideToggle;
 import org.odlabs.wiquery.core.javascript.JsScope;
-import org.odlabs.wiquery.ui.core.JsScopeUiEvent;
 import org.odlabs.wiquery.ui.datepicker.DatePicker;
 import org.odlabs.wiquery.ui.dialog.AjaxDialogButton;
 import org.odlabs.wiquery.ui.dialog.Dialog;
@@ -153,7 +152,8 @@ public class WorksAdministrationPage extends AdministrationPage {
 		footerNavigator = new PagingNavigator("footerPaginator", dataView);
 		parent.add(footerNavigator);
 
-		deleteDialog = deleteDialog();
+		//deleteDialog = deleteDialog(successDialogLabel, WorksAdministrationPage.class);
+		deleteDialog = deleteDialog(parent);
 		parent.add(deleteDialog);
 
 		deleteConfirmationDialog = deleteConfirmationDialog();
@@ -290,9 +290,9 @@ public class WorksAdministrationPage extends AdministrationPage {
 		return dataView;
 	}
 
-	private Dialog deleteDialog() {
+	private Dialog deleteDialog(final WebMarkupContainer parent) {
 
-		Dialog dialog = new Dialog("success_dialog");
+		final Dialog dialog = new Dialog("success_dialog");
 
 		dialog.add(successDialogLabel);
 
@@ -302,13 +302,26 @@ public class WorksAdministrationPage extends AdministrationPage {
 
 			@Override
 			protected void onButtonClicked(AjaxRequestTarget target) {
-				setResponsePage(WorksAdministrationPage.class);
-
+				//setResponsePage(WorksAdministrationPage.class);
+				System.out.println("CIERRO");
+//				JsScopeUiEvent.quickScope(dialog.close().render());
+//				dialog.close().render();
+//				JsScopeUiEvent.quickScope(dialog.close());
+//				dialog.close(target);
+//				dialog.setCloseOnEscape(true);
+				//JsScope.quickScope(dialog.close(target));
+				dialog.close(target);
+				target.add(parent);
+				//dialog.close().render();
+				//deleteDialog.close(target);
+				//deleteConfirmationDialog.close(target);
 			}
 		};
 
 		dialog.setButtons(ok);
-		dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
+		//dialog.setButtons(new DialogButton("OK", 
+         //       JsScope.quickScope(dialog.close().render())));
+		//dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
 
 		return dialog;
 
@@ -342,11 +355,20 @@ public class WorksAdministrationPage extends AdministrationPage {
 				successDialogModel.setObject("Obra " + deleteBookTitle + " eliminada.");
 				target.add(successDialogLabel);
 				// JsScopeUiEvent.quickScope(deleteConfirmationdialog.close().render());
-				JsScope.quickScope(dialog.close().render());
+				
 				// deleteConfirmationdialog.close(target);
 				deleteDialog.open(target);
+				//JsScope.quickScope(dialog.close().render());
+				//dialog.close().render();
 				// setResponsePage(MessagesAdministrationPage.class);
-
+				//dialog.close(target);
+				//dialog.close().render();
+				
+				//JsScope.quickScope(dialog.close(target));
+				
+				//JsScope.quickScope("$('#deleeeete__confirmation__dialog2').dialog('close');");
+				//dialog.setVisible(false);
+				dialog.close(target);
 			}
 		};
 
@@ -354,7 +376,7 @@ public class WorksAdministrationPage extends AdministrationPage {
 				JsScope.quickScope(dialog.close().render()));
 
 		dialog.setButtons(noButton, yesButton);
-		dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close()));
+		//dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close()));
 
 		return dialog;
 

@@ -4,8 +4,11 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.wicket.Page;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.odlabs.wiquery.core.effects.Effect;
@@ -14,7 +17,10 @@ import org.odlabs.wiquery.core.events.MouseEvent;
 import org.odlabs.wiquery.core.events.WiQueryEventBehavior;
 import org.odlabs.wiquery.core.javascript.JsScope;
 import org.odlabs.wiquery.core.javascript.JsStatement;
+import org.odlabs.wiquery.ui.core.JsScopeUiEvent;
 import org.odlabs.wiquery.ui.datepicker.DatePicker;
+import org.odlabs.wiquery.ui.dialog.AjaxDialogButton;
+import org.odlabs.wiquery.ui.dialog.Dialog;
 
 import com.booktube.service.BookService;
 import com.booktube.service.UserService;
@@ -82,6 +88,31 @@ public class AdministrationPage extends BasePage {
 		}));
 
 		return button;
+	}
+	
+	protected Dialog deleteDialog(Label label, final Class responsePage) {
+
+		Dialog dialog = new Dialog("success_dialog");
+
+		//dialog.add(successDialogLabel);
+		dialog.add(label);
+		
+		AjaxDialogButton ok = new AjaxDialogButton("OK") {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onButtonClicked(AjaxRequestTarget target) {
+				//setResponsePage(WorksAdministrationPage.class);
+				setResponsePage(responsePage);
+			}
+		};
+
+		dialog.setButtons(ok);
+		dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
+
+		return dialog;
+
 	}
 		
 }
