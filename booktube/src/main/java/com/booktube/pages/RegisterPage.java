@@ -3,18 +3,20 @@ package com.booktube.pages;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.validation.EqualPasswordInputValidator;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -24,6 +26,7 @@ import org.odlabs.wiquery.ui.dialog.Dialog;
 
 import com.booktube.model.User;
 import com.booktube.model.User.Gender;
+import com.booktube.model.User.Level;
 import com.booktube.pages.validators.UniqueUsernameValidator;
 import com.booktube.service.UserService;
 
@@ -88,40 +91,39 @@ public class RegisterPage extends BasePage {
 
 	}
 
-	private Form<Object> registerForm(final WebMarkupContainer parent,
+	private Form<User> registerForm(final WebMarkupContainer parent,
 			final FeedbackPanel feedback) {
 
-		Form<Object> form = new Form<Object>("form");
+		Form<User> form = new Form<User>("form");
+		
+		final User newUser = new User();
 
-		final TextField<String> usernameField = new TextField<String>(
-				"username", new Model<String>(""));
-		final TextField<String> firstnameField = new TextField<String>(
-				"firstname", new Model<String>(""));
-		final TextField<String> lastnameField = new TextField<String>(
-				"lastname", new Model<String>(""));
+		CompoundPropertyModel<User> model = new CompoundPropertyModel<User>(
+				newUser);
 
-		final TextField<String> birthdateField = new TextField<String>(
-				"birthdate", new Model<String>(""));
+		form.setDefaultModel(model);
+
+		final TextField<User> usernameField = new TextField<User>("username");
+		final TextField<User> firstnameField = new TextField<User>("firstname");
+		final TextField<User> lastnameField = new TextField<User>("lastname");
+
+		final TextField<Date> birthdateField = new TextField<Date>(
+				"birthdate");
 		
 		final PasswordTextField passwordField1 = new PasswordTextField(
-				"password1", new Model<String>(""));
+				"password1", new PropertyModel<String>(model, "password"));
 		final PasswordTextField passwordField2 = new PasswordTextField(
 				"password2", new Model<String>(""));
 
-		List<String> countryList = Arrays.asList(new String[] { "Country 1",
-				"...", "Country 2" });
-
-		final DropDownChoice<String> countrySelect = new DropDownChoice<String>("country",
-				new PropertyModel<String>(this, ""), countryList);
+		List<String> countryList = userService.getAllCountries();
+		final DropDownChoice<String> countrySelect = new DropDownChoice<String>(
+				"country", countryList);
 		
-		List<String> genderList = Arrays.asList(new String[] { "Masculino",
-				"Femenino" });
-
-		final DropDownChoice<String> genderSelect = new DropDownChoice<String>("gender",
-				new PropertyModel<String>(this, ""), genderList);
+		final DropDownChoice<Gender> genderSelect = new DropDownChoice<Gender>(
+				"gender", Arrays.asList(Gender.values()),
+				new EnumChoiceRenderer<Gender>(this));
 		
-		final TextField<String> cityField = new TextField<String>(
-				"city", new Model<String>(""));
+		final TextField<User> cityField = new TextField<User>("city");
 		
 		
 		usernameField.setRequired(true);
@@ -148,7 +150,7 @@ public class RegisterPage extends BasePage {
 
 		form.add(new AjaxSubmitLink("save") {
 
-			private static final long serialVersionUID = 5647152324594190069L;
+			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
@@ -159,55 +161,57 @@ public class RegisterPage extends BasePage {
 				// target.addComponent(parent);
 				// target.focusComponent(editor);
 				// System.out.println("ACA 1");
-				String username = usernameField.getDefaultModelObjectAsString();
-				String firstname = firstnameField
-						.getDefaultModelObjectAsString();
-				String lastname = lastnameField.getDefaultModelObjectAsString();
-				String password = passwordField1
-						.getDefaultModelObjectAsString();
-				String country = countrySelect.getDefaultModelObjectAsString();
-				String gender = genderSelect.getDefaultModelObjectAsString();
+//				String username = usernameField.getDefaultModelObjectAsString();
+//				String firstname = firstnameField
+//						.getDefaultModelObjectAsString();
+//				String lastname = lastnameField.getDefaultModelObjectAsString();
+//				String country = countrySelect.getDefaultModelObjectAsString();
+//				String gender = genderSelect.getDefaultModelObjectAsString();
+//				String city = cityField.getDefaultModelObjectAsString();
+//				String password = passwordField1
+//						.getDefaultModelObjectAsString();
 				String birthdate = birthdateField.getDefaultModelObjectAsString();
-				String city = cityField.getDefaultModelObjectAsString();
+				
 
-				User user = new User(username, password, firstname, lastname,
-						User.Level.USER);
+//				User user = new User(username, password, firstname, lastname,
+//						User.Level.USER);
 				
-				System.out.println("GENDER: " + gender);
+//				System.out.println("GENDER: " + gender);
 				
-				if ( gender.equals("Masculino") ) {
-					user.setGender(Gender.MALE);
-				}
-				else {
-					user.setGender(Gender.FEMALE);
-				}
+//				if ( gender.equals("Masculino") ) {
+//					user.setGender(Gender.MALE);
+//				}
+//				else {
+//					user.setGender(Gender.FEMALE);
+//				}
+//				
+//				if ( StringUtils.isNotBlank(city) ) {
+//					user.setCity(city);
+//				}
 				
-				if ( StringUtils.isNotBlank(city) ) {
-					user.setCity(city);
-				}
-				
-				user.setCountry(country);
+				//user.setCountry(country);
 				
 				SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 				
-				try {
-					user.setBirthdate(sdf.parse(birthdate));
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				System.out.println("USER GENDER: " + user.getGender());
+//				try {
+//					newUser.setBirthdate(sdf.parse(birthdate));
+//				} catch (ParseException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+				
+				newUser.setLevel(Level.USER);
+				//newUser.setPassword(password);
 				
 				/* Insert user */
-				userService.insertUser(user);
+				userService.insertUser(newUser);
 				System.out.println("User inserted.");
-				System.out.println("Username: " + username);
-				System.out.println("Firstname: " + firstname);
-				System.out.println("Lastname: " + lastname);
-				System.out.println("Country: " + country);
-				System.out.println("City: " + city);
-				System.out.println("Gender: " + gender);
+				System.out.println("Username: " + newUser.getUsername());
+				System.out.println("Firstname: " + newUser.getFirstname());
+				System.out.println("Lastname: " + newUser.getLastname());
+				System.out.println("Country: " + newUser.getCountry());
+				System.out.println("City: " + newUser.getCity());
+				System.out.println("Gender: " + newUser.getGender());
 
 				target.add(parent);
 

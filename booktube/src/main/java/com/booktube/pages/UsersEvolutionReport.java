@@ -1,6 +1,5 @@
 package com.booktube.pages;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.wicket.markup.html.form.Button;

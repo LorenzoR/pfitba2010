@@ -66,7 +66,7 @@ public class User implements Serializable {
 	@Column(name = "GENDER", nullable = false)
 	private Gender gender;
 	
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	@Column(name = "BIRTHDATE", nullable = false)
 	private Date birthdate;
 	
@@ -79,28 +79,28 @@ public class User implements Serializable {
 	private Level level;
 	
 	public User() {
-
+		this.registrationDate = Calendar.getInstance().getTime();
 	}
 
 	public User(Long id, String username, String password, String firstname,
 			String lastname, Level level) {
+		this();
 		this.username = username;
 		this.password = hash(password, "SHA-1");
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.id = id;
-		this.level = level;
-		this.registrationDate = Calendar.getInstance().getTime();
+		this.level = level;	
 	}
 
 	public User(String username, String password, String firstname,
 			String lastname, Level level) {
+		this();
 		this.username = username;
 		this.password = hash(password, "SHA-1");
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.level = level;
-		this.registrationDate = Calendar.getInstance().getTime();
 	}
 
 	public Long getId() {
@@ -172,7 +172,7 @@ public class User implements Serializable {
 	}
 
 	public void setPassword(String password) {
-		this.password = password;
+		this.password = hash(password, "SHA-1");
 	}
 
 	public String getPassword() {
