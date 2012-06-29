@@ -50,11 +50,30 @@ public class LoadDataPage extends BasePage {
 			label = "Ya hay datos";
 		} else {
 			addUsers();
-			addBooks();
-			addMessages();
-			addCampaigns();
-			label = "Cargue datos";
 		}
+		
+		if ( bookService.getCount() != 0 ) {
+			
+		}
+		else {
+			addBooks();
+		}
+		
+		if ( messageService.getCount(null, null, null, null, null, null) != 0 ) {
+			
+		}
+		else {
+			addMessages();
+		}
+		
+		if ( campaignService.getCount(null, null, null, null, null, null) != 0 ) {
+			
+		}
+		else {
+			addCampaigns();
+		}
+		
+		label = "Cargue datos";
 
 		parent.add(new Label("content", label));
 	}

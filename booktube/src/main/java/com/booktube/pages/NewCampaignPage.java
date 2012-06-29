@@ -1,4 +1,4 @@
-package com.booktube.pages;
+	package com.booktube.pages;
 
 import java.util.Date;
 import java.text.DateFormat;
@@ -14,6 +14,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Check;
 import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
@@ -21,8 +22,8 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.CheckGroupSelector;
+import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.odlabs.wiquery.ui.datepicker.DatePicker;
 
@@ -82,14 +83,19 @@ public class NewCampaignPage extends BasePage {
 	private Form<?> newContactForm() {
 		Form<?> form = new Form<Object>("form");
 
-		List<String> genders = Arrays.asList(new String[] { "Todos",
-				"Masculino", "Femenino" });
+//		List<String> genders = Arrays.asList(new String[] { "Todos",
+//				"Masculino", "Femenino" });
 
-		final DropDownChoice<String> genderSelect = new DropDownChoice<String>(
-				"gender", new PropertyModel<String>(this, ""), genders);
+//		final DropDownChoice<String> genderSelect = new DropDownChoice<String>(
+//				"gender", new PropertyModel<String>(this, ""), genders);
+//
+//		form.add(genderSelect);
 
+		final DropDownChoice<Gender> genderSelect = new DropDownChoice<Gender>(
+				"gender", Arrays.asList(Gender.values()),
+				new EnumChoiceRenderer<Gender>(this));
 		form.add(genderSelect);
-
+		
 		final TextField<String> lowAgeField = new TextField<String>("lowAge",
 				new Model<String>(""));
 
@@ -110,9 +116,12 @@ public class NewCampaignPage extends BasePage {
 
 		List<String> countryList = userService.getAllCountries();
 
+//		final DropDownChoice<String> countrySelect = new DropDownChoice<String>(
+//				"country", new PropertyModel<String>(this, ""), countryList);
+//
+//		form.add(countrySelect);
 		final DropDownChoice<String> countrySelect = new DropDownChoice<String>(
-				"country", new PropertyModel<String>(this, ""), countryList);
-
+				"country", countryList);
 		form.add(countrySelect);
 
 		final TextField<String> subject = new TextField<String>("subject",
@@ -147,14 +156,18 @@ public class NewCampaignPage extends BasePage {
 		add(form);
 		form.add(group);
 		group.add(new CheckGroupSelector("groupselector"));
-		ListView persons = new ListView("persons", personsList) {
+		ListView<User> persons = new ListView<User>("persons", personsList) {
 
-			protected void populateItem(ListItem item) {
-				item.add(new Check("checkbox", item.getModel()));
-				item.add(new Label("name", new PropertyModel(item.getModel(),
-						"firstname")));
-				item.add(new Label("lastName", new PropertyModel(item
-						.getModel(), "lastname")));
+			private static final long serialVersionUID = 1L;
+
+			protected void populateItem(ListItem<User> item) {
+
+				item.setDefaultModel(new CompoundPropertyModel<User>(
+						(User) item.getModelObject()));
+				
+				item.add(new Check<User>("checkbox", item.getModel()));
+				item.add(new Label("firstname"));
+				item.add(new Label("lastname"));
 			}
 
 		};
@@ -163,6 +176,8 @@ public class NewCampaignPage extends BasePage {
 
 		form.add(text);
 		form.add(new AjaxSubmitLink("save") {
+
+			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
