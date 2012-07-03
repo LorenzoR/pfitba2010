@@ -33,7 +33,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.odlabs.wiquery.core.effects.sliding.SlideToggle;
 import org.odlabs.wiquery.core.javascript.JsScope;
-import org.odlabs.wiquery.ui.core.JsScopeUiEvent;
 import org.odlabs.wiquery.ui.datepicker.DatePicker;
 import org.odlabs.wiquery.ui.dialog.AjaxDialogButton;
 import org.odlabs.wiquery.ui.dialog.Dialog;
@@ -41,6 +40,7 @@ import org.odlabs.wiquery.ui.dialog.DialogButton;
 
 import com.booktube.model.User;
 import com.booktube.model.User.Gender;
+import com.booktube.pages.customComponents.DynamicLabel;
 import com.booktube.service.UserService;
 
 public class UsersAdministrationPage extends AdministrationPage {
@@ -68,41 +68,40 @@ public class UsersAdministrationPage extends AdministrationPage {
 	// }
 	// };
 
-	Model<String> deleteConfirmationModel = new Model<String>() {
+//	Model<String> deleteConfirmationModel = new Model<String>() {
+//
+//		private static final long serialVersionUID = 1L;
+//
+//		private String text;
+//
+//		public String getObject() {
+//			return text;
+//		}
+//
+//		public void setObject(String value) {
+//			this.text = value;
+//		}
+//	};
 
-		private static final long serialVersionUID = 1L;
+	private DynamicLabel deleteConfirmationLabel = new DynamicLabel(
+			"delete_confirmation_dialog_text");
 
-		private String text;
+//	Model<String> successDialogModel = new Model<String>() {
+//
+//		private static final long serialVersionUID = 1L;
+//
+//		private String text;
+//
+//		public String getObject() {
+//			return text;
+//		}
+//
+//		public void setObject(String value) {
+//			this.text = value;
+//		}
+//	};
 
-		public String getObject() {
-			return text;
-		}
-
-		public void setObject(String value) {
-			this.text = value;
-		}
-	};
-
-	private Label deleteConfirmationLabel = new Label(
-			"delete_confirmation_dialog_text", deleteConfirmationModel);
-
-	Model<String> successDialogModel = new Model<String>() {
-
-		private static final long serialVersionUID = 1L;
-
-		private String text;
-
-		public String getObject() {
-			return text;
-		}
-
-		public void setObject(String value) {
-			this.text = value;
-		}
-	};
-
-	private Label successDialogLabel = new Label("success_dialog_text",
-			successDialogModel);
+	private DynamicLabel successDialogLabel = new DynamicLabel("success_dialog_text");
 
 	// private String deleteConfirmationText;
 	//
@@ -146,8 +145,8 @@ public class UsersAdministrationPage extends AdministrationPage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
-		deleteConfirmationLabel.setOutputMarkupId(true);
-		successDialogLabel.setOutputMarkupId(true);
+		//deleteConfirmationLabel.setOutputMarkupId(true);
+		//successDialogLabel.setOutputMarkupId(true);
 		
 		parent.add(new Label("pageTitle", "Users Administration Page"));
 
@@ -160,7 +159,7 @@ public class UsersAdministrationPage extends AdministrationPage {
 		footerNavigator = new PagingNavigator("footerPaginator", dataView);
 		parent.add(footerNavigator);
 
-		deleteDialog = deleteDialog();
+		deleteDialog = deleteDialog(parent);
 		parent.add(deleteDialog);
 
 		deleteConfirmationDialog = deleteConfirmationDialog();
@@ -230,8 +229,8 @@ public class UsersAdministrationPage extends AdministrationPage {
 
 						deleteUsername = deleteUser.getUsername();
 
-						deleteConfirmationModel
-								.setObject("Esta seguro que desea eliminar el usuario "
+						deleteConfirmationLabel
+								.setLabel("Esta seguro que desea eliminar el usuario "
 										+ deleteUsername + " ?");
 
 						target.add(deleteConfirmationLabel);
@@ -263,9 +262,9 @@ public class UsersAdministrationPage extends AdministrationPage {
 		return dataView;
 	}
 
-	private Dialog deleteDialog() {
+	private Dialog deleteDialog(final WebMarkupContainer parent) {
 
-		Dialog dialog = new Dialog("success_dialog");
+		final Dialog dialog = new Dialog("success_dialog");
 
 		dialog.add(successDialogLabel);
 
@@ -275,13 +274,14 @@ public class UsersAdministrationPage extends AdministrationPage {
 
 			@Override
 			protected void onButtonClicked(AjaxRequestTarget target) {
-				setResponsePage(UsersAdministrationPage.class);
-
+				//setResponsePage(UsersAdministrationPage.class);
+				dialog.close(target);
+				target.add(parent);
 			}
 		};
 
 		dialog.setButtons(ok);
-		dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
+		//dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
 
 		return dialog;
 
@@ -311,14 +311,14 @@ public class UsersAdministrationPage extends AdministrationPage {
 				System.out.println("USER ES : " + deleteUser);
 				userService.deleteUser(deleteUser);
 
-				successDialogModel.setObject("Usuario " + deleteUsername + " eliminado.");
+				successDialogLabel.setLabel("Usuario " + deleteUsername + " eliminado.");
 				target.add(successDialogLabel);
 				// JsScopeUiEvent.quickScope(deleteConfirmationdialog.close().render());
-				JsScope.quickScope(dialog.close().render());
+				//JsScope.quickScope(dialog.close().render());
 				// deleteConfirmationdialog.close(target);
 				deleteDialog.open(target);
 				// setResponsePage(MessagesAdministrationPage.class);
-
+				dialog.close(target);
 			}
 		};
 
@@ -326,7 +326,7 @@ public class UsersAdministrationPage extends AdministrationPage {
 				JsScope.quickScope(dialog.close().render()));
 
 		dialog.setButtons(noButton, yesButton);
-		dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close()));
+		//dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close()));
 
 		return dialog;
 

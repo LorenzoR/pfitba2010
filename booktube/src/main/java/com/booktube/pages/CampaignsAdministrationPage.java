@@ -28,7 +28,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.odlabs.wiquery.core.effects.sliding.SlideToggle;
 import org.odlabs.wiquery.core.javascript.JsScope;
-import org.odlabs.wiquery.ui.core.JsScopeUiEvent;
 import org.odlabs.wiquery.ui.datepicker.DatePicker;
 import org.odlabs.wiquery.ui.dialog.AjaxDialogButton;
 import org.odlabs.wiquery.ui.dialog.Dialog;
@@ -87,7 +86,7 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 				"searchCampaignLink", "searchFields", new SlideToggle());
 		parent.add(searchButton);
 
-		deleteDialog = deleteDialog();
+		deleteDialog = deleteDialog(parent);
 		parent.add(deleteDialog);
 
 		deleteConfirmationDialog = deleteConfirmationDialog();
@@ -98,9 +97,9 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 
 	}
 
-	private Dialog deleteDialog() {
+	private Dialog deleteDialog(final WebMarkupContainer parent) {
 
-		Dialog dialog = new Dialog("success_dialog");
+		final Dialog dialog = new Dialog("success_dialog");
 
 		dialog.add(new Label("success_dialog_text", "Campaña eliminada!"));
 
@@ -110,13 +109,14 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 
 			@Override
 			protected void onButtonClicked(AjaxRequestTarget target) {
-				setResponsePage(CampaignsAdministrationPage.class);
-
+				//setResponsePage(CampaignsAdministrationPage.class);
+				dialog.close(target);
+				target.add(parent);
 			}
 		};
 
 		dialog.setButtons(ok);
-		dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
+		//dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
 
 		return dialog;
 
@@ -144,15 +144,15 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 				// deleteConfirmationdialog.close(target);
 				deleteDialog.open(target);
 				// setResponsePage(MessagesAdministrationPage.class);
-
+				dialog.close(target);
 			}
 		};
 
 		DialogButton noButton = new DialogButton("No",
 				JsScope.quickScope(dialog.close().render()));
 
-		dialog.setButtons(yesButton, noButton);
-		dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close()));
+		dialog.setButtons(noButton, yesButton);
+		//dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close()));
 
 		return dialog;
 

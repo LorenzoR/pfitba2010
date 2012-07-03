@@ -30,7 +30,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.hibernate.StaleStateException;
 import org.odlabs.wiquery.core.effects.sliding.SlideToggle;
 import org.odlabs.wiquery.core.javascript.JsScope;
-import org.odlabs.wiquery.ui.core.JsScopeUiEvent;
 import org.odlabs.wiquery.ui.datepicker.DatePicker;
 import org.odlabs.wiquery.ui.dialog.AjaxDialogButton;
 import org.odlabs.wiquery.ui.dialog.Dialog;
@@ -53,7 +52,7 @@ public class MessagesAdministrationPage extends AdministrationPage {
 
 	private final CheckGroup<Message> group;
 
-	private static Long messageId;
+	private Message deleteMessage;
 
 	private Long searchMessageId;
 	private String searchSubject;
@@ -88,7 +87,7 @@ public class MessagesAdministrationPage extends AdministrationPage {
 				"searchMessageLink", "searchFields", new SlideToggle());
 		parent.add(searchButton);
 
-		deleteDialog = deleteDialog();
+		deleteDialog = deleteDialog(parent);
 		parent.add(deleteDialog);
 
 		deleteConfirmationDialog = deleteConfirmationDialog();
@@ -99,9 +98,9 @@ public class MessagesAdministrationPage extends AdministrationPage {
 
 	}
 
-	private Dialog deleteDialog() {
+	private Dialog deleteDialog(final WebMarkupContainer parent) {
 
-		Dialog dialog = new Dialog("success_dialog");
+		final Dialog dialog = new Dialog("success_dialog");
 
 		dialog.add(new Label("success_dialog_text", "Mensaje eliminado!"));
 
@@ -111,13 +110,14 @@ public class MessagesAdministrationPage extends AdministrationPage {
 
 			@Override
 			protected void onButtonClicked(AjaxRequestTarget target) {
-				setResponsePage(MessagesAdministrationPage.class);
-
+				//setResponsePage(MessagesAdministrationPage.class);
+				dialog.close(target);
+				target.add(parent);
 			}
 		};
 
 		dialog.setButtons(ok);
-		dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
+		//dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
 
 		return dialog;
 
@@ -137,35 +137,22 @@ public class MessagesAdministrationPage extends AdministrationPage {
 			@Override
 			protected void onButtonClicked(AjaxRequestTarget target) {
 				System.out.println("Borro mensaje");
-				Message message = messageService.getMessage(messageId);
-				messageService.deleteMessage(message);
+				//Message message = messageService.getMessage(messageId);
+				messageService.deleteMessage(deleteMessage);
 				// JsScopeUiEvent.quickScope(deleteConfirmationdialog.close().render());
 				JsScope.quickScope(dialog.close().render());
 				// deleteConfirmationdialog.close(target);
 				deleteDialog.open(target);
 				// setResponsePage(MessagesAdministrationPage.class);
-
+				dialog.close(target);
 			}
 		};
-
-		// AjaxDialogButton noButton = new AjaxDialogButton("No") {
-		//
-		// private static final long serialVersionUID = 1L;
-		//
-		// @Override
-		// protected void onButtonClicked(AjaxRequestTarget target) {
-		// System.out.println("No borro mensaje");
-		// dialog.close();
-		// // setResponsePage(MessagesAdministrationPage.class);
-		//
-		// }
-		// };
 
 		DialogButton noButton = new DialogButton("No",
 				JsScope.quickScope(dialog.close().render()));
 
-		dialog.setButtons(yesButton, noButton);
-		dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close()));
+		dialog.setButtons(noButton, yesButton);
+		//dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close()));
 
 		return dialog;
 
@@ -221,8 +208,8 @@ public class MessagesAdministrationPage extends AdministrationPage {
 					@Override
 					public void onClick(AjaxRequestTarget target) {
 
-						Message message = (Message) getModelObject();
-						messageId = message.getId();
+						deleteMessage = (Message) getModelObject();
+						//messageId = message.getId();
 						// messageService.deleteMessage(message);
 						// userService.deleteUser(message);
 						// System.out.println("User " + messageId +
