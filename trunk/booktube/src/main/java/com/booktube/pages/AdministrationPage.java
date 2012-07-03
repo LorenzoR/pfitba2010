@@ -90,29 +90,29 @@ public class AdministrationPage extends BasePage {
 		return button;
 	}
 	
-	protected Dialog deleteDialog(Label label, final Class responsePage) {
-
-		Dialog dialog = new Dialog("success_dialog");
-
-		//dialog.add(successDialogLabel);
-		dialog.add(label);
-		
-		AjaxDialogButton ok = new AjaxDialogButton("OK") {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onButtonClicked(AjaxRequestTarget target) {
-				//setResponsePage(WorksAdministrationPage.class);
-				setResponsePage(responsePage);
-			}
-		};
-
-		dialog.setButtons(ok);
-		dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
-
-		return dialog;
-
-	}
+//	protected Dialog deleteDialog(Label label, final Class responsePage) {
+//
+//		Dialog dialog = new Dialog("success_dialog");
+//
+//		//dialog.add(successDialogLabel);
+//		dialog.add(label);
+//		
+//		AjaxDialogButton ok = new AjaxDialogButton("OK") {
+//
+//			private static final long serialVersionUID = 1L;
+//
+//			@Override
+//			protected void onButtonClicked(AjaxRequestTarget target) {
+//				//setResponsePage(WorksAdministrationPage.class);
+//				setResponsePage(responsePage);
+//			}
+//		};
+//
+//		dialog.setButtons(ok);
+//		dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
+//
+//		return dialog;
+//
+//	}
 		
 }

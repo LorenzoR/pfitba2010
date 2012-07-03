@@ -1,7 +1,9 @@
 package com.booktube.persistence.hibernate;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -27,7 +29,6 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 		return getUser(username) != null;
 	}
 
-	
 	@SuppressWarnings("unchecked")
 	public List<User> getAllUsers(int first, int count) {
 		return (List<User>) getSession().createCriteria(User.class)
@@ -39,8 +40,8 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 			String username, Gender gender, Integer lowerAge,
 			Integer higherAge, String country, Date lowDate, Date highDate) {
 		return (List<User>) createCriteria(userId, username, gender, lowerAge,
-				higherAge, country, lowDate, highDate).setFirstResult(first).setMaxResults(count)
-				.list();
+				higherAge, country, lowDate, highDate).setFirstResult(first)
+				.setMaxResults(count).list();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -70,14 +71,23 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 	public List<User> getUsersByAge(int first, int count, int lowerAge,
 			int higherAge) {
 
+		Calendar lowCal = Calendar.getInstance();
+		lowCal.add(Calendar.YEAR, -lowerAge);
+
+		Calendar highCal = Calendar.getInstance();
+		highCal.add(Calendar.YEAR, -higherAge);
+
 		List<User> users = (List<User>) getSession()
 				.createCriteria(User.class)
-				.add(Expression
-						.sql("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 >= "
-								+ lowerAge))
-				.add(Expression
-						.sql("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 <= "
-								+ higherAge))
+				.add(Restrictions.and(
+						Restrictions.le("birthdate", lowCal.getTime()),
+						Restrictions.ge("birthdate", highCal.getTime())))
+				// .add(Expression
+				// .sql("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 >= "
+				// + lowerAge))
+				// .add(Expression
+				// .sql("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 <= "
+				// + higherAge))
 				// .add(Restrictions.gt("age", lowerAge))
 				// .add(Restrictions.lt("age", higherAge))
 				.setFirstResult(first).setMaxResults(count).list();
@@ -185,16 +195,42 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 			criteria.add(Restrictions.le("registrationDate", highDate));
 		}
 
-		if (lowerAge != null) {
-			criteria.add(Expression
-					.sql("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 >= "
-							+ lowerAge));
-		}
+		if (lowerAge != null && higherAge != null) {
 
-		if (higherAge != null) {
-			criteria.add(Expression
-					.sql("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 <= "
-							+ higherAge));
+			Calendar lowCal = Calendar.getInstance();
+			lowCal.add(Calendar.YEAR, -lowerAge);
+			
+			Calendar highCal = Calendar.getInstance();
+			highCal.add(Calendar.YEAR, -higherAge);
+			
+			criteria.add(Restrictions.and(
+					Restrictions.le("birthdate", lowCal.getTime()),
+					Restrictions.ge("birthdate", highCal.getTime())));
+			
+		} else {
+
+			if (lowerAge != null) {
+
+				Calendar lowCal = Calendar.getInstance();
+				lowCal.add(Calendar.YEAR, -lowerAge);
+
+				criteria.add(Restrictions.le("birthdate", lowCal.getTime()));
+			}
+
+			// criteria.add(Expression
+			// .sql("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 >= "
+			// + lowerAge));
+
+			if (higherAge != null) {
+				Calendar highCal = Calendar.getInstance();
+				highCal.add(Calendar.YEAR, -higherAge);
+
+				criteria.add(Restrictions.ge("birthdate", highCal.getTime()));
+
+				// criteria.add(Expression
+				// .sql("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 <= "
+				// + higherAge));
+			}
 		}
 
 		if (gender != null) {
@@ -207,35 +243,40 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 
 		return criteria;
 	}
-	
-// Para el filtro usado para generar reportes
-	
-//	public List<String> getAllCountries() {
-//		List<String> countries = (List<String>) getSession().createSQLQuery("SELECT country FROM user GROUP BY country").list();
-//		return countries;
-//	}
-	
-	//OJO: falta agregar este campo a la tabla
+
+	// Para el filtro usado para generar reportes
+
+	// public List<String> getAllCountries() {
+	// List<String> countries = (List<String>)
+	// getSession().createSQLQuery("SELECT country FROM user GROUP BY country").list();
+	// return countries;
+	// }
+
+	// OJO: falta agregar este campo a la tabla
 	public List<String> getAllCities() {
-		List<String> cities = (List<String>) getSession().createSQLQuery("SELECT city FROM user GROUP BY city").list();		
+		List<String> cities = (List<String>) getSession().createSQLQuery(
+				"SELECT city FROM user GROUP BY city").list();
 		return cities;
 	}
-	
-	
+
 	public List<String> getAllAges() {
-		List<Double> ages = (List<Double>) getSession().createSQLQuery("SELECT DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(birthdate)), '%Y')+0 AS age FROM user GROUP BY age").list();
+		List<Double> ages = (List<Double>) getSession()
+				.createSQLQuery(
+						"SELECT DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(birthdate)), '%Y')+0 AS age FROM user GROUP BY age")
+				.list();
 		List<String> resp = new ArrayList<String>();
-		for( Double age : ages ){
+		for (Double age : ages) {
 			resp.add(String.valueOf(Math.round(age)));
 		}
 		return resp;
 	}
 
 	public List<String> getAllGenders() {
-		List<Integer> genders = (List<Integer>) getSession().createSQLQuery("SELECT gender FROM user GROUP BY gender").list();
+		List<Integer> genders = (List<Integer>) getSession().createSQLQuery(
+				"SELECT gender FROM user GROUP BY gender").list();
 		List<String> resp = new ArrayList<String>();
-		for( Integer g : genders ){
-			if( g == 0 )
+		for (Integer g : genders) {
+			if (g == 0)
 				resp.add("Masculino");
 			else
 				resp.add("Femenino");

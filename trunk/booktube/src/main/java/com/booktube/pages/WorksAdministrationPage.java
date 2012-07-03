@@ -38,6 +38,7 @@ import org.odlabs.wiquery.ui.dialog.DialogButton;
 
 import com.booktube.model.Book;
 import com.booktube.model.BookTag;
+import com.booktube.pages.customComponents.DynamicLabel;
 
 public class WorksAdministrationPage extends AdministrationPage {
 	private static final long serialVersionUID = 7512914721917619810L;
@@ -62,40 +63,43 @@ public class WorksAdministrationPage extends AdministrationPage {
 //		}
 //	};
 
-	Model<String> deleteConfirmationModel = new Model<String>() {
-
-		private static final long serialVersionUID = 1L;
-		
-		private String text;
-		
-		public String getObject() {
-			return text;
-		}
-		
-		public void setObject(String value) {
-			this.text = value;
-		}
-	};
+//	Model<String> deleteConfirmationModel = new Model<String>() {
+//
+//		private static final long serialVersionUID = 1L;
+//		
+//		private String text;
+//		
+//		public String getObject() {
+//			return text;
+//		}
+//		
+//		public void setObject(String value) {
+//			this.text = value;
+//		}
+//	};
+//	
+//	private Label deleteConfirmationLabel = new Label(
+//			"delete_confirmation_dialog_text", deleteConfirmationModel);
 	
-	private Label deleteConfirmationLabel = new Label(
-			"delete_confirmation_dialog_text", deleteConfirmationModel);
-
-	Model<String> successDialogModel = new Model<String>() {
-
-		private static final long serialVersionUID = 1L;
-		
-		private String text;
-		
-		public String getObject() {
-			return text;
-		}
-		
-		public void setObject(String value) {
-			this.text = value;
-		}
-	};
+	private DynamicLabel deleteConfirmationLabel = new DynamicLabel("delete_confirmation_dialog_text");
+	private DynamicLabel successDialogLabel = new DynamicLabel("success_dialog_text");
 	
-	private Label successDialogLabel = new Label("success_dialog_text", successDialogModel);
+//	Model<String> successDialogModel = new Model<String>() {
+//
+//		private static final long serialVersionUID = 1L;
+//		
+//		private String text;
+//		
+//		public String getObject() {
+//			return text;
+//		}
+//		
+//		public void setObject(String value) {
+//			this.text = value;
+//		}
+//	};
+//	
+//	private Label successDialogLabel = new Label("success_dialog_text", successDialogModel);
 	
 //	private Label successDialogLabel = new Label("success_dialog_text",
 //			new PropertyModel<String>(this, "successDialogText")) {
@@ -138,8 +142,8 @@ public class WorksAdministrationPage extends AdministrationPage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
-		deleteConfirmationLabel.setOutputMarkupId(true);
-		successDialogLabel.setOutputMarkupId(true);
+		//deleteConfirmationLabel.setOutputMarkupId(true);
+		//successDialogLabel.setOutputMarkupId(true);
 		
 		parent.add(new Label("pageTitle", "Works Administration Page"));
 
@@ -277,8 +281,13 @@ public class WorksAdministrationPage extends AdministrationPage {
 
 						//deleteConfirmationText = "Esta seguro que desea eliminar la obra "
 						//		+ deleteBookTitle + " ?";
-						deleteConfirmationModel.setObject("Esta seguro que desea eliminar la obra "
+//						deleteConfirmationModel.setObject("Esta seguro que desea eliminar la obra "
+//								+ deleteBookTitle + " ?");
+						
+						deleteConfirmationLabel.setLabel("Esta seguro que desea eliminar la obra "
 								+ deleteBookTitle + " ?");
+						
+						//System.out.println("--- " + deleteConfirmationLabel.getLabel());
 
 						target.add(deleteConfirmationLabel);
 					}
@@ -352,7 +361,9 @@ public class WorksAdministrationPage extends AdministrationPage {
 				bookService.deleteBook(deleteBook);
 
 				//successDialogText = "Obra " + deleteBookTitle + " eliminada.";
-				successDialogModel.setObject("Obra " + deleteBookTitle + " eliminada.");
+				successDialogLabel.setLabel("Obra " + deleteBookTitle + " eliminada.");
+				//successDialogLabel.getLabel();
+				//System.out.println("==== " + successDialogLabel.getLabel());
 				target.add(successDialogLabel);
 				// JsScopeUiEvent.quickScope(deleteConfirmationdialog.close().render());
 				
