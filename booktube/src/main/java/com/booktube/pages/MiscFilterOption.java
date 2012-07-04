@@ -16,6 +16,9 @@ public class MiscFilterOption extends FilterOption {
 	public void addElement( DropDownElementPanel element ){
 		elements.add(element);
 	}
+	public List<DropDownElementPanel> getElements(){
+		return elements;
+	}
 
 	
 
