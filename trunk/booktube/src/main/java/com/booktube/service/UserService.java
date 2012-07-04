@@ -7,6 +7,9 @@ import java.util.List;
 import com.booktube.model.User;
 import com.booktube.model.User.Gender;
 import com.booktube.model.User.Level;
+import com.booktube.pages.AgeFilterOption;
+import com.booktube.pages.MiscFilterOption;
+import com.booktube.pages.OriginFilterOption;
 
 public interface UserService {
 	public boolean usernameExists(String username);
@@ -32,4 +35,7 @@ public interface UserService {
     public List<String> getAllCities();
     public List<String> getAllAges();
     public List<String> getAllGenders();
+    
+    // Para el reporte UserEvolution
+    public List<Object> getUserEvolutionByYear(OriginFilterOption origin, AgeFilterOption age, MiscFilterOption misc);
 }

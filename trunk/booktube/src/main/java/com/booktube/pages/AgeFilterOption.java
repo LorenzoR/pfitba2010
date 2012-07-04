@@ -15,11 +15,17 @@ public class AgeFilterOption extends FilterOption {
 	@SpringBean
 	UserService userService;
 	private List<String> allAgesList = userService.getAllAges();
-	private String selectedMinAge = allAgesList.get(0);
-	private String selectedMaxAge = selectedMinAge;
+//	private String selectedMinAge = allAgesList.get(0);
+//	private String selectedMaxAge = selectedMinAge;
 	
+	private String selectedMinAge;
+	private String selectedMaxAge;
 	public AgeFilterOption(String id) {		
 		super(id);
+	
+		allAgesList.add(0, listFirstOption);
+		selectedMinAge = allAgesList.get(0);
+		selectedMaxAge = selectedMinAge;
 		
 		add(new Label("minLabel", "Min"));
 		add(new DropDownChoice<String>("minAge", new PropertyModel<String>(this,"selectedMinAge"),allAgesList));

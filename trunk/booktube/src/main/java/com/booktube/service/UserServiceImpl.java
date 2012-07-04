@@ -7,6 +7,9 @@ import java.util.List;
 import com.booktube.model.User;
 import com.booktube.model.User.Gender;
 import com.booktube.model.User.Level;
+import com.booktube.pages.AgeFilterOption;
+import com.booktube.pages.MiscFilterOption;
+import com.booktube.pages.OriginFilterOption;
 import com.booktube.persistence.UserDao;
 
 public class UserServiceImpl implements UserService {
@@ -109,5 +112,10 @@ public class UserServiceImpl implements UserService {
 
 	public List<String> getAllGenders() {
 		return itemDao.getAllGenders();
+	}
+	
+	// Para el reporte UserEvolution
+	public List<Object> getUserEvolutionByYear(OriginFilterOption origin, AgeFilterOption age, MiscFilterOption misc){
+		return itemDao.getUserEvolutionByYear(origin, age, misc);
 	}
 }

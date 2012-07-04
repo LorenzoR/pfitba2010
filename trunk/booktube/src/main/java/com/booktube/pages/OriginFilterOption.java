@@ -15,25 +15,34 @@ public class OriginFilterOption extends FilterOption {
 	
 	@SpringBean
 	UserService userService;
-	private static final List<String> CITIES = Arrays.asList(new String[] {"Buenos Aires", "Montevideo", "Cordoba", "Asunción", "Rosario" });
+//	private static final List<String> CITIES = Arrays.asList(new String[] {"Buenos Aires", "Montevideo", "Cordoba", "Asunción", "Rosario" });
 	
-	private List<String> allCountriesList = userService.getAllCountries();
-	private String selectedCountry = allCountriesList.get(0);
+	private List<String> allCountriesList;
+	private String selectedCountry;
 	
-	//private List<String> allCitiesList = userService.getAllCities();
-	//private String selectedCity = allCitiesList.get(0);
-	private String selectedCity = CITIES.get(0);
+	private List<String> allCitiesList;
+	private String selectedCity;
+//	private String selectedCity = CITIES.get(0);
 	
 	
 	public OriginFilterOption(String id) {
 		super(id);
+		
+		allCountriesList = userService.getAllCountries();
+		allCountriesList.add(0, listFirstOption);
+		selectedCountry = allCountriesList.get(0);
+		
+		allCitiesList = userService.getAllCities();
+		allCitiesList.add(0, listFirstOption);
+		selectedCity = allCitiesList.get(0);
+				
 		add(new Label("countryLabel", "País"));				
 		add(new DropDownChoice<String>("country", new PropertyModel<String>(this, "selectedCountry"),allCountriesList));
 		
 		
 		add(new Label("cityLabel", "Ciudad"));
-		//add(new DropDownChoice<String>("city",  new PropertyModel<String>(this, "selectedCity"), allCitiesList) );
-		add(new DropDownChoice<String>("city", new PropertyModel<String>(this, "selectedCity"), CITIES) );
+		add(new DropDownChoice<String>("city",  new PropertyModel<String>(this, "selectedCity"), allCitiesList) );
+		//add(new DropDownChoice<String>("city", new PropertyModel<String>(this, "selectedCity"), CITIES) );
 	}
 
 

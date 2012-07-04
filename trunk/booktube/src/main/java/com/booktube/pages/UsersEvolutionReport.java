@@ -1,11 +1,22 @@
 package com.booktube.pages;
 
+import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.resource.ContextRelativeResource;
+import org.apache.wicket.request.resource.IResource;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+
+import com.booktube.pages.utilities.JFreeChartLineReport;
 import com.booktube.service.UserService;
 
 
@@ -32,6 +43,7 @@ public class UsersEvolutionReport extends ReportPage {
 		reportFilter.addFilterOption(ageFilter);
 	
 		customizedMisc = new MiscFilterOption("component");
+		allGendersList.add(0,FilterOption.listFirstOption);
 		genderDropDownElement = new DropDownElementPanel("element", "Sex", allGendersList); 
 		customizedMisc.addElement(genderDropDownElement);
 		reportFilter.addFilterOption(customizedMisc);
@@ -45,10 +57,39 @@ public class UsersEvolutionReport extends ReportPage {
 			private static final long serialVersionUID = 6743737357599494567L;
 
 			@Override
-			public void onSubmit() {
-				System.out.println("min="+ageFilter.getSelectedMinAge()+" Max="+ageFilter.getSelectedMaxAge());
-				System.out.println("pais="+originFilter.getSelectedCountry()+" ciudad="+originFilter.getSelectedCity());
-				System.out.println("sexo="+genderDropDownElement.getSelectedGender());
+			public void onSubmit() {				
+				List<?> data =  userService.getUserEvolutionByYear(originFilter, ageFilter, customizedMisc);				
+				final XYSeries serie = new XYSeries("Evolucion de Usuario en el tiempo");				 
+				for(Object object : data){
+		           Map<?, ?> row = (Map<?, ?>)object;
+		           serie.add(Double.valueOf((String)row.get("year")),Double.valueOf((String)row.get("total")) ); 
+		        }
+				    
+				
+				final XYSeriesCollection collection = new XYSeriesCollection();
+			    collection.addSeries(serie);			   
+			     
+			    int ANCHO_GRAFICA = 600;			    
+			    int ALTO_GRAFICA = 450;
+			    
+			    String filename = "src/main/webapp/img/report.png";
+			    
+			    try {
+			        final JFreeChartLineReport userEvolReport = new JFreeChartLineReport();
+			        final JFreeChart grafica = userEvolReport.crearGrafica(collection);
+			        ChartUtilities.saveChartAsPNG(new File(filename), grafica, ANCHO_GRAFICA, ALTO_GRAFICA);			        
+			    } catch (Exception e) {
+			        e.printStackTrace();
+			    }		
+			    
+			    reportImage.setImageResourceReference(new ResourceReference(UsersEvolutionReport.class, "report.png") {
+					private static final long serialVersionUID = 7995864723435899261L;
+
+					@Override
+					public IResource getResource() {						
+						return new ContextRelativeResource("/img/report.png");
+					}
+				});
 			}
 		});
 
