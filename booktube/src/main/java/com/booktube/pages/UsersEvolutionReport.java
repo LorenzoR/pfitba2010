@@ -44,7 +44,7 @@ public class UsersEvolutionReport extends ReportPage {
 	
 		customizedMisc = new MiscFilterOption("component");
 		allGendersList.add(0,FilterOption.listFirstOption);
-		genderDropDownElement = new DropDownElementPanel("element", "Sex", allGendersList); 
+		genderDropDownElement = new DropDownElementPanel("element", "Sex", "gender", allGendersList); 
 		customizedMisc.addElement(genderDropDownElement);
 		reportFilter.addFilterOption(customizedMisc);
 		

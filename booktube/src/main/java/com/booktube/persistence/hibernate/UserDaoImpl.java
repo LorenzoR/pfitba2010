@@ -1,33 +1,28 @@
 package com.booktube.persistence.hibernate;
 
 import java.util.ArrayList;
-
-
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.wicket.util.io.StringBufferWriter;
+
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
-import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
-
 import com.booktube.model.User;
 import com.booktube.model.User.Gender;
 import com.booktube.pages.AgeFilterOption;
-import com.booktube.pages.FilterOption;
 import com.booktube.pages.MiscFilterOption;
 import com.booktube.pages.OriginFilterOption;
 import com.booktube.persistence.UserDao;
 import com.booktube.model.User.Level;
 
+@SuppressWarnings("deprecation")
 public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 
 	protected UserDaoImpl() {
@@ -231,6 +226,7 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 				.list();
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<String> getAllAges() {
 		List<Double> ages = (List<Double>) getSession().createSQLQuery("SELECT DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(birthdate)), '%Y')+0 AS age FROM user GROUP BY age").list();
 		List<String> resp = new ArrayList<String>();
@@ -240,6 +236,7 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 		return resp;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<String> getAllGenders() {
 		List<Integer> genders = (List<Integer>) getSession().createSQLQuery("SELECT gender FROM user GROUP BY gender").list();
 		List<String> resp = new ArrayList<String>();
@@ -251,16 +248,9 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 		}
 		return resp;
 	}
+	
 	public List<Object> getUserEvolutionByYear(OriginFilterOption origin, AgeFilterOption age, MiscFilterOption misc) {
-		//String sql = "select year(registration_date) as year, count(user_id) as total from user group by year";
-		
-		String genderRestriction = generateRestriction("gender", "=", misc.getElements().get(0).getSelectedGender() ); 
-		String cityRestriction = generateRestriction("city", "=", origin.getSelectedCity());
-		String countryRestriction = generateRestriction("country", "=",origin.getSelectedCountry());
-		String minAgeRestriction = generateRestriction("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0", ">=", age.getSelectedMinAge());
-		String maxAgeRestriction = generateRestriction("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0", "<=", age.getSelectedMaxAge());		
-		
-		String whereClause = generateWhereClause(genderRestriction, cityRestriction, countryRestriction, minAgeRestriction, maxAgeRestriction);
+		String whereClause = SqlUtilities.generateWhereClause(origin, age, misc);
 		String sql = "select year(registration_date) as year, count(user_id) as total from user "+whereClause+" group by year";
 		
 		SQLQuery query = getSession().createSQLQuery(sql)
@@ -268,71 +258,16 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 			.addScalar("total", Hibernate.STRING);
 		
         query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-        List<Object> data = (List<Object>)query.list();
+        @SuppressWarnings("unchecked")
+		List<Object> data = (List<Object>)query.list();
         return data;
 	}
-//	public List<Object> getUserEvolutionByYear() {
-//		String sql = "select year(registration_date) as year, count(user_id) as total from user group by year";
-//		
-//		SQLQuery query = getSession().createSQLQuery(sql)
-//		.addScalar("year", Hibernate.STRING)
-//		.addScalar("total", Hibernate.STRING);
-//        query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-//        List data = query.list();
-//        return data;
-//	}
-	
-	
-	// Recibe un array de Strings de tamaño variable con las restricciones
-	// y devuelve toda la clausula where con las restricciones
-	// Si no hay restricciones devuelve una cadena vacia
-	private String generateWhereClause(String ... restrictions) {
-		StringBuffer buff = new StringBuffer();
-		String result = "";
-		int dim = restrictions.length;
-		
-		boolean clauseIsNotBlank = false;
-		for( int i=0; i<dim; i++ ){			
-			if( StringUtils.isNotBlank(restrictions[i])){
-				if( clauseIsNotBlank )
-					buff.append(" and ");
-				buff.append(restrictions[i]);
-				clauseIsNotBlank = true;
-			}
-		}
-		
-		if( StringUtils.isNotBlank(buff.toString()) )
-			result = "where "+buff.toString();
-		return result;	
-	}
 
-	// Genera cadena con la restriccion para la clausura where, o una
-	// cadena vacia si la restriccion no debe estar en el query.
-	// Se  usa para los combo box. Si no se selecciona ninguna opcion,
-	// queda la cadena "Seleccione ..", y la restriccion no debe agregarse
-	// En caso se requiera alguna transformacion del valor obtenido del combo
-	// la funcion getFieldValue() se encarga
-	private String generateRestriction(String fieldName, String comparator,  String value) {		
-		StringBuffer restriction = new StringBuffer();
-		if( value != FilterOption.listFirstOption )
-			restriction.append(fieldName+comparator+getFieldValue(value));
-		return restriction.toString();
-	}
 
-	// Se fija si debe transformar el valor obtenido de un combo a un valor
-	// equivalente que se pueda usar en la clausula where
-	private String getFieldValue(String value) {
-		String comillas = "\"";
-		String resp = value;
-		if( value == "Masculino")
-			resp =  String.valueOf(Gender.MALE.ordinal());
-		else if( value == "Femenino" )
-			resp = String.valueOf(Gender.FEMALE.ordinal());
-		return comillas+resp+comillas;
-	}
 
 	// METODO PRIVADO PARA CREAR LOS CRITERIOS HIBERNATE PARA REALIZAR LOS
 	// QUERIES DE LOS FILTROS
+	@SuppressWarnings( "unused" )
 	private Criteria createFilterCriteria(Gender gender, Integer lowerAge, Integer higherAge, String country, String city) {
 
 		Criteria criteria = getSession().createCriteria(User.class);
