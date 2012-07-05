@@ -16,9 +16,7 @@ public class UniqueUsernameValidator extends StringValidator {
 	@Override
 	protected void onValidate(IValidatable<String> validatable) {
 
-		boolean userExists = userService.usernameExists(validatable.getValue());
-
-		if (userExists) {
+		if ( userService.usernameExists(validatable.getValue()) ) {
 			error(validatable);
 		}
 

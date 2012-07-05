@@ -68,7 +68,7 @@ public abstract class BasePage extends WebPage {
 	private Dialog loginErrorDialog;
 
 	public BasePage() {
-
+		
 		if (WiaSession.get().isAuthenticated()) {
 			add(new Label("welcome", "Bienvenido "
 					+ WiaSession.get().getLoggedInUser().getUsername() + " | "));

@@ -8,6 +8,7 @@ import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.PasswordTextField;
+import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -124,7 +125,7 @@ public class AddBookPage extends BasePage {
 
 		form.setDefaultModel(model);
 
-		final TextField<Book> titleField = new TextField<Book>("title");
+		final RequiredTextField<Book> titleField = new RequiredTextField<Book>("title");
 
 		form.add(titleField);
 
@@ -147,6 +148,8 @@ public class AddBookPage extends BasePage {
 
 		final TextArea<Book> editor = new TextArea<Book>("text");
 		editor.setOutputMarkupId(true);
+		editor.setRequired(true);
+		form.add(editor);
 
 		final AbstractAutoCompleteTextField<String> category = new AbstractAutoCompleteTextField<String>(
 				"category", new PropertyModel<Book>(newBook, "category")) {
@@ -161,7 +164,7 @@ public class AddBookPage extends BasePage {
 				return choice;
 			}
 		};
-
+		category.setRequired(true);
 		form.add(category);
 
 		final AbstractAutoCompleteTextField<String> subcategory = new AbstractAutoCompleteTextField<String>(
@@ -179,77 +182,7 @@ public class AddBookPage extends BasePage {
 		};
 
 		form.add(subcategory);
-		
-		// final AutoCompleteTextField<String> category = new
-		// AutoCompleteTextField<String>(
-		// "category", new Model("")) {
-		//
-		// private static final long serialVersionUID = 1L;
-		//
-		// @Override
-		// protected Iterator<String> getChoices(String input) {
-		// if (Strings.isEmpty(input)) {
-		// List<String> emptyList = Collections.emptyList();
-		// return emptyList.iterator();
-		// }
-		//
-		// List<String> choices = new ArrayList<String>(10);
-		//
-		// List<String> categories = bookService.getCategories(0,
-		// Integer.MAX_VALUE);
-		//
-		// for (final String aCategory : categories) {
-		//
-		// if (aCategory.toUpperCase().startsWith(input.toUpperCase())) {
-		// choices.add(aCategory);
-		// if (choices.size() == 10) {
-		// break;
-		// }
-		// }
-		// }
-		//
-		// return choices.iterator();
-		// }
-		// };
-		//
-		// form.add(category);
 
-//		final AutoCompleteTextField<String> subcategory = new AutoCompleteTextField<String>(
-//				"subcategory", new Model<String>("")) {
-//
-//			private static final long serialVersionUID = 1L;
-//
-//			@Override
-//			protected Iterator<String> getChoices(String input) {
-//				if (Strings.isEmpty(input)) {
-//					List<String> emptyList = Collections.emptyList();
-//					return emptyList.iterator();
-//				}
-//
-//				List<String> choices = new ArrayList<String>(10);
-//
-//				List<String> subcategories = bookService.getSubcategories(0,
-//						Integer.MAX_VALUE, null);
-//
-//				for (final String aSubcategory : subcategories) {
-//					if (aSubcategory != null) {
-//						if (aSubcategory.toUpperCase().startsWith(
-//								input.toUpperCase())) {
-//							choices.add(aSubcategory);
-//							if (choices.size() == 10) {
-//								break;
-//							}
-//						}
-//					}
-//				}
-//
-//				return choices.iterator();
-//			}
-//		};
-//
-//		form.add(subcategory);
-
-		form.add(editor);
 		form.add(new AjaxSubmitLink("save") {
 
 			private static final long serialVersionUID = 1L;
@@ -297,9 +230,9 @@ public class AddBookPage extends BasePage {
 				System.out.println("Category: " + newBook.getCategory());
 				System.out.println("SubCategory: " + newBook.getSubCategory());
 
-				/* Clear values */
-				editor.setModel(new Model<Book>());
-				titleField.setModel(new Model<Book>());
+				///* Clear values */
+				//editor.setModel(new Model<Book>());
+				//titleField.setModel(new Model<Book>());
 				target.add(parent);
 
 				dialog.open(target);
