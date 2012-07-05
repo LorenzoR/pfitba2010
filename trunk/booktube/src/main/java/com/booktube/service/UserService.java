@@ -35,7 +35,10 @@ public interface UserService {
     public List<String> getAllCities();
     public List<String> getAllAges();
     public List<String> getAllGenders();
+    public List<String> getAllRegistrationYears();
     
-    // Para el reporte UserEvolution
+    // Para los reportes
     public List<Object> getUserEvolutionByYear(OriginFilterOption origin, AgeFilterOption age, MiscFilterOption misc);
+    public List<Object> getUserDistributionByCountry(AgeFilterOption age, MiscFilterOption misc);
+    
 }

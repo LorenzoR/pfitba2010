@@ -16,6 +16,8 @@ public class ReportsAdministrationPage extends AdministrationPage{
 			add(parent);
 			
 			parent.add(new BookmarkablePageLink<String>("usersEvolutionReport", UsersEvolutionReport.class));
+			parent.add(new BookmarkablePageLink<String>("usersDistributionReport", UsersDistributionReport.class));
+			parent.add(new BookmarkablePageLink<String>("usersBySexReport", UsersBySexReport.class));
 			
 			String newTitle = "Booktube - Reports Administration"; 
 			super.get("pageTitle").setDefaultModelObject(newTitle);

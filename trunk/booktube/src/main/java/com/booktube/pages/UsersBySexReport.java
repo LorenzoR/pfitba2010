@@ -13,15 +13,17 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
+import com.booktube.pages.utilities.JFreeChartBarReport;
 import com.booktube.pages.utilities.JFreeChartLineReport;
 import com.booktube.service.UserService;
 
 
-public class UsersEvolutionReport extends ReportPage {
-	private static final long serialVersionUID = 6051762145219128009L;
+public class UsersBySexReport extends ReportPage {
+	private static final long serialVersionUID = -4994588390864291547L;
 	
 	protected AgeFilterOption ageFilter;
 	protected OriginFilterOption originFilter;
@@ -29,9 +31,9 @@ public class UsersEvolutionReport extends ReportPage {
 	DropDownElementPanel genderDropDownElement;
 	@SpringBean
 	UserService userService;
-	private List<String> allGendersList = userService.getAllGenders();
+	
 		
-	public UsersEvolutionReport(){
+	public UsersBySexReport(){
 		super();
 		// No es necesario WebMarkupContainer pues esta subclase no agrega codigo estatico HTML a la superclase(ReportPage)
 
@@ -40,15 +42,9 @@ public class UsersEvolutionReport extends ReportPage {
 		reportFilter.addFilterOption(originFilter);
 		
 		ageFilter = new AgeFilterOption("component");
-		reportFilter.addFilterOption(ageFilter);
-	
-		customizedMisc = new MiscFilterOption("component");
-		allGendersList.add(0,FilterOption.listFirstOption);
-		genderDropDownElement = new DropDownElementPanel("element", "Sex", "gender", allGendersList); 
-		customizedMisc.addElement(genderDropDownElement);
-		reportFilter.addFilterOption(customizedMisc);
+		reportFilter.addFilterOption(ageFilter);	
 		
-		String newTitle = "Booktube - Users Evolution Report"; 
+		String newTitle = "Booktube - Users By Sex Report"; 
 		super.get("pageTitle").setDefaultModelObject(newTitle);	
 		
 		
@@ -60,25 +56,41 @@ public class UsersEvolutionReport extends ReportPage {
 			@Override
 			public void onSubmit() {				
 				//List<?> data =  userService.getUserEvolutionByYear(originFilter, ageFilter, customizedMisc);		
-				List<?> data  = getData();
-				final XYSeries serie = new XYSeries("Evolucion de Usuario en el tiempo");				 
-				for(Object object : data){
-		           Map<?, ?> row = (Map<?, ?>)object;
-		           serie.add(Double.valueOf((String)row.get("year")),Double.valueOf((String)row.get("total")) ); 
-		        }
-				    
+				//List<?> data  = getData();
 				
-				final XYSeriesCollection collection = new XYSeriesCollection();
-			    collection.addSeries(serie);			   
-			     
+				
+				
+				DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+				dataset.setValue(5, "jalados", "José");
+				dataset.setValue(5, "jalados", "Ronny");
+				dataset.setValue(4, "jalados", "Frank");
+				dataset.setValue(2, "jalados", "Sumire");
+				dataset.setValue(0, "jalados", "Maribel");
+				dataset.setValue(-1, "jalados", "Ian");
+				dataset.setValue(10, "aprobados", "José");
+				dataset.setValue(9, "aprobados", "Ronny");
+				dataset.setValue(12, "aprobados", "Frank");
+				dataset.setValue(13, "aprobados", "Sumire");
+				dataset.setValue(15, "aprobados", "Maribel");
+				dataset.setValue(12, "aprobados", "Ian");
+				
+				
+//				final XYSeries serie = new XYSeries("Evolucion de Usuario en el tiempo");
+//				for(Object object : data){
+//		           Map<?, ?> row = (Map<?, ?>)object;
+//		           serie.add(Double.valueOf((String)row.get("year")),Double.valueOf((String)row.get("total")) ); 
+//		        }
+//				    
+				
+				 
 			    int ANCHO_GRAFICA = 600;			    
 			    int ALTO_GRAFICA = 450;
 			    
 			    String filename = "src/main/webapp/img/report.png";
 			    
 			    try {
-			        final JFreeChartLineReport userEvolReport = new JFreeChartLineReport();
-			        final JFreeChart grafica = userEvolReport.crearGrafica(collection);
+			        final JFreeChartBarReport usersBySexReport = new JFreeChartBarReport();
+			        final JFreeChart grafica = usersBySexReport.crearGrafica(dataset);
 			        ChartUtilities.saveChartAsPNG(new File(filename), grafica, ANCHO_GRAFICA, ALTO_GRAFICA);			        
 			    } catch (Exception e) {
 			        e.printStackTrace();
