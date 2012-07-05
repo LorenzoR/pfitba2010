@@ -11,16 +11,21 @@ import org.apache.wicket.model.PropertyModel;
 public class DropDownElementPanel extends Panel {
 	private static final long serialVersionUID = -3071539804676533817L;
 	
-	private String selectedGender; 
+	private String selectedValue; 
+	private String tableFieldName;
 	
-	public DropDownElementPanel(String id, String label, List<String>values) {
+	public DropDownElementPanel(String id, String label, String tableFieldName, List<String>values) {
 		super(id);
-		selectedGender = values.get(0);
+		selectedValue = values.get(0);
+		this.tableFieldName = tableFieldName;
 		add(new Label("label", label));
-		add(new DropDownChoice<String>("list",new PropertyModel<String>(this,"selectedGender"), values));
+		add(new DropDownChoice<String>("list",new PropertyModel<String>(this,"selectedValue"), values));
 	}
 
-	public String getSelectedGender() {
-		return selectedGender;
+	public String getTableFieldName(){
+		return tableFieldName;
+	}
+	public String getSelectedValue() {
+		return selectedValue;
 	}
 }
