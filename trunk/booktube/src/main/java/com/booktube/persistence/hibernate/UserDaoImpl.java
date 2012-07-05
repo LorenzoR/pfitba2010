@@ -11,8 +11,10 @@ import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.SQLQuery;
 import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.type.Type;
 
 import com.booktube.model.User;
 import com.booktube.model.User.Gender;
@@ -30,10 +32,10 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 	}
 
 	public boolean usernameExists(String username) {
+		getYearAndField();
 		return getUser(username) != null;
 	}
 
-	
 	@SuppressWarnings("unchecked")
 	public List<User> getAllUsers(int first, int count) {
 		return (List<User>) getSession().createCriteria(User.class)
@@ -45,8 +47,8 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 			String username, Gender gender, Integer lowerAge,
 			Integer higherAge, String country, Date lowDate, Date highDate) {
 		return (List<User>) createCriteria(userId, username, gender, lowerAge,
-				higherAge, country, lowDate, highDate).setFirstResult(first).setMaxResults(count)
-				.list();
+				higherAge, country, lowDate, highDate).setFirstResult(first)
+				.setMaxResults(count).list();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -215,22 +217,24 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 								Projections.property("country"), "country")))
 				.list();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<String> getAllCities() {
 		return (List<String>) getSession()
 				.createCriteria(User.class)
 				.setProjection(
 						Projections.distinct(Projections.projectionList().add(
-								Projections.property("city"), "city")))
-				.list();
+								Projections.property("city"), "city"))).list();
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<String> getAllAges() {
-		List<Double> ages = (List<Double>) getSession().createSQLQuery("SELECT DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(birthdate)), '%Y')+0 AS age FROM user GROUP BY age").list();
+		List<Double> ages = (List<Double>) getSession()
+				.createSQLQuery(
+						"SELECT DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(birthdate)), '%Y')+0 AS age FROM user GROUP BY age")
+				.list();
 		List<String> resp = new ArrayList<String>();
-		for( Double age : ages ){
+		for (Double age : ages) {
 			resp.add(String.valueOf(Math.round(age)));
 		}
 		return resp;
@@ -238,40 +242,43 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 
 	@SuppressWarnings("unchecked")
 	public List<String> getAllGenders() {
-		List<Integer> genders = (List<Integer>) getSession().createSQLQuery("SELECT gender FROM user GROUP BY gender").list();
+		List<Integer> genders = (List<Integer>) getSession().createSQLQuery(
+				"SELECT gender FROM user GROUP BY gender").list();
 		List<String> resp = new ArrayList<String>();
-		for( Integer g : genders ){
-			if( g == 0 )
+		for (Integer g : genders) {
+			if (g == 0)
 				resp.add("Masculino");
 			else
 				resp.add("Femenino");
 		}
 		return resp;
 	}
-	
-	public List<Object> getUserEvolutionByYear(OriginFilterOption origin, AgeFilterOption age, MiscFilterOption misc) {
-		String whereClause = SqlUtilities.generateWhereClause(origin, age, misc);
-		String sql = "select year(registration_date) as year, count(user_id) as total from user "+whereClause+" group by year";
-		
+
+	public List<Object> getUserEvolutionByYear(OriginFilterOption origin,
+			AgeFilterOption age, MiscFilterOption misc) {
+		String whereClause = SqlUtilities
+				.generateWhereClause(origin, age, misc);
+		String sql = "select year(registration_date) as year, count(user_id) as total from user "
+				+ whereClause + " group by year";
+
 		SQLQuery query = getSession().createSQLQuery(sql)
-			.addScalar("year", Hibernate.STRING)
-			.addScalar("total", Hibernate.STRING);
-		
-        query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-        @SuppressWarnings("unchecked")
-		List<Object> data = (List<Object>)query.list();
-        return data;
+				.addScalar("year", Hibernate.STRING)
+				.addScalar("total", Hibernate.STRING);
+
+		query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+		@SuppressWarnings("unchecked")
+		List<Object> data = (List<Object>) query.list();
+		return data;
 	}
-
-
 
 	// METODO PRIVADO PARA CREAR LOS CRITERIOS HIBERNATE PARA REALIZAR LOS
 	// QUERIES DE LOS FILTROS
-	@SuppressWarnings( "unused" )
-	private Criteria createFilterCriteria(Gender gender, Integer lowerAge, Integer higherAge, String country, String city) {
+	@SuppressWarnings("unused")
+	private Criteria createFilterCriteria(Gender gender, Integer lowerAge,
+			Integer higherAge, String country, String city) {
 
 		Criteria criteria = getSession().createCriteria(User.class);
-		
+
 		if (lowerAge != null) {
 			criteria.add(Expression
 					.sql("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 >= "
@@ -296,8 +303,27 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 			criteria.add(Restrictions.eq("city", city));
 		}
 
-		
 		return criteria;
 	}
-	
+
+	private List<Object> getYearAndField() {
+		ProjectionList projList = Projections.projectionList();
+
+		Criteria criteria = getSession().createCriteria(User.class);
+		projList.add(Projections.property("id"), "id");
+		projList.add(Projections.sqlProjection("year(birthdate) AS year",
+				new String[] { "year" }, new Type[] { Hibernate.INTEGER }));
+
+		criteria.setProjection(projList);
+
+		List list = criteria.list();
+
+		/* ASI SE ITERA SOBRE LA LISTA DE RESULTADOS */
+		for(Object r: list){
+		  Object[] row = (Object[]) r;
+		  System.out.println("USER_ID: " + row[0] + "\tYEAR: " + row[1]);
+		}
+		
+		return list;
+	}
 }
