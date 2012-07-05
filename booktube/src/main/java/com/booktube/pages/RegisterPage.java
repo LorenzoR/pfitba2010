@@ -1,13 +1,12 @@
 package com.booktube.pages;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
+import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
@@ -20,13 +19,14 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.odlabs.wiquery.ui.core.JsScopeUiEvent;
-import org.odlabs.wiquery.ui.dialog.AjaxDialogButton;
 import org.odlabs.wiquery.ui.dialog.Dialog;
+import org.apache.wicket.datetime.PatternDateConverter;
 
+import com.booktube.WicketApplication;
 import com.booktube.model.User;
 import com.booktube.model.User.Gender;
 import com.booktube.model.User.Level;
+import com.booktube.pages.customComponents.SuccessDialog;
 import com.booktube.pages.validators.UniqueUsernameValidator;
 import com.booktube.service.UserService;
 
@@ -52,28 +52,8 @@ public class RegisterPage extends BasePage {
 		// parent.add(new FeedbackPanel("feedback").setOutputMarkupId(true));
 
 		parent.add(registerForm(parent, feedback));
-
-		AjaxDialogButton ok = new AjaxDialogButton("OK") {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onButtonClicked(AjaxRequestTarget target) {
-				// do your cancel logic here
-				System.out.println("BUTTON CLICKED!!");
-				setResponsePage(HomePage.class);
-
-			}
-		};
-
-		dialog = new Dialog("success_dialog");
-//		dialog.setOpenEvent(JsScopeUiEvent.quickScope(new JsStatement().self()
-//				.chain("parents", "'.ui-dialog:first'")
-//				.chain("find", "'.ui-dialog-titlebar-close'").chain("hide")
-//				.render())); // When we open the dialog, we remove the close
-//								// button on the title :)
-		dialog.setButtons(ok);
-		dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
+		
+		dialog = new SuccessDialog<HomePage>("success_dialog", "Usuario registrado con éxito!", HomePage.class, null);
 
 		parent.add(dialog);
 
@@ -107,8 +87,17 @@ public class RegisterPage extends BasePage {
 		final TextField<User> firstnameField = new TextField<User>("firstname");
 		final TextField<User> lastnameField = new TextField<User>("lastname");
 
-		final TextField<Date> birthdateField = new TextField<Date>(
-				"birthdate");
+//		final TextField<Date> birthdateField = new TextField<Date>(
+//				"birthdate", new PropertyModel<Date>(model, "birthdate"));
+		
+//		 DateTextField birthdateField = new DateTextField("birthdateField", new PropertyModel<Date>(
+//		            model, "birthdateField"), new StyleDateConverter("S-", true));
+		
+		final DateTextField birthdateField = new DateTextField("birthdate", new 
+				PropertyModel<Date>( 
+			            model, "birthdate"), new PatternDateConverter(WicketApplication.DATE_FORMAT, true));
+		
+		System.out.println("---FORMAT : " + birthdateField.getTextFormat());
 		
 		final PasswordTextField passwordField1 = new PasswordTextField(
 				"password1", new PropertyModel<String>(model, "password"));
@@ -170,8 +159,9 @@ public class RegisterPage extends BasePage {
 //				String city = cityField.getDefaultModelObjectAsString();
 //				String password = passwordField1
 //						.getDefaultModelObjectAsString();
-				String birthdate = birthdateField.getDefaultModelObjectAsString();
 				
+				String birthdate = birthdateField.getDefaultModelObjectAsString();
+				System.out.println(birthdate);
 
 //				User user = new User(username, password, firstname, lastname,
 //						User.Level.USER);
@@ -191,7 +181,7 @@ public class RegisterPage extends BasePage {
 				
 				//user.setCountry(country);
 				
-				SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+//				SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 				
 //				try {
 //					newUser.setBirthdate(sdf.parse(birthdate));
@@ -212,6 +202,7 @@ public class RegisterPage extends BasePage {
 				System.out.println("Country: " + newUser.getCountry());
 				System.out.println("City: " + newUser.getCity());
 				System.out.println("Gender: " + newUser.getGender());
+				System.out.println("Birthdate: " + newUser.getBirthdate());
 
 				target.add(parent);
 

@@ -173,6 +173,7 @@ public class Book implements Serializable {
 		this.tags = new HashSet<BookTag>();
 		this.userVotes = new HashSet<User>();
 		this.rating = new Rating(this);
+		this.hits = new Long(0);
 	}
 
 	public Book(Long id, String title, String text, User author) {
@@ -292,6 +293,12 @@ public class Book implements Serializable {
 
 	public Long getHits() {
 		return hits;
+	}
+	
+	public void increaseHits() {
+		synchronized ( hits ) {
+			hits++;
+		}
 	}
 
 	public void addUserVote(User user) {

@@ -66,6 +66,8 @@ public class ShowBookPage extends BasePage {
 		//user = WiaSession.get().getLoggedInUser();
 
 		book = bookService.getBook(bookId);
+		book.increaseHits();
+		bookService.updateBook(book);
 		//book = bookModel.getObject();
 		
 		final WebMarkupContainer parent = new WebMarkupContainer("bookDetails");
@@ -82,6 +84,7 @@ public class ShowBookPage extends BasePage {
 		parent.add(new Label("author.username"));
 		parent.add(new MultiLineLabel("text"));
 		parent.add(new Label("publishDate"));
+		parent.add(new Label("hits"));
 
 		final Rating rating1 = book.getRating();
 		

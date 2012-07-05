@@ -6,7 +6,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.TextArea;
@@ -17,7 +16,6 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.odlabs.wiquery.ui.core.JsScopeUiEvent;
 import org.odlabs.wiquery.ui.dialog.AjaxDialogButton;
 import org.odlabs.wiquery.ui.dialog.Dialog;
 
@@ -26,6 +24,7 @@ import com.booktube.model.Book;
 import com.booktube.model.User;
 import com.booktube.pages.customComponents.AbstractAutoCompleteTextField;
 import com.booktube.pages.customComponents.CustomTextField;
+import com.booktube.pages.customComponents.SuccessDialog;
 import com.booktube.pages.customConverters.TagSetToString;
 import com.booktube.service.BookService;
 import com.booktube.service.UserService;
@@ -42,7 +41,7 @@ public class AddBookPage extends BasePage {
 
 	private User user;
 	private static Dialog dialog;
-	private static Long lastInsertedId = null;
+	private static PageParameters pageParameters = new PageParameters();
 
 	public AddBookPage() {
 
@@ -88,28 +87,29 @@ public class AddBookPage extends BasePage {
 			registerMessage.setVisible(false);
 		}
 
-		AjaxDialogButton ok = new AjaxDialogButton("OK") {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onButtonClicked(AjaxRequestTarget target) {
-				// do your cancel logic here
-				System.out.println("BUTTON CLICKED!!");
-				setResponsePage(HomePage.class);
-				if (lastInsertedId != null) {
-					PageParameters pageParameters = new PageParameters();
-					pageParameters.set("book", lastInsertedId);
-					setResponsePage(ShowBookPage.class, pageParameters);
-				}
-
-			}
-		};
-
-		dialog = new Dialog("success_dialog");
-		dialog.setButtons(ok);
-		dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
-
+//		AjaxDialogButton ok = new AjaxDialogButton("OK") {
+//
+//			private static final long serialVersionUID = 1L;
+//
+//			@Override
+//			protected void onButtonClicked(AjaxRequestTarget target) {
+//				// do your cancel logic here
+//				System.out.println("BUTTON CLICKED!!");
+//				setResponsePage(HomePage.class);
+//				if (lastInsertedId != null) {
+//					PageParameters pageParameters = new PageParameters();
+//					pageParameters.set("book", lastInsertedId);
+//					setResponsePage(ShowBookPage.class, pageParameters);
+//				}
+//
+//			}
+//		};
+//
+//		dialog = new Dialog("success_dialog");
+//		dialog.setButtons(ok);
+//		dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
+		
+		dialog = new SuccessDialog<ShowBookPage>("success_dialog", "Obra agragada con éxito!", ShowBookPage.class, pageParameters);
 		parent.add(dialog);
 
 	}
@@ -288,7 +288,8 @@ public class AddBookPage extends BasePage {
 //				book.setSubCategory(subcategoryString);
 
 				/* Insert book */
-				lastInsertedId = bookService.insertBook(newBook);
+				Long lastInsertedId = bookService.insertBook(newBook);
+				pageParameters.set("book", lastInsertedId);
 				System.out.println("Book inserted.");
 				System.out.println("Title: " + newBook.getTitle());
 				System.out.println("Author: " + newBook.getAuthor());
@@ -334,7 +335,7 @@ public class AddBookPage extends BasePage {
 		};
 
 		dialog.setButtons(ok);
-		dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
+		//dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
 
 		return dialog;
 
@@ -363,40 +364,40 @@ public class AddBookPage extends BasePage {
 		form.add(username);
 		form.add(password);
 
-		form.add(new Button("button1", new Model<String>("")) {
-			private static final long serialVersionUID = 6743737357599494567L;
-
-			@Override
-			public void onSubmit() {
-				String userString = username.getDefaultModelObjectAsString();
-				String passwordString = User.hash(
-						password.getDefaultModelObjectAsString(), "SHA-1");
-
-				username.setModel(new Model<String>(""));
-
-				System.out.println("User: " + userString + " Pass: "
-						+ passwordString);
-
-				User user = userService.getUser(userString);
-
-				if (user != null && user.getPassword().equals(passwordString)) {
-					WiaSession.get().logInUser(user);
-				} else {
-					// TODO Auto-generated method stub
-					/* TERMINAR MENSAJE DE LOGIN INCORRECTO */
-					System.out.println("Login failed!");
-					info("aaaaaaaaaaaa");
-					// loginMsg.setVisible(true);
-				}
-
-				if (!continueToOriginalDestination()) {
-					setResponsePage(HomePage.class);
-				}
-
-				// setResponsePage(BasePage.this);
-
-			}
-		});
+//		form.add(new Button("button1", new Model<String>("")) {
+//			private static final long serialVersionUID = 6743737357599494567L;
+//
+//			@Override
+//			public void onSubmit() {
+//				String userString = username.getDefaultModelObjectAsString();
+//				String passwordString = User.hash(
+//						password.getDefaultModelObjectAsString(), "SHA-1");
+//
+//				username.setModel(new Model<String>(""));
+//
+//				System.out.println("User: " + userString + " Pass: "
+//						+ passwordString);
+//
+//				User user = userService.getUser(userString);
+//
+//				if (user != null && user.getPassword().equals(passwordString)) {
+//					WiaSession.get().logInUser(user);
+//				} else {
+//					// TODO Auto-generated method stub
+//					/* TERMINAR MENSAJE DE LOGIN INCORRECTO */
+//					System.out.println("Login failed!");
+//					info("aaaaaaaaaaaa");
+//					// loginMsg.setVisible(true);
+//				}
+//
+//				if (!continueToOriginalDestination()) {
+//					setResponsePage(HomePage.class);
+//				}
+//
+//				// setResponsePage(BasePage.this);
+//
+//			}
+//		});
 
 		return form;
 	}

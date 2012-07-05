@@ -10,14 +10,15 @@
 	<div wicket:id="login_dialog">
 	<form wicket:id="login_dialog_form">
 		Username: <input type="text" wicket:id="username" value=""/> <br />
-		Password: <input type="password" wicket:id="password" value=""/> <br />
-		<input type="submit" value="Login" wicket:id="button1" />
+		Password: <input type="password" wicket:id="password" value=""/> 
+<!-- 		<br /> -->
+<!-- 		<input type="submit" value="Login" wicket:id="button1" /> -->
 	</form>
 	</div>
 
-	<p wicket:id="success_dialog">
-    	Obra agragada con exito!
-    </p>
+	<div wicket:id="success_dialog">
+		<wicket:container wicket:id="text"></wicket:container>
+	</div>
 
 	<h2>New Book</h2>
 	<p wicket:id="registerMessage">
