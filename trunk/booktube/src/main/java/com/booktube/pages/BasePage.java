@@ -10,6 +10,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
@@ -26,6 +27,8 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
+import org.odlabs.wiquery.ui.dialog.AjaxDialogButton;
+import org.odlabs.wiquery.ui.dialog.Dialog;
 import org.wicketstuff.facebook.FacebookSdk;
 
 import com.booktube.WiaSession;
@@ -51,7 +54,7 @@ public abstract class BasePage extends WebPage {
 
 	@SpringBean
 	MessageService messageService;
-	
+
 	@SpringBean
 	CampaignService campaignService;
 
@@ -62,8 +65,10 @@ public abstract class BasePage extends WebPage {
 
 	protected abstract void setPageTitle();
 
+	private Dialog loginErrorDialog;
+
 	public BasePage() {
-		
+
 		if (WiaSession.get().isAuthenticated()) {
 			add(new Label("welcome", "Bienvenido "
 					+ WiaSession.get().getLoggedInUser().getUsername() + " | "));
@@ -83,7 +88,7 @@ public abstract class BasePage extends WebPage {
 		add(quote);
 
 		add(new Label("pageTitle", "Booktube"));
-		
+
 		// LINK PARA EL LOGO
 		add(new BookmarkablePageLink<String>("logoLink", HomePage.class));
 
@@ -106,76 +111,85 @@ public abstract class BasePage extends WebPage {
 		// add(new BookmarkablePageLink<String>("title", HomePage.class));
 
 		WebMarkupContainer addBookLi = new WebMarkupContainer("addBook_li");
-		addBookLi.add(new BookmarkablePageLink<String>("addBook", AddBookPage.class));
+		addBookLi.add(new BookmarkablePageLink<String>("addBook",
+				AddBookPage.class));
 		add(addBookLi);
-		
+
 		add(new BookmarkablePageLink<String>("showBooks", BooksPage.class));
 		/*
 		 * add(new Link("showBooks") { public void onClick() {
 		 * setResponsePage(BooksPage.class); } });
 		 */
 		add(new BookmarkablePageLink<String>("showWriters", WritersPage.class));
-		
+
 		WebMarkupContainer contactLi = new WebMarkupContainer("contact_li");
-		contactLi.add(new BookmarkablePageLink<String>("contact", NewContactPage.class));
+		contactLi.add(new BookmarkablePageLink<String>("contact",
+				NewContactPage.class));
 		contactLi.setVisible(false);
 		add(contactLi);
-		
-		WebMarkupContainer newCampaignsLi = new WebMarkupContainer("new_campaign_li");
-		newCampaignsLi.add(new BookmarkablePageLink<String>("new_campaign", NewCampaignPage.class));
+
+		WebMarkupContainer newCampaignsLi = new WebMarkupContainer(
+				"new_campaign_li");
+		newCampaignsLi.add(new BookmarkablePageLink<String>("new_campaign",
+				NewCampaignPage.class));
 		newCampaignsLi.setVisible(false);
 		add(newCampaignsLi);
-		
+
 		WebMarkupContainer campaignsLi = new WebMarkupContainer("campaigns_li");
-		campaignsLi.add(new BookmarkablePageLink<String>("campaignsLink", CampaignsPage.class));
+		campaignsLi.add(new BookmarkablePageLink<String>("campaignsLink",
+				CampaignsPage.class));
 		campaignsLi.setVisible(false);
 		add(campaignsLi);
-		
+
 		add(new BookmarkablePageLink<String>("loadDataLink", LoadDataPage.class));
-		
+
 		WebMarkupContainer messagesLi = new WebMarkupContainer("messages_li");
-		messagesLi.add(new BookmarkablePageLink<String>("messagesLink", MessagesPage.class));
+		messagesLi.add(new BookmarkablePageLink<String>("messagesLink",
+				MessagesPage.class));
 		messagesLi.setVisible(false);
 		add(messagesLi);
-		
-		WebMarkupContainer administrationLi = new WebMarkupContainer("administration_li");
-		administrationLi.add(new MenuLink("adminTools", AdministrationPage.class));
+
+		WebMarkupContainer administrationLi = new WebMarkupContainer(
+				"administration_li");
+		administrationLi.add(new MenuLink("adminTools",
+				AdministrationPage.class));
 		administrationLi.setVisible(false);
 		add(administrationLi);
-		
-		/*MenuLink adminLink = new MenuLink("adminTools",
-				AdministrationPage.class);
-		add(adminLink);*/
+
+		/*
+		 * MenuLink adminLink = new MenuLink("adminTools",
+		 * AdministrationPage.class); add(adminLink);
+		 */
 
 		BookmarkablePageLink<String> registerLink = new BookmarkablePageLink<String>(
 				"registerPage", RegisterPage.class);
 		add(registerLink);
 
 		if (WiaSession.get().isAuthenticated()) {
-			
+
 			contactLi.setVisible(true);
 			campaignsLi.setVisible(true);
 			messagesLi.setVisible(true);
-			
+
 			messagesLi.add(new Label("unreadMessages", "( "
 					+ Integer.toString(messageService
 							.countUnreadMessagesTo(WiaSession.get()
 									.getLoggedInUser())) + " )"));
-			
+
 			campaignsLi.add(new Label("unreadCampaigns", "( "
 					+ Integer.toString(campaignService
 							.countUnreadCampaignsTo(WiaSession.get()
 									.getLoggedInUser())) + " )"));
-			
-			if ( WiaSession.get().getLoggedInUser().getLevel() == Level.ADMIN ) {
-				//campaignsLink.setVisible(true);
+
+			if (WiaSession.get().getLoggedInUser().getLevel() == Level.ADMIN) {
+				// campaignsLink.setVisible(true);
 				contactLi.setVisible(false);
 				campaignsLi.setVisible(false);
 				newCampaignsLi.setVisible(true);
 				administrationLi.setVisible(true);
-				//contactLink.setVisible(false);
+				// contactLink.setVisible(false);
 			}
-			
+
 		} else {
 			messagesLi.add(new Label("unreadMessages", " "));
 			campaignsLi.add(new Label("unreadCampaigns", " "));
@@ -212,6 +226,10 @@ public abstract class BasePage extends WebPage {
 			// WiaSession.get().getUser().getUsername()));
 			logoutLink.setVisible(false);
 		}
+
+		loginErrorDialog = loginErrorDialog();
+
+		add(loginErrorDialog);
 
 		setPageTitle();
 
@@ -340,7 +358,8 @@ public abstract class BasePage extends WebPage {
 
 					for (final BookTag tag : tags) {
 
-						if (tag.getValue().toUpperCase().startsWith(input.toUpperCase())) {
+						if (tag.getValue().toUpperCase()
+								.startsWith(input.toUpperCase())) {
 							choices.add(tag.getValue());
 							if (choices.size() == 10) {
 								break;
@@ -391,18 +410,18 @@ public abstract class BasePage extends WebPage {
 					final PageParameters parameters = new PageParameters();
 
 					if (radioGroup.getValue().equals("author")) {
-						//parameters.set("type", "author");
+						// parameters.set("type", "author");
 						parameters.set("author", bookTitleString);
 					} else if (radioGroup.getValue().equals("rating")) {
-						//parameters.set("type", "rating");
+						// parameters.set("type", "rating");
 						parameters.set("rating", bookTitleString);
 					} else if (radioGroup.getValue().equals("tag")) {
-						//parameters.set("type", "tag");
+						// parameters.set("type", "tag");
 						parameters.set("tag", bookTitleString);
 					} else {
 						System.out.println("Radio Button: "
 								+ radioGroup.getValue());
-						//parameters.set("type", "title");
+						// parameters.set("type", "title");
 						parameters.set("title", bookTitleString);
 					}
 
@@ -438,11 +457,13 @@ public abstract class BasePage extends WebPage {
 		form.add(username);
 		form.add(password);
 
-		form.add(new Button("button1", new Model<String>("")) {
-			private static final long serialVersionUID = 6743737357599494567L;
+		form.add(new AjaxButton("button1") {
+
+			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onSubmit() {
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+
 				String userString = username.getDefaultModelObjectAsString();
 				String passwordString = User.hash(
 						password.getDefaultModelObjectAsString(), "SHA-1");
@@ -455,137 +476,200 @@ public abstract class BasePage extends WebPage {
 				User user = userService.getUser(userString);
 
 				if (user != null && user.getPassword().equals(passwordString)) {
+					System.out.println("Login OK");
 					WiaSession.get().logInUser(user);
+
+					if (!continueToOriginalDestination()) {
+						setResponsePage(HomePage.class);
+					}
+
 				} else {
-					/* TERMINAR MENSAJE DE LOGIN INCORRECTO */
-					System.out.println("Login failed!");
-					info("aaaaaaaaaaaa");
-					// loginMsg.setVisible(true);
+					System.out.println("Login ERROR");
+					loginErrorDialog.open(target);
 				}
-
-				if (!continueToOriginalDestination()) {
-					setResponsePage(HomePage.class);
-				}
-
-				// setResponsePage(BasePage.this);
 
 			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form) {
+				// TODO Auto-generated method stub
+
+			}
+
 		});
+
+		// form.add(new Button("button1", new Model<String>("")) {
+		// private static final long serialVersionUID = 6743737357599494567L;
+		//
+		// @Override
+		// public void onSubmit() {
+		// String userString = username.getDefaultModelObjectAsString();
+		// String passwordString = User.hash(
+		// password.getDefaultModelObjectAsString(), "SHA-1");
+		//
+		// username.setModel(new Model<String>(""));
+		//
+		// System.out.println("User: " + userString + " Pass: "
+		// + passwordString);
+		//
+		// User user = userService.getUser(userString);
+		//
+		// if (user != null && user.getPassword().equals(passwordString)) {
+		// WiaSession.get().logInUser(user);
+		// } else {
+		// /* TERMINAR MENSAJE DE LOGIN INCORRECTO */
+		// System.out.println("Login failed!");
+		// info("aaaaaaaaaaaa");
+		//
+		// // loginMsg.setVisible(true);
+		// }
+		//
+		// if (!continueToOriginalDestination()) {
+		// setResponsePage(HomePage.class);
+		// }
+		//
+		// // setResponsePage(BasePage.this);
+		//
+		// }
+		// });
 
 		return form;
 	}
-	
+
+	private Dialog loginErrorDialog() {
+
+		final Dialog dialog = new Dialog("login_error_dialog");
+
+		dialog.setTitle("<span class=\"ui-icon ui-icon-alert\" style=\"float: left\"></span> &nbsp; Error");
+		
+		AjaxDialogButton ok = new AjaxDialogButton("OK") {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onButtonClicked(AjaxRequestTarget target) {
+				dialog.close(target);
+			}
+		};
+
+		dialog.setButtons(ok);
+		// dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
+
+		return dialog;
+
+	}
+
 	private String[][] getQuoteArray() {
 		String[][] quoteArray = {
-			{
-				"The difficulty of literature is not to write, but to write what you mean",
-				"Robert Louis Stevenson" },
-		{ "Just don't take any class where you have to read BEOWULF.",
-				"Woody Allen" },
-		{ "Books are humanity in print.", "Barbara W. Tuchman" },
+				{
+						"The difficulty of literature is not to write, but to write what you mean",
+						"Robert Louis Stevenson" },
+				{ "Just don't take any class where you have to read BEOWULF.",
+						"Woody Allen" },
+				{ "Books are humanity in print.", "Barbara W. Tuchman" },
 
-		{
-				"Literature adds to reality, it does not simply describe it. It enriches the necessary competencies that daily life requires and provides; and in this respect, it irrigates the deserts that our lives have already become.",
-				"C.S. Lewis" },
+				{
+						"Literature adds to reality, it does not simply describe it. It enriches the necessary competencies that daily life requires and provides; and in this respect, it irrigates the deserts that our lives have already become.",
+						"C.S. Lewis" },
 
-		{
-				"Books are the carriers of civilization. Without books, history is silent, literature dumb, science crippled, thought and speculation at a standstill.",
-				"Barbara W. Tuchman" },
+				{
+						"Books are the carriers of civilization. Without books, history is silent, literature dumb, science crippled, thought and speculation at a standstill.",
+						"Barbara W. Tuchman" },
 
-		{
-				"What is wonderful about great literature is that it transforms the man who reads it towards the condition of the man who wrote.",
-				"E. M. Forster" },
+				{
+						"What is wonderful about great literature is that it transforms the man who reads it towards the condition of the man who wrote.",
+						"E. M. Forster" },
 
-		{ "Every man's memory is his private literature.",
-				"Aldous Huxley" },
+				{ "Every man's memory is his private literature.",
+						"Aldous Huxley" },
 
-		{
-				"The decline of literature indicates the decline of a nation.",
-				"Johann Wolfgang von Goethe" },
+				{
+						"The decline of literature indicates the decline of a nation.",
+						"Johann Wolfgang von Goethe" },
 
-		{
-				"The difficulty of literature is not to write, but to write what you mean; not to affect your reader, but to affect him precisely as you wish.",
-				"Robert Louis Stevenson" },
+				{
+						"The difficulty of literature is not to write, but to write what you mean; not to affect your reader, but to affect him precisely as you wish.",
+						"Robert Louis Stevenson" },
 
-		{
-				"The difference between literature and journalism is that journalism is unreadable and literature is not read.",
-				"Oscar Wilde" },
+				{
+						"The difference between literature and journalism is that journalism is unreadable and literature is not read.",
+						"Oscar Wilde" },
 
-		{
-				"Literature adds to reality, it does not simply describe it. It enriches the necessary competencies that daily life requires and provides; and in this respect, it irrigates the deserts that our lives have already become.",
-				"C. S. Lewis" },
+				{
+						"Literature adds to reality, it does not simply describe it. It enriches the necessary competencies that daily life requires and provides; and in this respect, it irrigates the deserts that our lives have already become.",
+						"C. S. Lewis" },
 
-		{
-				"Even in literature and art, no man who bothers about originality will ever be original: whereas if you simply try to tell the truth (without caring twopence how often it has been told before) you will, nine times out of ten, become original without ever having noticed it.",
-				"C. S. Lewis" },
+				{
+						"Even in literature and art, no man who bothers about originality will ever be original: whereas if you simply try to tell the truth (without caring twopence how often it has been told before) you will, nine times out of ten, become original without ever having noticed it.",
+						"C. S. Lewis" },
 
-		{
-				"Literature is my Utopia. Here I am not disenfranchised. No barrier of the senses shuts me out from the sweet, gracious discourses of my book friends. They talk to me without embarrassment or awkwardness.",
-				"Helen Keller" },
+				{
+						"Literature is my Utopia. Here I am not disenfranchised. No barrier of the senses shuts me out from the sweet, gracious discourses of my book friends. They talk to me without embarrassment or awkwardness.",
+						"Helen Keller" },
 
-		{
-				"All modern American literature comes from one book by Mark Twain called Huckleberry Finn.",
-				"Ernest Hemingway" },
+				{
+						"All modern American literature comes from one book by Mark Twain called Huckleberry Finn.",
+						"Ernest Hemingway" },
 
-		{
-				"We know too much, and are convinced of too little. Our literature is a substitute for religion, and so is our religion.",
-				"T. S. Eliot" },
+				{
+						"We know too much, and are convinced of too little. Our literature is a substitute for religion, and so is our religion.",
+						"T. S. Eliot" },
 
-		{
-				"I am an Anglo-Catholic in religion, a classicist in literature and a royalist in politics.",
-				"T. S. Eliot" },
+				{
+						"I am an Anglo-Catholic in religion, a classicist in literature and a royalist in politics.",
+						"T. S. Eliot" },
 
-		{
-				"Our high respect for a well read person is praise enough for literature.",
-				"T. S. Eliot" },
+				{
+						"Our high respect for a well read person is praise enough for literature.",
+						"T. S. Eliot" },
 
-		{
-				"The reason that fiction is more interesting than any other form of literature, to those who really like to study people, is that in fiction the author can really tell the truth without humiliating himself.",
-				"Jim Rohn" },
+				{
+						"The reason that fiction is more interesting than any other form of literature, to those who really like to study people, is that in fiction the author can really tell the truth without humiliating himself.",
+						"Jim Rohn" },
 
-		{
-				"The decline of literature indicates the decline of a nation.",
-				"Johann Wolfgang von Goethe" },
+				{
+						"The decline of literature indicates the decline of a nation.",
+						"Johann Wolfgang von Goethe" },
 
-		{
-				"He knew everything about literature except how to enjoy it.",
-				"Joseph Heller" },
+				{
+						"He knew everything about literature except how to enjoy it.",
+						"Joseph Heller" },
 
-		{
-				"The atmosphere of orthodoxy is always damaging to prose, and above all it is completely ruinous to the novel, the most anarchical of all forms of literature.",
-				"George Orwell" },
+				{
+						"The atmosphere of orthodoxy is always damaging to prose, and above all it is completely ruinous to the novel, the most anarchical of all forms of literature.",
+						"George Orwell" },
 
-		{ "Every man's memory is his private literature.",
-				"Aldous Huxley" },
+				{ "Every man's memory is his private literature.",
+						"Aldous Huxley" },
 
-		{
-				"If literature isn't everything, it's not worth a single hour of someone's trouble.",
-				"Jean-Paul Sartre" },
+				{
+						"If literature isn't everything, it's not worth a single hour of someone's trouble.",
+						"Jean-Paul Sartre" },
 
-		{
-				"It is the nature of the artist to mind excessively what is said about him. Literature is strewn with the wreckage of men who have minded beyond reason the opinions of others.",
-				"Virginia Woolf" },
+				{
+						"It is the nature of the artist to mind excessively what is said about him. Literature is strewn with the wreckage of men who have minded beyond reason the opinions of others.",
+						"Virginia Woolf" },
 
-		{
-				"This is not writing at all. Indeed, I could say that Shakespeare surpasses literature altogether, if I knew what I meant.",
-				"Virginia Woolf" },
+				{
+						"This is not writing at all. Indeed, I could say that Shakespeare surpasses literature altogether, if I knew what I meant.",
+						"Virginia Woolf" },
 
-		{
-				"Literature is strewn with the wreckage of men who have minded beyond reason the opinions of others.",
-				"Virginia Woolf" },
+				{
+						"Literature is strewn with the wreckage of men who have minded beyond reason the opinions of others.",
+						"Virginia Woolf" },
 
-		{
-				"The greatest advances of civilization, whether in architecture or painting, in science and literature, in industry or agriculture, have never come from centralized government.",
-				"Milton Friedman" },
+				{
+						"The greatest advances of civilization, whether in architecture or painting, in science and literature, in industry or agriculture, have never come from centralized government.",
+						"Milton Friedman" },
 
-		{
-				"I hold that a writer who does not passionately believe in the perfectibility of man has no dedication nor any membership in literature.",
-				"John Steinbeck" },
+				{
+						"I hold that a writer who does not passionately believe in the perfectibility of man has no dedication nor any membership in literature.",
+						"John Steinbeck" },
 
-		{
-				"Develop an interest in life as you see it; the people, things, literature, music - the world is so rich, simply throbbing with rich treasures, beautiful souls and interesting people. Forget yourself.",
-				"Henry Miller" } };
-		
+				{
+						"Develop an interest in life as you see it; the people, things, literature, music - the world is so rich, simply throbbing with rich treasures, beautiful souls and interesting people. Forget yourself.",
+						"Henry Miller" } };
+
 		return quoteArray;
 	}
 

@@ -19,6 +19,7 @@ import org.odlabs.wiquery.ui.dialog.Dialog;
 
 import com.booktube.model.User;
 import com.booktube.model.User.Level;
+import com.booktube.pages.customComponents.SuccessDialog;
 import com.booktube.service.BookService;
 import com.booktube.service.UserService;
 
@@ -47,23 +48,7 @@ public class EditWriterPage extends BasePage {
 
 		add(editWriterForm(user));
 
-		AjaxDialogButton ok = new AjaxDialogButton("OK") {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onButtonClicked(AjaxRequestTarget target) {
-				// do your cancel logic here
-				System.out.println("BUTTON CLICKED!!");
-				setResponsePage(backPage);
-
-			}
-		};
-
-		dialog = new Dialog("success_dialog");
-		dialog.setButtons(ok);
-		dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
-
+		dialog = new SuccessDialog("success_dialog", "Usuario editado con éxito!", backPage);
 		add(dialog);
 
 		// setResponsePage(backPage);
@@ -71,6 +56,31 @@ public class EditWriterPage extends BasePage {
 		String newTitle = "Booktube - Edit " + user.getUsername();
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
+	
+//	private Dialog successDialog(final WebPage backPage) {
+//		
+//		Dialog dialog = new Dialog("success_dialog");
+//		
+//		dialog.add(new Label("text", "Usuario editado con exito!"));
+//		
+//		AjaxDialogButton ok = new AjaxDialogButton("OK") {
+//
+//			private static final long serialVersionUID = 1L;
+//
+//			@Override
+//			protected void onButtonClicked(AjaxRequestTarget target) {
+//				// do your cancel logic here
+//				System.out.println("BUTTON CLICKED!!");
+//				setResponsePage(backPage);
+//
+//			}
+//		};
+//
+//		dialog.setButtons(ok);
+//		dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
+//		
+//		return dialog;
+//	}
 
 	private Form<User> editWriterForm(final User writer) {
 		Form<User> form = new Form<User>("editWriterForm");

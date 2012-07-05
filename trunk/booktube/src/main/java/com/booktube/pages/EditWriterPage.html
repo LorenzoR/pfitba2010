@@ -5,9 +5,9 @@
 </head>
 <body>
 <wicket:extend>
-<p wicket:id="success_dialog">
-	Usuario editado con exito!
-</p>
+<div wicket:id="success_dialog">
+	<wicket:container wicket:id="text"></wicket:container>
+</div>
 <h3>Edit Writer <span wicket:id="writerId"></span></h3>
 <form wicket:id="editWriterForm">
 	<p>Username: <input type="text" wicket:id="username" value=""/></p>

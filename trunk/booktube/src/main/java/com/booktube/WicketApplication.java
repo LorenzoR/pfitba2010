@@ -42,14 +42,8 @@ import com.booktube.service.UserService;
  */
 public class WicketApplication extends WebApplication {
 
-	// private BookService bookService = new BookServiceImpl();
-
-	/*
-	 * @SpringBean static UserService userService;
-	 */
-
-	// public static final SessionFactory SESSION_FACTORY = new Configuration()
-	// .configure().buildSessionFactory();
+	public static final String DATE_FORMAT = "dd/MM/yyyy";
+	public static final String DATE_FORMAT_ES = "dd/mm/aaaa";
 
 	protected void init() {
 
@@ -101,8 +95,7 @@ public class WicketApplication extends WebApplication {
 		((ConverterLocator) getConverterLocator()).set(Date.class,
 				new IConverter<Date>() {
 					private static final long serialVersionUID = 1L;
-					private final DateFormat mFormat = new SimpleDateFormat(
-							"dd/MM/yyyy");
+					private final DateFormat mFormat = new SimpleDateFormat(DATE_FORMAT);
 
 					public Date convertToObject(String value, Locale locale) {
 						try {

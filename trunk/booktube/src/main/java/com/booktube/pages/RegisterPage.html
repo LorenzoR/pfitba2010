@@ -6,8 +6,10 @@
 <body>
 	<wicket:extend>
 		<div wicket:id="register">
-
-			<p wicket:id="success_dialog">Usuario registrado con exito!</p>
+		
+			<div wicket:id="success_dialog">
+				<wicket:container wicket:id="text"></wicket:container>
+			</div>
 
 			<h2>Registro</h2>
 
@@ -26,6 +28,7 @@
 				</p>
 				<p>
 					Fecha nacimiento: <input type="text" wicket:id="birthdate" value="" />
+<!-- 					 ( <span wicket:id="date_format"></span> ) -->
 				</p>
 				<p>Sexo:
 					<select name="gender" wicket:id="gender">

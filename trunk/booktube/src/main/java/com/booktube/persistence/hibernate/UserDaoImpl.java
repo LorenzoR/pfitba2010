@@ -155,16 +155,6 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 				.setMaxResults(count).list();
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<String> getAllCountries() {
-		return (List<String>) getSession()
-				.createCriteria(User.class)
-				.setProjection(
-						Projections.distinct(Projections.projectionList().add(
-								Projections.property("country"), "country")))
-				.list();
-	}
-
 	public int getCount(Long userId, String username, Gender gender,
 			Integer lowerAge, Integer higherAge, String country, Date lowDate,
 			Date highDate) {
@@ -218,21 +208,29 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 
 		return criteria;
 	}
-	
-// Para el filtro usado para generar reportes
-	
-//	public List<String> getAllCountries() {
-//		List<String> countries = (List<String>) getSession().createSQLQuery("SELECT country FROM user GROUP BY country").list();
-//		return countries;
-//	}
-	
-	//OJO: falta agregar este campo a la tabla
-	public List<String> getAllCities() {
-		List<String> cities = (List<String>) getSession().createSQLQuery("SELECT city FROM user GROUP BY city").list();		
-		return cities;
+
+	// Para el filtro usado para generar reportes
+
+	@SuppressWarnings("unchecked")
+	public List<String> getAllCountries() {
+		return (List<String>) getSession()
+				.createCriteria(User.class)
+				.setProjection(
+						Projections.distinct(Projections.projectionList().add(
+								Projections.property("country"), "country")))
+				.list();
 	}
 	
-	
+	@SuppressWarnings("unchecked")
+	public List<String> getAllCities() {
+		return (List<String>) getSession()
+				.createCriteria(User.class)
+				.setProjection(
+						Projections.distinct(Projections.projectionList().add(
+								Projections.property("city"), "city")))
+				.list();
+	}
+
 	public List<String> getAllAges() {
 		List<Double> ages = (List<Double>) getSession().createSQLQuery("SELECT DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(birthdate)), '%Y')+0 AS age FROM user GROUP BY age").list();
 		List<String> resp = new ArrayList<String>();
