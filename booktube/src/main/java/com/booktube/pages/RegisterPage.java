@@ -8,10 +8,12 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.PasswordTextField;
+import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.validation.EqualPasswordInputValidator;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -27,6 +29,7 @@ import com.booktube.model.User;
 import com.booktube.model.User.Gender;
 import com.booktube.model.User.Level;
 import com.booktube.pages.customComponents.SuccessDialog;
+import com.booktube.pages.validators.BirthdayValidator;
 import com.booktube.pages.validators.UniqueUsernameValidator;
 import com.booktube.service.UserService;
 
@@ -82,10 +85,10 @@ public class RegisterPage extends BasePage {
 				newUser);
 
 		form.setDefaultModel(model);
-
-		final TextField<User> usernameField = new TextField<User>("username");
-		final TextField<User> firstnameField = new TextField<User>("firstname");
-		final TextField<User> lastnameField = new TextField<User>("lastname");
+		
+		final RequiredTextField<User> usernameField = new RequiredTextField<User>("username");
+		final RequiredTextField<User> firstnameField = new RequiredTextField<User>("firstname");
+		final RequiredTextField<User> lastnameField = new RequiredTextField<User>("lastname");
 
 //		final TextField<Date> birthdateField = new TextField<Date>(
 //				"birthdate", new PropertyModel<Date>(model, "birthdate"));
@@ -97,7 +100,7 @@ public class RegisterPage extends BasePage {
 				PropertyModel<Date>( 
 			            model, "birthdate"), new PatternDateConverter(WicketApplication.DATE_FORMAT, true));
 		
-		System.out.println("---FORMAT : " + birthdateField.getTextFormat());
+		form.add(new Label("date_format", WicketApplication.DATE_FORMAT_ES));
 		
 		final PasswordTextField passwordField1 = new PasswordTextField(
 				"password1", new PropertyModel<String>(model, "password"));
@@ -114,19 +117,19 @@ public class RegisterPage extends BasePage {
 		
 		final TextField<User> cityField = new TextField<User>("city");
 		
-		
-		usernameField.setRequired(true);
-		firstnameField.setRequired(true);
-		lastnameField.setRequired(true);
 		birthdateField.setRequired(true);
-		passwordField1.setRequired(true);
-		passwordField2.setRequired(true);
+		countrySelect.setRequired(true);
+		//passwordField1.setRequired(true);
+		//passwordField2.setRequired(true);
 
 		UniqueUsernameValidator usernameValidator = new UniqueUsernameValidator();
 		usernameField.add(usernameValidator);
+		
+		BirthdayValidator birthdayValidator = new BirthdayValidator();
+		birthdateField.add(birthdayValidator);
 
 		form.add(new EqualPasswordInputValidator(passwordField1, passwordField2));
-
+		
 		form.add(usernameField);
 		form.add(firstnameField);
 		form.add(lastnameField);
