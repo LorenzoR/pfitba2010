@@ -114,8 +114,18 @@ public class UserServiceImpl implements UserService {
 		return itemDao.getAllGenders();
 	}
 	
+	public List<String> getAllRegistrationYears() {	
+		return itemDao.getAllRegistrationYears();
+	}
+	
 	// Para el reporte UserEvolution
 	public List<Object> getUserEvolutionByYear(OriginFilterOption origin, AgeFilterOption age, MiscFilterOption misc){
 		return itemDao.getUserEvolutionByYear(origin, age, misc);
 	}
+
+	public List<Object> getUserDistributionByCountry(AgeFilterOption age, MiscFilterOption misc) {
+		return itemDao.getUserDistributionByCountry(age, misc);
+	}
+
+	
 }

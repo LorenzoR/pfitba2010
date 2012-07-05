@@ -1,5 +1,8 @@
 package com.booktube.persistence.hibernate;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -19,6 +22,8 @@ import org.hibernate.type.Type;
 import com.booktube.model.User;
 import com.booktube.model.User.Gender;
 import com.booktube.pages.AgeFilterOption;
+import com.booktube.pages.DropDownElementPanel;
+import com.booktube.pages.FilterOption;
 import com.booktube.pages.MiscFilterOption;
 import com.booktube.pages.OriginFilterOption;
 import com.booktube.persistence.UserDao;
@@ -254,13 +259,17 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 		return resp;
 	}
 
-	public List<Object> getUserEvolutionByYear(OriginFilterOption origin,
-			AgeFilterOption age, MiscFilterOption misc) {
-		String whereClause = SqlUtilities
-				.generateWhereClause(origin, age, misc);
-		String sql = "select year(registration_date) as year, count(user_id) as total from user "
-				+ whereClause + " group by year";
-
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getAllRegistrationYears() {
+		List<String> years = (List<String>) getSession().createSQLQuery("SELECT year(registration_date) as years FROM user GROUP BY years").list();
+		return years;
+	}
+	
+	public List<Object> getUserEvolutionByYear(OriginFilterOption origin, AgeFilterOption age, MiscFilterOption misc) {
+		String whereClause = SqlUtilities.generateWhereClause(origin, age, misc);
+		String sql = "select year(registration_date) as year, count(user_id) as total from user "+whereClause+" group by year";
+		
 		SQLQuery query = getSession().createSQLQuery(sql)
 				.addScalar("year", Hibernate.STRING)
 				.addScalar("total", Hibernate.STRING);
@@ -270,13 +279,37 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 		List<Object> data = (List<Object>) query.list();
 		return data;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Object> getUserDistributionByCountry(AgeFilterOption age, MiscFilterOption misc) {				
+		Integer lowerAge = ( age.getSelectedMinAge() != FilterOption.listFirstOption )? Integer.valueOf(age.getSelectedMinAge()) : null;
+		Integer higherAge =( age.getSelectedMaxAge() != FilterOption.listFirstOption )? Integer.valueOf(age.getSelectedMaxAge()) : null; 	
+		
+		Gender gender = null;
+		String registrationYear = null;
+		for (DropDownElementPanel element : misc.getElements()) {
+			String value = element.getSelectedValue();
+			if( value != FilterOption.listFirstOption ){
+				if( element.getTableFieldName() == "gender")				
+					gender = ( value == "Masculino")? Gender.MALE : Gender.FEMALE;				
+				if( element.getTableFieldName() == "registration_date") 
+					registrationYear = value;
+			}						
+		}
+				
+		Criteria criteria = createFilterCriteria(gender, lowerAge, higherAge, "", "", registrationYear);		
+		criteria.setProjection( Projections.projectionList()
+				.add(Projections.alias(Projections.rowCount(), "total"))				
+				.add(Projections.alias(Projections.groupProperty("country"), "country"))										
+				)
+				.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+		return (List<Object>)criteria.list();
+	}
 
 	// METODO PRIVADO PARA CREAR LOS CRITERIOS HIBERNATE PARA REALIZAR LOS
-	// QUERIES DE LOS FILTROS
-	@SuppressWarnings("unused")
-	private Criteria createFilterCriteria(Gender gender, Integer lowerAge,
-			Integer higherAge, String country, String city) {
-
+	// QUERIES DE LOS FILTROS	
+	private Criteria createFilterCriteria(Gender gender, Integer lowerAge, Integer higherAge, String country, String city, String registrationYear) {
+		
 		Criteria criteria = getSession().createCriteria(User.class);
 
 		if (lowerAge != null) {
@@ -302,10 +335,28 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 		if (StringUtils.isNotBlank(city)) {
 			criteria.add(Restrictions.eq("city", city));
 		}
-
+		if (registrationYear != null) {			
+			DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            Date lowDate=null, highDate=null;
+			try {
+				lowDate = (Date) format.parse(registrationYear+"-01-01 00:00:00");
+				highDate = (Date) format.parse(registrationYear+"-12-31 23:59:59");
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}            
+            criteria.add(Restrictions.between("registrationDate", lowDate, highDate));
+			criteria.add(Restrictions.ge("registrationDate", lowDate));
+			criteria.add(Restrictions.le("registrationDate", highDate));
+		}
+		
 		return criteria;
 	}
 
+
+	
+
+
+	@SuppressWarnings("unchecked")
 	private List<Object> getYearAndField() {
 		ProjectionList projList = Projections.projectionList();
 
@@ -316,7 +367,7 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 
 		criteria.setProjection(projList);
 
-		List list = criteria.list();
+		List<Object> list = criteria.list();
 
 		/* ASI SE ITERA SOBRE LA LISTA DE RESULTADOS */
 		for(Object r: list){
@@ -326,4 +377,6 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 		
 		return list;
 	}
+
+	
 }

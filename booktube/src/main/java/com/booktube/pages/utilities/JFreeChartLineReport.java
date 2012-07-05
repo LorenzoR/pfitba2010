@@ -13,11 +13,6 @@ import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 
 import org.jfree.data.xy.XYSeriesCollection;
 public class JFreeChartLineReport {
-
-	
-
-	 
-	
 	 
 	    private static Color COLOR_SERIE_1 = new Color(255, 128, 64);
 	 
@@ -66,7 +61,7 @@ public class JFreeChartLineReport {
 	        domainAxis.setTickUnit(new NumberTickUnit(1));
 	    }
 	     
-	    // configuramos el eje y de la gráfica (números enteros de dos en dos y rango entre 120 y 135)
+	    // configuramos el eje y de la gráfica (números enteros de dos en dos)
 	    private void configurarRangeAxis (NumberAxis rangeAxis) {
 	        rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
 	        rangeAxis.setTickUnit(new NumberTickUnit(2));
