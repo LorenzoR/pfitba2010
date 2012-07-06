@@ -1,6 +1,7 @@
 package com.booktube.pages;
 
-import java.io.File;
+
+
 import java.util.List;
 import java.util.Map;
 
@@ -11,14 +12,11 @@ import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import org.jfree.chart.ChartUtilities;
-import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
+import org.jfree.data.general.Dataset;
 
-import com.booktube.pages.utilities.JFreeChartBarReport;
-import com.booktube.pages.utilities.JFreeChartLineReport;
+import com.booktube.pages.utilities.BarReport;
+
 import com.booktube.service.UserService;
 
 
@@ -29,6 +27,8 @@ public class UsersBySexReport extends ReportPage {
 	protected OriginFilterOption originFilter;
 	protected MiscFilterOption customizedMisc;
 	DropDownElementPanel genderDropDownElement;
+	private String[] labels = new String[]{"Evolución de Usuarios por Género", "Año", "Usuarios"};
+	
 	@SpringBean
 	UserService userService;
 	
@@ -55,33 +55,17 @@ public class UsersBySexReport extends ReportPage {
 			
 			@Override
 			public void onSubmit() {				
-				//List<?> data =  userService.getUserEvolutionByYear(originFilter, ageFilter, customizedMisc);		
-				//List<?> data  = getData();
+				//List<?> data =  userService.getUserEvolutionByYear(originFilter, ageFilter, customizedMisc);
 				
-				
-				
-				DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-				dataset.setValue(5, "jalados", "José");
-				dataset.setValue(5, "jalados", "Ronny");
-				dataset.setValue(4, "jalados", "Frank");
-				dataset.setValue(2, "jalados", "Sumire");
-				dataset.setValue(0, "jalados", "Maribel");
-				dataset.setValue(-1, "jalados", "Ian");
-				dataset.setValue(10, "aprobados", "José");
-				dataset.setValue(9, "aprobados", "Ronny");
-				dataset.setValue(12, "aprobados", "Frank");
-				dataset.setValue(13, "aprobados", "Sumire");
-				dataset.setValue(15, "aprobados", "Maribel");
-				dataset.setValue(12, "aprobados", "Ian");
-				
-				
-//				final XYSeries serie = new XYSeries("Evolucion de Usuario en el tiempo");
+//				List<?> data  = getData();
+//				DefaultCategoryDataset dataset = new DefaultCategoryDataset();				
 //				for(Object object : data){
 //		           Map<?, ?> row = (Map<?, ?>)object;
-//		           serie.add(Double.valueOf((String)row.get("year")),Double.valueOf((String)row.get("total")) ); 
-//		        }
-//				    
-				
+//		           String year = (String)row.get("year");
+//		           dataset.setValue((Integer)row.get("female"), "mujeres", year); 
+//		           dataset.setValue((Integer)row.get("male"), "hombres", year); 
+//		        }				
+
 				 
 			    int ANCHO_GRAFICA = 600;			    
 			    int ALTO_GRAFICA = 450;
@@ -89,9 +73,8 @@ public class UsersBySexReport extends ReportPage {
 			    String filename = "src/main/webapp/img/report.png";
 			    
 			    try {
-			        final JFreeChartBarReport usersBySexReport = new JFreeChartBarReport();
-			        final JFreeChart grafica = usersBySexReport.crearGrafica(dataset);
-			        ChartUtilities.saveChartAsPNG(new File(filename), grafica, ANCHO_GRAFICA, ALTO_GRAFICA);			        
+			        final BarReport usersBySexReport = new BarReport(getData(), labels);
+			        usersBySexReport.saveReportAsPNG(filename, ANCHO_GRAFICA, ALTO_GRAFICA);			        			        
 			    } catch (Exception e) {
 			        e.printStackTrace();
 			    }		
@@ -111,8 +94,18 @@ public class UsersBySexReport extends ReportPage {
 	}
 
 	@Override
-	public List<?> getData() {
-		return  userService.getUserEvolutionByYear(originFilter, ageFilter, customizedMisc);
+	public Dataset getData() {
+		List<?> data = userService.getUserEvolutionBySex(originFilter, ageFilter);
+		
+		DefaultCategoryDataset dataset = new DefaultCategoryDataset();				
+		for(Object object : data){
+           Map<?, ?> row = (Map<?, ?>)object;
+           String year = (String)row.get("year");
+           dataset.setValue((Integer)row.get("female"), "mujeres", year); 
+           dataset.setValue((Integer)row.get("male"), "hombres", year); 
+        }
+		return (Dataset)dataset;
+
 	}
 	
 }

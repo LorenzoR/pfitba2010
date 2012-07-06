@@ -40,5 +40,6 @@ public interface UserService {
     // Para los reportes
     public List<Object> getUserEvolutionByYear(OriginFilterOption origin, AgeFilterOption age, MiscFilterOption misc);
     public List<Object> getUserDistributionByCountry(AgeFilterOption age, MiscFilterOption misc);
+    public List<Object> getUserEvolutionBySex(OriginFilterOption origin, AgeFilterOption age);
     
 }

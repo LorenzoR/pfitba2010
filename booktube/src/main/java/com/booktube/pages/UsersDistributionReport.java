@@ -1,7 +1,7 @@
 package com.booktube.pages;
 
 import java.util.List;
-import java.io.File;
+
 import java.util.Map;
 
 import org.apache.wicket.markup.html.form.Button;
@@ -11,12 +11,11 @@ import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import org.jfree.chart.ChartUtilities;
-import org.jfree.chart.JFreeChart;
+import org.jfree.data.general.Dataset;
 import org.jfree.data.general.DefaultPieDataset;
 
 
-import com.booktube.pages.utilities.JFreeChartPieReport;
+import com.booktube.pages.utilities.PieReport;
 import com.booktube.service.UserService;
 
 public class UsersDistributionReport extends ReportPage {
@@ -26,6 +25,8 @@ public class UsersDistributionReport extends ReportPage {
 		protected MiscFilterOption customizedMisc;
 		DropDownElementPanel genderDropDownElement;
 		DropDownElementPanel yearsDropDownElement;
+		private String[] labels = new String[]{"Distribución de Usuarios por país"};
+		
 		@SpringBean
 		UserService userService;
 		private List<String> allGendersList = userService.getAllGenders();
@@ -61,13 +62,13 @@ public class UsersDistributionReport extends ReportPage {
 				
 				@Override
 				public void onSubmit() {									
-					List<?> data  = getData();
-			
-					DefaultPieDataset result = new DefaultPieDataset();
-					for(Object object : data){
-			           Map<?, ?> row = (Map<?, ?>)object;
-					 	result.setValue((String)row.get("country"), (Number)row.get("total"));		           
-			        }	
+//					List<?> data  = getData();
+//			
+//					DefaultPieDataset result = new DefaultPieDataset();
+//					for(Object object : data){
+//			           Map<?, ?> row = (Map<?, ?>)object;
+//					 	result.setValue((String)row.get("country"), (Number)row.get("total"));		           
+//			        }	
 					 
 				    int ANCHO_GRAFICA = 600;			    
 				    int ALTO_GRAFICA = 450;
@@ -75,9 +76,8 @@ public class UsersDistributionReport extends ReportPage {
 				    String filename = "src/main/webapp/img/report.png";
 				    
 				    try {
-				        final JFreeChartPieReport userDistribReport = new JFreeChartPieReport();
-				        final JFreeChart grafica = userDistribReport.crearGrafica(result, "Distribución de Usuarios por país");
-				        ChartUtilities.saveChartAsPNG(new File(filename), grafica, ANCHO_GRAFICA, ALTO_GRAFICA);			        
+				        final PieReport userDistribReport = new PieReport(getData(), labels);				        
+				        userDistribReport.saveReportAsPNG(filename, ANCHO_GRAFICA, ALTO_GRAFICA);			        
 				    } catch (Exception e) {
 				        e.printStackTrace();
 				    }		
@@ -95,8 +95,15 @@ public class UsersDistributionReport extends ReportPage {
 		}
 	
 	@Override
-	public List<?> getData() {
-		return  userService.getUserDistributionByCountry(ageFilter, customizedMisc);
+	public Dataset getData() {
+		List<?> data = userService.getUserDistributionByCountry(ageFilter, customizedMisc);		
+		DefaultPieDataset result = new DefaultPieDataset();
+		for(Object object : data){
+           Map<?, ?> row = (Map<?, ?>)object;
+		 	result.setValue((String)row.get("country"), (Number)row.get("total"));		           
+        }	
+		return (Dataset)result;
+
 	}
 
 }

@@ -2,6 +2,7 @@ package com.booktube.pages.utilities;
 
 import java.awt.Color;
 
+
 import org.jfree.chart.ChartFactory;
 
 import org.jfree.chart.JFreeChart;
@@ -11,16 +12,22 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 
+import org.jfree.data.general.Dataset;
 import org.jfree.data.xy.XYSeriesCollection;
-public class JFreeChartLineReport {
+public class LineReport extends Report{
+	private String XLabel;
+	private String YLabel;
+	
+	private static Color COLOR_SERIE_1 = new Color(255, 128, 64);	 
+    private static Color COLOR_SERIE_2 = new Color(28, 84, 140); 
+    private static Color COLOR_RECUADROS_GRAFICA = new Color(31, 87, 4); 
+    private static Color COLOR_FONDO_GRAFICA = Color.white;
 	 
-	    private static Color COLOR_SERIE_1 = new Color(255, 128, 64);
-	 
-	    private static Color COLOR_SERIE_2 = new Color(28, 84, 140);
-	 
-	    private static Color COLOR_RECUADROS_GRAFICA = new Color(31, 87, 4);
-	 
-	    private static Color COLOR_FONDO_GRAFICA = Color.white;
+	public LineReport(Dataset dataset, String...labels) {
+	   	super(dataset, labels);		
+	}
+
+		
 	 
 	    public JFreeChart crearGrafica(XYSeriesCollection dataset) {
 	 
@@ -48,8 +55,44 @@ public class JFreeChartLineReport {
 	 
 	        return chart;
 	    }
-	     
-	    // configuramos el contenido del gráfico (damos un color a las líneas que sirven de guía)
+	    
+		@Override
+		public void processOtherLabels(String[] labels) {
+			// labels[0] lo procesa la superclase, porque siempre es el titulo (comun a todas las subclases)
+			XLabel = labels[1];
+			YLabel = labels[2];			
+		}
+
+		@Override
+		public void configureReport() {
+			chart = ChartFactory.createXYLineChart(title, XLabel, YLabel, 
+	                (XYSeriesCollection)dataset,
+	                PlotOrientation.VERTICAL, 
+	                true, // uso de leyenda
+	                false, // uso de tooltips  
+	                false // uso de urls
+	                );
+	        // color de fondo de la gráfica
+	        chart.setBackgroundPaint(COLOR_FONDO_GRAFICA);
+	 
+	        final XYPlot plot = (XYPlot) chart.getPlot();
+	        configurarPlot(plot);
+	 
+	        final NumberAxis domainAxis = (NumberAxis)plot.getDomainAxis();
+	        configurarDomainAxis(domainAxis);
+	         
+	        final NumberAxis rangeAxis = (NumberAxis)plot.getRangeAxis();
+	        configurarRangeAxis(rangeAxis);
+	 
+	        final XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer)plot.getRenderer();
+	        configurarRendered(renderer);			
+		}     
+		
+		
+		// METODOS PRIVADOS
+		// ================
+		
+		// configuramos el contenido del gráfico (damos un color a las líneas que sirven de guía)
 	    private void configurarPlot (XYPlot plot) {
 	        plot.setDomainGridlinePaint(COLOR_RECUADROS_GRAFICA);
 	        plot.setRangeGridlinePaint(COLOR_RECUADROS_GRAFICA);
@@ -75,6 +118,4 @@ public class JFreeChartLineReport {
 	        renderer.setSeriesPaint(0, COLOR_SERIE_1);
 	        renderer.setSeriesPaint(1, COLOR_SERIE_2);
 	    }
-	     
-	
 }

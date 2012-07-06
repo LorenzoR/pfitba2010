@@ -1,14 +1,11 @@
 package com.booktube.pages;
 
-//import static java.nio.file.StandardCopyOption.*;
-
-
-import java.util.List;
-
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.request.resource.ContextRelativeResource;
+import org.jfree.data.general.Dataset;
+
 
 public abstract class ReportPage extends AdministrationPage {
 	private static final long serialVersionUID = 151437101760469510L;
@@ -28,14 +25,11 @@ public abstract class ReportPage extends AdministrationPage {
 		
 		reportFilter = new ReportFilterPanel("reportFilterPanel");
 		form.add(reportFilter);
-		
-		//Image reportImage = new Image("reportImage", initModel());		
-		reportImage = new Image("reportImage", new ContextRelativeResource("/img/blankReport.png"));
-		
+				
+		reportImage = new Image("reportImage", new ContextRelativeResource("/img/blankReport.png"));		
 		parent.add(reportImage);
 		
-		
 	}
-	public abstract List<?> getData();
+	public abstract Dataset getData();
 	
 }
