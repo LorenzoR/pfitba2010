@@ -305,6 +305,22 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 				.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 		return (List<Object>)criteria.list();
 	}
+	
+	public List<Object> getUserEvolutionBySex(OriginFilterOption origin, AgeFilterOption age) {
+		String whereClause = SqlUtilities.generateWhereClause(origin, age, null);
+		String sql = "SELECT year(registration_date) as year,COALESCE(SUM(CASE WHEN gender = 0 THEN 1 END), 0) as female,COALESCE(SUM(CASE WHEN gender = 1 THEN 1 END), 0) as male FROM user "+whereClause+" GROUP BY year";
+		
+		SQLQuery query = getSession().createSQLQuery(sql)
+				.addScalar("year", Hibernate.STRING)
+				.addScalar("male", Hibernate.INTEGER)
+				.addScalar("female", Hibernate.INTEGER);
+
+		query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+		@SuppressWarnings("unchecked")
+		List<Object> data = (List<Object>) query.list();
+		return data;
+
+	}
 
 	// METODO PRIVADO PARA CREAR LOS CRITERIOS HIBERNATE PARA REALIZAR LOS
 	// QUERIES DE LOS FILTROS	
@@ -377,6 +393,5 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 		
 		return list;
 	}
-
 	
 }

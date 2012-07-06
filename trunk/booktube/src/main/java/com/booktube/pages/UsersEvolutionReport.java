@@ -1,6 +1,6 @@
 package com.booktube.pages;
 
-import java.io.File;
+
 import java.util.List;
 import java.util.Map;
 
@@ -11,12 +11,12 @@ import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import org.jfree.chart.ChartUtilities;
-import org.jfree.chart.JFreeChart;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+import org.jfree.data.general.Dataset;
 
-import com.booktube.pages.utilities.JFreeChartLineReport;
+
+import com.booktube.pages.utilities.LineReport;
 import com.booktube.service.UserService;
 
 
@@ -27,6 +27,8 @@ public class UsersEvolutionReport extends ReportPage {
 	protected OriginFilterOption originFilter;
 	protected MiscFilterOption customizedMisc;
 	DropDownElementPanel genderDropDownElement;
+	private String[] labels = new String[]{"Evolución de Usuarios en el tiempo", "Año", "Usuarios"};
+	
 	@SpringBean
 	UserService userService;
 	private List<String> allGendersList = userService.getAllGenders();
@@ -52,6 +54,7 @@ public class UsersEvolutionReport extends ReportPage {
 		super.get("pageTitle").setDefaultModelObject(newTitle);	
 		
 		
+		
 		// En esta clase se agrega el boton submit y el evento onSubmit pues cada Reporte
 		// necesitara informacion diferente y ejecutara graficos diferentes
 		form.add(new Button("renderReport", new Model<String>("Graficar")) {
@@ -60,26 +63,26 @@ public class UsersEvolutionReport extends ReportPage {
 			@Override
 			public void onSubmit() {				
 				//List<?> data =  userService.getUserEvolutionByYear(originFilter, ageFilter, customizedMisc);		
-				List<?> data  = getData();
-				final XYSeries serie = new XYSeries("Evolucion de Usuario en el tiempo");				 
-				for(Object object : data){
-		           Map<?, ?> row = (Map<?, ?>)object;
-		           serie.add(Double.valueOf((String)row.get("year")),Double.valueOf((String)row.get("total")) ); 
-		        }
+//				List<?> data  = getData();
+//				final XYSeries serie = new XYSeries("Evolucion de Usuarios en el tiempo");				 
+//				for(Object object : data){
+//		           Map<?, ?> row = (Map<?, ?>)object;
+//		           serie.add(Double.valueOf((String)row.get("year")),Double.valueOf((String)row.get("total")) ); 
+//		        }
 				    
 				
-				final XYSeriesCollection collection = new XYSeriesCollection();
-			    collection.addSeries(serie);			   
-			     
+//				final XYSeriesCollection collection = new XYSeriesCollection();
+//			    collection.addSeries(serie);
+				
+//			     
 			    int ANCHO_GRAFICA = 600;			    
 			    int ALTO_GRAFICA = 450;
 			    
 			    String filename = "src/main/webapp/img/report.png";
 			    
 			    try {
-			        final JFreeChartLineReport userEvolReport = new JFreeChartLineReport();
-			        final JFreeChart grafica = userEvolReport.crearGrafica(collection);
-			        ChartUtilities.saveChartAsPNG(new File(filename), grafica, ANCHO_GRAFICA, ALTO_GRAFICA);			        
+			        final LineReport userEvolReport = new LineReport(getData(), labels);			        
+			        userEvolReport.saveReportAsPNG(filename, ANCHO_GRAFICA, ALTO_GRAFICA);			        
 			    } catch (Exception e) {
 			        e.printStackTrace();
 			    }		
@@ -99,8 +102,17 @@ public class UsersEvolutionReport extends ReportPage {
 	}
 
 	@Override
-	public List<?> getData() {
-		return  userService.getUserEvolutionByYear(originFilter, ageFilter, customizedMisc);
+	public Dataset getData() {
+		List<?> data = userService.getUserEvolutionByYear(originFilter, ageFilter, customizedMisc);		  
+		final XYSeries serie = new XYSeries("Evolucion de Usuarios en el tiempo");				 
+		for(Object object : data){
+           Map<?, ?> row = (Map<?, ?>)object;
+           serie.add(Double.valueOf((String)row.get("year")),Double.valueOf((String)row.get("total")) ); 
+        }
+		final XYSeriesCollection collection = new XYSeriesCollection();
+	    collection.addSeries(serie);
+	    
+	    return (Dataset)collection;
 	}
 	
 }

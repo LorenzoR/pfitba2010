@@ -127,5 +127,9 @@ public class UserServiceImpl implements UserService {
 		return itemDao.getUserDistributionByCountry(age, misc);
 	}
 
+	public List<Object> getUserEvolutionBySex(OriginFilterOption origin, AgeFilterOption age) {
+		return itemDao.getUserEvolutionBySex(origin, age);
+	}
+
 	
 }

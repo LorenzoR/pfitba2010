@@ -13,22 +13,25 @@ import com.booktube.pages.MiscFilterOption;
 import com.booktube.pages.OriginFilterOption;
 
 public class SqlUtilities {
-	public static String generateWhereClause(OriginFilterOption origin, AgeFilterOption age, MiscFilterOption misc ){
-//		String genderRestriction = generateRestriction("gender", "=", misc.getElements().get(0).getSelectedValue() ); 
-//		String cityRestriction = generateRestriction("city", "=", origin.getSelectedCity());
-//		String countryRestriction = generateRestriction("country", "=",origin.getSelectedCountry());
-//		String minAgeRestriction = generateRestriction("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0", ">=", age.getSelectedMinAge());
-//		String maxAgeRestriction = generateRestriction("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0", "<=", age.getSelectedMaxAge());		
+	public static String generateWhereClause(OriginFilterOption origin, AgeFilterOption age, MiscFilterOption misc ){		
 		ArrayList<String> restrictions = new ArrayList<String>();
-		List<DropDownElementPanel> miscOptions = misc.getElements();
-		for (DropDownElementPanel element : miscOptions) {
-			restrictions.add( generateRestriction(element.getTableFieldName(), "=", element.getSelectedValue()) );
-		}
-		restrictions.add(generateRestriction("city", "=", origin.getSelectedCity()) );
-		restrictions.add(generateRestriction("country", "=",origin.getSelectedCountry()));
-		restrictions.add(generateRestriction("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0", ">=", age.getSelectedMinAge()));
-		restrictions.add(generateRestriction("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0", "<=", age.getSelectedMaxAge()));
 		
+		if( misc != null ){
+			List<DropDownElementPanel> miscOptions = misc.getElements();
+			for (DropDownElementPanel element : miscOptions) {
+				restrictions.add( generateRestriction(element.getTableFieldName(), "=", element.getSelectedValue()) );
+			}
+		}
+		
+		if( origin != null ){
+			restrictions.add(generateRestriction("city", "=", origin.getSelectedCity()) );
+			restrictions.add(generateRestriction("country", "=",origin.getSelectedCountry()));
+		}
+		
+		if( age != null ){
+			restrictions.add(generateRestriction("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0", ">=", age.getSelectedMinAge()));
+			restrictions.add(generateRestriction("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0", "<=", age.getSelectedMaxAge()));
+		}
 		return concatRestrictions(restrictions);
 	}
 	
