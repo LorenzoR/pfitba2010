@@ -28,12 +28,14 @@ public class DynamicLabel extends Label {
 	}
 
 	public void setLabel(String text) {
-		DynamicLabel.model.setObject(text);
+		//DynamicLabel.model.setObject(text);
 		//DynamicLabel.model.getObject();
+		model.setObject(text);
 	}
 
 	public String getLabel() {
-		return DynamicLabel.model.getObject();
+		//return DynamicLabel.model.getObject();
+		return model.getObject();
 	}
 
 }

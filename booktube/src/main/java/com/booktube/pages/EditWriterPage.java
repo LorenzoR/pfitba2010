@@ -111,6 +111,7 @@ public class EditWriterPage extends BasePage {
 		final DateTextField birthdateField = new DateTextField("birthdate",
 				new PropertyModel<Date>(model, "birthdate"),
 				new PatternDateConverter(WicketApplication.DATE_FORMAT, true));
+		birthdateField.setRequired(true);
 		form.add(birthdateField);
 
 		form.add(new Label("date_format", WicketApplication.DATE_FORMAT_ES));
@@ -128,13 +129,11 @@ public class EditWriterPage extends BasePage {
 		List<String> countryList = userService.getAllCountries();
 		final DropDownChoice<String> countrySelect = new DropDownChoice<String>(
 				"country", countryList);
+		countrySelect.setRequired(true);
 		form.add(countrySelect);
 		
 		final TextField<User> cityField = new TextField<User>("city");
 		form.add(cityField);
-
-		birthdateField.setRequired(true);
-		countrySelect.setRequired(true);
 		
 		UniqueUsernameValidator usernameValidator = new UniqueUsernameValidator();
 		usernameField.add(usernameValidator);

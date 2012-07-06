@@ -7,9 +7,16 @@
 <wicket:extend>
 <h3>Edit Book <span wicket:id="bookId"></span></h3>
 <form wicket:id="editBookForm">
-	<p><select wicket:id="author"></select></p>
-	<p><input type="text" wicket:id="title" value=""/></p>
-	<p><input type="text" wicket:id="tags" value=""/></p>
+	<p>Autor: <select wicket:id="author"></select></p>
+	<p>Titulo: <input type="text" wicket:id="title" value=""/></p>
+	<p>Categoria: <input type="text" wicket:id="category" value=""/></p>
+	<p>Subcategoria: <input type="text" wicket:id="subcategory" value=""/></p>
+	<p>Tags: <input type="text" wicket:id="tags" value=""/></p>
+	<p>Fecha de Publicacion: 
+		<input type="text" wicket:id="publishDate" value=""/>
+		&nbsp; ( <span wicket:id="date_format"></span> )
+	</p>
+	<p># Hits: <input type="text" wicket:id="hits" value=""/></p>
 	<p><textarea wicket:id="text" cols="120" rows="50"></textarea></p>
 	<input type="button" wicket:id="save" value="Edit Book"/>
 </form>

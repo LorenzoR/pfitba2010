@@ -1,19 +1,25 @@
 package com.booktube.pages;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
+import org.apache.wicket.datetime.PatternDateConverter;
+import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import com.booktube.WicketApplication;
 import com.booktube.model.Book;
 import com.booktube.model.User;
 import com.booktube.pages.customComponents.CustomTextField;
@@ -69,58 +75,41 @@ public class EditBookPage extends BasePage {
 
 		form.setDefaultModel(model);
 
-		final TextField<Book> titleField = new TextField<Book>("title");
+		final RequiredTextField<Book> titleField = new RequiredTextField<Book>("title");
 		form.add(titleField);
-
-//		String tags = book.getTags().toString()
-//				.substring(1, book.getTags().toString().length() - 1)
-//				.replace(",", "");
-
-		// final TextField<String> tagsField = new TextField<String>("tags",
-		// new Model<String>(tags));
-		// form.add(tagsField);
-
-		// final CustomTextField tagsField = new CustomTextField("tags",
-		// book.getTags(),
-		// new TagSetToString());
-		// form.add(tagsField);
-
-//		final TextField<Book> tagsField = new TextField<Book>("tags") {
-//			private static final long serialVersionUID = 1L;
-//
-//			@SuppressWarnings("unchecked")
-//			@Override
-//			public IConverter getConverter(Class type) {
-//				return new TagSetToString(book);
-//			}
-//
-//		};
-//		form.add(tagsField);
 		
 		final CustomTextField tagField = new CustomTextField("tags", null,
 				new TagSetToString());
 		form.add(tagField);
 
-		final TextArea<Book> editor = new TextArea<Book>("text");
-		editor.setOutputMarkupId(true);
+		final TextArea<Book> text = new TextArea<Book>("text");
+		text.setOutputMarkupId(true);
+		text.setRequired(true);
+		form.add(text);
 
-		// final DropDownChoice ddc2 = new DropDownChoice("usernameList",
-		// users);
-
-		final DropDownChoice<User> ddc = new DropDownChoice<User>("author",
+		final DropDownChoice<User> author = new DropDownChoice<User>("author",
 				new Model<User>(book.getAuthor()), users);
+		author.setRequired(true);
+		form.add(author);
+		
+		final DateTextField publishDate = new DateTextField("publishDate",
+				new PropertyModel<Date>(model, "publishDate"),
+				new PatternDateConverter(WicketApplication.DATE_FORMAT, true));
+		publishDate.setRequired(true);
+		form.add(publishDate);
+		
+		form.add(new Label("date_format", WicketApplication.DATE_FORMAT_ES));
 
-		// final DropDownChoice<User> ddc = new
-		// DropDownChoice<User>("usernameList",
-		// new Model<User>(book.getAuthor()), users, new ChoiceRenderer<User>(
-		// "username", "id"));
-
-		// ValueMap myParameters = new ValueMap();
-		// myParameters.put("usernameList", users.get(0));
-		// form.setModel(new CompoundPropertyModel(myParameters));
-		form.add(ddc);
-
-		form.add(editor);
+		final RequiredTextField<Book> category = new RequiredTextField<Book>("category");
+		form.add(category);
+		
+		final TextField<Book> subcategory = new TextField<Book>("subcategory");
+		form.add(subcategory);
+		
+		final TextField<Book> hits = new TextField<Book>("hits");
+		form.add(hits);
+		
+		
 		form.add(new AjaxSubmitLink("save") {
 
 			private static final long serialVersionUID = 1L;
