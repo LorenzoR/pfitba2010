@@ -2,32 +2,24 @@ package com.booktube.pages;
 
 
 import java.util.List;
+
 import java.util.Map;
 
-import org.apache.wicket.markup.html.form.Button;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.request.resource.ContextRelativeResource;
-import org.apache.wicket.request.resource.IResource;
-import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.data.general.Dataset;
 
-
 import com.booktube.pages.utilities.LineReport;
+import com.booktube.pages.utilities.Report;
 import com.booktube.service.UserService;
 
 
 public class UsersEvolutionReport extends ReportPage {
 	private static final long serialVersionUID = 6051762145219128009L;
 	
-	protected AgeFilterOption ageFilter;
-	protected OriginFilterOption originFilter;
-	protected MiscFilterOption customizedMisc;
-	DropDownElementPanel genderDropDownElement;
-	private String[] labels = new String[]{"Evolución de Usuarios en el tiempo", "Año", "Usuarios"};
+	private DropDownElementPanel genderDropDownElement;
 	
 	@SpringBean
 	UserService userService;
@@ -51,58 +43,22 @@ public class UsersEvolutionReport extends ReportPage {
 		reportFilter.addFilterOption(customizedMisc);
 		
 		String newTitle = "Booktube - Users Evolution Report"; 
-		super.get("pageTitle").setDefaultModelObject(newTitle);	
+		super.get("pageTitle").setDefaultModelObject(newTitle);		
 		
-		
-		
-		// En esta clase se agrega el boton submit y el evento onSubmit pues cada Reporte
-		// necesitara informacion diferente y ejecutara graficos diferentes
-		form.add(new Button("renderReport", new Model<String>("Graficar")) {
-			private static final long serialVersionUID = 6743737357599494567L;
-			
-			@Override
-			public void onSubmit() {				
-				//List<?> data =  userService.getUserEvolutionByYear(originFilter, ageFilter, customizedMisc);		
-//				List<?> data  = getData();
-//				final XYSeries serie = new XYSeries("Evolucion de Usuarios en el tiempo");				 
-//				for(Object object : data){
-//		           Map<?, ?> row = (Map<?, ?>)object;
-//		           serie.add(Double.valueOf((String)row.get("year")),Double.valueOf((String)row.get("total")) ); 
-//		        }
-				    
-				
-//				final XYSeriesCollection collection = new XYSeriesCollection();
-//			    collection.addSeries(serie);
-				
-//			     
-			    int ANCHO_GRAFICA = 600;			    
-			    int ALTO_GRAFICA = 450;
-			    
-			    String filename = "src/main/webapp/img/report.png";
-			    
-			    try {
-			        final LineReport userEvolReport = new LineReport(getData(), labels);			        
-			        userEvolReport.saveReportAsPNG(filename, ANCHO_GRAFICA, ALTO_GRAFICA);			        
-			    } catch (Exception e) {
-			        e.printStackTrace();
-			    }		
-			    
-			    reportImage.setImageResourceReference(new ResourceReference(UsersEvolutionReport.class, "report.png") {
-					private static final long serialVersionUID = 7995864723435899261L;
+		labels = new String[]{"Evolución de Usuarios en el tiempo", "Año", "Usuarios"};
 
-					@Override
-					public IResource getResource() {						
-						return new ContextRelativeResource("/img/report.png");
-					}
-				});
-			}
-		});
-
-
+	}
+	
+	public Report getReportType(){
+		return  new LineReport(getReportData(), labels);
+	}
+	
+	public Class<?> getReportClass(){
+		return UsersEvolutionReport.class;
 	}
 
 	@Override
-	public Dataset getData() {
+	public Dataset getReportData() {
 		List<?> data = userService.getUserEvolutionByYear(originFilter, ageFilter, customizedMisc);		  
 		final XYSeries serie = new XYSeries("Evolucion de Usuarios en el tiempo");				 
 		for(Object object : data){
