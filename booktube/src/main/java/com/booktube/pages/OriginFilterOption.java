@@ -1,6 +1,5 @@
 package com.booktube.pages;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.wicket.markup.html.basic.Label;
@@ -15,14 +14,12 @@ public class OriginFilterOption extends FilterOption {
 	
 	@SpringBean
 	UserService userService;
-//	private static final List<String> CITIES = Arrays.asList(new String[] {"Buenos Aires", "Montevideo", "Cordoba", "Asunción", "Rosario" });
 	
 	private List<String> allCountriesList;
 	private String selectedCountry;
 	
 	private List<String> allCitiesList;
 	private String selectedCity;
-//	private String selectedCity = CITIES.get(0);
 	
 	
 	public OriginFilterOption(String id) {
@@ -42,14 +39,11 @@ public class OriginFilterOption extends FilterOption {
 		
 		add(new Label("cityLabel", "Ciudad"));
 		add(new DropDownChoice<String>("city",  new PropertyModel<String>(this, "selectedCity"), allCitiesList) );
-		//add(new DropDownChoice<String>("city", new PropertyModel<String>(this, "selectedCity"), CITIES) );
 	}
-
 
 	public String getSelectedCountry() {
 		return selectedCountry;
 	}
-
 
 	public String getSelectedCity() {
 		return selectedCity;

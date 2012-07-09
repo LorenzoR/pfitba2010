@@ -68,13 +68,13 @@
 <!-- 			</p> -->
 <!-- 		</div> -->
 <div wicket:id="group">
-<table border="1" cellspacing="0" class="dataview">
+<table border="1" class="dataview">
 	<tbody>
 		<tr wicket:id="bookList">
 			<td><input type="checkbox" wicket:id="checkbox" /></td>
 			<td>
-				<a href="#" wicket:id="viewLink"><h3 wicket:id="title">Title goes here</h3></a>
-				<b>by</b> <a href="#" wicket:id="authorLink"><strong wicket:id="authorName">Author goes here</strong></a>
+				<div><a href="#" wicket:id="viewLink"><span wicket:id="title" class="title">Title goes here</span></a></div>
+				<div><b>by</b> <a href="#" wicket:id="authorLink"><strong wicket:id="authorName">Author goes here</strong></a></div>
 			</td>
 			<td><b>Publish Date: </b><span wicket:id="publishDate">Date goes here</span></td>
 			<td>

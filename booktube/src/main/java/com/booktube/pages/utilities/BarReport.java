@@ -18,6 +18,7 @@ import org.jfree.data.general.Dataset;
 
 
 public class BarReport extends Report{
+	private static final long serialVersionUID = 8713526337586529322L;
 	private String XLabel;
 	private String YLabel;
 	

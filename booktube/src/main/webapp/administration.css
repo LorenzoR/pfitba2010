@@ -224,6 +224,25 @@ DIV.details.children DIV.image {
 	POSITION: absolute
 }
 
+/* Para UsersAdministrationPage.html 
+		WorksAdministrationPage.html 
+		MessagesAdministrationPage.html
+*/
+TABLE.dataview{
+	 border-collapse:collapse;
+	border-spacing: 0px; /*Equivalente a cellspacing=0 ... HTML5 desaconseja este atributo para el tag table en el html */
+}
+
+TABLE.dataview SPAN.title{
+	font-size: 20px;	
+}
+
+TABLE.bookResultListTable{
+	border-collapse:collapse;
+	border-spacing: 0px;
+	border-padding: 2px;
+}
+
 
 /* FOOTER */
 
