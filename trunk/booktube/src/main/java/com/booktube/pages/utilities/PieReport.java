@@ -8,6 +8,7 @@ import org.jfree.util.Rotation;
 
 
 public class PieReport extends Report {  
+	private static final long serialVersionUID = 4543877477746800635L;
 
 	public PieReport(Dataset dataset, String... labels) {
 		super(dataset, labels);

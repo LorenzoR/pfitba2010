@@ -17,6 +17,7 @@ public class MenuLink extends BookmarkablePageLink<Void>{
 	static final long serialVersionUID = -6638008415906069431L;	
 	Class <? extends WebPage>targetPageClass;
 	
+	@SuppressWarnings("deprecation")
 	public MenuLink(String wicketId, Class<? extends WebPage> pageClass){	
 		super(wicketId, pageClass);		
 		targetPageClass = pageClass;

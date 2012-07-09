@@ -15,6 +15,7 @@ import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.general.Dataset;
 import org.jfree.data.xy.XYSeriesCollection;
 public class LineReport extends Report{
+	private static final long serialVersionUID = -6055519566322495305L;
 	private String XLabel;
 	private String YLabel;
 	
