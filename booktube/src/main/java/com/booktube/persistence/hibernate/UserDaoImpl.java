@@ -19,6 +19,8 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.type.Type;
 
+import com.booktube.model.Book;
+import com.booktube.model.Message;
 import com.booktube.model.User;
 import com.booktube.model.User.Gender;
 import com.booktube.pages.AgeFilterOption;
@@ -297,7 +299,7 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 			}						
 		}
 				
-		Criteria criteria = createFilterCriteria(gender, lowerAge, higherAge, "", "", registrationYear);		
+		Criteria criteria = createFilterCriteria(User.class, gender, lowerAge, higherAge, "", "", registrationYear);		
 		criteria.setProjection( Projections.projectionList()
 				.add(Projections.alias(Projections.rowCount(), "total"))				
 				.add(Projections.alias(Projections.groupProperty("country"), "country"))										
@@ -321,12 +323,90 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 		return data;
 
 	}
-
-	// METODO PRIVADO PARA CREAR LOS CRITERIOS HIBERNATE PARA REALIZAR LOS
-	// QUERIES DE LOS FILTROS	
-	private Criteria createFilterCriteria(Gender gender, Integer lowerAge, Integer higherAge, String country, String city, String registrationYear) {
+	
+	@SuppressWarnings("unchecked")
+	public List<Object> getWorksByCategory(AgeFilterOption age,	MiscFilterOption misc) {
+		Integer lowerAge = ( age.getSelectedMinAge() != FilterOption.listFirstOption )? Integer.valueOf(age.getSelectedMinAge()) : null;
+		Integer higherAge =( age.getSelectedMaxAge() != FilterOption.listFirstOption )? Integer.valueOf(age.getSelectedMaxAge()) : null; 	
 		
-		Criteria criteria = getSession().createCriteria(User.class);
+		Gender gender = null;
+		String registrationYear = null;
+		for (DropDownElementPanel element : misc.getElements()) {
+			String value = element.getSelectedValue();
+			if( value != FilterOption.listFirstOption ){
+				if( element.getTableFieldName() == "gender")				
+					gender = ( value == "Masculino")? Gender.MALE : Gender.FEMALE;				
+				if( element.getTableFieldName() == "registration_date") 
+					registrationYear = value;
+			}						
+		}
+				
+		Criteria criteria = createFilterCriteria(Book.class, gender, lowerAge, higherAge, "", "", registrationYear);		
+		criteria.setProjection( Projections.projectionList()
+				.add(Projections.alias(Projections.rowCount(), "total"))				
+				.add(Projections.alias(Projections.groupProperty("category"), "category"))										
+				)
+				.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+		return (List<Object>)criteria.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Object> getMessagesBySubject(AgeFilterOption age, MiscFilterOption misc) {
+		Integer lowerAge = ( age.getSelectedMinAge() != FilterOption.listFirstOption )? Integer.valueOf(age.getSelectedMinAge()) : null;
+		Integer higherAge =( age.getSelectedMaxAge() != FilterOption.listFirstOption )? Integer.valueOf(age.getSelectedMaxAge()) : null; 	
+		
+		Gender gender = null;
+		String registrationYear = null;
+		for (DropDownElementPanel element : misc.getElements()) {
+			String value = element.getSelectedValue();
+			if( value != FilterOption.listFirstOption ){
+				if( element.getTableFieldName() == "gender")				
+					gender = ( value == "Masculino")? Gender.MALE : Gender.FEMALE;				
+				if( element.getTableFieldName() == "registration_date") 
+					registrationYear = value;
+			}						
+		}
+				
+		Criteria criteria = createFilterCriteria(Message.class, gender, lowerAge, higherAge, "", "", registrationYear);		
+		criteria.setProjection( Projections.projectionList()
+				.add(Projections.alias(Projections.rowCount(), "total"))				
+				.add(Projections.alias(Projections.groupProperty("subject"), "subject"))										
+				)
+				.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+		return (List<Object>)criteria.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Object> getMessagesByCountry(AgeFilterOption age, MiscFilterOption misc) {
+		Integer lowerAge = ( age.getSelectedMinAge() != FilterOption.listFirstOption )? Integer.valueOf(age.getSelectedMinAge()) : null;
+		Integer higherAge =( age.getSelectedMaxAge() != FilterOption.listFirstOption )? Integer.valueOf(age.getSelectedMaxAge()) : null; 	
+		
+		Gender gender = null;
+		String registrationYear = null;
+		for (DropDownElementPanel element : misc.getElements()) {
+			String value = element.getSelectedValue();
+			if( value != FilterOption.listFirstOption ){
+				if( element.getTableFieldName() == "gender")				
+					gender = ( value == "Masculino")? Gender.MALE : Gender.FEMALE;				
+				if( element.getTableFieldName() == "registration_date") 
+					registrationYear = value;
+			}						
+		}
+				
+		Criteria criteria = createFilterCriteria(Message.class, gender, lowerAge, higherAge, "", "", registrationYear);		
+		criteria.setProjection( Projections.projectionList()
+				.add(Projections.alias(Projections.rowCount(), "total"))				
+				.add(Projections.alias(Projections.groupProperty("country"), "country"))										
+				)
+				.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+		return (List<Object>)criteria.list();
+	}
+
+
+	// METODO PRIVADO PARA CREAR CRITERIOS HIBERNATE PARA LOS QUERIES DE LOS FILTROS	
+	private Criteria createFilterCriteria(Class<?> sourceClass, Gender gender, Integer lowerAge, Integer higherAge, String country, String city, String registrationYear) {
+		
+		Criteria criteria = getSession().createCriteria(sourceClass);
 
 		if (lowerAge != null) {
 			criteria.add(Expression
@@ -392,6 +472,5 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 		}
 		
 		return list;
-	}
-	
+	}		
 }

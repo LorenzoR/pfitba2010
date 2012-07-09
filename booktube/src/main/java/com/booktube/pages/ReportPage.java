@@ -1,5 +1,8 @@
 package com.booktube.pages;
 
+import java.util.List;
+
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 
@@ -31,14 +34,18 @@ public abstract class ReportPage extends AdministrationPage {
 	private Image reportImage;
 	private Report report; 
 	
-	private int ANCHO_GRAFICA = 600;			    
-    private int ALTO_GRAFICA = 450;
+	private int CHART_WIDTH = 600;			    
+    private int CHART_HEIGHT = 450;
 	
 	// Cada reporte puede usar los siguientes filtros
-	protected ReportFilterPanel reportFilter;
-	protected AgeFilterOption ageFilter;
-	protected OriginFilterOption originFilter;
-	protected MiscFilterOption customizedMisc;
+	protected ReportFilterPanel reportFilter = null;
+	protected AgeFilterOption ageFilter = null;
+	protected OriginFilterOption originFilter = null;
+	protected MiscFilterOption customizedMisc = null;
+	
+	//Customized Filter puede incluir dos tipos de condiciones
+	protected DropDownElementPanel genderDropDownElement;
+	protected DropDownElementPanel yearsDropDownElement;
 	
 	//Titulos del reporte: Titulo Princial, Etiqueta Eje X, Etiqueta Eje Y
 	//Debe tener al menos el titulo principal (entonces, tiene tamaño variable)
@@ -81,7 +88,7 @@ public abstract class ReportPage extends AdministrationPage {
 			    chartCreated = true;
 			    try {
 			    	report = getReportType();
-			        report.saveReportAsPNG(filename, ANCHO_GRAFICA, ALTO_GRAFICA);			        
+			        report.saveReportAsPNG(filename, CHART_WIDTH, CHART_HEIGHT);			        
 			    } catch (Exception e) {
 			        e.printStackTrace();
 			    }		
@@ -94,6 +101,7 @@ public abstract class ReportPage extends AdministrationPage {
 						return new ContextRelativeResource("/img/report.png");
 					}
 				});
+			    reportImage.add(new AttributeModifier("class", new Model<String>("reportImage")));
 			}
 		});
 		
@@ -113,7 +121,7 @@ public abstract class ReportPage extends AdministrationPage {
 					
 					public void write(Response output) {					
 						try {
-					          report.writeChartAsPdf(output.getOutputStream(), ANCHO_GRAFICA, ALTO_GRAFICA);
+					          report.writeChartAsPdf(output.getOutputStream(), CHART_WIDTH, CHART_HEIGHT);
 					        } catch (Exception e) {
 					        	e.printStackTrace();
 					        }
@@ -142,39 +150,14 @@ public abstract class ReportPage extends AdministrationPage {
 					download.initiate(target);			    
 				}				
 			}
-		});
-		
-// Esta version funciona pero no es un evento AJAX		
-//		form.add(new Link<Void>("downloadLink") {
-//			private static final long serialVersionUID = -7156242893015466304L;
-//
-//			@Override
-//			public void onClick() {
-//				
-//			    IResourceStream resourceStream = new AbstractResourceStreamWriter() {
-//					private static final long serialVersionUID = 2132022243218093750L;
-//					@Override
-//				    public String getContentType() {
-//				    	  return "application/pdf";
-//				    }
-//					
-//					public void write(Response output) {					
-//						try {
-//					          report.writeChartAsPdf(output.getOutputStream(), ANCHO_GRAFICA, ALTO_GRAFICA);
-//					        } catch (Exception e) {
-//					        	e.printStackTrace();
-//					        }
-//					}
-//			    };
-//
-//			    getRequestCycle().scheduleRequestHandlerAfterCurrent(new ResourceStreamRequestHandler(resourceStream, "report.pdf"));			    
-//			    
-//			}
-//		});
+		});		
 		
 	}
 	
-	// Cada reporte especifico debe implementar estos metodos
+	/*
+	 *  CADA REPORTE ESPECIFICO DEBE IMPLEMENTAR ESTOS METODOS
+	 *  ======================================================
+	 */
 	
 	// Genera el conjunto de datos especifico del reporte
 	public abstract Dataset getReportData();
@@ -186,15 +169,51 @@ public abstract class ReportPage extends AdministrationPage {
 	public abstract Class<?> getReportClass();
 	
 	
+	/*
+	 *  METODOS PARA AGREGAR LAS OPCIONES DEL FILTRO
+	 *  ============================================
+	 *  Cada Reporte agrega solo las que necesita
+	 */	
+	protected void addOriginFilterOption(){
+		originFilter = new OriginFilterOption("component");
+		reportFilter.addFilterOption(originFilter);
+	}
+	
+	protected void addAgeFilterOption(){
+		ageFilter = new AgeFilterOption("component");
+		reportFilter.addFilterOption(ageFilter);	
+	}
+	
+	protected void addGenderFilterOption(List<String> allGendersList){
+		createMiscFilterOption();		
+		allGendersList.add(0,FilterOption.listFirstOption);
+		genderDropDownElement = new DropDownElementPanel("element", "Sexo", "gender", allGendersList);			
+		customizedMisc.addElement(genderDropDownElement);		
+	}
+	
+	protected void addYearFilterOption(List<String> allYearsList){
+		createMiscFilterOption();
+		allYearsList.add(0,FilterOption.listFirstOption);
+		yearsDropDownElement = new DropDownElementPanel("element", "Año", "registration_date", allYearsList);			
+		customizedMisc.addElement(yearsDropDownElement);
+	}
+	
+	/*
+	 *  METODOS PRIVADOS
+	 *  ================
+	 */
+	private void createMiscFilterOption(){
+		if( customizedMisc == null ){
+			customizedMisc = new MiscFilterOption("component");
+			reportFilter.addFilterOption(customizedMisc);
+		}
+	}
+	
 	private Dialog downloadErrorDialog() {
-
 		final Dialog dialog = new Dialog("download_error_dialog");
-
-		dialog.setTitle("<span class=\"ui-icon ui-icon-alert\" style=\"float: left;\"></span> &nbsp; Error");
-		
+		dialog.setTitle("<span class=\"ui-icon ui-icon-alert\" style=\"float: left;\"></span> &nbsp; Error");		
 		
 		AjaxDialogButton ok = new AjaxDialogButton("OK") {
-
 			private static final long serialVersionUID = 1L;
 
 			@Override

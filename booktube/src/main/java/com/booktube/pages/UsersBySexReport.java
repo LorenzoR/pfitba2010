@@ -23,20 +23,15 @@ public class UsersBySexReport extends ReportPage {
 		
 	public UsersBySexReport(){
 		super();
-		// No es necesario WebMarkupContainer pues esta subclase no agrega codigo estatico HTML a la superclase(ReportPage)
-
-		//Agrego las opciones de filtrado segun que reporte se quiere generar
-		originFilter = new OriginFilterOption("component");
-		reportFilter.addFilterOption(originFilter);
+		// Agrego las opciones de filtrado segun que reporte se quiere generar
+		addOriginFilterOption();
+		addAgeFilterOption();
 		
-		ageFilter = new AgeFilterOption("component");
-		reportFilter.addFilterOption(ageFilter);	
+		// Especifico Titulo ( y etiquetas, si corresponde)
+		labels = new String[]{"Evolución de Usuarios por Género", "Año", "Usuarios"};
 		
 		String newTitle = "Booktube - Users By Sex Report"; 
-		super.get("pageTitle").setDefaultModelObject(newTitle);	
-		
-		labels = new String[]{"Evolución de Usuarios por Género", "Año", "Usuarios"};	
-
+		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 
 	@Override
