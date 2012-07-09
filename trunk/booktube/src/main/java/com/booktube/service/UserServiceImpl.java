@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService {
 		return itemDao.getCount(userId, username, gender, lowerAge, higherAge, country, lowDate, highDate);
 	}
 	
-	 // Para el filtro usado para generar reportes
+	 // PARA GENERAR LISTADOS PARA EL FILTRO DE LOS REPORTES	
 //	public List<String> getAllCountries() {
 //		return itemDao.getAllCountries();		
 //	}
@@ -118,7 +118,7 @@ public class UserServiceImpl implements UserService {
 		return itemDao.getAllRegistrationYears();
 	}
 	
-	// Para el reporte UserEvolution
+	// PARA LOS REPORTES
 	public List<Object> getUserEvolutionByYear(OriginFilterOption origin, AgeFilterOption age, MiscFilterOption misc){
 		return itemDao.getUserEvolutionByYear(origin, age, misc);
 	}
@@ -130,6 +130,17 @@ public class UserServiceImpl implements UserService {
 	public List<Object> getUserEvolutionBySex(OriginFilterOption origin, AgeFilterOption age) {
 		return itemDao.getUserEvolutionBySex(origin, age);
 	}
+	
+	public List<Object> getWorksByCategory(AgeFilterOption age, MiscFilterOption misc){
+		return itemDao.getWorksByCategory(age, misc);
+	}
+    public List<Object> getMessagesBySubject(AgeFilterOption age, MiscFilterOption misc){
+    	return itemDao.getMessagesBySubject(age, misc);
+    }
+    public List<Object> getMessagesByCountry(AgeFilterOption age, MiscFilterOption misc){
+    	return itemDao.getMessagesByCountry(age, misc);
+    }
+    
 
 	
 }

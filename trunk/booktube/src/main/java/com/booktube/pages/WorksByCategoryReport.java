@@ -1,12 +1,9 @@
 package com.booktube.pages;
 
 import java.util.List;
-
-
 import java.util.Map;
 
 import org.apache.wicket.spring.injection.annot.SpringBean;
-
 import org.jfree.data.general.Dataset;
 import org.jfree.data.general.DefaultPieDataset;
 
@@ -14,16 +11,16 @@ import com.booktube.pages.utilities.PieReport;
 import com.booktube.pages.utilities.Report;
 import com.booktube.service.UserService;
 
-public class UsersDistributionReport extends ReportPage {
-	private static final long serialVersionUID = 254209194148266371L;
-		
+public class WorksByCategoryReport extends ReportPage {
+	private static final long serialVersionUID = 7623329476031234020L;
+	
 	@SpringBean
 	UserService userService;
 	
 	private List<String> allGendersList = userService.getAllGenders();
 	private List<String> allYearsList = userService.getAllRegistrationYears();
-		
-	public UsersDistributionReport(){
+
+	public WorksByCategoryReport(){
 		super();
 		// Agrego las opciones de filtrado segun que reporte se quiere generar
 		addAgeFilterOption();
@@ -31,32 +28,32 @@ public class UsersDistributionReport extends ReportPage {
 		addYearFilterOption(allYearsList);
 		
 		// Especifico Titulo ( y etiquetas, si corresponde)
-		labels = new String[]{"Distribución de Usuarios por país"};
+		labels = new String[]{"Trabajos por Categoría"};
 		
-		String newTitle = "Booktube - Users Distribution Report"; 
-		super.get("pageTitle").setDefaultModelObject(newTitle);		
+		String newTitle = "Booktube - Works by Category Report"; 
+		super.get("pageTitle").setDefaultModelObject(newTitle);			
+		
 	}
 	
 	@Override
 	public Dataset getReportData() {
-		List<?> data = userService.getUserDistributionByCountry(ageFilter, customizedMisc);		
+		List<?> data = userService.getWorksByCategory(ageFilter, customizedMisc);		
 		DefaultPieDataset result = new DefaultPieDataset();
 		for(Object object : data){
            Map<?, ?> row = (Map<?, ?>)object;
-		 	result.setValue((String)row.get("country"), (Number)row.get("total"));		           
+		 	result.setValue((String)row.get("category"), (Number)row.get("total"));		           
         }	
 		return (Dataset)result;
-
 	}
 
 	@Override
-	public Report getReportType() {
+	public Report getReportType() {		
 		return new PieReport(getReportData(), labels);
 	}
 
 	@Override
 	public Class<?> getReportClass() {
-		return UsersEvolutionReport.class;
+		return WorksByCategoryReport.class;
 	}
 
 }

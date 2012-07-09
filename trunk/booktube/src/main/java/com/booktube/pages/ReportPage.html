@@ -13,7 +13,7 @@
 
 <wicket:extend>
 	
-	<div wicket:id="download_error_dialog">Debe generar un grafico antes de poder bajar un archivo</div>
+	<div wicket:id="download_error_dialog">Debe generar un gr&aacute;fico antes de poder bajar un archivo</div>
 	
 	<div class="reportContainer" wicket:id="reportContainer">
 		
@@ -24,13 +24,13 @@
             
         <div id="submitDownload">
               <input type="submit" value="Graficar" wicket:id="renderReport"/>
-          <p><a href="#" wicket:id="downloadLink" >Bajar Reporte</a></p>
+          <p><a href="#" wicket:id="downloadLink" ><img src="/img/pdfIcon.gif" id="pdfIcon" /><span id="text">Bajar Reporte</span></a></p>
         </div>
 			</form>
 		</div>
 		
 		<div class="resultingReportDiv">
-			<img wicket:id="reportImage" />
+			<img wicket:id="reportImage" class="emptyChartImage" />
 		</div>
 				
 	</div>    <!--  class="reportContainer" -->

@@ -19,33 +19,38 @@ import com.booktube.service.UserService;
 public class UsersEvolutionReport extends ReportPage {
 	private static final long serialVersionUID = 6051762145219128009L;
 	
-	private DropDownElementPanel genderDropDownElement;
-	
 	@SpringBean
 	UserService userService;
+	
 	private List<String> allGendersList = userService.getAllGenders();
 		
 	public UsersEvolutionReport(){
 		super();
-		// No es necesario WebMarkupContainer pues esta subclase no agrega codigo estatico HTML a la superclase(ReportPage)
-
-		//Agrego las opciones de filtrado segun que reporte se quiere generar
-		originFilter = new OriginFilterOption("component");
-		reportFilter.addFilterOption(originFilter);
+		// Agrego las opciones de filtrado segun que reporte se quiere generar
+		addOriginFilterOption();
+		addAgeFilterOption();
+		addGenderFilterOption(allGendersList);		
+				
+		// Especifico Titulo ( y etiquetas, si corresponde)
+		labels = new String[]{"Evolución de Usuarios en el tiempo", "Año", "Usuarios"};
 		
-		ageFilter = new AgeFilterOption("component");
-		reportFilter.addFilterOption(ageFilter);
-	
-		customizedMisc = new MiscFilterOption("component");
-		allGendersList.add(0,FilterOption.listFirstOption);
-		genderDropDownElement = new DropDownElementPanel("element", "Sex", "gender", allGendersList); 
-		customizedMisc.addElement(genderDropDownElement);
-		reportFilter.addFilterOption(customizedMisc);
+//		//Agrego las opciones de filtrado segun que reporte se quiere generar
+//		originFilter = new OriginFilterOption("component");
+//		reportFilter.addFilterOption(originFilter);
+//		
+//		ageFilter = new AgeFilterOption("component");
+//		reportFilter.addFilterOption(ageFilter);
+//	
+//		customizedMisc = new MiscFilterOption("component");
+//		allGendersList.add(0,FilterOption.listFirstOption);
+//		genderDropDownElement = new DropDownElementPanel("element", "Sexo", "gender", allGendersList); 
+//		customizedMisc.addElement(genderDropDownElement);
+//		reportFilter.addFilterOption(customizedMisc);
 		
 		String newTitle = "Booktube - Users Evolution Report"; 
 		super.get("pageTitle").setDefaultModelObject(newTitle);		
 		
-		labels = new String[]{"Evolución de Usuarios en el tiempo", "Año", "Usuarios"};
+		
 
 	}
 	

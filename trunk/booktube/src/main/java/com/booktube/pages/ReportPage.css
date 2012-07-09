@@ -1,11 +1,18 @@
 @CHARSET "ISO-8859-1";
 
-div.filterDiv{background-color:yellow;width:650px; height:110px;
-	padding-top:10px; margin-top:0px;
-	border-bottom: 1px solid #E0E0E0;
+div.filterDiv{
+/* 	background-color:yellow; */
+	width:630px; height:100px;
+	padding-top:10px;	
+	padding-left:30px;
+	margin-top:-10px;	
+	border-bottom: 1px solid #E0E0E0;	
+	text-align: center;
 }
 	
-div.filterDiv FORM{font-size: 11px;}
+div.filterDiv FORM{
+	font-size: 11px;	
+}
 
 /*  Estilo por default para los componentes del filtro.
 	Para cada componente dinamico se puede customizar el estilo en su CSS
@@ -15,37 +22,82 @@ div.filterDiv option,select {
 	font-size:11px;
 	color:#777777;
 	margin: 0px;
-	padding:0px 0px 0px 0px;  
-    -moz-border-radius: 1px;  
-    -webkit-border-radius: 1px;
+	padding:0px 0px 0px 0px;	
+		  
+    /*-moz-border-radius: 1px;  
+    -webkit-border-radius: 1px;*/    
 }
 
 div.filterDiv fieldset{
-	width:140px; float:left;
-	margin-left:10px;
-	-moz-border-radius: 5px;  
-    -webkit-border-radius: 5px;
+BACKGROUND: url(/img/pagebg.png) #fafafa no-repeat;
+FONT-FAMILY: "Lucida Grande", "Lucida Sans Unicode", "Segoe UI", Helvetica, Sans-serif; 
+	border:#d0d0d0 1px solid;
+	width:130px; height:70px; 
+	float:left;
+	margin-left:15px;
+	padding:0px 12px 10px 12px;
+	
+    -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0 1px 3px; 
+    -moz-box-shadow: rgba(0, 0, 0, 0.3) 0 1px 3px; 
+	-moz-border-radius: 5px; 
+	-webkit-border-radius: 5px; 
+	border-radius: 5px; 
+	-o-border-radius: 5px; 
+	-khtml-border-radius: 5px;
 }
 /*  FIn del estilo por defecto para los componentes del filtro */
 
 div.filterDiv div#submitDownload{
-	background-color:blue;
-	width: 80px; height: 80px;
-	float:left; margin-left: 555px; margin-top:-100px;
+/* 	background-color:blue; */
+	width: 110px; height: 80px;
+	float:left; margin-left: 510px; margin-top:-90px;
 	padding: 10px;
+	
 }
 
 div.filterDiv div#submitDownload input{
 	font-size: 14px;
-	margin: 10px auto 20px 8px ;
-	padding: 4px;
+	margin: 10px auto 10px 8px ;
+	padding: 4px;	
 }
 
+
 div.filterDiv div#submitDownload a{
-	font-size: 12px;
+	font-size: 11px;
+}
+
+div.filterDiv div#submitDownload a span#text{
+	margin-top:10px;
+}
+
+div.filterDiv div#submitDownload a img#pdfIcon{
+	width:18px;
+	height:18px;
+	margin-right:5px;
 }
 
 div.resultingReportDiv{
 	margin: 10px auto;
 	text-align : center;	
+}
+img.emptyChartImage{
+	width: 400px;
+	height:300px;
+	
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
+	
+	/* This works in IE 8 & 9 too */
+	/* ... but also 5, 6, 7 */
+	filter: alpha(opacity=30);
+	
+	/* Older than Firefox 0.9 */
+	-moz-opacity:0.3;
+	
+	/* Safari 1.x (pre WebKit!) */
+	-khtml-opacity: 0.3;
+    
+	/* Modern!
+	/* Firefox 0.9+, Safari 2?, Chrome any?
+	/* Opera 9+, IE 9+ */
+	opacity: 0.3;
 }

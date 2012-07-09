@@ -41,5 +41,8 @@ public interface UserService {
     public List<Object> getUserEvolutionByYear(OriginFilterOption origin, AgeFilterOption age, MiscFilterOption misc);
     public List<Object> getUserDistributionByCountry(AgeFilterOption age, MiscFilterOption misc);
     public List<Object> getUserEvolutionBySex(OriginFilterOption origin, AgeFilterOption age);
+    public List<Object> getWorksByCategory(AgeFilterOption age, MiscFilterOption misc);
+    public List<Object> getMessagesBySubject(AgeFilterOption age, MiscFilterOption misc);
+    public List<Object> getMessagesByCountry(AgeFilterOption age, MiscFilterOption misc);
     
 }

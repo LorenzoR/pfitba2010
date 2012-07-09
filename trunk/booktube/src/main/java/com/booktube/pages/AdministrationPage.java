@@ -20,10 +20,6 @@ import com.booktube.service.BookService;
 import com.booktube.service.UserService;
 
 public class AdministrationPage extends BasePage {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8681226479793317569L;
 
 	@SpringBean
