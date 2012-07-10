@@ -18,6 +18,7 @@ import com.booktube.model.Message;
 import com.booktube.model.Message.Type;
 import com.booktube.model.CampaignDetail;
 import com.booktube.model.BookTag;
+import com.booktube.model.Rating;
 import com.booktube.model.User;
 import com.booktube.model.User.Gender;
 import com.booktube.pages.BasePage;
@@ -103,7 +104,7 @@ public class LoadDataPage extends BasePage {
 		
 		Gender gender = Gender.MALE;
 		
-		for ( int i = 0; i < 100; i++ ) {
+		for ( int i = 0; i < 10; i++ ) {
 			
 			int year = randBetween(1900, 2010);
 	        int month = randBetween(0, 11);
@@ -178,23 +179,46 @@ public class LoadDataPage extends BasePage {
 		
 		Random randomGenerator = new Random(System.currentTimeMillis());
 		
+		Set<User> userSet = new HashSet<User>(users);
+		
 		System.out.println("Adding books");
 		
-		for ( int i = 0; i < 100; i++ ) {
+		for ( int i = 0; i < 10; i++ ) {
 			
-			Book book = new Book("titulo"+i, "texto"+i, this.users.get(randomGenerator.nextInt(this.users.size())));
+			double rating = randomGenerator.nextDouble() * 10;
+			int numOfVotes = randomGenerator.nextInt(5000);
+			int sumOfRating = (int) rating * numOfVotes;
+			
+			System.out.println("SIZEEEE: " + this.users.size());
+			
+			User newUser = userService.getUser(this.users.get(randomGenerator.nextInt(this.users.size())).getId());
+			
+			Book book = new Book("titulo"+i, "texto"+i, newUser);
 
 			book.setCategory("category" + randomGenerator.nextInt(10));
 			book.setSubCategory("subcategory" + randomGenerator.nextInt(50));
+			//book.addUserVote(users.get(0));
+			//book.addUserVote(users.get(1));
+			//book.setUserVotes(userSet);
+			//book.addUserVote(new UserVote(users.get(0), book));
+			
+//			for ( User aUser : this.users ) {
+//				aUser.addVote(book);
+//			}
 
+			book.setRating(new Rating(sumOfRating, numOfVotes, rating, book));
+			
 			int cantTags = randomGenerator.nextInt(10) + 1;
 			
 			for ( int j = 0; j < cantTags; j++ ) {
 				book.addTag("tag" + randomGenerator.nextInt(20));
 			}
-
-			bookService.insertBook(book);
 			
+			newUser.addBook(book);
+			//newUser.addVote(book);
+			bookService.insertBook(book);
+			//userService.updateUser(newUser);
+
 		}
 		
 //		Book book = new Book("titulo", "textoooooooooooooo", this.users.get(0));

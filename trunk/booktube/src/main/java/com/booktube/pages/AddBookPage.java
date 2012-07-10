@@ -219,7 +219,7 @@ public class AddBookPage extends BasePage {
 //				// book.setTags(bookTagSet);
 //				book.setCategory(categoryString);
 //				book.setSubCategory(subcategoryString);
-
+				
 				/* Insert book */
 				Long lastInsertedId = bookService.insertBook(newBook);
 				pageParameters.set("book", lastInsertedId);
@@ -230,6 +230,8 @@ public class AddBookPage extends BasePage {
 				System.out.println("Category: " + newBook.getCategory());
 				System.out.println("SubCategory: " + newBook.getSubCategory());
 
+				user.addBook(newBook);
+				
 				///* Clear values */
 				//editor.setModel(new Model<Book>());
 				//titleField.setModel(new Model<Book>());

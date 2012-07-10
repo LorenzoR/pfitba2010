@@ -62,9 +62,16 @@ public class Book implements Serializable {
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Rating rating;
 
-	// @ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "USER_ID")
+//	@ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+	//@ManyToOne(fetch = FetchType.LAZY,  cascade = { CascadeType.PERSIST,
+	//		CascadeType.MERGE, CascadeType.REFRESH})
+//	@JoinColumn(name = "USER_ID")
+//	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+//	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
+//	@OnDelete(action = OnDeleteAction.CASCADE)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+    @JoinColumn(name="USER_ID")
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User author;
 
@@ -111,9 +118,10 @@ public class Book implements Serializable {
 	 * tags;
 	 */
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST,
-			CascadeType.MERGE, CascadeType.REFRESH })
-	@Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST,
+			CascadeType.MERGE, CascadeType.REFRESH})
+	//@Cascade(org.hibernate.annotations.CascadeType.ALL)
+	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
 	@JoinTable(name = "USERVOTES", joinColumns = { @JoinColumn(name = "BOOK_ID") }, inverseJoinColumns = { @JoinColumn(name = "USER_ID") })
 	private Set<User> userVotes;
 
@@ -128,8 +136,9 @@ public class Book implements Serializable {
 	//@JoinTable(name = "BOOK_TAG", joinColumns = { @JoinColumn(name = "BOOK_ID") }, inverseJoinColumns = { @JoinColumn(name = "TAG_ID") })
 	//FIN ESTE ANDA
 	@OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST,
-			CascadeType.MERGE, CascadeType.REFRESH })
-	@Cascade(org.hibernate.annotations.CascadeType.ALL)
+			CascadeType.MERGE, CascadeType.REFRESH})
+	//@Cascade(org.hibernate.annotations.CascadeType.ALL)
+	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
 	//@JoinTable(name = "BOOK_TAGS", joinColumns = { @JoinColumn(name = "BOOK_ID") }, inverseJoinColumns = { @JoinColumn(name = "text") })
 	@JoinColumn(name = "BOOK_ID")
 	private Set<BookTag> tags;
