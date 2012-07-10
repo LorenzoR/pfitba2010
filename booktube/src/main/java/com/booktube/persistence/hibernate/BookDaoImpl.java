@@ -46,6 +46,10 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 		 * getSession().flush();
 		 */
 		super.delete(book);
+		//getSession().refresh(book);
+		//getSession().delete(book);
+		//getSession().flush();
+		
 	}
 
 	@SuppressWarnings("unchecked")

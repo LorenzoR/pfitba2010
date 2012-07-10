@@ -4,22 +4,30 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.Cascade;
 
 @Entity
 @Table(name = "USER")
@@ -78,8 +86,14 @@ public class User implements Serializable {
 	@Column(name = "LEVEL", nullable = false)
 	private Level level;
 	
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+    @JoinColumn(name="USER_ID")
+	private List<Book> books;
+	
 	public User() {
 		this.registrationDate = Calendar.getInstance().getTime();
+		this.books = new ArrayList<Book>();
 	}
 
 	public User(Long id, String username, String password, String firstname,
@@ -245,6 +259,18 @@ public class User implements Serializable {
 		}
 		
 		return shaM;
+	}
+
+	public List<Book> getBooks() {
+		return books;
+	}
+
+	public void setBooks(List<Book> books) {
+		this.books = books;
+	}
+	
+	public void addBook(Book book) {
+		this.books.add(book);
 	}
 	
 }
