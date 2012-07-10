@@ -1,6 +1,7 @@
 package com.booktube.persistence.hibernate;
 
 import java.text.DateFormat;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -8,11 +9,13 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+
 import org.apache.commons.lang.StringUtils;
 
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.SQLQuery;
+//import org.hibernate.annotations.FetchMode;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
@@ -378,28 +381,59 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 
 	@SuppressWarnings("unchecked")
 	public List<Object> getMessagesByCountry(AgeFilterOption age, MiscFilterOption misc) {
-		Integer lowerAge = ( age.getSelectedMinAge() != FilterOption.listFirstOption )? Integer.valueOf(age.getSelectedMinAge()) : null;
-		Integer higherAge =( age.getSelectedMaxAge() != FilterOption.listFirstOption )? Integer.valueOf(age.getSelectedMaxAge()) : null; 	
 		
-		Gender gender = null;
-		String registrationYear = null;
-		for (DropDownElementPanel element : misc.getElements()) {
-			String value = element.getSelectedValue();
-			if( value != FilterOption.listFirstOption ){
-				if( element.getTableFieldName() == "gender")				
-					gender = ( value == "Masculino")? Gender.MALE : Gender.FEMALE;				
-				if( element.getTableFieldName() == "registration_date") 
-					registrationYear = value;
-			}						
-		}
+		String whereClause = SqlUtilities.generateWhereClause(null, age, misc);	
+		String sql = "select country, count(message_id) as total from user join message on user_id=sender_id "+whereClause+" group by country";
+		SQLQuery query = getSession().createSQLQuery(sql)
+				.addScalar("country", Hibernate.STRING)
+				.addScalar("total", Hibernate.INTEGER);
+
+		query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+		List<Object> data = (List<Object>) query.list();
+		return data;
+
+//		Integer lowerAge = ( age.getSelectedMinAge() != FilterOption.listFirstOption )? Integer.valueOf(age.getSelectedMinAge()) : null;
+//		Integer higherAge =( age.getSelectedMaxAge() != FilterOption.listFirstOption )? Integer.valueOf(age.getSelectedMaxAge()) : null; 	
+//		
+//		Gender gender = null;
+//		String registrationYear = null;
+//		for (DropDownElementPanel element : misc.getElements()) {
+//			String value = element.getSelectedValue();
+//			if( value != FilterOption.listFirstOption ){
+//				if( element.getTableFieldName() == "gender")				
+//					gender = ( value == "Masculino")? Gender.MALE : Gender.FEMALE;				
+//				if( element.getTableFieldName() == "registration_date") 
+//					registrationYear = value;
+//			}						
+//		}
+		
 				
-		Criteria criteria = createFilterCriteria(Message.class, gender, lowerAge, higherAge, "", "", registrationYear);		
-		criteria.setProjection( Projections.projectionList()
-				.add(Projections.alias(Projections.rowCount(), "total"))				
-				.add(Projections.alias(Projections.groupProperty("country"), "country"))										
-				)
-				.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-		return (List<Object>)criteria.list();
+//		System.out.println("Messages by COuntry : A PUNTO DE REALIZAR QUERY HIBERNATE");
+//		Criteria criteria = getSession().createCriteria(User.class)
+//										.setFetchMode("Message", org.hibernate.FetchMode.EAGER)										
+//										.setProjection( Projections.projectionList()
+//												.add(Projections.alias(Projections.rowCount(), "total"))				
+//												.add(Projections.alias(Projections.groupProperty("country"), "country"))										
+//										)
+//										.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+//		
+//		
+//		List<Object > data = (List<Object>)criteria.list();
+//		for(Object object : data){
+//           Map<?, ?> row = (Map<?, ?>)object;
+//           System.out.println("country="+(String)row.get("country")+"  total="+(Long)row.get("total"));
+//           
+//        }
+		
+		
+//		Criteria criteria = createFilterCriteria(Message.class, gender, lowerAge, higherAge, "", "", registrationYear);		
+//		criteria.setProjection( Projections.projectionList()
+//				.add(Projections.alias(Projections.rowCount(), "total"))				
+//				.add(Projections.alias(Projections.groupProperty("country"), "country"))										
+//				)
+//				.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+		
+//		return (List<Object>)criteria.list();
 	}
 
 
