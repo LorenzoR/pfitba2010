@@ -185,7 +185,7 @@ public class LoadDataPage extends BasePage {
 		
 		for ( int i = 0; i < 10; i++ ) {
 			
-			double rating = randomGenerator.nextDouble() * 10;
+			double rating = randomGenerator.nextDouble() * 5;
 			int numOfVotes = randomGenerator.nextInt(5000);
 			int sumOfRating = (int) rating * numOfVotes;
 			
