@@ -86,7 +86,8 @@ public class User implements Serializable {
 	@Column(name = "LEVEL", nullable = false)
 	private Level level;
 	
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST,
+			CascadeType.MERGE, CascadeType.REFRESH})
 	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     @JoinColumn(name="USER_ID")
 	private List<Book> books;

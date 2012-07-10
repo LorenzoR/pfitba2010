@@ -69,10 +69,11 @@ public class Book implements Serializable {
 //	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
 //	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
 //	@OnDelete(action = OnDeleteAction.CASCADE)
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST,
+					CascadeType.MERGE, CascadeType.REFRESH})
+	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
     @JoinColumn(name="USER_ID")
-	@OnDelete(action = OnDeleteAction.CASCADE)
+	//@OnDelete(action = OnDeleteAction.CASCADE)
 	private User author;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -118,7 +119,7 @@ public class Book implements Serializable {
 	 * tags;
 	 */
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST,
+	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST,
 			CascadeType.MERGE, CascadeType.REFRESH})
 	//@Cascade(org.hibernate.annotations.CascadeType.ALL)
 	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
