@@ -81,8 +81,13 @@ public class NewCampaignPage extends BasePage {
 	}
 
 	private Form<?> newContactForm() {
-		Form<?> form = new Form<Object>("form");
+		Form<User> form = new Form<User>("form");
 
+		CompoundPropertyModel<User> model = new CompoundPropertyModel<User>(
+				new User());
+
+		form.setDefaultModel(model);
+		
 //		List<String> genders = Arrays.asList(new String[] { "Todos",
 //				"Masculino", "Femenino" });
 
@@ -197,13 +202,11 @@ public class NewCampaignPage extends BasePage {
 				String genderString = genderSelect
 						.getDefaultModelObjectAsString();
 
-				// if (!genderSelect.getDefaultModelObjectAsString().isEmpty())
-				// {
-				// genderString = genderSelect.getDefaultModelObjectAsString();
-				// }
-				// else {
-				// genderString = null;
-				// }
+				if (!genderSelect.getDefaultModelObjectAsString().isEmpty()) {
+					genderString = genderSelect.getDefaultModelObjectAsString();
+				} else {
+					genderString = null;
+				}
 
 				Gender gender;
 
