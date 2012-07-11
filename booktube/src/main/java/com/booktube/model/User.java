@@ -7,7 +7,10 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -20,6 +23,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -28,6 +33,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "USER")
@@ -42,7 +50,8 @@ public class User implements Serializable {
 	public enum Gender { MALE, FEMALE }
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GenericGenerator(name = "generator", strategy = "increment")
+    @GeneratedValue(generator = "generator")
 	@Column(name = "USER_ID")
 	private Long id;
 
@@ -92,9 +101,37 @@ public class User implements Serializable {
     @JoinColumn(name="USER_ID")
 	private List<Book> books;
 	
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.user")
+	@OnDelete(action=OnDeleteAction.CASCADE)
+	private List<UserVote> userVotes = new LinkedList<UserVote>();
+	
+    public List<UserVote> getUserVotes() {
+        return this.userVotes;
+    }
+ 
+    public void setUserVotes(List<UserVote> userVotes) {
+        this.userVotes = userVotes;
+    }
+    
+    public void addUserVote(UserVote userVote) {
+    	this.userVotes.add(userVote);
+    }
+    
+////	@ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE},
+////		      mappedBy="userVotes")
+////	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
+////	//	  @OnDelete(action=OnDeleteAction.CASCADE)
+////	private Set<Book> votes;
+//	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+//	@JoinTable(name = "USERVOTES", joinColumns = { @JoinColumn(name = "USER_ID", unique = false) }, inverseJoinColumns = { @JoinColumn(name = "BOOK_ID", unique = false) })
+//	private Set<Book> votes;
+	
 	public User() {
 		this.registrationDate = Calendar.getInstance().getTime();
 		this.books = new ArrayList<Book>();
+		//this.votes = new HashSet<Book>();
 	}
 
 	public User(Long id, String username, String password, String firstname,
@@ -273,5 +310,17 @@ public class User implements Serializable {
 	public void addBook(Book book) {
 		this.books.add(book);
 	}
-	
+
+//	public Set<Book> getVotes() {
+//		return votes;
+//	}
+//
+//	public void setVotes(Set<Book> votes) {
+//		this.votes = votes;
+//	}
+//	
+//	public void addVote(Book book) {
+//		this.votes.add(book);
+//	}
+//	
 }

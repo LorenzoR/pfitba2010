@@ -1,5 +1,6 @@
 package com.booktube.pages;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -107,7 +108,12 @@ public class RegisterPage extends BasePage {
 		final PasswordTextField passwordField2 = new PasswordTextField(
 				"password2", new Model<String>(""));
 
-		List<String> countryList = userService.getAllCountries();
+		List<String> countryList = new ArrayList<String>();
+		countryList.add("Country 1");
+		countryList.add("Country 2");
+		countryList.add("Country 3");
+		countryList.add("Country 4");
+		countryList.add("Country 5");
 		final DropDownChoice<String> countrySelect = new DropDownChoice<String>(
 				"country", countryList);
 		
