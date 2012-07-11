@@ -30,9 +30,9 @@ public class UserVote implements Serializable {
 		setBook(book);
 	}
 
-//	private void setPk(UserVotePk pk) {
-//		this.pk = pk;
-//	}
+	private void setPk(UserVotePk pk) {
+		this.pk = pk;
+	}
 
 	@Transient
 	public User getUser() {
