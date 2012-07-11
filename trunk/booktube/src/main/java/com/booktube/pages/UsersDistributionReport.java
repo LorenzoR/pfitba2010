@@ -59,4 +59,9 @@ public class UsersDistributionReport extends ReportPage {
 		return UsersEvolutionReport.class;
 	}
 
+	@Override
+	public String getReportTitle() {
+		return "Reporte Usuarios por País";
+	}
+
 }

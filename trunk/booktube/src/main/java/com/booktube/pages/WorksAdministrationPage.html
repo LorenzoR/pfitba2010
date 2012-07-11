@@ -17,39 +17,41 @@
 	    	<span wicket:id="delete_confirmation_dialog_text">Delete confirmation dialog goes here</span>
 	    </p>
 		
-		<h3 wicket:id="pageTitle"></h3>
+		<h3 wicket:id="pageTitle" class="pageTitle"></h3>
 	
 		<div wicket:id="feedbackMessage"></div>
-	
-		<h2><a href="#" wicket:id="searchBookLink" onclick="return false;">Buscar</a></h2>
-			<form id="searchBookFormId" wicket:id="searchBookForm">
-				<div id="searchFields" wicket:id="searchFields">
-					<p>
-						<b>ID:</b> <input type="text" wicket:id="bookId" value="" />
-					</p>
-					<p>
-						<b>Author:</b> <input type="text" wicket:id="author" value="" />
-					</p>
-					<p>
-						<b>Title:</b> <input type="text" wicket:id="title" value="" />
-					</p>
-					<p>
-						<b>Category:</b> <input type="text" wicket:id="category" value="" />
-					</p>
-					<p>
-						<b>Subcategory:</b> <input type="text" wicket:id="subcategory" value="" />
-					</p>
-					<p>
-						<b>Tag:</b> <input type="text" wicket:id="tag" value="" />
-					</p>
-					<p>
-						<b>Fecha Publicacion:</b> &nbsp;
-						Desde: <input type="text" wicket:id="lowPublishDate" value="" />
-						Hasta: <input type="text" wicket:id="highPublishDate" value="" />
-					</p>
-					<p>
-						<input type="button" wicket:id="searchBook" value="Search" />
-					</p>
+		
+		<h2><a href="#" wicket:id="searchBookLink" onclick="return false;" class="searchLink">Buscar</a></h2>
+			<form id="searchBookFormId" wicket:id="searchBookForm" class="searchForm">
+				<div id="searchFields" wicket:id="searchFields" class="searchFields">
+					<table class="searchview">
+						<tr>
+							<td><b>ID:</b> </td>
+							<td><input type="text" wicket:id="bookId" value="" /></td>
+							<td><b>Autor:</b></td>
+							<td><input type="text" wicket:id="author" value="" /></td>
+						</tr>
+						<tr>
+							<td><b>T&iacute;tulo:</b></td>
+							<td><input type="text" wicket:id="title" value="" /></td>
+							<td><b>Tag:</b></td>
+							<td><input type="text" wicket:id="tag" value="" /></td>
+						</tr>
+						<tr>
+							<td><b>Categor&iacute;a:</b></td>
+							<td><input type="text" wicket:id="category" value="" /></td>
+							<td><b>Subcategor&iacute;a:</b></td>
+							<td><input type="text" wicket:id="subcategory" value="" /></td>
+						</tr>
+						<tr>
+							<td colspan="4">
+								<b>Fecha Publicaci&oacute;n:</b> &nbsp;
+								Desde: <input type="text" wicket:id="lowPublishDate" value="" />
+								Hasta: <input type="text" wicket:id="highPublishDate" value="" />
+							</td>						
+						</tr>
+					</table>
+					<input type="button" wicket:id="searchBook" value="Search" class="buttons" />				
 				</div>
 			
 	
@@ -72,21 +74,32 @@
 <!-- 		</div> -->
 
 <div wicket:id="group">
-<table border="1" class="dataview">
+<table class="dataview">
 	<tbody>
+		<tr>
+			<th class="title"></th>
+			<th class="title">T&iacute;tulo</th>
+			<th class="title">Autor</th>
+			<th class="title">Tags</th>
+			<th class="title">Publicaci&oacute;n</th>
+			<th class="title"></th>
+		</tr>
 		<tr wicket:id="bookList">
-			<td><input type="checkbox" wicket:id="checkbox" /></td>
-			<td>
+			<td class="list"><input type="checkbox" wicket:id="checkbox" /></td>
+			<td class="list">
 				<div><a href="#" wicket:id="viewLink"><span wicket:id="title" class="title">Title goes here</span></a></div>
-				<div><b>by</b> <a href="#" wicket:id="authorLink"><strong wicket:id="authorName">Author goes here</strong></a></div>
 			</td>
-			<td><b>Publish Date: </b><span wicket:id="publishDate">Date goes here</span></td>
-			<td>
+			<td class="list">
+				<div><a href="#" wicket:id="authorLink"><strong wicket:id="authorName">Author goes here</strong></a></div>
+			</td>
+			
+			<td class="list longList">
 				<span wicket:id="tagList">
 					<a href="#" wicket:id="tagLink">#<span wicket:id="tagName"></span></a>&nbsp;
 				</span>
 			</td>
-			<td>
+			<td class="list"><span wicket:id="publishDate">Date goes here</span></td>
+			<td class="list listTools">
 				<a href="#" wicket:id="detailsLink">Ver</a> | 
 				<a href="#" wicket:id="deleteLink">Eliminar</a> | 
 				<a href="#" wicket:id="editLink">Editar</a>
@@ -95,11 +108,11 @@
 	</tbody>
 </table>
 </div>
-<input type="button" wicket:id="deleteBook" value="Delete Selected Books" />
+<input type="button" wicket:id="deleteBook" value="Delete Selected Books" class="buttons" />
 
 </form>
 	
-	<div wicket:id="footerPaginator"></div>  
+	<div wicket:id="footerPaginator" class="footerPaginator"></div>  
 		
 	</div>
 </wicket:extend>

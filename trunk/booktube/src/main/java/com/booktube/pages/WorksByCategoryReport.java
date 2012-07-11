@@ -56,4 +56,9 @@ public class WorksByCategoryReport extends ReportPage {
 		return WorksByCategoryReport.class;
 	}
 
+	@Override
+	public String getReportTitle() {
+		return "Reporte Trabajos por Categoría";
+	}
+
 }

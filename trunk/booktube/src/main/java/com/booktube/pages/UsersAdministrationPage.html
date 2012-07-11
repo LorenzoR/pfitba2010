@@ -19,10 +19,10 @@
 	    
 	    <h3 wicket:id="pageTitle" class="pageTitle"></h3>
 	    
-		<h2><a href="#" wicket:id="searchUserLink" onclick="return false;">Buscar</a></h2>
+		<h2><a href="#" wicket:id="searchUserLink" onclick="return false;" class="searchLink">Buscar</a></h2>
 			<form id="searchUserFormId" wicket:id="searchUserForm" class="searchForm">
 				<div id="searchFields" wicket:id="searchFields">
-					<table>
+					<table class="searchview">
 						<tr>
 							<td><b>ID:</b></td><td> <input type="text" wicket:id="userId" value="" /></td>
 							<td><b>Usuario:</b></td> <td> <input type="text" wicket:id="username" value="" /></td>
@@ -58,7 +58,7 @@
 				</div>
 	
 				<div wicket:id="group">
-				<table class="dataview">
+				<table class="dataview smallDataview">
 					<tbody>
 						<tr>
 							<th class="title"></th>
@@ -66,7 +66,8 @@
 							<th class="title">Usuario</th>
 							<th class="title">Nombre</th>
 							<th class="title">Apellido</th>
-							<th class="title"></th></tr>
+							<th class="title"></th>
+						</tr>
 						<tr wicket:id="writerList">
 							<td class="list"><input type="checkbox" wicket:id="checkbox" /></td>
 							<td class="list"><span wicket:id="id">User Id goes here</span></td>
@@ -87,7 +88,7 @@
 
 			</form>
 
-		<div wicket:id="footerPaginator" style="text-align:center; margin:0px auto 10px auto;"></div>  
+		<div wicket:id="footerPaginator" class="footerPaginator"></div>  
 		
 	</div>
 </wicket:extend>

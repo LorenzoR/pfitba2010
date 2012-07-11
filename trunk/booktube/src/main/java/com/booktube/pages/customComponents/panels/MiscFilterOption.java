@@ -1,9 +1,10 @@
-package com.booktube.pages;
+package com.booktube.pages.customComponents.panels;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.booktube.pages.customComponents.DropDownElementPanel;
+import com.booktube.pages.customComponents.PanelListView;
+import com.booktube.pages.customComponents.panels.DropDownElementPanel;
 
 public class MiscFilterOption extends FilterOption {
 	private static final long serialVersionUID = 8701603490904340060L;	

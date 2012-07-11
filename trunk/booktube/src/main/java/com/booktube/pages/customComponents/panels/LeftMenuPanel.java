@@ -1,8 +1,13 @@
-package com.booktube.pages;
+package com.booktube.pages.customComponents.panels;
 
 
 import org.apache.wicket.markup.html.panel.Panel;
 
+import com.booktube.pages.CampaignsAdministrationPage;
+import com.booktube.pages.MessagesAdministrationPage;
+import com.booktube.pages.ReportsAdministrationPage;
+import com.booktube.pages.UsersAdministrationPage;
+import com.booktube.pages.WorksAdministrationPage;
 import com.booktube.pages.customComponents.MenuLink;
 
 public class LeftMenuPanel extends Panel{	

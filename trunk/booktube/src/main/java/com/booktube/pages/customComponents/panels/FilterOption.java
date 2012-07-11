@@ -1,4 +1,4 @@
-package com.booktube.pages;
+package com.booktube.pages.customComponents.panels;
 
 
 import org.apache.wicket.markup.html.panel.Panel;

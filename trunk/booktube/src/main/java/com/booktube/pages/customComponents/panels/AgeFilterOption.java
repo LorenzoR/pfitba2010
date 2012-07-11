@@ -1,6 +1,7 @@
-package com.booktube.pages;
+package com.booktube.pages.customComponents.panels;
 
 import java.util.List;
+
 
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -14,7 +15,8 @@ public class AgeFilterOption extends FilterOption {
 	
 	@SpringBean
 	UserService userService;
-	private List<String> allAgesList = userService.getAllAges();
+	
+	private List<String> allAgesList = (List<String>)userService.getAllAges();
 //	private String selectedMinAge = allAgesList.get(0);
 //	private String selectedMaxAge = selectedMinAge;
 	

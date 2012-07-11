@@ -1,16 +1,18 @@
 package com.booktube.persistence.hibernate;
 
 import java.util.ArrayList;
+
+
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
 import com.booktube.model.User.Gender;
-import com.booktube.pages.AgeFilterOption;
-import com.booktube.pages.FilterOption;
-import com.booktube.pages.MiscFilterOption;
-import com.booktube.pages.OriginFilterOption;
-import com.booktube.pages.customComponents.DropDownElementPanel;
+import com.booktube.pages.customComponents.panels.FilterOption;
+import com.booktube.pages.customComponents.panels.MiscFilterOption;
+import com.booktube.pages.customComponents.panels.AgeFilterOption;
+import com.booktube.pages.customComponents.panels.DropDownElementPanel;
+import com.booktube.pages.customComponents.panels.OriginFilterOption;
 
 public class SqlUtilities {
 	public static String generateWhereClause(OriginFilterOption origin, AgeFilterOption age, MiscFilterOption misc ){		
