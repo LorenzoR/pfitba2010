@@ -42,6 +42,10 @@ public class Message implements Serializable {
 		PRIVATE_MESSAGE, ANSWER
 	};
 
+	public enum Subject {
+		SUBJECT1, SUBJECT2, SUBJECT3, SUBJECT4
+	}
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "MESSAGE_ID")
