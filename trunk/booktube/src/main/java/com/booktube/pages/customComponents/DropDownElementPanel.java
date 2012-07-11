@@ -1,4 +1,4 @@
-package com.booktube.pages;
+package com.booktube.pages.customComponents;
 
 import java.util.List;
 

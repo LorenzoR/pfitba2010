@@ -12,24 +12,31 @@
 	<wicket:extend>
 		<div wicket:id="bookDetails"
 			style="margin-bottom: 1px; padding-left: 2px;">
-			<h2 wicket:id="title"></h2>
-			Author: <span wicket:id="author.username">Author goes here</span> <br />
-			Text: <span wicket:id="text">Text goes here</span> Publish Date: <span
-				wicket:id="publishDate">Date goes here</span>
+			<h2 wicket:id="title"></h2> by <span wicket:id="author.username">Author goes here</span>
+			<p>
+				Publish Date: 
+				<span wicket:id="publishDate">Date goes here</span>
+			</p>
+
 
 			<table>
 				<tr>
 					<td>Rate this:</td>
 					<td><span wicket:id="rating1"></span></td>
 				</tr>
-				<tr>
-					<td>&nbsp;</td>
-					<td><a href="#" wicket:id="reset1">Reset rating</a></td>
-				</tr>
+<!-- 				<tr> -->
+<!-- 					<td>&nbsp;</td> -->
+<!-- 					<td><a href="#" wicket:id="reset1">Reset rating</a></td> -->
+<!-- 				</tr> -->
 			</table>
 			
 			<p>
 				Cantidad Visitas <span wicket:id="hits"></span>
+			</p>
+
+			Text: 
+			<p>
+				<span wicket:id="text">Text goes here</span> 
 			</p>
 
 			<hr />

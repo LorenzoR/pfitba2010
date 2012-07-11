@@ -68,6 +68,9 @@ public class BooksPage extends BasePage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
+		final WebMarkupContainer categoryMenu = new WebMarkupContainer("categoryButton");
+		add(categoryMenu);
+		
 		final String newUrl = RequestCycle.get().getUrlRenderer().renderFullUrl(
 				   Url.parse(urlFor(CategoryMenu.class, null).toString()));
 		Label myScript = new Label("myScript", "url = '"
@@ -117,10 +120,12 @@ public class BooksPage extends BasePage {
 		
 		if ( dataView.getItemCount() <= 0 ) {
 			footerNavigator.setVisible(false);
+			categoryMenu.setVisible(false);
 			feedbackMessage.setVisible(true);
 		}
 		else {
 			footerNavigator.setVisible(true);
+			categoryMenu.setVisible(true);
 			feedbackMessage.setVisible(false);
 		}
 		

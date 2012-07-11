@@ -12,6 +12,8 @@ import javax.persistence.*;
 		@AssociationOverride(name = "pk.book", joinColumns = @JoinColumn(name = "book_id")) })
 public class UserVote implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	private UserVotePk pk = new UserVotePk();
 
 	@EmbeddedId
@@ -28,9 +30,9 @@ public class UserVote implements Serializable {
 		setBook(book);
 	}
 
-	private void setPk(UserVotePk pk) {
-		this.pk = pk;
-	}
+//	private void setPk(UserVotePk pk) {
+//		this.pk = pk;
+//	}
 
 	@Transient
 	public User getUser() {

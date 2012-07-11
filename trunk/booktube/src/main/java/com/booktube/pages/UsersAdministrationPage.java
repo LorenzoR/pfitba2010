@@ -41,6 +41,7 @@ import org.odlabs.wiquery.ui.dialog.DialogButton;
 import com.booktube.model.User;
 import com.booktube.model.User.Gender;
 import com.booktube.pages.customComponents.DynamicLabel;
+import com.booktube.pages.customComponents.SuccessDialog;
 import com.booktube.service.UserService;
 
 public class UsersAdministrationPage extends AdministrationPage {
@@ -49,7 +50,7 @@ public class UsersAdministrationPage extends AdministrationPage {
 	@SpringBean
 	UserService userService;
 
-	private static Dialog deleteDialog;
+	private static SuccessDialog<?> successDialog;
 	private static Dialog deleteConfirmationDialog;
 
 	private static Long userId;
@@ -101,7 +102,7 @@ public class UsersAdministrationPage extends AdministrationPage {
 //		}
 //	};
 
-	private DynamicLabel successDialogLabel = new DynamicLabel("success_dialog_text");
+//	private DynamicLabel successDialogLabel = new DynamicLabel("success_dialog_text");
 
 	// private String deleteConfirmationText;
 	//
@@ -159,8 +160,8 @@ public class UsersAdministrationPage extends AdministrationPage {
 		footerNavigator = new PagingNavigator("footerPaginator", dataView);
 		parent.add(footerNavigator);
 
-		deleteDialog = deleteDialog(parent);
-		parent.add(deleteDialog);
+		successDialog = new SuccessDialog<UsersAdministrationPage>("success_dialog", "Usuario eliminado.", parent);
+		parent.add(successDialog);
 
 		deleteConfirmationDialog = deleteConfirmationDialog();
 		parent.add(deleteConfirmationDialog);
@@ -262,30 +263,30 @@ public class UsersAdministrationPage extends AdministrationPage {
 		return dataView;
 	}
 
-	private Dialog deleteDialog(final WebMarkupContainer parent) {
-
-		final Dialog dialog = new Dialog("success_dialog");
-
-		dialog.add(successDialogLabel);
-
-		AjaxDialogButton ok = new AjaxDialogButton("OK") {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onButtonClicked(AjaxRequestTarget target) {
-				//setResponsePage(UsersAdministrationPage.class);
-				dialog.close(target);
-				target.add(parent);
-			}
-		};
-
-		dialog.setButtons(ok);
-		//dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
-
-		return dialog;
-
-	}
+//	private Dialog deleteDialog(final WebMarkupContainer parent) {
+//
+//		final Dialog dialog = new Dialog("success_dialog");
+//
+//		dialog.add(successDialogLabel);
+//
+//		AjaxDialogButton ok = new AjaxDialogButton("OK") {
+//
+//			private static final long serialVersionUID = 1L;
+//
+//			@Override
+//			protected void onButtonClicked(AjaxRequestTarget target) {
+//				//setResponsePage(UsersAdministrationPage.class);
+//				dialog.close(target);
+//				target.add(parent);
+//			}
+//		};
+//
+//		dialog.setButtons(ok);
+//		//dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
+//
+//		return dialog;
+//
+//	}
 
 	private Dialog deleteConfirmationDialog() {
 
@@ -311,12 +312,12 @@ public class UsersAdministrationPage extends AdministrationPage {
 				System.out.println("USER ES : " + deleteUser);
 				userService.deleteUser(deleteUser);
 
-				successDialogLabel.setLabel("Usuario " + deleteUsername + " eliminado.");
-				target.add(successDialogLabel);
+				successDialog.setText("Usuario eliminado.");
+				target.add(successDialog);
 				// JsScopeUiEvent.quickScope(deleteConfirmationdialog.close().render());
 				//JsScope.quickScope(dialog.close().render());
 				// deleteConfirmationdialog.close(target);
-				deleteDialog.open(target);
+				successDialog.open(target);
 				// setResponsePage(MessagesAdministrationPage.class);
 				dialog.close(target);
 			}
