@@ -28,6 +28,7 @@ import com.booktube.WiaSession;
 import com.booktube.model.Book;
 import com.booktube.model.Rating;
 import com.booktube.model.User;
+import com.booktube.model.UserVote;
 import com.booktube.service.BookService;
 import com.booktube.service.UserService;
 
@@ -104,7 +105,11 @@ public class ShowBookPage extends BasePage {
 				if ( user != null) {
 					User newUser = userService.getUser(user.getId());
 					System.out.println("NEW USER: " + newUser);
-					book.addUserVote(newUser);
+					//book.addUserVote(newUser);
+					UserVote userVote = new UserVote(user, book);
+//                	userVote.setBook(book);
+//                	userVote.setUser(user);
+					book.addUserVote(userVote);
 				}
 				bookService.updateBook(book);
 			}
@@ -223,7 +228,7 @@ public class ShowBookPage extends BasePage {
 	 * @return <code>true</code> when the user has already voted.
 	 */
 	public Boolean getHasVoted() {
-		return WiaSession.get().getLoggedInUser() == null || this.book.getUserVotes().contains(user);
+		return WiaSession.get().getLoggedInUser() == null || this.book.getUserVotes().contains(new UserVote(user, book));
 	}
 
 	@Override

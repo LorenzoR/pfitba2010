@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Basic;
@@ -27,6 +29,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.JoinColumn;
 
 import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -40,7 +43,8 @@ public class Book implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GenericGenerator(name = "generator", strategy = "increment")
+    @GeneratedValue(generator = "generator")
 	@Column(name = "BOOK_ID")
 	private Long id;
 
@@ -119,12 +123,12 @@ public class Book implements Serializable {
 	 * tags;
 	 */
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST,
-			CascadeType.MERGE, CascadeType.REFRESH})
-	//@Cascade(org.hibernate.annotations.CascadeType.ALL)
-	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
-	@JoinTable(name = "USERVOTES", joinColumns = { @JoinColumn(name = "BOOK_ID") }, inverseJoinColumns = { @JoinColumn(name = "USER_ID") })
-	private Set<User> userVotes;
+//	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST,
+//			CascadeType.MERGE, CascadeType.REFRESH})
+//	//@Cascade(org.hibernate.annotations.CascadeType.ALL)
+//	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
+//	@JoinTable(name = "USERVOTES", joinColumns = { @JoinColumn(name = "BOOK_ID") }, inverseJoinColumns = { @JoinColumn(name = "USER_ID") })
+//	private Set<User> userVotes;
 
 	// @OneToMany(mappedBy = "book", cascade = {CascadeType.PERSIST,
 	// CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
@@ -178,10 +182,28 @@ public class Book implements Serializable {
 	@Column(name = "HITS")
 	private Long hits;
 
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.book", cascade = { CascadeType.PERSIST,
+			CascadeType.MERGE, CascadeType.REFRESH})
+	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+	@OnDelete(action=OnDeleteAction.CASCADE)
+	private List<UserVote> userVotes = new LinkedList<UserVote>();
+	
+    public List<UserVote> getUserVotes() {
+        return this.userVotes;
+    }
+ 
+    public void setUserVotes(List<UserVote> userVotes) {
+        this.userVotes = userVotes;
+    }
+    
+    public void addUserVote(UserVote userVote) {
+    	this.userVotes.add(userVote);
+    }
+	
 	public Book() {
 		this.publishDate = Calendar.getInstance().getTime();
 		this.tags = new HashSet<BookTag>();
-		this.userVotes = new HashSet<User>();
+		//this.userVotes = new HashSet<User>();
 		this.rating = new Rating(this);
 		this.hits = new Long(0);
 	}
@@ -311,17 +333,17 @@ public class Book implements Serializable {
 		}
 	}
 
-	public void addUserVote(User user) {
-		this.userVotes.add(user);
-	}
-
-	public Set<User> getUserVotes() {
-		return userVotes;
-	}
-
-	public void setUserVotes(Set<User> userVotes) {
-		this.userVotes = userVotes;
-	}
+//	public void addUserVote(User user) {
+//		this.userVotes.add(user);
+//	}
+//
+//	public Set<User> getUserVotes() {
+//		return userVotes;
+//	}
+//
+//	public void setUserVotes(Set<User> userVotes) {
+//		this.userVotes = userVotes;
+//	}
 
 	@Override
 	public int hashCode() {
