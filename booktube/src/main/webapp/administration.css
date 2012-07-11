@@ -42,7 +42,7 @@ input[type="text"], input[type="password"], textarea {
 	-khtml-border-radius: 3px;   
 }
 
-input[type="submit"]{	  
+input[type="submit"], input[type="button"] {	  
     width: auto;
     text-align:center;
     font-size: 10px;  
@@ -64,6 +64,10 @@ input:focus, textarea:focus {
 	border:solid 2px;
     border-color: #C9C9C9;  
     -webkit-box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 8px;  
+}
+
+.pageTitle{
+	border-bottom:1px solid #ccc;
 }
 
 
@@ -152,7 +156,7 @@ DIV#mainmenu UL LI A.selected:hover {
 /* ESTILO PARA LA PAGINA DE ADMINISTRACION */
 
 div.adminContainer { 
-  font-family:arial; 
+/*   font-family:arial;  */
   font-size: 10pt; 
   position: relative;
   width: 900px;
@@ -234,11 +238,92 @@ DIV.details.children DIV.image {
 		WorksAdministrationPage.html 
 		MessagesAdministrationPage.html
 */
-TABLE.dataview{
-	 border-collapse:collapse;
-	border-spacing: 0px; /*Equivalente a cellspacing=0 ... HTML5 desaconseja este atributo para el tag table en el html */
+FORM.searchForm TABLE.dataview{	
+	border-spacing: 0px; /*Equivalente a cellspacing=0 ... HTML5 desaconseja este atributo para el tag table en el html*/	
+
+	width: 550px;
+	height: 100px;
+	padding: 15px;
+	margin:15px 5px;
+/* 	border: 1px solid #4fb8db; */
+
+	border: 1px solid #e0e0e0;
+		
+/* 	background-color:#e8f7ff;	 */
+	BACKGROUND: url(/img/pagebg.png) #f9f9f9 no-repeat;
+	text-align:left;
+	color: #333;
+}
+INPUT[type="button"].buttons{
+	font-size: 12px;
+	margin: 10px auto 10px 8px ;
+	padding: 4px;	
+}
+FORM.searchForm TABLE.dataview TH.title{
+	font-weight: bold;
+	text-transform: uppercase;	
+	background-color:#d9e5fb;	
+/* 	background: #168eb5; */
+	border-top: 1px solid #c9e0fc;
+	border-bottom: 1px solid #c9e0fc;
+	padding: 3px 5px  5px 3px;
+}
+.list{
+	border-bottom:1px solid #c9e0fc;
+	font-size:13px;
+	vertical-align: top;
+	padding: 3px 5px  5px 3px;
+	
+}
+.listTools{
+	width:140px;
 }
 
+FORM.searchForm{
+	font-size:11px;
+}
+FORM.searchForm TABLE{
+	margin-left:4px;
+	
+	border-spacing: 0px; /*Equivalente a cellspacing=0 ... HTML5 desaconseja este atributo para el tag table en el html*/	
+
+	
+	padding: 5px 15px 15px 15px;
+	
+
+
+	border: 1px solid #e0e0e0;
+		
+BACKGROUND: url(/img/pagebg.png) #fafafa no-repeat;
+	text-align:left;
+
+	-moz-border-radius: 4px;  
+    -webkit-border-radius: 4px;
+    border-radius: 4px; 
+	-o-border-radius: 4px; 
+	-khtml-border-radius: 4px;
+	
+}
+FORM.searchForm TABLE TD{
+	padding: 10px 0px;
+	border-bottom:1px solid #c9e0fc;
+}
+FORM.searchForm input{
+/* 	padding: 3px 4px 3px 4px; */
+	padding: 1px 2px 1px 2px;
+}
+
+FORM.searchForm option,select {	
+	font-size:11px;
+	color:#777777;
+	margin: 0px;
+	padding:0px 0px 0px 0px;    
+}
+
+#searchFields{
+	border-bottom:1px solid #ccc;	
+	padding-bottom: 5px;
+}
 TABLE.dataview SPAN.title{
 	font-size: 20px;	
 }
