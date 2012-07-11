@@ -26,7 +26,6 @@ import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.odlabs.wiquery.core.effects.sliding.SlideToggle;
@@ -39,11 +38,12 @@ import org.odlabs.wiquery.ui.dialog.DialogButton;
 import com.booktube.model.Book;
 import com.booktube.model.BookTag;
 import com.booktube.pages.customComponents.DynamicLabel;
+import com.booktube.pages.customComponents.SuccessDialog;
 
 public class WorksAdministrationPage extends AdministrationPage {
 	private static final long serialVersionUID = 7512914721917619810L;
 
-	private static Dialog deleteDialog;
+	private static SuccessDialog<?> successDialog;
 	private static Dialog deleteConfirmationDialog;
 
 	private static Long bookId;
@@ -82,7 +82,7 @@ public class WorksAdministrationPage extends AdministrationPage {
 //			"delete_confirmation_dialog_text", deleteConfirmationModel);
 	
 	private DynamicLabel deleteConfirmationLabel = new DynamicLabel("delete_confirmation_dialog_text");
-	private DynamicLabel successDialogLabel = new DynamicLabel("success_dialog_text");
+//	private DynamicLabel successDialogLabel = new DynamicLabel("success_dialog_text");
 	
 //	Model<String> successDialogModel = new Model<String>() {
 //
@@ -126,14 +126,6 @@ public class WorksAdministrationPage extends AdministrationPage {
 	private Date searchLowPublishDate = null;
 	private Date searchHighPublishDate = null;
 
-	final LoadableDetachableModel<List<Book>> resultsModel = new LoadableDetachableModel<List<Book>>() {
-		private static final long serialVersionUID = 1L;
-
-		protected List<Book> load() {
-			return null;
-		}
-	};
-
 	public WorksAdministrationPage() {
 		super();
 		
@@ -157,8 +149,10 @@ public class WorksAdministrationPage extends AdministrationPage {
 		parent.add(footerNavigator);
 
 		//deleteDialog = deleteDialog(successDialogLabel, WorksAdministrationPage.class);
-		deleteDialog = deleteDialog(parent);
-		parent.add(deleteDialog);
+//		deleteDialog = deleteDialog(parent);
+//		parent.add(deleteDialog);
+		successDialog = new SuccessDialog<ShowBookPage>("success_dialog", "Obra eliminada.", parent);
+		parent.add(successDialog);
 
 		deleteConfirmationDialog = deleteConfirmationDialog();
 		parent.add(deleteConfirmationDialog);
@@ -299,42 +293,42 @@ public class WorksAdministrationPage extends AdministrationPage {
 		return dataView;
 	}
 
-	private Dialog deleteDialog(final WebMarkupContainer parent) {
-
-		final Dialog dialog = new Dialog("success_dialog");
-
-		dialog.add(successDialogLabel);
-
-		AjaxDialogButton ok = new AjaxDialogButton("OK") {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onButtonClicked(AjaxRequestTarget target) {
-				//setResponsePage(WorksAdministrationPage.class);
-				System.out.println("CIERRO");
-//				JsScopeUiEvent.quickScope(dialog.close().render());
-//				dialog.close().render();
-//				JsScopeUiEvent.quickScope(dialog.close());
+//	private Dialog deleteDialog(final WebMarkupContainer parent) {
+//
+//		final Dialog dialog = new Dialog("success_dialog");
+//
+////		dialog.add(successDialogLabel);
+//
+//		AjaxDialogButton ok = new AjaxDialogButton("OK") {
+//
+//			private static final long serialVersionUID = 1L;
+//
+//			@Override
+//			protected void onButtonClicked(AjaxRequestTarget target) {
+//				//setResponsePage(WorksAdministrationPage.class);
+//				System.out.println("CIERRO");
+////				JsScopeUiEvent.quickScope(dialog.close().render());
+////				dialog.close().render();
+////				JsScopeUiEvent.quickScope(dialog.close());
+////				dialog.close(target);
+////				dialog.setCloseOnEscape(true);
+//				//JsScope.quickScope(dialog.close(target));
 //				dialog.close(target);
-//				dialog.setCloseOnEscape(true);
-				//JsScope.quickScope(dialog.close(target));
-				dialog.close(target);
-				target.add(parent);
-				//dialog.close().render();
-				//deleteDialog.close(target);
-				//deleteConfirmationDialog.close(target);
-			}
-		};
-
-		dialog.setButtons(ok);
-		//dialog.setButtons(new DialogButton("OK", 
-         //       JsScope.quickScope(dialog.close().render())));
-		//dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
-
-		return dialog;
-
-	}
+//				target.add(parent);
+//				//dialog.close().render();
+//				//deleteDialog.close(target);
+//				//deleteConfirmationDialog.close(target);
+//			}
+//		};
+//
+//		dialog.setButtons(ok);
+//		//dialog.setButtons(new DialogButton("OK", 
+//         //       JsScope.quickScope(dialog.close().render())));
+//		//dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
+//
+//		return dialog;
+//
+//	}
 
 	private Dialog deleteConfirmationDialog() {
 
@@ -361,14 +355,16 @@ public class WorksAdministrationPage extends AdministrationPage {
 				bookService.deleteBook(deleteBook);
 
 				//successDialogText = "Obra " + deleteBookTitle + " eliminada.";
-				successDialogLabel.setLabel("Obra " + deleteBookTitle + " eliminada.");
+				//successDialogLabel.setLabel("Obra " + deleteBookTitle + " eliminada.");
 				//successDialogLabel.getLabel();
 				//System.out.println("==== " + successDialogLabel.getLabel());
-				target.add(successDialogLabel);
-				// JsScopeUiEvent.quickScope(deleteConfirmationdialog.close().render());
+				//target.add(successDialogLabel);
 				
+				// JsScopeUiEvent.quickScope(deleteConfirmationdialog.close().render());
+				successDialog.setText("Obra " + deleteBookTitle + " eliminada.");
+				target.add(successDialog);
 				// deleteConfirmationdialog.close(target);
-				deleteDialog.open(target);
+				successDialog.open(target);
 				//JsScope.quickScope(dialog.close().render());
 				//dialog.close().render();
 				// setResponsePage(MessagesAdministrationPage.class);

@@ -101,7 +101,8 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 	public int countUnreadMessagesTo(User receiver) {
 		Criteria criteria = getSession().createCriteria(Message.class)
 				.add(Restrictions.eq("receiver", receiver))
-				.add(Restrictions.eq("isRead", false));
+				.add(Restrictions.eq("isRead", false))
+				.add(Restrictions.eq("type", Type.PRIVATE_MESSAGE));
 		criteria.setProjection(Projections.rowCount());
 		return ((Number) criteria.uniqueResult()).intValue();
 	}

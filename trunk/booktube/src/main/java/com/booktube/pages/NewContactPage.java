@@ -8,14 +8,15 @@ import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import com.booktube.WiaSession;
 import com.booktube.model.Message;
+import com.booktube.model.Message.Subject;
 import com.booktube.model.User;
 import com.booktube.model.Message.Type;
 import com.booktube.model.User.Level;
@@ -54,8 +55,8 @@ public class NewContactPage extends BasePage {
 				"Debe registrarse para poder contactarnos.");
 		parent.add(registerMessage);
 
-		parent.add(new BookmarkablePageLink<String>("contactsPage",
-				ContactsPage.class));
+//		parent.add(new BookmarkablePageLink<String>("contactsPage",
+//				ContactsPage.class));
 
 		if (user == null) {
 			form.setVisible(false);
@@ -83,16 +84,9 @@ public class NewContactPage extends BasePage {
 
 		form.setDefaultModel(model);
 
-		List<String> subjects = Arrays.asList(new String[] { "subject1",
-				"subject2", "subject3" });
-
-//		final DropDownChoice<String> subject = new DropDownChoice<String>("subject",
-//				new PropertyModel<String>(this, ""), subjects);
-//
-//		form.add(subject);
-
-		final DropDownChoice<String> subject = new DropDownChoice<String>(
-				"subject", subjects);
+		final DropDownChoice<Subject> subject = new DropDownChoice<Subject>(
+				"subject", Arrays.asList(Subject.values()),
+				new EnumChoiceRenderer<Subject>(this));
 		form.add(subject);
 		
 		final TextArea<Message> editor = new TextArea<Message>("text");
