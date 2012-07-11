@@ -1,15 +1,16 @@
 package com.booktube.service;
 
 import java.util.Date;
+
 import java.util.Iterator;
 import java.util.List;
 
 import com.booktube.model.User;
 import com.booktube.model.User.Gender;
 import com.booktube.model.User.Level;
-import com.booktube.pages.AgeFilterOption;
-import com.booktube.pages.MiscFilterOption;
-import com.booktube.pages.OriginFilterOption;
+import com.booktube.pages.customComponents.panels.MiscFilterOption;
+import com.booktube.pages.customComponents.panels.AgeFilterOption;
+import com.booktube.pages.customComponents.panels.OriginFilterOption;
 import com.booktube.persistence.UserDao;
 
 public class UserServiceImpl implements UserService {

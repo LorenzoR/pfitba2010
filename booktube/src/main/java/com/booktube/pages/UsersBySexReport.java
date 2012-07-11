@@ -58,5 +58,10 @@ public class UsersBySexReport extends ReportPage {
 	public Class<?> getReportClass() {
 		return UsersBySexReport.class;
 	}
+
+	@Override
+	public String getReportTitle() {
+		return "Reporte Evolución de Usuarios por Género";
+	}
 	
 }

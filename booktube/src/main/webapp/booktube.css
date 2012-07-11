@@ -68,8 +68,14 @@ input:focus, textarea:focus {
 
 .pageTitle{
 	border-bottom:1px solid #ccc;
+	font-size: 14px;
+	color: #777;
+	padding:0px;
+	margin:2px 0px 0px 0px;
 }
-
+.footerPaginator{
+	text-align:center; margin:0px auto 10px auto;
+}
 
 /* Para efectos de brillo y sombra */
 
@@ -238,10 +244,20 @@ DIV.details.children DIV.image {
 		WorksAdministrationPage.html 
 		MessagesAdministrationPage.html
 */
+INPUT[type="button"].buttons{
+	font-size: 12px;
+	margin: 10px auto 10px 8px ;
+	padding: 4px;	
+}
+
+FORM.searchForm{
+	font-size:11px;
+}
+
 FORM.searchForm TABLE.dataview{	
 	border-spacing: 0px; /*Equivalente a cellspacing=0 ... HTML5 desaconseja este atributo para el tag table en el html*/	
 
-	width: 550px;
+	width: 650px;
 	height: 100px;
 	padding: 15px;
 	margin:15px 5px;
@@ -254,78 +270,77 @@ FORM.searchForm TABLE.dataview{
 	text-align:left;
 	color: #333;
 }
-INPUT[type="button"].buttons{
-	font-size: 12px;
-	margin: 10px auto 10px 8px ;
-	padding: 4px;	
+FORM.searchForm TABLE.dataview.smallDataview{
+	width: 580px;
 }
 FORM.searchForm TABLE.dataview TH.title{
 	font-weight: bold;
 	text-transform: uppercase;	
-	background-color:#d9e5fb;	
-/* 	background: #168eb5; */
+	background-color:#d9e5fb;
+
 	border-top: 1px solid #c9e0fc;
 	border-bottom: 1px solid #c9e0fc;
 	padding: 3px 5px  5px 3px;
 }
-.list{
+FORM.searchForm TABLE.dataview  TD.list{
 	border-bottom:1px solid #c9e0fc;
 	font-size:13px;
 	vertical-align: top;
 	padding: 3px 5px  5px 3px;
 	
 }
+.longList{
+	width:140px;
+}
+
 .listTools{
 	width:140px;
 }
 
-FORM.searchForm{
-	font-size:11px;
-}
-FORM.searchForm TABLE{
-	margin-left:4px;
-	
+
+FORM.searchForm TABLE.searchview{
+	margin-left:4px;	
 	border-spacing: 0px; /*Equivalente a cellspacing=0 ... HTML5 desaconseja este atributo para el tag table en el html*/	
-
-	
 	padding: 5px 15px 15px 15px;
-	
-
-
-	border: 1px solid #e0e0e0;
-		
-BACKGROUND: url(/img/pagebg.png) #fafafa no-repeat;
+	border: 1px solid #e0e0e0;		
+	BACKGROUND: url(/img/pagebg.png) #fafafa no-repeat;
 	text-align:left;
 
 	-moz-border-radius: 4px;  
     -webkit-border-radius: 4px;
     border-radius: 4px; 
 	-o-border-radius: 4px; 
-	-khtml-border-radius: 4px;
-	
+	-khtml-border-radius: 4px;	
 }
-FORM.searchForm TABLE TD{
+
+FORM.searchForm TABLE.searchview TD{
 	padding: 10px 0px;
 	border-bottom:1px solid #c9e0fc;
 }
-FORM.searchForm input{
-/* 	padding: 3px 4px 3px 4px; */
+FORM.searchForm TABLE.searchview input{
 	padding: 1px 2px 1px 2px;
 }
 
-FORM.searchForm option,select {	
+FORM.searchForm TABLE.searchview option,select {	
 	font-size:11px;
 	color:#777777;
 	margin: 0px;
 	padding:0px 0px 0px 0px;    
 }
 
+.searchLink{
+	font-size: 15px;
+	padding:0px;
+	margin: 0px 0px 30px 0px;
+}
+
 #searchFields{
 	border-bottom:1px solid #ccc;	
 	padding-bottom: 5px;
 }
-TABLE.dataview SPAN.title{
-	font-size: 20px;	
+FORM.searchForm TABLE.dataview SPAN.title{
+/* 	font-size: 20px;	 */
+font-weight: bold;
 }
 
 TABLE.bookResultListTable{

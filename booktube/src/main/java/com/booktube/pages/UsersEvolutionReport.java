@@ -75,5 +75,10 @@ public class UsersEvolutionReport extends ReportPage {
 	    
 	    return (Dataset)collection;
 	}
+
+	@Override
+	public String getReportTitle() {
+		return "Reporte Evolución de Usuarios en el Tiempo";
+	}
 	
 }

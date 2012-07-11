@@ -2,11 +2,13 @@ package com.booktube.pages;
 
 import java.util.List;
 
+
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.image.Image;
@@ -23,7 +25,12 @@ import org.odlabs.wiquery.ui.dialog.AjaxDialogButton;
 import org.odlabs.wiquery.ui.dialog.Dialog;
 
 import com.booktube.pages.customComponents.AJAXDownload;
-import com.booktube.pages.customComponents.DropDownElementPanel;
+import com.booktube.pages.customComponents.panels.AgeFilterOption;
+import com.booktube.pages.customComponents.panels.DropDownElementPanel;
+import com.booktube.pages.customComponents.panels.FilterOption;
+import com.booktube.pages.customComponents.panels.MiscFilterOption;
+import com.booktube.pages.customComponents.panels.OriginFilterOption;
+import com.booktube.pages.customComponents.panels.ReportFilterPanel;
 import com.booktube.pages.utilities.Report;
 
 
@@ -69,6 +76,8 @@ public abstract class ReportPage extends AdministrationPage {
 		parent = new TransparentWebMarkupContainer("reportContainer");		
 		parent.setOutputMarkupId(true);
 		add(parent);
+		
+		parent.add(new Label("pageTitle", getReportTitle()));
 		
 		form = new Form<Void>("filterForm");
 		parent.add(form);
@@ -169,6 +178,7 @@ public abstract class ReportPage extends AdministrationPage {
 	// Obtiene la clase que correponde al reporte a ser generado. 
 	public abstract Class<?> getReportClass();
 	
+	public abstract String getReportTitle();
 	
 	/*
 	 *  METODOS PARA AGREGAR LAS OPCIONES DEL FILTRO

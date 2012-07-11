@@ -53,5 +53,9 @@ public class MessagesBySubjectReport extends ReportPage {
 	public Class<?> getReportClass() {
 		return MessagesBySubjectReport.class;
 	}
+	@Override
+	public String getReportTitle() {
+		return "Reporte Mensajes por Tema";
+	}
 
 }

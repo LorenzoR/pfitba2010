@@ -1,6 +1,7 @@
 package com.booktube.pages;
 
 import java.util.List;
+
 import java.util.Map;
 
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -53,6 +54,11 @@ public class MessagesByCountryReport extends ReportPage {
 	@Override
 	public Class<?> getReportClass() {
 		return MessagesByCountryReport.class;
+	}
+
+	@Override
+	public String getReportTitle() {
+		return "Reporte Mensajes por País";
 	}
 
 }

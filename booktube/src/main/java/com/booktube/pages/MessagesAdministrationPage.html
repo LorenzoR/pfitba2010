@@ -14,44 +14,56 @@
 	    <p wicket:id="delete_confirmation_dialog">
 	    	<span wicket:id="delete_confirmation_dialog_text">Delete confirmation dialog goes here</span>
 	    </p>
-		<h3 wicket:id="pageTitle"></h3>
+		<h3 wicket:id="pageTitle" class="pageTitle"></h3>
 		
-		<h2><a href="#" wicket:id="searchMessageLink" onclick="return false;">Buscar</a></h2>
+		<h2><a href="#" wicket:id="searchMessageLink" onclick="return false;" class="searchLink">Buscar</a></h2>
 		
-		<form id="searchMessageForm" wicket:id="searchMessageForm">
+		<form id="searchMessageForm" wicket:id="searchMessageForm" class="searchForm">
 			<div id="searchFields" wicket:id="searchFields">
-			<p>
-				<b>ID:</b> <input type="text" wicket:id="id" value="" />
-			</p>
-			<p>
-				<b>Subject:</b> <input type="text" wicket:id="subject" value="" />
-			</p>
-			<p>
-				<b>Sender:</b> <input type="text" wicket:id="sender" value="" />
-			</p>
-			<p>
-				<b>Receiver:</b> <input type="text" wicket:id="receiver" value="" />
-			</p>
-			<p>
-				<b>Fecha Envio:</b> &nbsp;
-				Desde: <input type="text" wicket:id="lowMessageDate" value="" />
-				Hasta: <input type="text" wicket:id="highMessageDate" value="" />
-			</p>
-			<p>
-				<input type="button" wicket:id="searchMessage" value="Search" />
-			</p>
+			<table class="searchview">
+				<tr>
+					<td><b>ID:</b></td>
+					<td><input type="text" wicket:id="id" value="" /></td>
+					<td><b>Asunto:</b></td>
+					<td><input type="text" wicket:id="subject" value="" /></td>
+				</tr>
+				<tr>
+					<td><b>Autor:</b></td>
+					<td><input type="text" wicket:id="sender" value="" /></td>
+					<td><b>Destinatario</b></td>
+					<td><input type="text" wicket:id="receiver" value="" /></td>
+				</tr>
+				<tr>
+					<td colspan="4">
+						<b>Fecha Envio:</b> &nbsp;
+						Desde: <input type="text" wicket:id="lowMessageDate" value="" />
+						Hasta: <input type="text" wicket:id="highMessageDate" value="" />
+					</td>					
+				</tr>
+			</table>
+			
+			<input type="button" wicket:id="searchMessage" value="Search" class="buttons" />
+			
 			</div>
 		
 		<div wicket:id="group">
-		<table border="1" class="dataview">
+		<table class="dataview smallDataview">
 			<tbody>
+				<tr>
+					<th class="title"></th>
+					<th class="title">Autor</th>
+					<th class="title">Destinatario</th>
+					<th class="title">Asunto</th>
+					<th class="title">Fecha</th>
+					<th class="title"></th>
+				</tr>	
 				<tr wicket:id="messageList">
-					<td><input type="checkbox" wicket:id="checkbox" /></td>
-					<td><b>Sender: </b><span wicket:id="sender">Sender goes here</span></td>
-					<td><b>Receivers: </b><span wicket:id="receiver">Receiver goes here</span></td>
-					<td><b>Subject: </b><span wicket:id="subject">Subject goes here</span></td>
-					<td><b>Date: </b><span wicket:id="date">Date goes here</span></td>
-					<td>
+					<td class="list"><input type="checkbox" wicket:id="checkbox" /></td>
+					<td class="list"><span wicket:id="sender">Sender goes here</span></td>
+					<td class="list"><span wicket:id="receiver">Receiver goes here</span></td>
+					<td class="list"><span wicket:id="subject">Subject goes here</span></td>
+					<td class="list longList"><span wicket:id="date">Date goes here</span></td>
+					<td class="list listTools">
 						<a href="#" wicket:id="detailsLink">Ver</a> | 
 						<a href="#" wicket:id="deleteLink">Eliminar</a> | 
 						<a href="#" wicket:id="editLink">Editar</a>
@@ -61,7 +73,7 @@
 		</table>
 		</div>
 		
-		<input type="button" wicket:id="deleteMessage" value="Delete Selected Messages" />
+		<input type="button" wicket:id="deleteMessage" value="Delete Selected Messages" class="buttons" />
 		
 		</form>
 		
@@ -77,7 +89,7 @@
 <!-- 		</p> -->
 <!-- 		</div> -->
 
-		<div wicket:id="footerPaginator"></div>  
+		<div wicket:id="footerPaginator" class="footerPaginator"></div>  
 		
 	</div>
 </wicket:extend>

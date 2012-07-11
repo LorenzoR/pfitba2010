@@ -1,10 +1,13 @@
-package com.booktube.pages;
+package com.booktube.pages.customComponents.panels;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.markup.html.panel.Panel;
+
+import com.booktube.pages.customComponents.PanelListView;
+
 
 public class ReportFilterPanel extends Panel {
 	private static final long serialVersionUID = 2581370639576897790L;

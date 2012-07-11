@@ -2,6 +2,8 @@ package com.booktube.persistence.hibernate;
 
 import java.text.DateFormat;
 
+
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,11 +28,11 @@ import com.booktube.model.Book;
 import com.booktube.model.Message;
 import com.booktube.model.User;
 import com.booktube.model.User.Gender;
-import com.booktube.pages.AgeFilterOption;
-import com.booktube.pages.FilterOption;
-import com.booktube.pages.MiscFilterOption;
-import com.booktube.pages.OriginFilterOption;
-import com.booktube.pages.customComponents.DropDownElementPanel;
+import com.booktube.pages.customComponents.panels.FilterOption;
+import com.booktube.pages.customComponents.panels.MiscFilterOption;
+import com.booktube.pages.customComponents.panels.AgeFilterOption;
+import com.booktube.pages.customComponents.panels.DropDownElementPanel;
+import com.booktube.pages.customComponents.panels.OriginFilterOption;
 import com.booktube.persistence.UserDao;
 import com.booktube.model.User.Level;
 
