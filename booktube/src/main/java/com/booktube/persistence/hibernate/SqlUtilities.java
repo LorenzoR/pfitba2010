@@ -7,10 +7,10 @@ import org.apache.commons.lang.StringUtils;
 
 import com.booktube.model.User.Gender;
 import com.booktube.pages.AgeFilterOption;
-import com.booktube.pages.DropDownElementPanel;
 import com.booktube.pages.FilterOption;
 import com.booktube.pages.MiscFilterOption;
 import com.booktube.pages.OriginFilterOption;
+import com.booktube.pages.customComponents.DropDownElementPanel;
 
 public class SqlUtilities {
 	public static String generateWhereClause(OriginFilterOption origin, AgeFilterOption age, MiscFilterOption misc ){		

@@ -27,10 +27,10 @@ import com.booktube.model.Message;
 import com.booktube.model.User;
 import com.booktube.model.User.Gender;
 import com.booktube.pages.AgeFilterOption;
-import com.booktube.pages.DropDownElementPanel;
 import com.booktube.pages.FilterOption;
 import com.booktube.pages.MiscFilterOption;
 import com.booktube.pages.OriginFilterOption;
+import com.booktube.pages.customComponents.DropDownElementPanel;
 import com.booktube.persistence.UserDao;
 import com.booktube.model.User.Level;
 

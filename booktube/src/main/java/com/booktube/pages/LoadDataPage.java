@@ -30,14 +30,15 @@ import com.booktube.service.UserService;
 public class LoadDataPage extends BasePage {
 
 	private final int CANT_CAMPAIGNS = 20;
-	private final int CANT_USERS = 10;
-	private final int CANT_BOOKS = 10;
+	private final int CANT_USERS = 30;
+	private final int CANT_BOOKS = 100;
 	private final int CANT_MSG = 20;
-	
+
 	private static final long serialVersionUID = 1L;
 
-	private final Random randomGenerator = new Random(System.currentTimeMillis());
-	
+	private final Random randomGenerator = new Random(
+			System.currentTimeMillis());
+
 	@SpringBean
 	UserService userService;
 
@@ -68,7 +69,7 @@ public class LoadDataPage extends BasePage {
 		} else {
 			addBooks();
 		}
-		
+
 		users.add(admin);
 
 		if (messageService.getCount(null, null, null, null, null, null) != 0) {
@@ -138,7 +139,10 @@ public class LoadDataPage extends BasePage {
 			gc.set(year, month, day);
 			Date registrationDate = new Date(gc.getTimeInMillis());
 
-			User user = new User("user" + i, "user" + i, "nombre" + i,
+			int letter = ( i % 26 ) + 97;
+			System.out.println(i + ": " + (char)i);
+			String username = (char)letter + "user" + i;
+			User user = new User(username, username, "nombre" + i,
 					"apellido" + i, User.Level.USER);
 
 			user.setBirthdate(birthdate);
@@ -185,7 +189,7 @@ public class LoadDataPage extends BasePage {
 			User newUser = userService.getUser(this.users.get(
 					randomGenerator.nextInt(this.users.size())).getId());
 
-			Book book = new Book("titulo" + i, "texto" + i, newUser);
+			Book book = new Book("titulo" + i, bookText, newUser);
 
 			book.setCategory("category" + randomGenerator.nextInt(10));
 			book.setSubCategory("subcategory" + randomGenerator.nextInt(50));
@@ -224,125 +228,121 @@ public class LoadDataPage extends BasePage {
 
 	public void addCampaigns() {
 
-		for ( int i = 0; i < CANT_CAMPAIGNS; i++ ) {
-		
+		for (int i = 0; i < CANT_CAMPAIGNS; i++) {
+
 			Campaign campaign = new Campaign("subject " + i, "text " + i, admin);
-			
+
 			Set<CampaignDetail> receiverSet = new HashSet<CampaignDetail>();
 
 			int cantReceivers = randomGenerator.nextInt(CANT_USERS + 1);
-			
-			for ( int j = 0; j < cantReceivers; j++ ) {
+
+			for (int j = 0; j < cantReceivers; j++) {
 				receiverSet.add(new CampaignDetail(users.get(j), campaign));
 			}
-			
+
 			campaign.setReceiver(receiverSet);
 
 			campaignService.insertCampaign(campaign);
-			
+
 		}
-		
-		
 
-		
-
-//		campaign = new Campaign("subject2", "text2", admin);
-//
-//		receiverSet = new HashSet<CampaignDetail>();
-//
-//		receiverSet.add(new CampaignDetail(users.get(1), campaign));
-//		receiverSet.add(new CampaignDetail(users.get(2), campaign));
-//		receiverSet.add(new CampaignDetail(users.get(3), campaign));
-//
-//		campaign.setReceiver(receiverSet);
-//		campaignService.insertCampaign(campaign);
+		// campaign = new Campaign("subject2", "text2", admin);
+		//
+		// receiverSet = new HashSet<CampaignDetail>();
+		//
+		// receiverSet.add(new CampaignDetail(users.get(1), campaign));
+		// receiverSet.add(new CampaignDetail(users.get(2), campaign));
+		// receiverSet.add(new CampaignDetail(users.get(3), campaign));
+		//
+		// campaign.setReceiver(receiverSet);
+		// campaignService.insertCampaign(campaign);
 
 	}
 
 	public void addMessages() {
 
 		Long time = 0L;
-		
-		for ( int i = 0; i < CANT_MSG; i++ ) {
-			
+
+		for (int i = 0; i < CANT_MSG; i++) {
+
 			String subject = "subject " + i;
 			User sender = users.get(randomGenerator.nextInt(CANT_USERS + 1));
 
 			User receiver = users.get(randomGenerator.nextInt(CANT_USERS + 1));
 
-			
 			Message message = new Message(Type.PRIVATE_MESSAGE, subject,
 					"text " + i, sender, receiver);
 			message.setDate(new Date(time += 100000));
-			
-			//messageService.insertMessage(message);
-			
+
+			// messageService.insertMessage(message);
+
 			int cantAns = randomGenerator.nextInt(10);
-			
+
 			Message auxMessage = message;
-			
-			for ( int j = 0; j < cantAns; j++ ) {
-			
+
+			for (int j = 0; j < cantAns; j++) {
+
 				User auxUser = sender;
 				sender = receiver;
-				receiver = auxUser; 
-				
+				receiver = auxUser;
+
 				Message answer = new Message(Type.ANSWER, "RE: " + subject,
 						"respuesta " + j, sender, receiver);
 				answer.setDate(new Date(time += 100000));
 				auxMessage.setAnswer(answer);
 				auxMessage = answer;
-				
+
 			}
-			
+
 			messageService.insertMessage(message);
-			
+
 		}
-		
-//		Message message = new Message(Type.PRIVATE_MESSAGE, "subject 0",
-//				"text", admin, users.get(0));
-//		message.setDate(new Date(System.currentTimeMillis() - 10000));
-//		messageService.insertMessage(message);
-//
-//		message = new Message(Type.PRIVATE_MESSAGE, "subject 3", "text 1",
-//				admin, users.get(0));
-//		messageService.insertMessage(message);
-//
-//		message = new Message(Type.PRIVATE_MESSAGE, "subject 1",
-//				"texto de admin a user", admin, users.get(0));
-//		message.setDate(new Date(System.currentTimeMillis() - 1000000));
-//		Message answer = new Message(Type.ANSWER, "RE: subject 1",
-//				"respuesta de user a admin", users.get(0), admin);
-//		answer.setDate(new Date(System.currentTimeMillis() - 1000));
-//		message.setAnswer(answer);
-//
-//		Message answer2 = new Message(Type.ANSWER, "RE: RE: subject 1",
-//				"respuesta2 de admin a user", admin, users.get(0));
-//		answer2.setDate(new Date(System.currentTimeMillis() - 1));
-//		answer.setAnswer(answer2);
-//
-//		// receiverSet.add(new MessageDetail(users.get(0), message));
-//		// receiverSet.add(new MessageDetail(users.get(1), message));
-//
-//		// message.setReceiver(receiverSet);
-//
-//		messageService.insertMessage(message);
-//
-//		message = new Message(Type.PRIVATE_MESSAGE, "subject 2", "text 2",
-//				admin, users.get(1));
-//
-//		// receiverSet = new HashSet<MessageDetail>();
-//
-//		// receiverSet.add(new MessageDetail(users.get(1), message));
-//		// receiverSet.add(new MessageDetail(users.get(2), message));
-//		// receiverSet.add(new MessageDetail(users.get(3), message));
-//
-//		// message.setReceiver(receiverSet);
-//		messageService.insertMessage(message);
-//
-//		message = new Message(Type.PRIVATE_MESSAGE, "subject 333", "text 333",
-//				users.get(0), admin);
-//		messageService.insertMessage(message);
+
+		// Message message = new Message(Type.PRIVATE_MESSAGE, "subject 0",
+		// "text", admin, users.get(0));
+		// message.setDate(new Date(System.currentTimeMillis() - 10000));
+		// messageService.insertMessage(message);
+		//
+		// message = new Message(Type.PRIVATE_MESSAGE, "subject 3", "text 1",
+		// admin, users.get(0));
+		// messageService.insertMessage(message);
+		//
+		// message = new Message(Type.PRIVATE_MESSAGE, "subject 1",
+		// "texto de admin a user", admin, users.get(0));
+		// message.setDate(new Date(System.currentTimeMillis() - 1000000));
+		// Message answer = new Message(Type.ANSWER, "RE: subject 1",
+		// "respuesta de user a admin", users.get(0), admin);
+		// answer.setDate(new Date(System.currentTimeMillis() - 1000));
+		// message.setAnswer(answer);
+		//
+		// Message answer2 = new Message(Type.ANSWER, "RE: RE: subject 1",
+		// "respuesta2 de admin a user", admin, users.get(0));
+		// answer2.setDate(new Date(System.currentTimeMillis() - 1));
+		// answer.setAnswer(answer2);
+		//
+		// // receiverSet.add(new MessageDetail(users.get(0), message));
+		// // receiverSet.add(new MessageDetail(users.get(1), message));
+		//
+		// // message.setReceiver(receiverSet);
+		//
+		// messageService.insertMessage(message);
+		//
+		// message = new Message(Type.PRIVATE_MESSAGE, "subject 2", "text 2",
+		// admin, users.get(1));
+		//
+		// // receiverSet = new HashSet<MessageDetail>();
+		//
+		// // receiverSet.add(new MessageDetail(users.get(1), message));
+		// // receiverSet.add(new MessageDetail(users.get(2), message));
+		// // receiverSet.add(new MessageDetail(users.get(3), message));
+		//
+		// // message.setReceiver(receiverSet);
+		// messageService.insertMessage(message);
+		//
+		// message = new Message(Type.PRIVATE_MESSAGE, "subject 333",
+		// "text 333",
+		// users.get(0), admin);
+		// messageService.insertMessage(message);
 
 	}
 
@@ -356,5 +356,11 @@ public class LoadDataPage extends BasePage {
 	private static int randBetween(int start, int end) {
 		return start + (int) Math.round(Math.random() * (end - start));
 	}
+
+	private String bookText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel orci sit amet lacus facilisis dignissim. Etiam id ante non quam porta bibendum vel eu leo. Duis scelerisque tellus at eros faucibus quis placerat lacus posuere. Aliquam interdum tempus dignissim. Fusce pellentesque adipiscing ipsum, sed tincidunt diam hendrerit sed. Cras pharetra facilisis nunc sit amet mattis. Sed volutpat gravida risus, ut lacinia tortor posuere eu. Vestibulum quis dapibus tortor. Aliquam nisi ipsum, vestibulum sed viverra sit amet, sodales quis nulla. Etiam enim turpis, molestie vel volutpat vehicula, pretium a mauris. Quisque purus nunc, placerat at consequat nec, rhoncus at nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eleifend, nisi id semper facilisis, tellus neque faucibus tellus, sed ultrices sapien metus in libero. Nunc volutpat tempus mauris a vulputate. Suspendisse volutpat sodales fringilla. Nunc ac sapien sit amet arcu vestibulum cursus."
+			+ "\n\n Praesent nec ligula neque, id sollicitudin ante. Aliquam rhoncus congue mauris id pellentesque. Donec non metus nulla, et rutrum velit. Nulla ac nibh eget arcu molestie pellentesque. Donec sed sem in nibh egestas mollis. Donec ornare lobortis suscipit. Vestibulum lacinia lobortis varius. Suspendisse ac luctus turpis. Suspendisse eget turpis tortor. Maecenas at aliquet velit. Nam lobortis massa at justo mattis tristique. Vestibulum consequat enim a est blandit a luctus neque aliquet. Morbi sed volutpat enim. Vivamus eget neque sit amet justo condimentum tincidunt non id lacus. Mauris et ipsum ac tortor malesuada ornare vulputate pharetra nunc. Vivamus sollicitudin euismod pellentesque."
+			+ "\n\n Pellentesque eu mauris volutpat sem lacinia ultrices non ut ante. Donec pretium adipiscing magna sed tempor. Curabitur in diam massa, ac malesuada dui. Aenean ac auctor ipsum. Phasellus condimentum semper erat rutrum lobortis. Nullam fermentum mattis leo vitae cursus. Integer nec massa a purus tempus euismod. Aenean ut velit metus. Nam non quam eget sem posuere commodo. Donec mattis malesuada faucibus. Donec vestibulum euismod pellentesque. Fusce commodo lobortis augue. Nulla imperdiet, metus non auctor fermentum, velit nulla eleifend ligula, eget fringilla purus dolor sed quam."
+			+ "\n\n Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Integer posuere iaculis turpis, vitae adipiscing felis aliquam et. Nulla quis placerat ipsum. Aliquam et erat quis lectus fermentum pulvinar. Nunc nec lectus purus, a fermentum nulla. Vestibulum aliquet facilisis justo, ac pharetra urna aliquam in. Proin eget mauris a odio tincidunt ornare a vitae neque. Nunc vehicula auctor nunc eu laoreet. Donec pretium mollis nisi, et bibendum odio facilisis ut."
+			+ "\n\n Vestibulum sit amet consectetur mauris. Sed fringilla iaculis interdum. Maecenas ultrices elementum congue. Morbi id velit tellus, adipiscing convallis est. Phasellus eros augue, eleifend et suscipit ut, mattis non lacus. Quisque orci eros, iaculis sit amet volutpat ut, euismod adipiscing leo. Sed eu quam ac libero tincidunt elementum nec et nunc. Maecenas nisi eros, consectetur et vulputate sed, feugiat volutpat metus. Phasellus vitae justo velit. Quisque tincidunt libero id purus facilisis gravida iaculis mauris tempor. Morbi at augue eget nisi condimentum lobortis a sit amet massa. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam iaculis, elit sed suscipit bibendum, eros sapien tempor quam, ut ullamcorper justo metus in lorem.";
 
 }

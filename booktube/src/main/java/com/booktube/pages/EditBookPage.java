@@ -13,7 +13,9 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -21,6 +23,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import com.booktube.WicketApplication;
 import com.booktube.model.Book;
+import com.booktube.model.Rating;
 import com.booktube.model.User;
 import com.booktube.pages.customComponents.CustomTextField;
 import com.booktube.pages.customConverters.TagSetToString;
@@ -109,6 +112,7 @@ public class EditBookPage extends BasePage {
 		final TextField<Book> hits = new TextField<Book>("hits");
 		form.add(hits);
 		
+		form.add(new ResetRatingLink("reset1", new Model<Rating>(book.getRating()), book));
 		
 		form.add(new AjaxSubmitLink("save") {
 
@@ -157,6 +161,40 @@ public class EditBookPage extends BasePage {
 		// TODO Auto-generated method stub
 		// String newTitle = "Booktube - Edit " + book.getTitle();
 		// super.get("pageTitle").setDefaultModelObject(newTitle);
+	}
+	
+	/**
+	 * Link to reset the ratings.
+	 */
+	private final class ResetRatingLink extends Link<Rating> {
+		/** For serialization. */
+		private static final long serialVersionUID = 1L;
+		private final Book book;
+
+		/**
+		 * Constructor.
+		 * 
+		 * @param id
+		 *            component id
+		 * @param object
+		 *            the model to reset.
+		 */
+		public ResetRatingLink(String id, IModel<Rating> object, Book book) {
+			super(id, object);
+			this.book = book;
+		}
+
+		/**
+		 * @see Link#onClick()
+		 */
+		@Override
+		public void onClick() {
+			Rating rating = getModelObject();
+			rating.setNrOfVotes(0);
+			rating.setRating(0);
+			rating.setSumOfRatings(0);
+			rating.setBook(book);
+		}
 	}
 
 }

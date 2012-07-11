@@ -3,6 +3,8 @@ package com.booktube.pages;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.booktube.pages.customComponents.DropDownElementPanel;
+
 public class MiscFilterOption extends FilterOption {
 	private static final long serialVersionUID = 8701603490904340060L;	
 	private List<DropDownElementPanel> elements;

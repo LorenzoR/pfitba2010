@@ -48,7 +48,8 @@ public class WorksAdministrationPage extends AdministrationPage {
 
 	private static Long bookId;
 
-	private static Book deleteBook;
+	private static List<Book> removedBooks = null;
+	private static Book deleteBook = null;
 
 	private static String deleteBookTitle;
 
@@ -111,7 +112,7 @@ public class WorksAdministrationPage extends AdministrationPage {
 //	};
 
 //	private String successDialogText;
-
+	private final Label feedbackMessage;
 	private final DataView<Book> dataView;
 	private final PagingNavigator footerNavigator;
 
@@ -151,7 +152,7 @@ public class WorksAdministrationPage extends AdministrationPage {
 		//deleteDialog = deleteDialog(successDialogLabel, WorksAdministrationPage.class);
 //		deleteDialog = deleteDialog(parent);
 //		parent.add(deleteDialog);
-		successDialog = new SuccessDialog<ShowBookPage>("success_dialog", "Obra eliminada.", parent);
+		successDialog = new SuccessDialog<WorksAdministrationPage>("success_dialog", "Obra eliminada.", parent);
 		parent.add(successDialog);
 
 		deleteConfirmationDialog = deleteConfirmationDialog();
@@ -166,6 +167,21 @@ public class WorksAdministrationPage extends AdministrationPage {
 		WebMarkupContainer searchButton = createButtonWithEffect(
 				"searchBookLink", "searchFields", new SlideToggle());
 		parent.add(searchButton);
+		
+		feedbackMessage = new Label("feedbackMessage", "No se encontraron resultados.");
+		
+		if (dataView.getItemCount() > 0) {
+			feedbackMessage.setVisible(false);
+		}
+		else {
+			feedbackMessage.setVisible(true);
+			searchBookForm.setVisible(false);
+			footerNavigator.setVisible(false);
+			searchButton.setVisible(false);
+		}
+		
+		
+		parent.add(feedbackMessage);
 
 		String newTitle = "Booktube - Works Administration";
 		super.get("pageTitle").setDefaultModelObject(newTitle);
@@ -264,10 +280,10 @@ public class WorksAdministrationPage extends AdministrationPage {
 
 						deleteBook = (Book) getModelObject();
 
-						bookId = book.getId();
-						// deleteBook = bookService.getBook(bookId);
-						System.out.println("Book ID " + bookId);
-						System.out.println("BOOK ES : " + deleteBook);
+//						bookId = book.getId();
+//						// deleteBook = bookService.getBook(bookId);
+//						System.out.println("Book ID " + bookId);
+//						System.out.println("BOOK ES : " + deleteBook);
 
 						deleteConfirmationDialog.open(target);
 
@@ -352,7 +368,24 @@ public class WorksAdministrationPage extends AdministrationPage {
 				System.out.println("Borro Boook");
 
 				System.out.println("USER ES : " + deleteBook);
-				bookService.deleteBook(deleteBook);
+				
+				if ( deleteBook != null ) {
+					bookService.deleteBook(deleteBook);
+					deleteBook = null;
+					successDialog.setText("Obra eliminada.");
+				}
+				else if ( removedBooks != null ) {
+					successDialog.setText("Obras eliminadas.");
+					
+					for (Book aBook : removedBooks) {
+						bookService.deleteBook(aBook);
+					}
+					
+					removedBooks = null;
+					
+				}
+				
+				
 
 				//successDialogText = "Obra " + deleteBookTitle + " eliminada.";
 				//successDialogLabel.setLabel("Obra " + deleteBookTitle + " eliminada.");
@@ -361,7 +394,7 @@ public class WorksAdministrationPage extends AdministrationPage {
 				//target.add(successDialogLabel);
 				
 				// JsScopeUiEvent.quickScope(deleteConfirmationdialog.close().render());
-				successDialog.setText("Obra " + deleteBookTitle + " eliminada.");
+				dialog.close(target);
 				target.add(successDialog);
 				// deleteConfirmationdialog.close(target);
 				successDialog.open(target);
@@ -375,7 +408,7 @@ public class WorksAdministrationPage extends AdministrationPage {
 				
 				//JsScope.quickScope("$('#deleeeete__confirmation__dialog2').dialog('close');");
 				//dialog.setVisible(false);
-				dialog.close(target);
+				
 			}
 		};
 
@@ -439,18 +472,22 @@ public class WorksAdministrationPage extends AdministrationPage {
 
 			private static final long serialVersionUID = 1L;
 
+			@SuppressWarnings("unchecked")
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				System.out.println("selected book(s): "
 						+ group.getDefaultModelObjectAsString());
 
-				@SuppressWarnings("unchecked")
-				List<Book> removedBooks = (List<Book>) group
-						.getDefaultModelObject();
+				
+				deleteConfirmationDialog.open(target);
 
-				for (Book aBook : removedBooks) {
-					bookService.deleteBook(aBook);
-				}
+				deleteConfirmationLabel
+						.setLabel("Esta seguro que desea eliminar las obras seleccionadas?");
+
+				target.add(deleteConfirmationLabel);
+				
+				removedBooks = (List<Book>) group
+						.getDefaultModelObject();
 
 				// removedBooks.remove(books.size()-1);
 				// List<Book> books = bookService.getBooks(0, Integer.MAX_VALUE,
@@ -464,15 +501,20 @@ public class WorksAdministrationPage extends AdministrationPage {
 				// resultsModel.setObject(null);
 				// group.setVisible(false);
 				// }
+				
+				
+				
 				if (dataView.getItemCount() <= 0) {
 					this.setVisible(false);
 					footerNavigator.setVisible(false);
+					feedbackMessage.setVisible(true);
 				} else {
 					this.setVisible(true);
 					footerNavigator.setVisible(true);
+					feedbackMessage.setVisible(false);
 				}
-
-				target.add(parent);
+//
+//				target.add(parent);
 
 				// System.out.println("BOOKS: " + books);
 
@@ -578,11 +620,17 @@ public class WorksAdministrationPage extends AdministrationPage {
 
 				if (dataView.getItemCount() <= 0) {
 					deleteBook.setVisible(false);
+					group.setVisible(false);
 					footerNavigator.setVisible(false);
+					feedbackMessage.setVisible(true);
 				} else {
 					deleteBook.setVisible(true);
+					group.setVisible(true);
 					footerNavigator.setVisible(true);
+					feedbackMessage.setVisible(false);
 				}
+				
+				
 
 				dataView.setCurrentPage(0);
 				target.add(parent);

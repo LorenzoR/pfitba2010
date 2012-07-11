@@ -7,8 +7,10 @@ import javax.persistence.ManyToOne;
 
 @Embeddable
 public class UserVotePk implements Serializable {
- 
-    private User user;
+
+	private static final long serialVersionUID = 1L;
+	
+	private User user;
     private Book book;
  
     @ManyToOne

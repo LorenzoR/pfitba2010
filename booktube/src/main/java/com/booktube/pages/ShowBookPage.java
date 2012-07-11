@@ -12,7 +12,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -115,7 +114,7 @@ public class ShowBookPage extends BasePage {
 			}
 		});
 
-		parent.add(new ResetRatingLink("reset1", new Model<Rating>(rating1), book));
+//		parent.add(new ResetRatingLink("reset1", new Model<Rating>(rating1), book));
 
 		PageParameters backPageParameters = new PageParameters();
 		backPageParameters.set("currentPage", currentPage);
@@ -188,39 +187,39 @@ public class ShowBookPage extends BasePage {
 	/** For serialization. */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Link to reset the ratings.
-	 */
-	private final class ResetRatingLink extends Link<Rating> {
-		/** For serialization. */
-		private static final long serialVersionUID = 1L;
-		private final Book book;
-
-		/**
-		 * Constructor.
-		 * 
-		 * @param id
-		 *            component id
-		 * @param object
-		 *            the model to reset.
-		 */
-		public ResetRatingLink(String id, IModel<Rating> object, Book book) {
-			super(id, object);
-			this.book = book;
-		}
-
-		/**
-		 * @see Link#onClick()
-		 */
-		@Override
-		public void onClick() {
-			Rating rating = getModelObject();
-			rating.setNrOfVotes(0);
-			rating.setRating(0);
-			rating.setSumOfRatings(0);
-			rating.setBook(book);
-		}
-	}
+//	/**
+//	 * Link to reset the ratings.
+//	 */
+//	private final class ResetRatingLink extends Link<Rating> {
+//		/** For serialization. */
+//		private static final long serialVersionUID = 1L;
+//		private final Book book;
+//
+//		/**
+//		 * Constructor.
+//		 * 
+//		 * @param id
+//		 *            component id
+//		 * @param object
+//		 *            the model to reset.
+//		 */
+//		public ResetRatingLink(String id, IModel<Rating> object, Book book) {
+//			super(id, object);
+//			this.book = book;
+//		}
+//
+//		/**
+//		 * @see Link#onClick()
+//		 */
+//		@Override
+//		public void onClick() {
+//			Rating rating = getModelObject();
+//			rating.setNrOfVotes(0);
+//			rating.setRating(0);
+//			rating.setSumOfRatings(0);
+//			rating.setBook(book);
+//		}
+//	}
 
 	/**
 	 * Getter for the hasVoted flag.
