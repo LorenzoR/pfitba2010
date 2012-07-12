@@ -86,6 +86,16 @@ public class MessagesAdministrationPage extends AdministrationPage {
 		WebMarkupContainer searchButton = createButtonWithEffect(
 				"searchMessageLink", "searchFields", new SlideToggle());
 		parent.add(searchButton);
+		
+		if (dataView.getItemCount() > 0) {
+			feedbackMessage.setVisible(false);
+		}
+		else {
+			feedbackMessage.setVisible(true);
+			searchForm.setVisible(false);
+			footerNavigator.setVisible(false);
+			searchButton.setVisible(false);
+		}
 
 		deleteDialog = deleteDialog(parent);
 		parent.add(deleteDialog);
@@ -241,6 +251,8 @@ public class MessagesAdministrationPage extends AdministrationPage {
 				"searchFields");
 		searchFields.add(AttributeModifier.replace("style", "display: none;"));
 		form.add(searchFields);
+		
+		searchFields.add(feedbackMessage);
 
 		final TextField<Message> messageId = new TextField<Message>("id");
 		searchFields.add(messageId);
@@ -291,9 +303,11 @@ public class MessagesAdministrationPage extends AdministrationPage {
 				if (dataView.getItemCount() <= 0) {
 					this.setVisible(false);
 					footerNavigator.setVisible(false);
+					feedbackMessage.setVisible(true);
 				} else {
 					this.setVisible(true);
 					footerNavigator.setVisible(true);
+					feedbackMessage.setVisible(false);
 				}
 
 				target.add(parent);
@@ -365,10 +379,14 @@ public class MessagesAdministrationPage extends AdministrationPage {
 
 				if (dataView.getItemCount() <= 0) {
 					deleteMessage.setVisible(false);
+					group.setVisible(false);
 					footerNavigator.setVisible(false);
+					feedbackMessage.setVisible(true);
 				} else {
 					deleteMessage.setVisible(true);
+					group.setVisible(true);
 					footerNavigator.setVisible(true);
+					feedbackMessage.setVisible(false);
 				}
 
 				dataView.setCurrentPage(0);

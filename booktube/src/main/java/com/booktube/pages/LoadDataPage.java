@@ -183,6 +183,8 @@ public class LoadDataPage extends BasePage {
 
 		System.out.println("Adding books");
 
+		long publishDate = System.currentTimeMillis();
+		
 		for (int i = 0; i < CANT_BOOKS; i++) {
 
 			double rating = randomGenerator.nextDouble() * 5;
@@ -195,6 +197,7 @@ public class LoadDataPage extends BasePage {
 			String title = bookTitles[i % bookTitles.length];
 
 			Book book = new Book(title, bookText, newUser);
+			book.setPublishDate(new Date(publishDate -= 100000000));
 
 			int categoryIndex = i%categories.length;
 			

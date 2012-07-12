@@ -58,7 +58,6 @@ public abstract class BasePage extends WebPage {
 
 	private final int TITLE_SELECTED = 1;
 	private final int AUTHOR_SELECTED = 2;
-	private final int RATING_SELECTED = 3;
 	private final int TAG_SELECTED = 4;
 
 	protected abstract void setPageTitle();
@@ -197,6 +196,8 @@ public abstract class BasePage extends WebPage {
 
 		Form<?> searchForm = searchBookForm("searchBook");
 
+		searchForm.add(new BookmarkablePageLink<AdvancedSearchPage>("advancedSearch", AdvancedSearchPage.class));
+		
 		Link<?> logoutLink = new Link<Object>("logoutLink") {
 			private static final long serialVersionUID = -4042618076562731461L;
 

@@ -141,24 +141,24 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 	@SuppressWarnings("unchecked")
 	public List<Book> getBooks(int first, int count, Long bookId,
 			String author, String title, String tag, String category,
-			String subcategory, Date lowPublishDate, Date highPublishDate) {
+			String subcategory, Date lowPublishDate, Date highPublishDate, Double lowRating, Double highRating) {
 		return (List<Book>) createCriteria(bookId, author, title, tag,
-				category, subcategory, lowPublishDate, highPublishDate)
+				category, subcategory, lowPublishDate, highPublishDate, lowRating, highRating)
 				.setFirstResult(first).setMaxResults(count).list();
 	}
 
 	public int getCount(Long bookId, String author, String title, String tag,
 			String category, String subcategory, Date lowPublishDate,
-			Date highPublishDate) {
+			Date highPublishDate, Double lowRating, Double highRating) {
 		Criteria criteria = createCriteria(bookId, author, title, tag,
-				category, subcategory, lowPublishDate, highPublishDate);
+				category, subcategory, lowPublishDate, highPublishDate, lowRating, highRating);
 		criteria.setProjection(Projections.rowCount());
 		return ((Number) criteria.uniqueResult()).intValue();
 	}
 
 	private Criteria createCriteria(Long bookId, String author, String title,
 			String tag, String category, String subcategory,
-			Date lowPublishDate, Date highPublishDate) {
+			Date lowPublishDate, Date highPublishDate, Double lowRating, Double highRating) {
 		Criteria criteria = getSession().createCriteria(Book.class);
 
 		if (bookId != null) {
@@ -196,6 +196,20 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 		if (StringUtils.isNotBlank(tag)) {
 			System.out.println("*** tag> " + tag);
 			criteria.createCriteria("tags").add(Restrictions.eq("value", tag));
+		}
+		
+		Criteria ratingCriteria = criteria.createCriteria("rating");
+		
+		if ( lowRating != null ) {
+			System.out.println("*** lowRating> " + lowRating);
+			ratingCriteria.add(
+					Restrictions.ge("rating", lowRating));
+		}
+		
+		if ( highRating != null ) {
+			System.out.println("*** highRating> " + highRating);
+			ratingCriteria.add(
+					Restrictions.le("rating", highRating));
 		}
 
 		return criteria;

@@ -121,7 +121,7 @@ div#randomQuote{background-color: #fff; height:60px; width:640px;
 }	
 
 DIV#searchbox {
-	POSITION: absolute; WIDTH: 367px; HEIGHT: 56px; TOP: 50px; LEFT: 280px;
+	POSITION: absolute; WIDTH: 425px; HEIGHT: 56px; TOP: 50px; LEFT: 280px;
 }
 DIV#searchbox FORM INPUT.searchField { width:150px; height:12px;
 /*width:205px; height:31px; background-image:url(/img/input3.gif);border;0px*/

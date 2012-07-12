@@ -52,6 +52,8 @@ public class BooksPage extends BasePage {
 	private Long bookId = null;
 	private Date lowPublishDate = null;
 	private Date highPublishDate = null;
+	private Double lowRating = null;
+	private Double highRating = null;
 	
 	final LoadableDetachableModel<List<Book>> resultsModel = new LoadableDetachableModel<List<Book>>() {
 
@@ -245,7 +247,7 @@ public class BooksPage extends BasePage {
 			return bookService
 					.getBooks(first, count, bookId, author, title, tag,
 							category, subcategory, lowPublishDate,
-							highPublishDate).iterator();
+							highPublishDate, lowRating, highRating).iterator();
 		}
 
 		public int size() {
@@ -264,7 +266,7 @@ public class BooksPage extends BasePage {
 			// return size;
 			// return bookService.getCount(type, parameter);
 			return bookService.getCount(bookId, author, title, tag, category,
-					subcategory, lowPublishDate, highPublishDate);
+					subcategory, lowPublishDate, highPublishDate, lowRating, highRating);
 		}
 
 		public IModel<Book> model(Book book) {

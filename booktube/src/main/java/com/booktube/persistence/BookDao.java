@@ -16,9 +16,9 @@ public interface BookDao {
 	public List<Book> findBookByTitle(String title, int first, int count);
 	public List<Book> findBookByTag(String tag, int first, int count);
 	public List<Book> findBookByAuthor(String author, int first, int count);
-	public List<Book> getBooks(int first, int count, Long bookId, String author, String title, String tag, String category, String subcategory, Date lowPublishDate, Date highPublishDate);
+	public List<Book> getBooks(int first, int count, Long bookId, String author, String title, String tag, String category, String subcategory, Date lowPublishDate, Date highPublishDate, Double lowRating, Double highRating);
 	public int getCount();
-	public int getCount(Long bookId, String author, String title, String tag, String category, String subcategory, Date lowPublishDate, Date highPublishDate);
+	public int getCount(Long bookId, String author, String title, String tag, String category, String subcategory, Date lowPublishDate, Date highPublishDate, Double lowRating, Double highRating);
     public Iterator<Book> iterator(int first, int count);
     public List<String> getAllTitles();
     public List<String> getAllTags();

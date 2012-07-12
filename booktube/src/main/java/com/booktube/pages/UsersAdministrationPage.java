@@ -69,40 +69,41 @@ public class UsersAdministrationPage extends AdministrationPage {
 	// }
 	// };
 
-//	Model<String> deleteConfirmationModel = new Model<String>() {
-//
-//		private static final long serialVersionUID = 1L;
-//
-//		private String text;
-//
-//		public String getObject() {
-//			return text;
-//		}
-//
-//		public void setObject(String value) {
-//			this.text = value;
-//		}
-//	};
+	// Model<String> deleteConfirmationModel = new Model<String>() {
+	//
+	// private static final long serialVersionUID = 1L;
+	//
+	// private String text;
+	//
+	// public String getObject() {
+	// return text;
+	// }
+	//
+	// public void setObject(String value) {
+	// this.text = value;
+	// }
+	// };
 
 	private DynamicLabel deleteConfirmationLabel = new DynamicLabel(
 			"delete_confirmation_dialog_text");
 
-//	Model<String> successDialogModel = new Model<String>() {
-//
-//		private static final long serialVersionUID = 1L;
-//
-//		private String text;
-//
-//		public String getObject() {
-//			return text;
-//		}
-//
-//		public void setObject(String value) {
-//			this.text = value;
-//		}
-//	};
+	// Model<String> successDialogModel = new Model<String>() {
+	//
+	// private static final long serialVersionUID = 1L;
+	//
+	// private String text;
+	//
+	// public String getObject() {
+	// return text;
+	// }
+	//
+	// public void setObject(String value) {
+	// this.text = value;
+	// }
+	// };
 
-//	private DynamicLabel successDialogLabel = new DynamicLabel("success_dialog_text");
+	// private DynamicLabel successDialogLabel = new
+	// DynamicLabel("success_dialog_text");
 
 	// private String deleteConfirmationText;
 	//
@@ -146,9 +147,9 @@ public class UsersAdministrationPage extends AdministrationPage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
-		//deleteConfirmationLabel.setOutputMarkupId(true);
-		//successDialogLabel.setOutputMarkupId(true);
-		
+		// deleteConfirmationLabel.setOutputMarkupId(true);
+		// successDialogLabel.setOutputMarkupId(true);
+
 		parent.add(new Label("pageTitle", "Users Administration Page"));
 
 		group = new CheckGroup<User>("group", new ArrayList<User>());
@@ -160,7 +161,8 @@ public class UsersAdministrationPage extends AdministrationPage {
 		footerNavigator = new PagingNavigator("footerPaginator", dataView);
 		parent.add(footerNavigator);
 
-		successDialog = new SuccessDialog<UsersAdministrationPage>("success_dialog", "Usuario eliminado.", parent);
+		successDialog = new SuccessDialog<UsersAdministrationPage>(
+				"success_dialog", "Usuario eliminado.", parent);
 		parent.add(successDialog);
 
 		deleteConfirmationDialog = deleteConfirmationDialog();
@@ -175,6 +177,17 @@ public class UsersAdministrationPage extends AdministrationPage {
 		WebMarkupContainer searchButton = createButtonWithEffect(
 				"searchUserLink", "searchFields", new SlideToggle());
 		parent.add(searchButton);
+
+		if (dataView.getItemCount() > 0) {
+			feedbackMessage.setVisible(false);
+		} else {
+			feedbackMessage.setVisible(true);
+			searchUserForm.setVisible(false);
+			footerNavigator.setVisible(false);
+			searchButton.setVisible(false);
+		}
+		
+//		parent.add(feedbackMessage);
 
 		String newTitle = "Booktube - Users Administration";
 		super.get("pageTitle").setDefaultModelObject(newTitle);
@@ -263,30 +276,30 @@ public class UsersAdministrationPage extends AdministrationPage {
 		return dataView;
 	}
 
-//	private Dialog deleteDialog(final WebMarkupContainer parent) {
-//
-//		final Dialog dialog = new Dialog("success_dialog");
-//
-//		dialog.add(successDialogLabel);
-//
-//		AjaxDialogButton ok = new AjaxDialogButton("OK") {
-//
-//			private static final long serialVersionUID = 1L;
-//
-//			@Override
-//			protected void onButtonClicked(AjaxRequestTarget target) {
-//				//setResponsePage(UsersAdministrationPage.class);
-//				dialog.close(target);
-//				target.add(parent);
-//			}
-//		};
-//
-//		dialog.setButtons(ok);
-//		//dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
-//
-//		return dialog;
-//
-//	}
+	// private Dialog deleteDialog(final WebMarkupContainer parent) {
+	//
+	// final Dialog dialog = new Dialog("success_dialog");
+	//
+	// dialog.add(successDialogLabel);
+	//
+	// AjaxDialogButton ok = new AjaxDialogButton("OK") {
+	//
+	// private static final long serialVersionUID = 1L;
+	//
+	// @Override
+	// protected void onButtonClicked(AjaxRequestTarget target) {
+	// //setResponsePage(UsersAdministrationPage.class);
+	// dialog.close(target);
+	// target.add(parent);
+	// }
+	// };
+	//
+	// dialog.setButtons(ok);
+	// //dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
+	//
+	// return dialog;
+	//
+	// }
 
 	private Dialog deleteConfirmationDialog() {
 
@@ -315,7 +328,7 @@ public class UsersAdministrationPage extends AdministrationPage {
 				successDialog.setText("Usuario eliminado.");
 				target.add(successDialog);
 				// JsScopeUiEvent.quickScope(deleteConfirmationdialog.close().render());
-				//JsScope.quickScope(dialog.close().render());
+				// JsScope.quickScope(dialog.close().render());
 				// deleteConfirmationdialog.close(target);
 				successDialog.open(target);
 				// setResponsePage(MessagesAdministrationPage.class);
@@ -327,7 +340,7 @@ public class UsersAdministrationPage extends AdministrationPage {
 				JsScope.quickScope(dialog.close().render()));
 
 		dialog.setButtons(noButton, yesButton);
-		//dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close()));
+		// dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close()));
 
 		return dialog;
 
@@ -341,11 +354,13 @@ public class UsersAdministrationPage extends AdministrationPage {
 				new User());
 
 		form.setDefaultModel(model);
-		
+
 		final WebMarkupContainer searchFields = new WebMarkupContainer(
 				"searchFields");
 		searchFields.add(AttributeModifier.replace("style", "display: none;"));
 		form.add(searchFields);
+		
+		searchFields.add(feedbackMessage);
 
 		final TextField<String> userId = new TextField<String>("userId",
 				new Model<String>(""));
@@ -400,13 +415,15 @@ public class UsersAdministrationPage extends AdministrationPage {
 				for (User aUser : removedUsers) {
 					userService.deleteUser(aUser);
 				}
-
+				
 				if (dataView.getItemCount() <= 0) {
 					this.setVisible(false);
 					footerNavigator.setVisible(false);
+					feedbackMessage.setVisible(true);
 				} else {
 					this.setVisible(true);
 					footerNavigator.setVisible(true);
+					feedbackMessage.setVisible(false);
 				}
 
 				target.add(parent);
@@ -513,10 +530,14 @@ public class UsersAdministrationPage extends AdministrationPage {
 
 				if (dataView.getItemCount() <= 0) {
 					deleteUser.setVisible(false);
+					group.setVisible(false);
 					footerNavigator.setVisible(false);
+					feedbackMessage.setVisible(true);
 				} else {
 					deleteUser.setVisible(true);
+					group.setVisible(true);
 					footerNavigator.setVisible(true);
+					feedbackMessage.setVisible(false);
 				}
 
 				dataView.setCurrentPage(0);

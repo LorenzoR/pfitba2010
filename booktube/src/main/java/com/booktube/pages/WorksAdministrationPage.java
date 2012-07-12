@@ -112,7 +112,7 @@ public class WorksAdministrationPage extends AdministrationPage {
 //	};
 
 //	private String successDialogText;
-	private final Label feedbackMessage;
+	
 	private final DataView<Book> dataView;
 	private final PagingNavigator footerNavigator;
 
@@ -126,6 +126,8 @@ public class WorksAdministrationPage extends AdministrationPage {
 	private Long searchBookId = null;
 	private Date searchLowPublishDate = null;
 	private Date searchHighPublishDate = null;
+	private Double searchLowRating = null;
+	private Double searchHighRating = null;
 
 	public WorksAdministrationPage() {
 		super();
@@ -168,8 +170,6 @@ public class WorksAdministrationPage extends AdministrationPage {
 				"searchBookLink", "searchFields", new SlideToggle());
 		parent.add(searchButton);
 		
-		feedbackMessage = new Label("feedbackMessage", "No se encontraron resultados.");
-		
 		if (dataView.getItemCount() > 0) {
 			feedbackMessage.setVisible(false);
 		}
@@ -179,9 +179,6 @@ public class WorksAdministrationPage extends AdministrationPage {
 			footerNavigator.setVisible(false);
 			searchButton.setVisible(false);
 		}
-		
-		
-		parent.add(feedbackMessage);
 
 		String newTitle = "Booktube - Works Administration";
 		super.get("pageTitle").setDefaultModelObject(newTitle);
@@ -436,6 +433,8 @@ public class WorksAdministrationPage extends AdministrationPage {
 		searchFields.add(AttributeModifier.replace("style", "display: none;"));
 		form.add(searchFields);
 
+		searchFields.add(feedbackMessage);
+		
 		final TextField<String> bookId = new TextField<String>("bookId",
 				new Model<String>(""));
 		searchFields.add(bookId);
@@ -630,8 +629,6 @@ public class WorksAdministrationPage extends AdministrationPage {
 					feedbackMessage.setVisible(false);
 				}
 				
-				
-
 				dataView.setCurrentPage(0);
 				target.add(parent);
 
@@ -640,7 +637,6 @@ public class WorksAdministrationPage extends AdministrationPage {
 			@Override
 			protected void onError(AjaxRequestTarget target, Form<?> form) {
 				// TODO Auto-generated method stub
-
 			}
 
 		});
@@ -657,19 +653,16 @@ public class WorksAdministrationPage extends AdministrationPage {
 		}
 
 		public Iterator<Book> iterator(int first, int count) {
-			// return bookService.getAllBooks(first, count).iterator();
 			return bookService.getBooks(first, count, searchBookId,
 					searchAuthor, searchTitle, searchTag, searchCategory,
 					searchSubcategory, searchLowPublishDate,
-					searchHighPublishDate).iterator();
+					searchHighPublishDate, searchLowRating, searchHighRating).iterator();
 		}
 
 		public int size() {
-			// return bookService.getCount(type, parameter);
-			// return this.books.size();
 			return bookService.getCount(searchBookId, searchAuthor,
 					searchTitle, searchTag, searchCategory, searchSubcategory,
-					searchLowPublishDate, searchHighPublishDate);
+					searchLowPublishDate, searchHighPublishDate, searchLowRating, searchHighRating);
 		}
 
 		public IModel<Book> model(Book book) {
@@ -678,7 +671,6 @@ public class WorksAdministrationPage extends AdministrationPage {
 
 		public void detach() {
 			// TODO Auto-generated method stub
-
 		}
 	}
 
