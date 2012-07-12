@@ -135,7 +135,7 @@ DIV#mainmenubg {
 	POSITION: absolute; WIDTH: 930px; BACKGROUND: url(/img/mainmenubg.png); HEIGHT: 41px; TOP: 101px; 
 }
 DIV#mainmenu {
-	Z-INDEX: 1000; POSITION: absolute; WIDTH: 930px; HEIGHT: 41px; TOP: 101px; LEFT:100px; 
+	Z-INDEX: 0; POSITION: absolute; WIDTH: 930px; HEIGHT: 41px; TOP: 101px; LEFT:100px; 
 }
 DIV#mainmenu UL {
 	POSITION: relative; TEXT-ALIGN: center; PADDING-BOTTOM: 0px; LIST-STYLE-TYPE: none; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FLOAT: left; CLEAR: left; LIST-STYLE-IMAGE: none; PADDING-TOP: 0px; LEFT: 50%

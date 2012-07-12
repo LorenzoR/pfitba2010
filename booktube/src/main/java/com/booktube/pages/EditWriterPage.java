@@ -19,6 +19,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.validation.validator.EmailAddressValidator;
 import org.odlabs.wiquery.ui.dialog.Dialog;
 
 import com.booktube.WicketApplication;
@@ -107,6 +108,10 @@ public class EditWriterPage extends BasePage {
 
 		final RequiredTextField<User> lastnameField = new RequiredTextField<User>("lastname");
 		form.add(lastnameField);
+		
+		final RequiredTextField<User> email = new RequiredTextField<User>("email");
+		email.add(EmailAddressValidator.getInstance());
+		form.add(email);
 
 		final DateTextField birthdateField = new DateTextField("birthdate",
 				new PropertyModel<Date>(model, "birthdate"),

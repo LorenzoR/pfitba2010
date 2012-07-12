@@ -86,16 +86,6 @@ public class CampaignsPage extends BasePage {
 					}
 
 				});
-				item.add(new Link<Campaign>("editLink", item.getModel()) {
-					private static final long serialVersionUID = 1L;
-
-					public void onClick() {
-						setResponsePage(ShowMessagePage.class, parameters);
-						//setResponsePage(new EditWriterPage(user.getId(),
-						//		MessagePage.this));
-					}
-
-				});
 				item.add(new Link<Campaign>("deleteLink", item.getModel()) {
 					private static final long serialVersionUID = -7155146615720218460L;
 

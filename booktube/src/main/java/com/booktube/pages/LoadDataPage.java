@@ -139,29 +139,31 @@ public class LoadDataPage extends BasePage {
 			gc.set(year, month, day);
 			Date registrationDate = new Date(gc.getTimeInMillis());
 
-			int letter = ( i % 26 ) + 97;
-			System.out.println(i + ": " + (char)i);
-			String username = (char)letter + "user" + i;
-			User user = new User(username, username, "nombre" + i,
-					"apellido" + i, User.Level.USER);
+			int letter = (i % 26) + 97;
+			System.out.println(i + ": " + (char) i);
+			String username = (char) letter + "user" + i;
+			User user = new User(username, username, "nombre" + i, "apellido"
+					+ i, User.Level.USER);
 
 			user.setBirthdate(birthdate);
 			user.setRegistrationDate(registrationDate);
 			user.setGender(gender);
 			user.setCountry(countries.get(i % countries.size()));
 			user.setCity(cities.get(i % cities.size()));
+			user.setEmail(username + "@mail.com");
 			userService.insertUser(user);
 			users.add(user);
 
 			gender = gender == Gender.MALE ? Gender.FEMALE : Gender.MALE;
 		}
 
-		User user = new User("user", "pass", "nombre", "apellido",
+		User user = new User("user", "user", "nombre", "apellido",
 				User.Level.USER);
 		user.setBirthdate(new Date());
 		user.setGender(Gender.MALE);
 		user.setCountry("Country 1");
 		user.setCity("City 10");
+		user.setEmail(user.getUsername() + "@mail.com");
 		user.setRegistrationDate(new Date());
 		this.admin = new User("admin", "admin", "nombre", "apellido",
 				User.Level.ADMIN);
@@ -169,6 +171,7 @@ public class LoadDataPage extends BasePage {
 		this.admin.setGender(Gender.MALE);
 		this.admin.setCountry("Country 1");
 		this.admin.setCity("City 1");
+		this.admin.setEmail(this.admin.getUsername() + "@mail.com");
 
 		userService.insertUser(user);
 		users.add(user);
@@ -189,9 +192,13 @@ public class LoadDataPage extends BasePage {
 			User newUser = userService.getUser(this.users.get(
 					randomGenerator.nextInt(this.users.size())).getId());
 
-			Book book = new Book("titulo" + i, bookText, newUser);
+			String title = bookTitles[i % bookTitles.length];
 
-			book.setCategory("category" + randomGenerator.nextInt(10));
+			Book book = new Book(title, bookText, newUser);
+
+			int categoryIndex = i%categories.length;
+			
+			book.setCategory(categories[categoryIndex]);
 			book.setSubCategory("subcategory" + randomGenerator.nextInt(50));
 			// book.addUserVote(users.get(0));
 			// book.addUserVote(users.get(1));
@@ -362,5 +369,35 @@ public class LoadDataPage extends BasePage {
 			+ "\n\n Pellentesque eu mauris volutpat sem lacinia ultrices non ut ante. Donec pretium adipiscing magna sed tempor. Curabitur in diam massa, ac malesuada dui. Aenean ac auctor ipsum. Phasellus condimentum semper erat rutrum lobortis. Nullam fermentum mattis leo vitae cursus. Integer nec massa a purus tempus euismod. Aenean ut velit metus. Nam non quam eget sem posuere commodo. Donec mattis malesuada faucibus. Donec vestibulum euismod pellentesque. Fusce commodo lobortis augue. Nulla imperdiet, metus non auctor fermentum, velit nulla eleifend ligula, eget fringilla purus dolor sed quam."
 			+ "\n\n Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Integer posuere iaculis turpis, vitae adipiscing felis aliquam et. Nulla quis placerat ipsum. Aliquam et erat quis lectus fermentum pulvinar. Nunc nec lectus purus, a fermentum nulla. Vestibulum aliquet facilisis justo, ac pharetra urna aliquam in. Proin eget mauris a odio tincidunt ornare a vitae neque. Nunc vehicula auctor nunc eu laoreet. Donec pretium mollis nisi, et bibendum odio facilisis ut."
 			+ "\n\n Vestibulum sit amet consectetur mauris. Sed fringilla iaculis interdum. Maecenas ultrices elementum congue. Morbi id velit tellus, adipiscing convallis est. Phasellus eros augue, eleifend et suscipit ut, mattis non lacus. Quisque orci eros, iaculis sit amet volutpat ut, euismod adipiscing leo. Sed eu quam ac libero tincidunt elementum nec et nunc. Maecenas nisi eros, consectetur et vulputate sed, feugiat volutpat metus. Phasellus vitae justo velit. Quisque tincidunt libero id purus facilisis gravida iaculis mauris tempor. Morbi at augue eget nisi condimentum lobortis a sit amet massa. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam iaculis, elit sed suscipit bibendum, eros sapien tempor quam, ut ullamcorper justo metus in lorem.";
+
+	private String[] bookTitles = { "Forgotten Luck", "The Which Servant",
+			"Words of Sons", "The Night's World", "The Dream of the Prophecy",
+			"Shards in the Shores", "Purple Ice", "The Wild Slaves",
+			"Girl of Flowers", "The Bridges's Mage",
+			"The Streams of the Flame", "Truth in the Something",
+			"Purple Dying", "The Smooth Sky", "Secrets of Ice",
+			"The Edge's Lord", "The Return of the Time", "Birch in the Snake",
+			"Sleeping Obsession", "The Silent Nothing", "Tears of Predator",
+			"The Destiny's Princess", "The Danger of the Wizard",
+			"Hunter in the Memory", "Silent Illusion", "The Smooth Word",
+			"Abyss of Emerald", "The Visions's Storm", "The Wizards's Slaves",
+			"The Mist of the Force", "Consort in the Gate",
+			"Magnificent Thief", "The Lonely Flower", "Healer of Lover",
+			"The Flame's Hunter", "The Wizards of the Ashes",
+			"Winter in the Alien", "Broken Scent", "The Lost Misty",
+			"Emperor of Pirates", "The Consort's Dream",
+			"The Healer of the Night", "Tower in the Slaves", "Grey Voyagers",
+			"The Whispering Force", "Wings of Prophecy",
+			"The Worlds's Dreamer", "The Secret of the Voyagers",
+			"Witch in the Ice", "Smooth Flying", "Witches of Birch",
+			"The Missing Wizard", "The Women of the Silence",
+			"Nobody in the Prince", "Prized Secrets", "The First Lord",
+			"Angel of Lover", "The Snow's Body", "The Door of the Wizards",
+			"Rose in the Slave" };
+
+	private String[] categories = { "Self", "Special Interest",
+			"Health & Living", "General Interest", "History", "Fiction",
+			"Law & Order", "Hobbies", "Business & Finance",
+			"Entertainment & Leisure", "Travel" };
 
 }

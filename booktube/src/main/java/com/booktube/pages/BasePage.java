@@ -32,8 +32,6 @@ import org.odlabs.wiquery.ui.dialog.Dialog;
 import org.wicketstuff.facebook.FacebookSdk;
 
 import com.booktube.WiaSession;
-import com.booktube.model.Book;
-import com.booktube.model.BookTag;
 import com.booktube.model.User;
 import com.booktube.model.User.Level;
 import com.booktube.pages.customComponents.MenuLink;
@@ -260,18 +258,18 @@ public abstract class BasePage extends WebPage {
 					}
 				}));
 
-		radioGroup.add(new Radio<String>("rating", new Model<String>("rating"))
-				.add(new AjaxEventBehavior("onclick") {
-
-					private static final long serialVersionUID = 1L;
-
-					protected void onEvent(AjaxRequestTarget target) {
-						// add your favorite component.
-						System.out.println("CLICK EN RATING!!!");
-						selectedRadio = RATING_SELECTED;
-						System.out.println("selectedRadio es " + selectedRadio);
-					}
-				}));
+//		radioGroup.add(new Radio<String>("rating", new Model<String>("rating"))
+//				.add(new AjaxEventBehavior("onclick") {
+//
+//					private static final long serialVersionUID = 1L;
+//
+//					protected void onEvent(AjaxRequestTarget target) {
+//						// add your favorite component.
+//						System.out.println("CLICK EN RATING!!!");
+//						selectedRadio = RATING_SELECTED;
+//						System.out.println("selectedRadio es " + selectedRadio);
+//					}
+//				}));
 
 		radioGroup.add(new Radio<String>("title", new Model<String>("title"))
 				.add(new AjaxEventBehavior("onclick") {
@@ -354,13 +352,13 @@ public abstract class BasePage extends WebPage {
 						}
 					}
 				} else if (selectedRadio == TAG_SELECTED) {
-					List<BookTag> tags = bookService.getAllTags();
+					List<String> tags = bookService.getAllTags();
 
-					for (final BookTag tag : tags) {
+					for (final String tag : tags) {
 
-						if (tag.getValue().toUpperCase()
+						if (tag.toUpperCase()
 								.startsWith(input.toUpperCase())) {
-							choices.add(tag.getValue());
+							choices.add(tag);
 							if (choices.size() == 10) {
 								break;
 							}
@@ -370,11 +368,10 @@ public abstract class BasePage extends WebPage {
 				} else {
 					System.out.println("OTRA COSA SELECTED!");
 					System.out.println("selectedRadio es " + selectedRadio);
-					List<Book> books = bookService.getAllBooks(0,
-							Integer.MAX_VALUE);
+					List<String> bookTitles = bookService.getAllTitles();
 
-					for (final Book book : books) {
-						final String title = book.getTitle();
+					for (final String title : bookTitles) {
+//						final String title = book.getTitle();
 
 						if (title.toUpperCase().startsWith(input.toUpperCase())) {
 							choices.add(title);
@@ -412,9 +409,9 @@ public abstract class BasePage extends WebPage {
 					if (radioGroup.getValue().equals("author")) {
 						// parameters.set("type", "author");
 						parameters.set("author", bookTitleString);
-					} else if (radioGroup.getValue().equals("rating")) {
-						// parameters.set("type", "rating");
-						parameters.set("rating", bookTitleString);
+//					} else if (radioGroup.getValue().equals("rating")) {
+//						// parameters.set("type", "rating");
+//						parameters.set("rating", bookTitleString);
 					} else if (radioGroup.getValue().equals("tag")) {
 						// parameters.set("type", "tag");
 						parameters.set("tag", bookTitleString);

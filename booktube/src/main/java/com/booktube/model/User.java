@@ -74,6 +74,10 @@ public class User implements Serializable {
 	@Column(name = "CITY", nullable = false)
 	private String city;
 	
+	@Basic
+	@Column(name = "EMAIL", nullable = false)
+	private String email;
+	
 	@Enumerated(EnumType.ORDINAL)
 	@Column(name = "GENDER", nullable = false)
 	private Gender gender;
@@ -304,6 +308,14 @@ public class User implements Serializable {
 	
 	public void addBook(Book book) {
 		this.books.add(book);
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 //	public Set<Book> getVotes() {

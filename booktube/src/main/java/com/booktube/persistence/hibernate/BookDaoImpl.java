@@ -46,16 +46,18 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 		 * getSession().flush();
 		 */
 		super.delete(book);
-		//getSession().refresh(book);
-		//getSession().delete(book);
-		//getSession().flush();
-		
+		// getSession().refresh(book);
+		// getSession().delete(book);
+		// getSession().flush();
+
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<Book> getAllBooks(int first, int count) {
 		List<Book> books = (List<Book>) getSession().createCriteria(Book.class)
-				.setFirstResult(first).setMaxResults(count).list();
+				.setFirstResult(first).setMaxResults(count)
+				.addOrder(Order.asc("title"))
+				.list();
 		return books;
 	}
 
@@ -98,9 +100,14 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<BookTag> getAllTags() {
-		return (List<BookTag>) getSession().createCriteria(BookTag.class)
-				.setFirstResult(0).setMaxResults(Integer.MAX_VALUE).list();
+	public List<String> getAllTags() {
+		return (List<String>) getSession()
+				.createCriteria(BookTag.class)
+				.setProjection(
+						Projections.distinct(Projections.projectionList().add(
+								Projections.property("value"), "value")))
+				.setFirstResult(0).setMaxResults(Integer.MAX_VALUE)
+				.addOrder(Order.asc("value")).list();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -111,26 +118,24 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 						Projections.distinct(Projections.projectionList().add(
 								Projections.property("category"), "category")))
 				.setFirstResult(first).setMaxResults(count)
-				.addOrder(Order.asc("category"))
-				.list();
+				.addOrder(Order.asc("category")).list();
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<String> getSubcategories(int first, int count, String category) {
-		
-		Criteria criteria = getSession()
-				.createCriteria(Book.class);
-		
-		if ( StringUtils.isNotBlank(category) ) {
+
+		Criteria criteria = getSession().createCriteria(Book.class);
+
+		if (StringUtils.isNotBlank(category)) {
 			criteria.add(Restrictions.eq("category", category));
 		}
-		
+
 		return (List<String>) criteria
 				.setProjection(
 						Projections.distinct(Projections.projectionList().add(
 								Projections.property("subcategory"),
 								"subcategory"))).setFirstResult(first)
-				.setMaxResults(count).list();
+				.setMaxResults(count).addOrder(Order.asc("category")).list();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -138,8 +143,8 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 			String author, String title, String tag, String category,
 			String subcategory, Date lowPublishDate, Date highPublishDate) {
 		return (List<Book>) createCriteria(bookId, author, title, tag,
-				category, subcategory, lowPublishDate, highPublishDate).setFirstResult(first).setMaxResults(count)
-				.list();
+				category, subcategory, lowPublishDate, highPublishDate)
+				.setFirstResult(first).setMaxResults(count).list();
 	}
 
 	public int getCount(Long bookId, String author, String title, String tag,
@@ -194,6 +199,17 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 		}
 
 		return criteria;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<String> getAllTitles() {
+		return (List<String>) getSession()
+				.createCriteria(Book.class)
+				.setProjection(
+						Projections.distinct(Projections.projectionList().add(
+								Projections.property("title"), "title")))
+				.setFirstResult(0).setMaxResults(Integer.MAX_VALUE)
+				.addOrder(Order.asc("title")).list();
 	}
 
 }
