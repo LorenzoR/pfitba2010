@@ -8,7 +8,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -87,48 +86,49 @@ public class AnswerMessagePage extends BasePage {
 				item.add(new Label("sender"));
 				item.add(new Label("date"));
 				item.add(new Label("text"));
-				item.add(new Link<Message>("detailsLink", item.getModel()) {
-					private static final long serialVersionUID = 1L;
-
-					public void onClick() {
-						//setResponsePage(ShowMessagePage.class, parameters);
-					}
-
-				});
-				item.add(new Link<Message>("answerLink", item.getModel()) {
-					private static final long serialVersionUID = 1L;
-
-					public void onClick() {
-						//setResponsePage(AnswerMessagePage.class, parameters);
-					}
-
-				});
-				item.add(new Link<Message>("editLink", item.getModel()) {
-					private static final long serialVersionUID = 1L;
-
-					public void onClick() {
-						//setResponsePage(ShowMessagePage.class, parameters);
-						// setResponsePage(new EditWriterPage(user.getId(),
-						// MessagePage.this));
-					}
-
-				});
-				item.add(new Link<Message>("deleteLink", item.getModel()) {
-					private static final long serialVersionUID = -7155146615720218460L;
-
-					public void onClick() {
-
-						Message message = (Message) getModelObject();
-						//Long messageId = message.getId();
-
-						messageService.deleteMessage(message);
-						// System.out.println("User " + messageId +
-						// " deleted.");
-
-						//setResponsePage(MessagesPage.this);
-					}
-
-				});
+				
+//				item.add(new Link<Message>("detailsLink", item.getModel()) {
+//					private static final long serialVersionUID = 1L;
+//
+//					public void onClick() {
+//						//setResponsePage(ShowMessagePage.class, parameters);
+//					}
+//
+//				});
+//				item.add(new Link<Message>("answerLink", item.getModel()) {
+//					private static final long serialVersionUID = 1L;
+//
+//					public void onClick() {
+//						//setResponsePage(AnswerMessagePage.class, parameters);
+//					}
+//
+//				});
+//				item.add(new Link<Message>("editLink", item.getModel()) {
+//					private static final long serialVersionUID = 1L;
+//
+//					public void onClick() {
+//						//setResponsePage(ShowMessagePage.class, parameters);
+//						// setResponsePage(new EditWriterPage(user.getId(),
+//						// MessagePage.this));
+//					}
+//
+//				});
+//				item.add(new Link<Message>("deleteLink", item.getModel()) {
+//					private static final long serialVersionUID = -7155146615720218460L;
+//
+//					public void onClick() {
+//
+//						Message message = (Message) getModelObject();
+//						//Long messageId = message.getId();
+//
+//						messageService.deleteMessage(message);
+//						// System.out.println("User " + messageId +
+//						// " deleted.");
+//
+//						//setResponsePage(MessagesPage.this);
+//					}
+//
+//				});
 			}
 		};
 		

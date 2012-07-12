@@ -22,8 +22,10 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.validation.validator.EmailAddressValidator;
 import org.odlabs.wiquery.ui.dialog.Dialog;
 import org.apache.wicket.datetime.PatternDateConverter;
+import org.apache.wicket.extensions.validation.validator.RfcCompliantEmailAddressValidator;
 
 import com.booktube.WicketApplication;
 import com.booktube.model.User;
@@ -90,7 +92,9 @@ public class RegisterPage extends BasePage {
 		final RequiredTextField<User> usernameField = new RequiredTextField<User>("username");
 		final RequiredTextField<User> firstnameField = new RequiredTextField<User>("firstname");
 		final RequiredTextField<User> lastnameField = new RequiredTextField<User>("lastname");
-
+		final RequiredTextField<User> email = new RequiredTextField<User>("email");
+		email.add(EmailAddressValidator.getInstance());
+		
 //		final TextField<Date> birthdateField = new TextField<Date>(
 //				"birthdate", new PropertyModel<Date>(model, "birthdate"));
 		
@@ -139,6 +143,7 @@ public class RegisterPage extends BasePage {
 		form.add(usernameField);
 		form.add(firstnameField);
 		form.add(lastnameField);
+		form.add(email);
 		form.add(birthdateField);
 		form.add(passwordField1);
 		form.add(passwordField2);

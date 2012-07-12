@@ -63,7 +63,7 @@ public class BookServiceImpl implements BookService {
 		return itemDao.iterator(first, count);
 	}
 
-	public List<BookTag> getAllTags() {
+	public List<String> getAllTags() {
 		return itemDao.getAllTags();
 	}
 
@@ -85,5 +85,9 @@ public class BookServiceImpl implements BookService {
 			String category, String subcategory, Date lowPublishDate,
 			Date highPublishDate) {
 		return itemDao.getCount(bookId, author, title, tag, category, subcategory, lowPublishDate, highPublishDate);
+	}
+
+	public List<String> getAllTitles() {
+		return itemDao.getAllTitles();
 	}
 }

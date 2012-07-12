@@ -19,6 +19,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.SQLQuery;
 //import org.hibernate.annotations.FetchMode;
 import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -51,7 +52,9 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 	@SuppressWarnings("unchecked")
 	public List<User> getAllUsers(int first, int count) {
 		return (List<User>) getSession().createCriteria(User.class)
-				.setFirstResult(first).setMaxResults(count).list();
+				.setFirstResult(first).setMaxResults(count)
+				.addOrder(Order.asc("username"))
+				.list();
 	}
 
 	@SuppressWarnings("unchecked")

@@ -20,7 +20,8 @@ public interface BookDao {
 	public int getCount();
 	public int getCount(Long bookId, String author, String title, String tag, String category, String subcategory, Date lowPublishDate, Date highPublishDate);
     public Iterator<Book> iterator(int first, int count);
-    public List<BookTag> getAllTags();
+    public List<String> getAllTitles();
+    public List<String> getAllTags();
     public List<String> getCategories(int first, int count);
     public List<String> getSubcategories(int first, int count, String category);
 }
