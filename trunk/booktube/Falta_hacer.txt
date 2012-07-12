@@ -9,14 +9,14 @@
 - Formato del paginador y su ubicacion al lado del boton de borrar en los listados
 - En reportes dejar solo icono y titulo del reporte
 - En los search de paginas de administracion:
-	- Arreglar qu� pasa cuando no tira resultados
+	----- Arreglar qu� pasa cuando no tira resultados (OK)
 	- Ver que columnas y campos mostrar
 - Buscador en el header de la pagina:
 	----- Que pasa cuando no hay resultados. 
 			(OK, NO CAMBIE NADA PORQUE NO PUDE VOLVER A REPRODUCIR EL ERROR) 
 	----- Cambiar css para que el autocompletar se vea por encima de la pagina 
 			(OK, CAMBIE EL Z-INDEX de DIV#mainmenu POR 0, NO SE SI TRAERA ALGUN PROBLEMA)
-	- Agregar un link para busqueda avanzar
+	----- Agregar un link para busqueda avanzar (OK)
 - Terminar de poner estilo a las paginas
 - Poner un AVATAR a los usuarios
 - Para escribir y editar un trabajo poner texto enriquecido ( cosas basicas )
@@ -35,5 +35,6 @@
 - En los menues debe quedar seleccionado la opcion elegida
 - Agregar bread scrums
 - sacar Wicket ajax debug 	
-
+- Ver pagina de escritores, mensajes, campañas cuando no hay datos
+- Formato de rating en busqueda avanzada (numeros con punto o coma)
 

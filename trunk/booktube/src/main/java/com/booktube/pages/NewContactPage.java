@@ -20,6 +20,7 @@ import com.booktube.model.Message.Subject;
 import com.booktube.model.User;
 import com.booktube.model.Message.Type;
 import com.booktube.model.User.Level;
+import com.booktube.pages.customComponents.SuccessDialog;
 import com.booktube.service.MessageService;
 import com.booktube.service.UserService;
 
@@ -33,7 +34,9 @@ public class NewContactPage extends BasePage {
 	@SpringBean
 	UserService userService;
 
-	User user;
+	private final User user;
+	
+	private final SuccessDialog dialog;
 
 	public NewContactPage() {
 
@@ -58,6 +61,9 @@ public class NewContactPage extends BasePage {
 //		parent.add(new BookmarkablePageLink<String>("contactsPage",
 //				ContactsPage.class));
 
+		dialog = new SuccessDialog<MessagesPage>("success_dialog", "Mensaje enviado con éxito!", MessagesPage.class, null);
+		parent.add(dialog);
+		
 		if (user == null) {
 			form.setVisible(false);
 		} else {
@@ -111,6 +117,8 @@ public class NewContactPage extends BasePage {
 				System.out.println("+++++++ SUBJECT: " + message.getSubject());
 				
 				messageService.sendMessages(message, receivers);
+				
+				dialog.open(target);
 				
 				//Set<MessageDetail> receiverSet = new HashSet<MessageDetail>();
 

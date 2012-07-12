@@ -85,6 +85,16 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 		WebMarkupContainer searchButton = createButtonWithEffect(
 				"searchCampaignLink", "searchFields", new SlideToggle());
 		parent.add(searchButton);
+		
+		if (dataView.getItemCount() > 0) {
+			feedbackMessage.setVisible(false);
+		}
+		else {
+			feedbackMessage.setVisible(true);
+			searchForm.setVisible(false);
+			footerNavigator.setVisible(false);
+			searchButton.setVisible(false);
+		}
 
 		deleteDialog = deleteDialog(parent);
 		parent.add(deleteDialog);
@@ -243,6 +253,8 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 				"searchFields");
 		searchFields.add(AttributeModifier.replace("style", "display: none;"));
 		form.add(searchFields);
+		
+		searchFields.add(feedbackMessage);
 
 		final TextField<Campaign> subject = new TextField<Campaign>("subject");
 		searchFields.add(subject);
@@ -284,9 +296,11 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 				if (dataView.getItemCount() <= 0) {
 					this.setVisible(false);
 					footerNavigator.setVisible(false);
+					feedbackMessage.setVisible(true);
 				} else {
 					this.setVisible(true);
 					footerNavigator.setVisible(true);
+					feedbackMessage.setVisible(false);
 				}
 
 				target.add(parent);
@@ -355,13 +369,17 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 				} else {
 					searchHighCampaignDate = null;
 				}
-
+				
 				if (dataView.getItemCount() <= 0) {
 					deleteCampaign.setVisible(false);
+					group.setVisible(false);
 					footerNavigator.setVisible(false);
+					feedbackMessage.setVisible(true);
 				} else {
 					deleteCampaign.setVisible(true);
+					group.setVisible(true);
 					footerNavigator.setVisible(true);
+					feedbackMessage.setVisible(false);
 				}
 
 				dataView.setCurrentPage(0);

@@ -77,14 +77,14 @@ public class BookServiceImpl implements BookService {
 
 	public List<Book> getBooks(int first, int count, Long bookId, String author, String title, String tag,
 			String category, String subcategory, Date lowPublishDate,
-			Date highPublishDate) {
-		return itemDao.getBooks(first, count, bookId, author, title, tag, category, subcategory, lowPublishDate, highPublishDate);
+			Date highPublishDate, Double lowRating, Double highRating) {
+		return itemDao.getBooks(first, count, bookId, author, title, tag, category, subcategory, lowPublishDate, highPublishDate, lowRating, highRating);
 	}
 
 	public int getCount(Long bookId, String author, String title, String tag,
 			String category, String subcategory, Date lowPublishDate,
-			Date highPublishDate) {
-		return itemDao.getCount(bookId, author, title, tag, category, subcategory, lowPublishDate, highPublishDate);
+			Date highPublishDate, Double lowRating, Double highRating) {
+		return itemDao.getCount(bookId, author, title, tag, category, subcategory, lowPublishDate, highPublishDate, lowRating, highRating);
 	}
 
 	public List<String> getAllTitles() {

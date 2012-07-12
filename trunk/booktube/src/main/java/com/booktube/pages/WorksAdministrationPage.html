@@ -18,8 +18,6 @@
 	    </p>
 		
 		<h3 wicket:id="pageTitle" class="pageTitle"></h3>
-	
-		<div wicket:id="feedbackMessage"></div>
 		
 		<h2><a href="#" wicket:id="searchBookLink" onclick="return false;" class="searchLink">Buscar</a></h2>
 			<form id="searchBookFormId" wicket:id="searchBookForm" class="searchForm">
@@ -51,7 +49,10 @@
 							</td>						
 						</tr>
 					</table>
-					<input type="button" wicket:id="searchBook" value="Search" class="buttons" />				
+					<input type="button" wicket:id="searchBook" value="Search" class="buttons" />
+					
+					<div wicket:id="feedbackMessage"></div>
+								
 				</div>
 			
 	
