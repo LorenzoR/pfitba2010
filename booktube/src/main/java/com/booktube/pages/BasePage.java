@@ -24,6 +24,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
@@ -34,6 +35,7 @@ import org.wicketstuff.facebook.FacebookSdk;
 import com.booktube.WiaSession;
 import com.booktube.model.User;
 import com.booktube.model.User.Level;
+import com.booktube.pages.customComponents.DynamicLabel;
 import com.booktube.pages.customComponents.MenuLink;
 import com.booktube.service.BookService;
 import com.booktube.service.CampaignService;
@@ -64,13 +66,56 @@ public abstract class BasePage extends WebPage {
 
 	private Dialog loginErrorDialog;
 
+	private static Model<String> model = new Model<String>() {
+
+		private static final long serialVersionUID = 1L;
+
+		private String text;
+
+		public String getObject() {
+			return text;
+		}
+
+		public void setObject(String value) {
+			this.text = value;
+		}
+	};
+	
+	private Label breadcrumbs = new Label("breadcrumbs", model);
+	
 	public BasePage() {
+				
+//		breadcrumbs = new DynamicLabel("breadcrumbs");
+		breadcrumbs.setOutputMarkupId(true);
+		setBreadcrumbs("");
+		add(breadcrumbs);
+		
+		setBreadcrumbs("");
+		
+		Link<User> editProfileLink = new Link<User>("editProfileLink") {
+			private static final long serialVersionUID = 1L;
+
+			public void onClick() {
+				final CompoundPropertyModel<User> model = new CompoundPropertyModel<User>(
+						WiaSession.get().getLoggedInUser());
+				setResponsePage(new EditWriterPage(model,
+						BasePage.this));
+			}
+
+		};
+		
+		WebMarkupContainer editProfile = new WebMarkupContainer("editProfile");
+		//editProfile.add(new BookmarkablePageLink<EditWriterPage>("editProfileLink", EditWriterPage.class, pageParameters));
+		editProfile.add(editProfileLink);
+		add(editProfile);
 		
 		if (WiaSession.get().isAuthenticated()) {
 			add(new Label("welcome", "Bienvenido "
 					+ WiaSession.get().getLoggedInUser().getUsername() + " | "));
+			editProfile.setVisible(true);
 		} else {
 			add(new Label("welcome"));
+			editProfile.setVisible(false);
 		}
 
 		String[][] quoteArray = getQuoteArray();
@@ -240,12 +285,23 @@ public abstract class BasePage extends WebPage {
 
 		final Form<Object> form = new Form<Object>(label);
 
-		selectedRadio = AUTHOR_SELECTED;
-
 		final RadioGroup<String> radioGroup = new RadioGroup<String>("group",
 				new Model<String>(""));
 		radioGroup.setOutputMarkupId(true);
 
+		radioGroup.add(new Radio<String>("title", new Model<String>("title"))
+				.add(new AjaxEventBehavior("onclick") {
+
+					private static final long serialVersionUID = 1L;
+
+					protected void onEvent(AjaxRequestTarget target) {
+						// add your favorite component.
+						System.out.println("CLICK EN TITLE!!!");
+						selectedRadio = TITLE_SELECTED;
+						System.out.println("selectedRadio es " + selectedRadio);
+					}
+				}));
+		
 		radioGroup.add(new Radio<String>("author", new Model<String>("author"))
 				.add(new AjaxEventBehavior("onclick") {
 
@@ -271,19 +327,6 @@ public abstract class BasePage extends WebPage {
 //						System.out.println("selectedRadio es " + selectedRadio);
 //					}
 //				}));
-
-		radioGroup.add(new Radio<String>("title", new Model<String>("title"))
-				.add(new AjaxEventBehavior("onclick") {
-
-					private static final long serialVersionUID = 1L;
-
-					protected void onEvent(AjaxRequestTarget target) {
-						// add your favorite component.
-						System.out.println("CLICK EN TITLE!!!");
-						selectedRadio = TITLE_SELECTED;
-						System.out.println("selectedRadio es " + selectedRadio);
-					}
-				}));
 
 		radioGroup.add(new Radio<String>("tag", new Model<String>("tag"))
 				.add(new AjaxEventBehavior("onclick") {
@@ -428,6 +471,8 @@ public abstract class BasePage extends WebPage {
 
 			}
 		});
+		
+		selectedRadio = TITLE_SELECTED;
 
 		return form;
 	}
@@ -555,6 +600,18 @@ public abstract class BasePage extends WebPage {
 
 		return dialog;
 
+	}
+	
+	public void setBreadcrumbs(String text) {
+		this.model.setObject(text);
+	}
+	
+	public Model getBreadcrumbs() {
+		return this.model;
+	}
+	
+	public Label getBreadcrumbsLabel() {
+		return this.breadcrumbs;
 	}
 
 	private String[][] getQuoteArray() {

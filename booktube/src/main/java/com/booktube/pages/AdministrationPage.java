@@ -49,6 +49,7 @@ public class AdministrationPage extends BasePage {
 			
 			parent.add(new LeftMenuPanel("leftPaneDiv"));
 			
+			setBreadcrumbs("Administración > ");
 			
 		}
 

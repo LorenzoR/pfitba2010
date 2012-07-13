@@ -68,6 +68,8 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
+		setBreadcrumbs("Administración > Campañas");
+		
 		parent.add(new Label("pageTitle", "Campaigns Administration Page"));
 
 		dataView = campaignList("campaignsList");

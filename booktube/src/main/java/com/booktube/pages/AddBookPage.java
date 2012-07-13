@@ -41,7 +41,7 @@ public class AddBookPage extends BasePage {
 	BookService bookService;
 
 	private User user;
-	private static Dialog dialog;
+	private static SuccessDialog<?> dialog;
 	private static PageParameters pageParameters = new PageParameters();
 
 	public AddBookPage() {
@@ -50,6 +50,8 @@ public class AddBookPage extends BasePage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
+		setBreadcrumbs("Agregar Obra >");
+		
 		user = WiaSession.get().getLoggedInUser();
 
 		// Label registerMessage = new Label("registerMessage",

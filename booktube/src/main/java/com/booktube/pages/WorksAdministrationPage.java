@@ -138,6 +138,8 @@ public class WorksAdministrationPage extends AdministrationPage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
+		setBreadcrumbs("Administración > Obras");
+		
 		//deleteConfirmationLabel.setOutputMarkupId(true);
 		//successDialogLabel.setOutputMarkupId(true);
 		

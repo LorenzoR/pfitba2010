@@ -36,7 +36,7 @@ public class NewContactPage extends BasePage {
 
 	private final User user;
 	
-	private final SuccessDialog dialog;
+	private final SuccessDialog<?> dialog;
 
 	public NewContactPage() {
 
@@ -101,7 +101,7 @@ public class NewContactPage extends BasePage {
 		add(form);
 
 		form.add(editor);
-		form.add(new AjaxSubmitLink("save") {
+		form.add(new AjaxSubmitLink("sendMessage") {
 
 			private static final long serialVersionUID = 1L;
 
