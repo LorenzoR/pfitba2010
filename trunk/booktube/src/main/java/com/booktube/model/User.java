@@ -317,6 +317,10 @@ public class User implements Serializable {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
+	public boolean isAdmin() {
+		return this.level == Level.ADMIN;
+	}
 
 //	public Set<Book> getVotes() {
 //		return votes;

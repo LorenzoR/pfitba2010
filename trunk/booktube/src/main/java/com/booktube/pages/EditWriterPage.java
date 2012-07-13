@@ -8,6 +8,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.datetime.PatternDateConverter;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -22,6 +23,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.EmailAddressValidator;
 import org.odlabs.wiquery.ui.dialog.Dialog;
 
+import com.booktube.WiaSession;
 import com.booktube.WicketApplication;
 import com.booktube.model.User;
 import com.booktube.model.User.Gender;
@@ -124,7 +126,14 @@ public class EditWriterPage extends BasePage {
 		final DropDownChoice<Level> levelDDC = new DropDownChoice<Level>(
 				"level", Arrays.asList(Level.values()),
 				new EnumChoiceRenderer<Level>(this));
-		form.add(levelDDC);
+		
+		final WebMarkupContainer levelP = new WebMarkupContainer("level_p");
+		levelP.add(levelDDC);
+		form.add(levelP);
+		
+		if ( WiaSession.get().getLoggedInUser() == null || !WiaSession.get().getLoggedInUser().isAdmin() ) {
+			levelP.setVisible(false);
+		}
 		
 		final DropDownChoice<Gender> genderSelect = new DropDownChoice<Gender>(
 				"gender", Arrays.asList(Gender.values()),

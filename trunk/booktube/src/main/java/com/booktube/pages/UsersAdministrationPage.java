@@ -148,6 +148,8 @@ public class UsersAdministrationPage extends AdministrationPage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
+		setBreadcrumbs("Administración > Usuarios");
+		
 		// deleteConfirmationLabel.setOutputMarkupId(true);
 		// successDialogLabel.setOutputMarkupId(true);
 

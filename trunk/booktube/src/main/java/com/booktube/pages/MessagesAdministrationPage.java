@@ -69,6 +69,8 @@ public class MessagesAdministrationPage extends AdministrationPage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
+		setBreadcrumbs("Administración > Mensajes");
+		
 		parent.add(new Label("pageTitle", "Messages Administration Page"));
 
 		dataView = messageList("messageList");

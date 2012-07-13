@@ -15,6 +15,8 @@ public class ReportsAdministrationPage extends AdministrationPage{
 			parent.setOutputMarkupId(true);
 			add(parent);
 			
+			setBreadcrumbs("Administración > Reportes");
+			
 			parent.add(new BookmarkablePageLink<String>("usersEvolutionReport", UsersEvolutionReport.class));
 			parent.add(new BookmarkablePageLink<String>("usersDistributionReport", UsersDistributionReport.class));
 			parent.add(new BookmarkablePageLink<String>("usersBySexReport", UsersBySexReport.class));

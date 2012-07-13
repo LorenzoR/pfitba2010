@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -20,6 +22,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import com.booktube.model.User;
+import com.booktube.pages.customComponents.DynamicLabel;
 import com.booktube.service.UserService;
 
 public class WritersPage extends BasePage {
@@ -39,6 +42,11 @@ public class WritersPage extends BasePage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
+		//final DynamicLabel breadcrumbs = new DynamicLabel("breadcrumbs");
+		//breadcrumbs.setLabel("Escritores >");
+		setBreadcrumbs("Escritores >");
+		//parent.add(breadcrumbs);
+		
 		searchUsername = null;
 		
 		List<String> list = Arrays.asList(new String[] { "A", "B", "C", "D",
@@ -53,14 +61,18 @@ public class WritersPage extends BasePage {
 //				BookmarkablePageLink link = new BookmarkablePageLink("link",
 //						HomePage.class);
 				
-				Link<String> link = new Link<String>("link") {
+				AjaxLink<?> link = new AjaxLink<Void>("link") {
 
 					private static final long serialVersionUID = 1L;
 
 					@Override
-					public void onClick() {
+					public void onClick(AjaxRequestTarget target) {
 						searchUsername = item.getModelObject() +"%s";
 						System.out.println("{{{{{{{ SearchUserName: " + searchUsername);
+						setBreadcrumbs("Escritores > " + item.getModelObject());
+						//breadcrumbs.setLabel("Escritores > " + item.getModelObject());
+						target.add(getBreadcrumbsLabel());
+						target.add(parent);
 					}
 				};
 				

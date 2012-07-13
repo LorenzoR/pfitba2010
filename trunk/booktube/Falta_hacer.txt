@@ -47,7 +47,7 @@
 
 - Pasar todo a castellano
 
-- Agregar que un usuario comun pueda editar su perfil (datos, imagen)
+----- Agregar que un usuario comun pueda editar su perfil (datos, imagen) (OK, falta agregar avatar)
 
 - Registracion, completar con un proceso de enviar mail, confirmacion, etc
 
@@ -59,11 +59,13 @@
 
 - En los menues debe quedar seleccionado la opcion elegida
 
-- Agregar bread scrums
+- Agregar bread scrums (FALTA TERMINAR)
 
 - sacar Wicket ajax debug 	
 
 - Ver pagina de escritores, mensajes, campañas cuando no hay datos
 
 - Formato de rating en busqueda avanzada (numeros con punto o coma)
+
+- Mensaje de error en enviar campaña cuando no se seleccionan destinatarios
 

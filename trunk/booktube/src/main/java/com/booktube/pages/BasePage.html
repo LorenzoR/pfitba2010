@@ -77,8 +77,11 @@
 						<a href="#" wicket:id="registerPage">Registrate</a>
 					</div>
 					<div id="welcomeLogoutLabel">
-						<span wicket:id="welcome"></span> <a href="#"
-							wicket:id="logoutLink">Logout</a>
+						<span wicket:id="welcome"></span>
+						<wicket:container wicket:id="editProfile">
+							<a href="#" wicket:id="editProfileLink">Editar Perfil</a>| 
+						</wicket:container>
+							<a href="#" wicket:id="logoutLink">Logout</a>
 					</div>
 				</div>
 
@@ -98,11 +101,11 @@
 							wicket:id="find" value="Buscar" /> 
 						<a href="#" wicket:id="advancedSearch" style="font-size: x-small;">Búsqueda Avanzada</a>
 						<br /> 
-						<span wicket:id="group">
-							<input id="ratio" wicket:id="author" type="radio" checked="checked" />
-							&nbsp;Autor
-							<input id="ratio" wicket:id="title" type="radio" />
+						<span wicket:id="group">	
+							<input id="ratio" wicket:id="title" type="radio" checked="checked" />
 							&nbsp;Titulo
+							<input id="ratio" wicket:id="author" type="radio" />
+							&nbsp;Autor
 							<input id="ratio" wicket:id="tag" type="radio" />
 							&nbsp;Tag
 						</span>
@@ -131,15 +134,14 @@
 					<DIV class="clear"></DIV>
 				</DIV>
 
-
 			</div>
+
+			
+
 			<!-- id=hd -->
 
-
-
-
-
 			<div id="bd">
+				<span wicket:id="breadcrumbs">Breadcrumbs</span>
 				<div id="yui-main">
 					<div class="yui-b">
 						<wicket:child />

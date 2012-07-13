@@ -7,6 +7,10 @@
 	<wicket:extend>
 		<div wicket:id="newCampaign">
 
+			<div wicket:id="success_dialog">
+				<wicket:container wicket:id="text"></wicket:container>
+			</div>
+
 			<h2>Nueva Campa&ntilde;a</h2>		
 
 			<form wicket:id="form">
@@ -47,7 +51,7 @@
 				<br /> 
 				<b>Text:</b>
 				<p>
-					<textarea wicket:id="textArea" cols="60" rows="15"></textarea>
+					<textarea wicket:id="campaignText" cols="60" rows="15"></textarea>
 				</p>
 
 				<div wicket:id="group">
@@ -74,7 +78,7 @@
 						</tr>
 					</table>
 				</div> 
-				<input type="button" wicket:id="save" value="Send" />
+				<input type="button" wicket:id="sendCampaign" value="Send" />
 			</form>
 
 			<span wicket:id="registerMessage">Register message</span>
