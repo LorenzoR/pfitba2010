@@ -19,7 +19,10 @@
 	    
 	    <h3 wicket:id="pageTitle" class="pageTitle"></h3>
 	    
-		<h2><a href="#" wicket:id="searchUserLink" onclick="return false;" class="searchLink">Buscar</a></h2>
+		<h2>
+			<a href="#" wicket:id="searchUserLink" onclick="return false;" class="searchLink">Buscar</a>
+			<a href="#" wicket:id="createUser" class="searchLink">Crear Usuario</a>
+		</h2>
 			<form id="searchUserFormId" wicket:id="searchUserForm" class="searchForm">
 				<div id="searchFields" wicket:id="searchFields">
 					<table class="searchview">
@@ -63,12 +66,12 @@
 				<table class="dataview smallDataview">
 					<tbody>
 						<tr>
-							<th class="title"></th>
+							<th class="title"><input type="checkbox" wicket:id="groupSelector" /></th>
 							<th class="title">Id</th>
 							<th class="title">Usuario</th>
 							<th class="title">Nombre</th>
 							<th class="title">Apellido</th>
-							<th class="title"></th>
+							<th class="title">Acciones</th>
 						</tr>
 						<tr wicket:id="writerList">
 							<td class="list"><input type="checkbox" wicket:id="checkbox" /></td>
@@ -77,9 +80,9 @@
 							<td class="list"><span wicket:id="firstname">Firstname goes here</span></td>
 							<td class="list"><span wicket:id="lastname">Lastname goes here</span></td>
 							<td class="list listTools">
-								<a href="#" wicket:id="detailsLink">Ver</a> | 
-								<a href="#" wicket:id="deleteLink">Eliminar</a> | 
-								<a href="#" wicket:id="editLink">Editar</a>
+								<a href="#" wicket:id="detailsLink"><img src="/img/view-icon.png" alt="Ver"></a>&nbsp;
+								<a href="#" wicket:id="editLink"><img src="/img/edit-icon.png" alt="Editar"></a>&nbsp;
+								<a href="#" wicket:id="deleteLink"><img src="/img/delete-icon.png" alt="Eliminar"></a>
 							</td>
 						</tr>
 					</tbody>

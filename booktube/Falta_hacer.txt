@@ -1,40 +1,69 @@
 - En el filtro de reportes, el combo list "a�o" no queda con el ultimo valor seleccionado, y aparece una opcion adicional: Seleccione uno !!!!!!!!!-
+
 - En los reportes PIE, hay que hacer que aparezca el % o un numero que representa cantidad.
+
 - Al bajar los reportes, el pdf no tiene los valores del filtro que dan como resultado dicho grafico. Agregar esto al pdf.
+
 - Revisar los combolist para que se agregue una opcion a la lista de valores obtenida de la bd, ej: todos, seleecione.. algo para 
+
   indicar que no se selecciona ningun valor.
-- Poner checkall a los listados de administracion
-- Link para crear nuevo usuario desde administracion de usuarios
+
+----- Poner checkall a los listados de administracion (OK)
+
+----- Link para crear nuevo usuario desde administracion de usuarios (OK)
+
 - Revisar el formato de las fechas que se muestra en los listados y formularios para validarlos. Debe ser uniforme.
+
 - Formato del paginador y su ubicacion al lado del boton de borrar en los listados
+
 - En reportes dejar solo icono y titulo del reporte
+
 - En los search de paginas de administracion:
 	----- Arreglar qu� pasa cuando no tira resultados (OK)
 	- Ver que columnas y campos mostrar
+
 - Buscador en el header de la pagina:
 	----- Que pasa cuando no hay resultados. 
 			(OK, NO CAMBIE NADA PORQUE NO PUDE VOLVER A REPRODUCIR EL ERROR) 
 	----- Cambiar css para que el autocompletar se vea por encima de la pagina 
 			(OK, CAMBIE EL Z-INDEX de DIV#mainmenu POR 0, NO SE SI TRAERA ALGUN PROBLEMA)
 	----- Agregar un link para busqueda avanzar (OK)
+
 - Terminar de poner estilo a las paginas
+
 - Poner un AVATAR a los usuarios
+
 - Para escribir y editar un trabajo poner texto enriquecido ( cosas basicas )
+
 ----- Ordenar los autocompletar y filtrar usando DISTINCT (OK)
+
 - Falta la posibilidad de agregar capitulos a los libros
+
 - Para usuarios comunes, en Contactenos. Al enviar un nuevo mensaje o responder, nada avisa que se envio con exito
+
 ---- Al ver detalles de un mensaje, sacar los links que permiten responder, eliminar. Sacar EDITAR (OK)
+
 ---- EN campa�as sacar la opcion editar (OK)
+
 - Pasar todo a castellano
+
 - Agregar que un usuario comun pueda editar su perfil (datos, imagen)
+
 - Registracion, completar con un proceso de enviar mail, confirmacion, etc
+
 ----- Registracion, agregar campo correo electronico (OK)
+
 - Validacion: 
 	- nombre, apellido que acepte solo letras
 	------ email (OK)
+
 - En los menues debe quedar seleccionado la opcion elegida
+
 - Agregar bread scrums
+
 - sacar Wicket ajax debug 	
+
 - Ver pagina de escritores, mensajes, campañas cuando no hay datos
+
 - Formato de rating en busqueda avanzada (numeros con punto o coma)
 

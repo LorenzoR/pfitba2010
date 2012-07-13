@@ -15,6 +15,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Check;
 import org.apache.wicket.markup.html.form.CheckGroup;
+import org.apache.wicket.markup.html.form.CheckGroupSelector;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -41,7 +42,7 @@ import com.booktube.pages.customComponents.DynamicLabel;
 import com.booktube.pages.customComponents.SuccessDialog;
 
 public class WorksAdministrationPage extends AdministrationPage {
-	private static final long serialVersionUID = 7512914721917619810L;
+	private static final long serialVersionUID = 1L;
 
 	private static SuccessDialog<?> successDialog;
 	private static Dialog deleteConfirmationDialog;
@@ -142,12 +143,12 @@ public class WorksAdministrationPage extends AdministrationPage {
 		
 		parent.add(new Label("pageTitle", "Works Administration Page"));
 
-		group = new CheckGroup<Book>("group", new ArrayList<Book>());
-
 		dataView = bookList("bookList");
 
+		group = new CheckGroup<Book>("group", new ArrayList<Book>());
 		group.add(dataView);
-
+		group.add(new CheckGroupSelector("groupSelector"));
+		
 		footerNavigator = new PagingNavigator("footerPaginator", dataView);
 		parent.add(footerNavigator);
 
