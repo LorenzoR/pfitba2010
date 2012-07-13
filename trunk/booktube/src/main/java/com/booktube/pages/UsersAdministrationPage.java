@@ -16,6 +16,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Check;
 import org.apache.wicket.markup.html.form.CheckGroup;
+import org.apache.wicket.markup.html.form.CheckGroupSelector;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
@@ -152,11 +153,11 @@ public class UsersAdministrationPage extends AdministrationPage {
 
 		parent.add(new Label("pageTitle", "Users Administration Page"));
 
-		group = new CheckGroup<User>("group", new ArrayList<User>());
-
 		dataView = writerList("writerList");
-
+		
+		group = new CheckGroup<User>("group", new ArrayList<User>());
 		group.add(dataView);
+		group.add(new CheckGroupSelector("groupSelector"));
 
 		footerNavigator = new PagingNavigator("footerPaginator", dataView);
 		parent.add(footerNavigator);
@@ -177,6 +178,8 @@ public class UsersAdministrationPage extends AdministrationPage {
 		WebMarkupContainer searchButton = createButtonWithEffect(
 				"searchUserLink", "searchFields", new SlideToggle());
 		parent.add(searchButton);
+		
+		parent.add(new BookmarkablePageLink<RegisterPage>("createUser", RegisterPage.class));
 
 		if (dataView.getItemCount() > 0) {
 			feedbackMessage.setVisible(false);

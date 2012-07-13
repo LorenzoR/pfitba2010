@@ -78,12 +78,12 @@
 <table class="dataview">
 	<tbody>
 		<tr>
-			<th class="title"></th>
+			<th class="title"><input type="checkbox" wicket:id="groupSelector" /></th>
 			<th class="title">T&iacute;tulo</th>
 			<th class="title">Autor</th>
 			<th class="title">Tags</th>
 			<th class="title">Publicaci&oacute;n</th>
-			<th class="title"></th>
+			<th class="title">Acciones</th>
 		</tr>
 		<tr wicket:id="bookList">
 			<td class="list"><input type="checkbox" wicket:id="checkbox" /></td>
@@ -101,9 +101,9 @@
 			</td>
 			<td class="list"><span wicket:id="publishDate">Date goes here</span></td>
 			<td class="list listTools">
-				<a href="#" wicket:id="detailsLink">Ver</a> | 
-				<a href="#" wicket:id="deleteLink">Eliminar</a> | 
-				<a href="#" wicket:id="editLink">Editar</a>
+				<a href="#" wicket:id="detailsLink"><img src="/img/view-icon.png" alt="Ver"></a>&nbsp;
+				<a href="#" wicket:id="editLink"><img src="/img/edit-icon.png" alt="Editar"></a>&nbsp;
+				<a href="#" wicket:id="deleteLink"><img src="/img/delete-icon.png" alt="Eliminar"></a>
 			</td>
 		</tr>
 	</tbody>

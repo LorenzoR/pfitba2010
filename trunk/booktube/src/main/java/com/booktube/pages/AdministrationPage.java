@@ -22,7 +22,7 @@ import com.booktube.service.BookService;
 import com.booktube.service.UserService;
 
 public class AdministrationPage extends BasePage {
-	private static final long serialVersionUID = -8681226479793317569L;
+	private static final long serialVersionUID = 1L;
 
 	@SpringBean
 	BookService bookService;
@@ -30,7 +30,7 @@ public class AdministrationPage extends BasePage {
 	@SpringBean
 	UserService userService;
 
-	protected static final int ITEMS_PER_PAGE = 5;
+	protected static final int ITEMS_PER_PAGE = 10;
 	
 	final protected String dateFormat = "dd/mm/yy";
 	final protected DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
