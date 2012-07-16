@@ -21,6 +21,7 @@ import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.CheckGroupSelector;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.odlabs.wiquery.ui.datepicker.DatePicker;
 
@@ -45,6 +46,8 @@ public class NewCampaignPage extends BasePage {
 	private User user;
 	
 	private final SuccessDialog<?> dialog;
+	
+	final PageParameters parameters;
 
 	public NewCampaignPage() {
 
@@ -65,8 +68,11 @@ public class NewCampaignPage extends BasePage {
 		Label registerMessage = new Label("registerMessage",
 				"Debe registrarse para poder contactarnos.");
 		parent.add(registerMessage);
+		
+		parameters = new PageParameters();
+		//parameters.set("campaignId", campaign.getId());
 
-		dialog = new SuccessDialog<CampaignsPage>("success_dialog", "Campaña enviada con éxito!", CampaignsPage.class, null);
+		dialog = new SuccessDialog<ShowCampaignPage>("success_dialog", "Campaña enviada con éxito!", ShowCampaignPage.class, parameters);
 		parent.add(dialog);
 		
 		if (user == null) {
@@ -303,6 +309,8 @@ public class NewCampaignPage extends BasePage {
 				campaignService.sendCampaign(campaign, receivers);
 
 				campaignService.insertCampaign(campaign);
+				
+				parameters.set("campaignId", campaign.getId());
 				
 				dialog.open(target);
 			}

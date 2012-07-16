@@ -24,6 +24,7 @@ public interface UserService {
     public List<String> getAllCountries();
     public void updateUser(User user);
     public void deleteUser(User user);
+    public void deleteUsers(List<User> users);
     public User getUser(Long id);
     public User getUser(String username);
     public void insertUser(User user);

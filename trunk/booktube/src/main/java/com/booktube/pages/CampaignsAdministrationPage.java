@@ -183,7 +183,7 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 
 			protected void populateItem(Item<Campaign> item) {
 				final Campaign campaign = (Campaign) item.getModelObject();
-				final String receivers = getReceivers(campaign);
+				//final String receivers = getReceivers(campaign);
 				System.out.println("MESSAGE: " + campaign.getText());
 				CompoundPropertyModel<Campaign> model = new CompoundPropertyModel<Campaign>(
 						campaign);
@@ -193,10 +193,10 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 				parameters.set("messageId", campaign.getId());
 				// item.add(new Label("id"));
 				item.add(new Check<Campaign>("checkbox", item.getModel()));
-				item.add(new Label("id"));
+//				item.add(new Label("id"));
 				item.add(new Label("subject"));
 				item.add(new Label("sender"));
-				item.add(new Label("receiver", receivers));
+				//item.add(new Label("receiver", receivers));
 				item.add(new Label("date"));
 
 				item.add(new Link<Campaign>("detailsLink", item.getModel()) {

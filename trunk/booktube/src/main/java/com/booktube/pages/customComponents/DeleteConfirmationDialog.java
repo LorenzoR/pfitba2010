@@ -1,6 +1,7 @@
 package com.booktube.pages.customComponents;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.odlabs.wiquery.core.javascript.JsScope;
 import org.odlabs.wiquery.ui.dialog.AjaxDialogButton;
@@ -21,7 +22,7 @@ public class DeleteConfirmationDialog<C extends IRequestablePage> extends Dialog
 		
 		final DeleteConfirmationDialog dialog = this;
 		
-		dynamicLabel = new DynamicLabel("text");
+		dynamicLabel = new DynamicLabel("text", new Model<String>());
 //		dynamicLabel.setLabel(text);
 		this.add(dynamicLabel);
 		

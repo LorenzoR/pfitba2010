@@ -29,10 +29,10 @@ import com.booktube.service.UserService;
 
 public class LoadDataPage extends BasePage {
 
-	private final int CANT_CAMPAIGNS = 20;
-	private final int CANT_USERS = 30;
-	private final int CANT_BOOKS = 100;
-	private final int CANT_MSG = 20;
+	private final int CANT_CAMPAIGNS = 5;
+	private final int CANT_USERS = 10;
+	private final int CANT_BOOKS = 20;
+	private final int CANT_MSG = 5;
 
 	private static final long serialVersionUID = 1L;
 
@@ -172,7 +172,17 @@ public class LoadDataPage extends BasePage {
 		this.admin.setCountry("Country 1");
 		this.admin.setCity("City 1");
 		this.admin.setEmail(this.admin.getUsername() + "@mail.com");
-
+		
+		User admin2 = new User("admin2", "admin2", "nombreAdmin", "apellidoAdmin",
+				User.Level.ADMIN);
+		admin2.setBirthdate(new Date());
+		admin2.setGender(Gender.MALE);
+		admin2.setCountry("Country 1");
+		admin2.setCity("City 1");
+		admin2.setEmail(this.admin.getUsername() + "@mail.com");
+		userService.insertUser(admin2);
+		
+		
 		userService.insertUser(user);
 		users.add(user);
 		userService.insertUser(this.admin);
