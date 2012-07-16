@@ -126,8 +126,13 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 		// Set<MessageDetail> messageDetail = new HashSet<MessageDetail>();
 
 		for (User aUser : receivers) {
-			insert(new Message(message.getType(), message.getSubject(),
-					message.getText(), message.getSender(), aUser));
+			Message newMessage = new Message(message.getType(), message.getSubject(),
+					message.getText(), message.getSender(), aUser);
+			
+			insert(newMessage);
+			
+			System.out.println("MESSAGE ID> " + message.getId());
+			System.out.println("NEW MESSAGFE IOD> " + newMessage.getId());
 			// messageDetail.add(new MessageDetail(aUser, message));
 		}
 

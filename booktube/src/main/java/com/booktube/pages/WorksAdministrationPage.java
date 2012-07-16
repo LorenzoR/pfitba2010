@@ -19,8 +19,6 @@ import org.apache.wicket.markup.html.form.CheckGroupSelector;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
@@ -37,7 +35,6 @@ import org.odlabs.wiquery.ui.dialog.Dialog;
 import org.odlabs.wiquery.ui.dialog.DialogButton;
 
 import com.booktube.model.Book;
-import com.booktube.model.BookTag;
 import com.booktube.pages.customComponents.DynamicLabel;
 import com.booktube.pages.customComponents.SuccessDialog;
 
@@ -83,7 +80,7 @@ public class WorksAdministrationPage extends AdministrationPage {
 //	private Label deleteConfirmationLabel = new Label(
 //			"delete_confirmation_dialog_text", deleteConfirmationModel);
 	
-	private DynamicLabel deleteConfirmationLabel = new DynamicLabel("delete_confirmation_dialog_text");
+	private DynamicLabel deleteConfirmationLabel = new DynamicLabel("delete_confirmation_dialog_text", new Model<String>());
 //	private DynamicLabel successDialogLabel = new DynamicLabel("success_dialog_text");
 	
 //	Model<String> successDialogModel = new Model<String>() {
@@ -207,30 +204,6 @@ public class WorksAdministrationPage extends AdministrationPage {
 
 				item.add(new Check<Book>("checkbox", item.getModel()));
 
-				List<BookTag> tagList = null;
-
-				if (book.getTags() != null) {
-					tagList = new ArrayList<BookTag>(book.getTags());
-				}
-
-				item.add(new PropertyListView<Object>("tagList", tagList) {
-
-					private static final long serialVersionUID = -7951435365391555660L;
-
-					protected void populateItem(ListItem<Object> item) {
-						BookTag tag = (BookTag) item.getModelObject();
-						final PageParameters parameters = new PageParameters();
-						parameters.set("tag", tag);
-						parameters.set("type", "tag");
-
-						BookmarkablePageLink<Object> bpl = new BookmarkablePageLink<Object>(
-								"tagLink", BooksPage.class, parameters);
-						bpl.add(new Label("tagName", tag.getValue()));
-						item.add(bpl);
-
-					}
-				});
-
 				final PageParameters parameters = new PageParameters();
 				parameters.set("book", book.getId().toString());
 				// item.add(new Label("title", book.getTitle()));
@@ -264,8 +237,7 @@ public class WorksAdministrationPage extends AdministrationPage {
 				bplAuthor.add(new Label("authorName", book.getAuthor()
 						.getUsername()));
 				item.add(bplAuthor);
-				item.add(new Label("publishDate", book.getPublishDate()
-						.toString()));
+				item.add(new Label("publishDate"));
 
 				item.add(new BookmarkablePageLink<Object>("editLink",
 						EditBookPage.class, detailsParameter));

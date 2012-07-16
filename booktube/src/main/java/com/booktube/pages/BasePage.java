@@ -66,22 +66,22 @@ public abstract class BasePage extends WebPage {
 
 	private Dialog loginErrorDialog;
 
-	private static Model<String> model = new Model<String>() {
-
-		private static final long serialVersionUID = 1L;
-
-		private String text;
-
-		public String getObject() {
-			return text;
-		}
-
-		public void setObject(String value) {
-			this.text = value;
-		}
-	};
+//	private static Model<String> model = new Model<String>() {
+//
+//		private static final long serialVersionUID = 1L;
+//
+//		private String text;
+//
+//		public String getObject() {
+//			return text;
+//		}
+//
+//		public void setObject(String value) {
+//			this.text = value;
+//		}
+//	};
 	
-	private Label breadcrumbs = new Label("breadcrumbs", model);
+	private DynamicLabel breadcrumbs = new DynamicLabel("breadcrumbs", new Model<String>());
 	
 	public BasePage() {
 				
@@ -603,12 +603,12 @@ public abstract class BasePage extends WebPage {
 	}
 	
 	public void setBreadcrumbs(String text) {
-		this.model.setObject(text);
+		this.breadcrumbs.setLabel(text);
 	}
 	
-	public Model getBreadcrumbs() {
-		return this.model;
-	}
+//	public Model getBreadcrumbs() {
+//		return this.breadcrumbs.get;
+//	}
 	
 	public Label getBreadcrumbsLabel() {
 		return this.breadcrumbs;

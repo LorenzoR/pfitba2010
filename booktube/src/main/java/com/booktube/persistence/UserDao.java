@@ -27,6 +27,7 @@ public interface UserDao {
     public void update(User user);
     public Long insert(User user);
     public void delete(User user);
+    public void deleteUsers(List<User> users);
     public int getCount();
     public int getCount(Long userId, String username, Gender gender, Integer lowerAge, Integer higherAge, String country, Date lowDate, Date highDate);
     public Iterator<User> iterator(int first, int count);

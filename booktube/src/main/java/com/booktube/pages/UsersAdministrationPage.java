@@ -3,6 +3,7 @@ package com.booktube.pages;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -86,7 +87,7 @@ public class UsersAdministrationPage extends AdministrationPage {
 	// };
 
 	private DynamicLabel deleteConfirmationLabel = new DynamicLabel(
-			"delete_confirmation_dialog_text");
+			"delete_confirmation_dialog_text", new Model<String>());
 
 	// Model<String> successDialogModel = new Model<String>() {
 	//
@@ -216,7 +217,7 @@ public class UsersAdministrationPage extends AdministrationPage {
 				item.add(new Check<User>("checkbox", item.getModel()));
 				final PageParameters parameters = new PageParameters();
 				parameters.set("userId", user.getId());
-				item.add(new Label("id"));
+//				item.add(new Label("id"));
 				item.add(new Label("username"));
 				item.add(new Label("firstname"));
 				item.add(new Label("lastname"));
@@ -416,10 +417,22 @@ public class UsersAdministrationPage extends AdministrationPage {
 				@SuppressWarnings("unchecked")
 				List<User> removedUsers = (List<User>) group
 						.getDefaultModelObject();
+				
+				userService.deleteUsers(removedUsers);
+				
+//				Collection<User> removedUsers = group.getConvertedInput();
+//				
+//				Iterator<User> iterator = removedUsers.iterator();
+//				
+//				while ( iterator.hasNext() ) {
+//					User deleteUser = iterator.next();
+//					System.out.println("------------- USER: " + deleteUser);
+//					userService.deleteUser(deleteUser);
+//				}
 
-				for (User aUser : removedUsers) {
-					userService.deleteUser(aUser);
-				}
+//				for (User aUser : removedUsers) {
+//					userService.deleteUser(aUser);
+//				}
 				
 				if (dataView.getItemCount() <= 0) {
 					this.setVisible(false);

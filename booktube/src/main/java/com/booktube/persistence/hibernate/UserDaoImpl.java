@@ -45,7 +45,6 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 	}
 
 	public boolean usernameExists(String username) {
-		getYearAndField();
 		return getUser(username) != null;
 	}
 
@@ -141,6 +140,21 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 		super.delete(user);
 		// getSession().delete(user);
 		// getSession().flush();
+	}
+	
+	public void deleteUsers(List<User> users) {
+		Iterator<User> iterator = users.iterator();
+		
+		while ( iterator.hasNext() ) {
+			User deleteUser = iterator.next();
+			System.out.println("------------- USER: " + deleteUser);
+			getSession().delete(deleteUser);
+			//getSession().clear();
+			getSession().flush();
+			getSession().clear();
+		}
+		
+		
 	}
 
 	public int getCount() {

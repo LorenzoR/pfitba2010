@@ -55,6 +55,10 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(User user) {
     	itemDao.delete(user);
     }
+    
+    public void deleteUsers(List<User> users) {
+    	itemDao.deleteUsers(users);
+    }
 
     public User getUser(Long id) {
         return itemDao.getUser(id);

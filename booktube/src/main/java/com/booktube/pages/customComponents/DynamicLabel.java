@@ -7,22 +7,22 @@ public class DynamicLabel extends Label {
 
 	private static final long serialVersionUID = 1L;
 
-	private static Model<String> model = new Model<String>() {
+//	private static Model<String> model = new Model<String>() {
+//
+//		private static final long serialVersionUID = 1L;
+//
+//		private String text;
+//
+//		public String getObject() {
+//			return text;
+//		}
+//
+//		public void setObject(String value) {
+//			this.text = value;
+//		}
+//	};
 
-		private static final long serialVersionUID = 1L;
-
-		private String text;
-
-		public String getObject() {
-			return text;
-		}
-
-		public void setObject(String value) {
-			this.text = value;
-		}
-	};
-
-	public DynamicLabel(String id) {
+	public DynamicLabel(String id, Model<String> model) {
 		super(id, model);
 		this.setOutputMarkupId(true);
 	}
@@ -30,12 +30,14 @@ public class DynamicLabel extends Label {
 	public void setLabel(String text) {
 		//DynamicLabel.model.setObject(text);
 		//DynamicLabel.model.getObject();
-		model.setObject(text);
+		//model.setObject(text);
+		this.setDefaultModelObject(text);
 	}
 
 	public String getLabel() {
 		//return DynamicLabel.model.getObject();
-		return model.getObject();
+		//return model.getObject();
+		return (String) this.getDefaultModelObject();
 	}
 
 }

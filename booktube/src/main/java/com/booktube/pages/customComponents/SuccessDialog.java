@@ -3,6 +3,7 @@ package com.booktube.pages.customComponents;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.odlabs.wiquery.ui.dialog.AjaxDialogButton;
@@ -17,7 +18,7 @@ public class SuccessDialog<C extends IRequestablePage> extends Dialog {
 			final PageParameters pageParameters) {
 		super(id);
 		
-		dynamicLabel = new DynamicLabel("text");
+		dynamicLabel = new DynamicLabel("text", new Model<String>());
 		dynamicLabel.setLabel(text);
 		this.add(dynamicLabel);
 
@@ -39,7 +40,7 @@ public class SuccessDialog<C extends IRequestablePage> extends Dialog {
 	public SuccessDialog(String id, String text, final WebPage backPage) {
 		super(id);
 		
-		dynamicLabel = new DynamicLabel("text");
+		dynamicLabel = new DynamicLabel("text", new Model<String>());
 		dynamicLabel.setLabel(text);
 		this.add(dynamicLabel);
 
@@ -63,7 +64,7 @@ public class SuccessDialog<C extends IRequestablePage> extends Dialog {
 	public SuccessDialog(String id, String text, final WebMarkupContainer parent) {
 		super(id);
 		
-		dynamicLabel = new DynamicLabel("text");
+		dynamicLabel = new DynamicLabel("text", new Model<String>());
 		dynamicLabel.setLabel(text);
 		this.add(dynamicLabel);
 		//final SuccessDialog<C> dialog = this;
