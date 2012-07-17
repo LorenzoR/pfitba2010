@@ -20,23 +20,23 @@
 		<span wicket:id="text"></span>
 	</div>
 
-	<h2>New Book</h2>
+	<h2><wicket:message key="newBook">New Book</wicket:message></h2>
 	<p wicket:id="registerMessage">
 		Debe <a href="#" wicket:id="registerLink">registrarse</a> o <a href="#" wicket:id="loginLink">iniciar sesion</a> para poder publicar.
 	</p>
 <!-- 	<span wicket:id="registerMessage"></span> -->
 	<form wicket:id="form">
-		<p>Title: <input type="text" wicket:id="title" value=""/></p>
+		<p><wicket:message key="title">Title</wicket:message>: <input type="text" wicket:id="title" value=""/></p>
 		<br/>
-		<p>Category: <input type="text" wicket:id="category" value=""/></p>
+		<p><wicket:message key="category">Category</wicket:message>: <input type="text" wicket:id="category" value=""/></p>
 		<br/>
-		<p>Subcategory: <input type="text" wicket:id="subcategory" value=""/></p>
+		<p><wicket:message key="subcategory">Subcategory</wicket:message>: <input type="text" wicket:id="subcategory" value=""/></p>
 		<br/>
-		<p>Tags: <input type="text" wicket:id="tags" value="" size="100" /></p>
+		<p><wicket:message key="tags">Tags</wicket:message>: <input type="text" wicket:id="tags" value="" size="100" /></p>
 		<br/>
-		Text: 
+		<wicket:message key="text">Text</wicket:message>: 
 		<p><textarea wicket:id="text" cols="120" rows="50"></textarea></p>
-		<input type="button" wicket:id="save" value="Add Book"/>
+		<input type="button" wicket:id="save" value="Add Book" wicket:message="value:addBook"/>
 	</form>
 
 </div>

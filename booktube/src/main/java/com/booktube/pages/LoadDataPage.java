@@ -30,9 +30,9 @@ import com.booktube.service.UserService;
 public class LoadDataPage extends BasePage {
 
 	private final int CANT_CAMPAIGNS = 5;
-	private final int CANT_USERS = 10;
-	private final int CANT_BOOKS = 20;
-	private final int CANT_MSG = 5;
+	private final int CANT_USERS = 50;
+	private final int CANT_BOOKS = 200;
+	private final int CANT_MSG = 10;
 
 	private static final long serialVersionUID = 1L;
 

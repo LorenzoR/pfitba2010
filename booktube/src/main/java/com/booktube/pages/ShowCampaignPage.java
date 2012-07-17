@@ -14,6 +14,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import com.booktube.WiaSession;
 import com.booktube.model.Campaign;
 import com.booktube.model.User;
+import com.booktube.model.User.Level;
 import com.booktube.service.CampaignService;
 
 public class ShowCampaignPage extends BasePage {
@@ -40,38 +41,41 @@ public class ShowCampaignPage extends BasePage {
 
 		String newTitle = "Booktube - Campaign " + campaign.getSubject();
 		super.get("pageTitle").setDefaultModelObject(newTitle);
-		
-		//List<Campaign> campaignList = campaign.getAllAnswers();
+
+		// List<Campaign> campaignList = campaign.getAllAnswers();
 		List<Campaign> campaignList = new ArrayList<Campaign>();
 		campaignList.add(campaign);
-		
-		//List<Message> messageList = getAnswers(message);
-		
-		//Collections.sort(messageList, Message.getDateComparator());
-		
-		ListView<Campaign> listview = new ListView<Campaign>("campaignList", campaignList) {
+
+		// List<Message> messageList = getAnswers(message);
+
+		// Collections.sort(messageList, Message.getDateComparator());
+
+		ListView<Campaign> listview = new ListView<Campaign>("campaignList",
+				campaignList) {
 			private static final long serialVersionUID = 1L;
 
 			protected void populateItem(ListItem<Campaign> item) {
 				final Campaign campaign = (Campaign) item.getModelObject();
-				CompoundPropertyModel<Campaign> model = new CompoundPropertyModel<Campaign>(campaign);
+				CompoundPropertyModel<Campaign> model = new CompoundPropertyModel<Campaign>(
+						campaign);
 				item.setDefaultModel(model);
-				
+
 				item.add(new Label("subject"));
 				item.add(new Label("sender"));
 				item.add(new Label("date"));
 				item.add(new Label("text"));
 			}
 		};
-		
+
 		parent.add(listview);
-		
-		campaignService.getCampaignDetail(campaign, user).setRead(true);
-		campaignService.updateCampaign(campaign);
-		
-		//campaign.setRead(true);
-		//messageService.updateMessage(message);
-		
+
+		if (user.getLevel() != Level.ADMIN) {
+			campaignService.getCampaignDetail(campaign, user).setRead(true);
+			campaignService.updateCampaign(campaign);
+		}
+
+		// campaign.setRead(true);
+		// messageService.updateMessage(message);
 
 	}
 

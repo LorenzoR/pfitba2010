@@ -39,23 +39,23 @@
 </div>
 <div wicket:id="books" style="width: 700px; float: right; min-height: 500px;">
 
-	<h2>Book List</h2>
+	<h2><wicket:message key="bookList">Book List</wicket:message></h2>
 	
-	<div wicket:id="bookList"  style="border: 1px black solid; margin-bottom: 5px; padding-left: 2px;">
+	<div wicket:id="bookList" style="border: 1px black solid; margin-bottom: 5px; padding-left: 2px;">
 		<h3><a href="#" wicket:id="viewLink"><span wicket:id="title">Title goes here</span></a></h3>
-		by <a href="#" wicket:id="authorLink"><strong wicket:id="authorName">Author goes here</strong></a>
+		<wicket:message key="by">By</wicket:message> <a href="#" wicket:id="authorLink"><strong wicket:id="authorName">Author goes here</strong></a>
 		<br />
-		Publish Date: <span wicket:id="publishDate">Date goes here</span>
+		<wicket:message key="publishDate">Publish Date</wicket:message>: <span wicket:id="publishDate">Date goes here</span>
 		<p>
-			<b>Tags:</b> 
+			<b><wicket:message key="tags">Tags</wicket:message>:</b> 
 			<span wicket:id="tagList">
 				<a href="#" wicket:id="tagLink">#<span wicket:id="tagName"></span></a>&nbsp;
 			</span>
 		</p>
 		<p>
-			<a href="#" wicket:id="detailsLink">Ver</a> | 
-			<a href="#" wicket:id="deleteLink">Eliminar</a> | 
-			<a href="#" wicket:id="editLink">Editar</a>
+			<a href="#" wicket:id="detailsLink"><wicket:message key="view">View</wicket:message></a> | 
+			<a href="#" wicket:id="deleteLink"><wicket:message key="delete">Delete</wicket:message></a> | 
+			<a href="#" wicket:id="editLink"><wicket:message key="edit">Edit</wicket:message></a>
 		</p>
 	</div>
 	<div wicket:id="feedbackMessage"></div>

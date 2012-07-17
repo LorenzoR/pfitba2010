@@ -13,11 +13,12 @@ public class SuccessDialog<C extends IRequestablePage> extends Dialog {
 
 	private static final long serialVersionUID = 1L;
 	private DynamicLabel dynamicLabel;
-	
+	private boolean redirect = true;
+
 	public SuccessDialog(String id, String text, final Class<C> webPage,
 			final PageParameters pageParameters) {
 		super(id);
-		
+
 		dynamicLabel = new DynamicLabel("text", new Model<String>());
 		dynamicLabel.setLabel(text);
 		this.add(dynamicLabel);
@@ -30,7 +31,11 @@ public class SuccessDialog<C extends IRequestablePage> extends Dialog {
 			protected void onButtonClicked(AjaxRequestTarget target) {
 				// do your cancel logic here
 				System.out.println("BUTTON CLICKED!!");
-				setResponsePage(webPage, pageParameters);
+				if (redirect) {
+					setResponsePage(webPage, pageParameters);
+				} else {
+					SuccessDialog.this.close(target);
+				}
 			}
 		};
 
@@ -39,7 +44,7 @@ public class SuccessDialog<C extends IRequestablePage> extends Dialog {
 
 	public SuccessDialog(String id, String text, final WebPage backPage) {
 		super(id);
-		
+
 		dynamicLabel = new DynamicLabel("text", new Model<String>());
 		dynamicLabel.setLabel(text);
 		this.add(dynamicLabel);
@@ -52,7 +57,11 @@ public class SuccessDialog<C extends IRequestablePage> extends Dialog {
 			protected void onButtonClicked(AjaxRequestTarget target) {
 				// do your cancel logic here
 				System.out.println("BUTTON CLICKED!!");
-				setResponsePage(backPage);
+				if (redirect) {
+					setResponsePage(backPage);
+				} else {
+					SuccessDialog.this.close(target);
+				}
 
 			}
 		};
@@ -60,14 +69,14 @@ public class SuccessDialog<C extends IRequestablePage> extends Dialog {
 		this.setButtons(ok);
 
 	}
-	
+
 	public SuccessDialog(String id, String text, final WebMarkupContainer parent) {
 		super(id);
-		
+
 		dynamicLabel = new DynamicLabel("text", new Model<String>());
 		dynamicLabel.setLabel(text);
 		this.add(dynamicLabel);
-		//final SuccessDialog<C> dialog = this;
+		// final SuccessDialog<C> dialog = this;
 
 		AjaxDialogButton ok = new AjaxDialogButton("OK") {
 
@@ -77,7 +86,7 @@ public class SuccessDialog<C extends IRequestablePage> extends Dialog {
 			protected void onButtonClicked(AjaxRequestTarget target) {
 				// do your cancel logic here
 				System.out.println("BUTTON CLICKED!!");
-				//dialog.close(target);
+				// dialog.close(target);
 				SuccessDialog.this.close(target);
 				target.add(parent);
 			}
@@ -86,14 +95,18 @@ public class SuccessDialog<C extends IRequestablePage> extends Dialog {
 		this.setButtons(ok);
 
 	}
-	
+
 	public DynamicLabel getLabel() {
 		return dynamicLabel;
 	}
-	
+
 	public void setText(String text) {
 		dynamicLabel.setLabel(text);
-		//System.out.println("+++++" + dynamicLabel.getLabel());
+		// System.out.println("+++++" + dynamicLabel.getLabel());
+	}
+
+	public void setRedirect(boolean redirect) {
+		this.redirect = redirect;
 	}
 
 }

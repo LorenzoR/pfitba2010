@@ -1,8 +1,9 @@
-	package com.booktube.pages;
+package com.booktube.pages;
 
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -27,8 +28,10 @@ import org.odlabs.wiquery.ui.datepicker.DatePicker;
 
 import com.booktube.WiaSession;
 import com.booktube.model.Campaign;
+import com.booktube.model.CampaignDetail;
 import com.booktube.model.User;
 import com.booktube.model.User.Gender;
+import com.booktube.model.User.Level;
 import com.booktube.pages.customComponents.SuccessDialog;
 import com.booktube.service.MessageService;
 import com.booktube.service.UserService;
@@ -44,9 +47,9 @@ public class NewCampaignPage extends BasePage {
 	UserService userService;
 
 	private User user;
-	
+
 	private final SuccessDialog<?> dialog;
-	
+
 	final PageParameters parameters;
 
 	public NewCampaignPage() {
@@ -68,13 +71,15 @@ public class NewCampaignPage extends BasePage {
 		Label registerMessage = new Label("registerMessage",
 				"Debe registrarse para poder contactarnos.");
 		parent.add(registerMessage);
-		
-		parameters = new PageParameters();
-		//parameters.set("campaignId", campaign.getId());
 
-		dialog = new SuccessDialog<ShowCampaignPage>("success_dialog", "Campaña enviada con éxito!", ShowCampaignPage.class, parameters);
+		parameters = new PageParameters();
+		// parameters.set("campaignId", campaign.getId());
+
+		dialog = new SuccessDialog<ShowCampaignPage>("success_dialog",
+				"Campaña enviada con éxito!", ShowCampaignPage.class,
+				parameters);
 		parent.add(dialog);
-		
+
 		if (user == null) {
 			form.setVisible(false);
 		} else {
@@ -101,14 +106,14 @@ public class NewCampaignPage extends BasePage {
 				"gender", Arrays.asList(Gender.values()),
 				new EnumChoiceRenderer<Gender>(this));
 		form.add(genderSelect);
-		
+
 		final TextField<Integer> lowAgeField = new TextField<Integer>("lowAge",
-				new Model<Integer>());
+				new Model<Integer>(), Integer.class);
 
 		form.add(lowAgeField);
 
-		final TextField<Integer> highAgeField = new TextField<Integer>("highAge",
-				new Model<Integer>());
+		final TextField<Integer> highAgeField = new TextField<Integer>(
+				"highAge", new Model<Integer>(), Integer.class);
 
 		form.add(highAgeField);
 
@@ -122,10 +127,11 @@ public class NewCampaignPage extends BasePage {
 
 		List<String> countryList = userService.getAllCountries();
 
-//		final DropDownChoice<String> countrySelect = new DropDownChoice<String>(
-//				"country", new PropertyModel<String>(this, ""), countryList);
-//
-//		form.add(countrySelect);
+		// final DropDownChoice<String> countrySelect = new
+		// DropDownChoice<String>(
+		// "country", new PropertyModel<String>(this, ""), countryList);
+		//
+		// form.add(countrySelect);
 		final DropDownChoice<String> countrySelect = new DropDownChoice<String>(
 				"country", countryList);
 		form.add(countrySelect);
@@ -157,7 +163,8 @@ public class NewCampaignPage extends BasePage {
 
 			personsList.remove(currentUserIndex);
 		}
-		final CheckGroup<Campaign> group = new CheckGroup<Campaign>("group", new ArrayList<Campaign>());
+		final CheckGroup<Campaign> group = new CheckGroup<Campaign>("group",
+				new ArrayList<Campaign>());
 
 		add(form);
 		form.add(group);
@@ -170,7 +177,7 @@ public class NewCampaignPage extends BasePage {
 
 				item.setDefaultModel(new CompoundPropertyModel<User>(
 						(User) item.getModelObject()));
-				
+
 				item.add(new Check<User>("checkbox", item.getModel()));
 				item.add(new Label("firstname"));
 				item.add(new Label("lastname"));
@@ -192,95 +199,103 @@ public class NewCampaignPage extends BasePage {
 						.getDefaultModelObjectAsString(), text
 						.getDefaultModelObjectAsString(), user);
 
-				
 				String country = countrySelect.getConvertedInput();
-				
-				System.out.println("+++++++++ COUNTRY " + country);
-				
-//				String country;
-//
-//				if (!countrySelect.getDefaultModelObjectAsString().isEmpty()) {
-//					country = countrySelect.getDefaultModelObjectAsString();
-//				} else {
-//					country = null;
-//				}
 
-//				String genderString = genderSelect
-//						.getDefaultModelObjectAsString();
-//
-//				if (!genderSelect.getDefaultModelObjectAsString().isEmpty()) {
-//					genderString = genderSelect.getDefaultModelObjectAsString();
-//				} else {
-//					genderString = null;
-//				}
-//				
-//				System.out.println("---CONVERTED INPUT: " + genderSelect.getConvertedInput());
+				System.out.println("+++++++++ COUNTRY " + country);
+
+				// String country;
+				//
+				// if (!countrySelect.getDefaultModelObjectAsString().isEmpty())
+				// {
+				// country = countrySelect.getDefaultModelObjectAsString();
+				// } else {
+				// country = null;
+				// }
+
+				// String genderString = genderSelect
+				// .getDefaultModelObjectAsString();
+				//
+				// if (!genderSelect.getDefaultModelObjectAsString().isEmpty())
+				// {
+				// genderString = genderSelect.getDefaultModelObjectAsString();
+				// } else {
+				// genderString = null;
+				// }
+				//
+				// System.out.println("---CONVERTED INPUT: " +
+				// genderSelect.getConvertedInput());
 
 				Gender gender = genderSelect.getConvertedInput();
 
-//				if (genderString.equals("Masculino")) {
-//					gender = Gender.MALE;
-//				} else if (genderString.equals("Femenino")) {
-//					gender = Gender.FEMALE;
-//				} else {
-//					gender = null;
-//				}
+				// if (genderString.equals("Masculino")) {
+				// gender = Gender.MALE;
+				// } else if (genderString.equals("Femenino")) {
+				// gender = Gender.FEMALE;
+				// } else {
+				// gender = null;
+				// }
 
-				System.out.println("---LOW AGE: " + lowAgeField.getConvertedInput());
-				
+				System.out.println("---LOW AGE: "
+						+ lowAgeField.getConvertedInput());
+				System.out.println("---HIGH AGE: "
+						+ highAgeField.getConvertedInput());
+				// System.out.println("++++++ CLASSS: " +
+				// lowAgeField.getConvertedInput().getClass());
+
 				Integer lowAge = lowAgeField.getConvertedInput();
+
 				Integer highAge = highAgeField.getConvertedInput();
 
-//				try {
-//					lowAge = Integer.valueOf(lowAgeField
-//							.getDefaultModelObjectAsString());
-//				} catch (NumberFormatException nfe) {
-//					lowAge = null;
-//				}
-//
-//				try {
-//					highAge = Integer.valueOf(highAgeField
-//							.getDefaultModelObjectAsString());
-//				} catch (NumberFormatException nfe) {
-//					highAge = null;
-//				}
+				// try {
+				// lowAge = Integer.valueOf(lowAgeField
+				// .getDefaultModelObjectAsString());
+				// } catch (NumberFormatException nfe) {
+				// lowAge = null;
+				// }
+				//
+				// try {
+				// highAge = Integer.valueOf(highAgeField
+				// .getDefaultModelObjectAsString());
+				// } catch (NumberFormatException nfe) {
+				// highAge = null;
+				// }
 
-//				DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+				// DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
 				Date lowDate = lowRegistrationDateField.getConvertedInput();
 				Date highDate = highRegistrationDateField.getConvertedInput();
-				
-//				Date lowDate = null;
-//
-//				System.out.println(lowRegistrationDateField.getConvertedInput());
-//				
-//				if (!lowRegistrationDateField.getDefaultModelObjectAsString()
-//						.isEmpty()) {
-//					try {
-//						lowDate = (Date) formatter
-//								.parse(lowRegistrationDateField
-//										.getDefaultModelObjectAsString());
-//					} catch (ParseException e) {
-//						lowDate = null;
-//					}
-//				} else {
-//					lowDate = null;
-//				}
-//
-//				Date highDate = null;
-//
-//				if (!lowRegistrationDateField.getDefaultModelObjectAsString()
-//						.isEmpty()) {
-//					try {
-//						highDate = (Date) formatter
-//								.parse(highRegistrationDateField
-//										.getDefaultModelObjectAsString());
-//					} catch (ParseException e) {
-//						highDate = null;
-//					}
-//				} else {
-//					highDate = null;
-//				}
+
+				// Date lowDate = null;
+				//
+				// System.out.println(lowRegistrationDateField.getConvertedInput());
+				//
+				// if (!lowRegistrationDateField.getDefaultModelObjectAsString()
+				// .isEmpty()) {
+				// try {
+				// lowDate = (Date) formatter
+				// .parse(lowRegistrationDateField
+				// .getDefaultModelObjectAsString());
+				// } catch (ParseException e) {
+				// lowDate = null;
+				// }
+				// } else {
+				// lowDate = null;
+				// }
+				//
+				// Date highDate = null;
+				//
+				// if (!lowRegistrationDateField.getDefaultModelObjectAsString()
+				// .isEmpty()) {
+				// try {
+				// highDate = (Date) formatter
+				// .parse(highRegistrationDateField
+				// .getDefaultModelObjectAsString());
+				// } catch (ParseException e) {
+				// highDate = null;
+				// }
+				// } else {
+				// highDate = null;
+				// }
 
 				// Component datePicker = getForm().get( "lowRegistrationDate"
 				// );
@@ -289,30 +304,58 @@ public class NewCampaignPage extends BasePage {
 				System.out.println("HIGHDATESTRING: "
 						+ highRegistrationDateField
 								.getDefaultModelObjectAsString());
-//				System.out.println("HIDHDATE STR: " + highDate.toString());
+				// System.out.println("HIDHDATE STR: " + highDate.toString());
 
 				System.out.println("LOW DATE STRING: "
 						+ lowRegistrationDateField
 								.getDefaultModelObjectAsString());
-//				System.out.println("LOWDATE STR: " + lowDate.toString());
+				// System.out.println("LOWDATE STR: " + lowDate.toString());
 
 				System.out.println("LowAge: " + lowAge);
 				System.out.println("HighAge: " + highAge);
 
 				List<User> receivers = userService.getUsers(0,
-						Integer.MAX_VALUE, null, null, gender, lowAge, highAge, country,
-						lowDate, highDate);
+						Integer.MAX_VALUE, null, null, gender, lowAge, highAge,
+						country, lowDate, highDate);
 
-				System.out.println("RECEIVERS: ");
+				System.out.println("-----RECEIVERS: ");
 				System.out.println(receivers.toString());
 
-				campaignService.sendCampaign(campaign, receivers);
+				/* Saco a los ADMIN */
+				for (Iterator<User> it = receivers.iterator(); it.hasNext();) {
+					User user = it.next();
+					if (user.getLevel() == Level.ADMIN) {
+						it.remove();
+					}
+				}
 
-				campaignService.insertCampaign(campaign);
-				
-				parameters.set("campaignId", campaign.getId());
-				
-				dialog.open(target);
+				System.out.println("-----RECEIVERS: ");
+				System.out.println(receivers.toString());
+
+				if (receivers != null && receivers.size() > 0) {
+					dialog.setRedirect(true);
+					campaignService.sendCampaign(campaign, receivers);
+
+					campaignService.insertCampaign(campaign);
+
+					parameters.set("campaignId", campaign.getId());
+
+					dialog.setText("Campaña enviada con éxito!");
+					target.add(dialog);
+
+					dialog.open(target);
+
+				} else {
+
+					System.out.println("NO HAY RECEIVERS.");
+					dialog.setRedirect(false);
+
+					dialog.setText("No hay usuarios que cumplan con los requisitos seleccionados.");
+					target.add(dialog);
+
+					dialog.open(target);
+				}
+
 			}
 
 			@Override
