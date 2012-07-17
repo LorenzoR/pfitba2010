@@ -11,6 +11,7 @@ import org.hibernate.criterion.Restrictions;
 import com.booktube.model.Campaign;
 import com.booktube.model.CampaignDetail;
 import com.booktube.model.User;
+import com.booktube.model.User.Level;
 import com.booktube.persistence.CampaignDao;
 
 public class CampaignDaoImpl extends AbstractDaoHibernate<Campaign> implements
@@ -85,9 +86,14 @@ public class CampaignDaoImpl extends AbstractDaoHibernate<Campaign> implements
 
 	public void sendCampaign(Campaign campaign, List<User> receivers) {
 		for (User aUser : receivers) {
-			campaign.addReceiver(new CampaignDetail(aUser, campaign));
+			if (aUser.getLevel() == Level.USER) {
+				campaign.addReceiver(new CampaignDetail(aUser, campaign));
+			}
 		}
-		insertCampaign(campaign);
+		
+		if (campaign.getReceiver().size() > 0) {
+			insertCampaign(campaign);
+		}
 	}
 
 	@SuppressWarnings("unchecked")

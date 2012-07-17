@@ -40,7 +40,7 @@
 </head>
 <body>
 
-	<div wicket:id="login_error_dialog">Usuario o contraseña incorrectos.</div>
+	<div wicket:id="login_error_dialog"><wicket:message key="wrongLogin">Wrong Login</wicket:message></div>
 
 	<div id="fb-root" wicket:id="fbRoot"></div>
 
@@ -74,14 +74,14 @@
 						</table>
 					</form>
 					<div id="registerLabel">
-						<a href="#" wicket:id="registerPage">Registrate</a>
+						<a href="#" wicket:id="registerPage"><wicket:message key="register">Register</wicket:message></a>
 					</div>
 					<div id="welcomeLogoutLabel">
 						<span wicket:id="welcome"></span>
 						<wicket:container wicket:id="editProfile">
-							<a href="#" wicket:id="editProfileLink">Editar Perfil</a>| 
+							<a href="#" wicket:id="editProfileLink"><wicket:message key="editProfile">Editar Perfil</wicket:message></a>| 
 						</wicket:container>
-							<a href="#" wicket:id="logoutLink">Logout</a>
+							<a href="#" wicket:id="logoutLink"><wicket:message key="logout">Logout</wicket:message></a>
 					</div>
 				</div>
 
@@ -94,20 +94,20 @@
 
 				<div id="searchbox">
 					<form wicket:id="searchBook">
-						Buscar Libro: 
+						<wicket:message key="searchBook">Search Book:</wicket:message> 
 						<input class="searchField" type="text"
 							wicket:id="bookTitle" value="Buscar" /> &nbsp; 
 						<input class="searchButton" type="submit" 
 							wicket:id="find" value="Buscar" /> 
-						<a href="#" wicket:id="advancedSearch" style="font-size: x-small;">Búsqueda Avanzada</a>
+						<a href="#" wicket:id="advancedSearch" style="font-size: x-small;"><wicket:message key="advancedSearch">Advanced Search</wicket:message></a>
 						<br /> 
 						<span wicket:id="group">	
 							<input id="ratio" wicket:id="title" type="radio" checked="checked" />
-							&nbsp;Titulo
+							&nbsp;<wicket:message key="title">Title</wicket:message>
 							<input id="ratio" wicket:id="author" type="radio" />
-							&nbsp;Autor
+							&nbsp;<wicket:message key="author">Author</wicket:message>
 							<input id="ratio" wicket:id="tag" type="radio" />
-							&nbsp;Tag
+							&nbsp;<wicket:message key="tag">Tag</wicket:message>
 						</span>
 					</form>
 				</div>
@@ -115,19 +115,19 @@
 				<DIV id="mainmenubg"></DIV>
 				<DIV id="mainmenu">
 					<UL>
-						<LI><A href="#" wicket:id="showBooks">Leer</A></LI>
-						<LI wicket:id="addBook_li"><A href="#" wicket:id="addBook">Compartir</A></LI>
-						<LI><A href="#" wicket:id="showWriters">Escritores</A></LI>
-						<LI wicket:id="contact_li"><A href="#" wicket:id="contact">Contactenos</A></LI>
+						<LI><A href="#" wicket:id="showBooks"><wicket:message key="read">Read</wicket:message></A></LI>
+						<LI wicket:id="addBook_li"><A href="#" wicket:id="addBook"><wicket:message key="share">Share</wicket:message></A></LI>
+						<LI><A href="#" wicket:id="showWriters"><wicket:message key="writers">Writers</wicket:message></A></LI>
+						<LI wicket:id="contact_li"><A href="#" wicket:id="contact"><wicket:message key="contactUs">Contact</wicket:message></A></LI>
 						<LI wicket:id="new_campaign_li"><A href="#"
-							wicket:id="new_campaign">Nueva Campaña</A></LI>
+							wicket:id="new_campaign"><wicket:message key="newCampaign">New Campaign</wicket:message></A></LI>
 						<LI wicket:id="administration_li"><A href="#"
-							wicket:id="adminTools">Administración</A></LI>
+							wicket:id="adminTools"><wicket:message key="administration">Administration</wicket:message></A></LI>
 						<LI wicket:id="messages_li"><a href="#"
-							wicket:id="messagesLink" style="display: inline;">Mensajes</a>&nbsp;<span
+							wicket:id="messagesLink" style="display: inline;"><wicket:message key="messages">Messages</wicket:message></a>&nbsp;<span
 							wicket:id="unreadMessages"></span></LI>
 						<LI wicket:id="campaigns_li"><a href="#"
-							wicket:id="campaignsLink" style="display: inline;">Campañas</a>&nbsp;<span
+							wicket:id="campaignsLink" style="display: inline;"><wicket:message key="campaigns">Campaigns</wicket:message></a>&nbsp;<span
 							wicket:id="unreadCampaigns"></span></LI>
 						<LI><a href="#" wicket:id="loadDataLink">Load Data</a></LI>
 					</UL>
@@ -156,12 +156,11 @@
 			<div id="ft">
 				<div id="footer">
 					<div id="footermenu">
-						<a href="#" wicket:id="home">Home</a><SPAN>|</SPAN> <A
-							class=selected href="#" wicket:id="ayuda">Ayuda</A><SPAN>|</SPAN>
-						<A href="#" wicket:id="acercaDe">Acerca de</A><SPAN>|</SPAN> <A
-							href="#" wicket:id="contacto">Contacto</A><SPAN>|</SPAN> <A
-							href="#" wicket:id="terminosYcondiciones">Términos y
-							condiciones</A><SPAN>|</SPAN>
+						<a href="#" wicket:id="home"><wicket:message key="home">Home</wicket:message></a><SPAN>|</SPAN> <A
+							class=selected href="#" wicket:id="ayuda"><wicket:message key="help">Help</wicket:message></A><SPAN>|</SPAN>
+						<A href="#" wicket:id="acercaDe"><wicket:message key="about">About</wicket:message></A><SPAN>|</SPAN> <A
+							href="#" wicket:id="contacto"><wicket:message key="contact">Contact</wicket:message></A><SPAN>|</SPAN> <A
+							href="#" wicket:id="terminosYcondiciones"><wicket:message key="termsAndConditions">Terms and Conditions</wicket:message></A><SPAN>|</SPAN>
 					</div>
 					<DIV id="logoGrupo">
 						<IMG src="/img/poweredByNosotros_b.png">

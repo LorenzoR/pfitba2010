@@ -390,11 +390,11 @@ public class UsersAdministrationPage extends AdministrationPage {
 		searchFields.add(country);
 
 		final TextField<Integer> lowAge = new TextField<Integer>("lowAge",
-				new Model<Integer>());
+				new Model<Integer>(), Integer.class);
 		searchFields.add(lowAge);
 
 		final TextField<Integer> highAge = new TextField<Integer>("highAge",
-				new Model<Integer>());
+				new Model<Integer>(), Integer.class);
 		searchFields.add(highAge);
 
 		final DatePicker<Date> lowRegistrationDate = createDatePicker(
@@ -453,7 +453,7 @@ public class UsersAdministrationPage extends AdministrationPage {
 			@Override
 			protected void onError(AjaxRequestTarget target, Form<?> form) {
 				// TODO Auto-generated method stub
-
+				System.out.println("ERROR EN SEARCH USER");
 			}
 
 		};
@@ -503,19 +503,23 @@ public class UsersAdministrationPage extends AdministrationPage {
 					searchGender = null;
 				}
 
-				try {
-					searchLowAge = new Integer(lowAge
-							.getDefaultModelObjectAsString());
-				} catch (NumberFormatException ex) {
-					searchLowAge = null;
-				}
-
-				try {
-					searchHighAge = new Integer(highAge
-							.getDefaultModelObjectAsString());
-				} catch (NumberFormatException ex) {
-					searchHighAge = null;
-				}
+				
+				searchHighAge = highAge.getModelObject();
+				searchLowAge = lowAge.getModelObject();
+				
+//				try {
+//					searchLowAge = new Integer(lowAge
+//							.getDefaultModelObjectAsString());
+//				} catch (NumberFormatException ex) {
+//					searchLowAge = null;
+//				}
+//
+//				try {
+//					searchHighAge = new Integer(highAge
+//							.getDefaultModelObjectAsString());
+//				} catch (NumberFormatException ex) {
+//					searchHighAge = null;
+//				}
 
 				if (!StringUtils.isBlank(lowRegistrationDate
 						.getDefaultModelObjectAsString())) {
