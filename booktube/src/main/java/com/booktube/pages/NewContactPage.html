@@ -11,7 +11,7 @@
 		<wicket:container wicket:id="text"></wicket:container>
 	</div>
 
-	<h2>Contact Us</h2>
+	<h2><wicket:message key="contactUs">Contact Us</wicket:message></h2>
 	
 <!-- 	<p><a href="#" wicket:id="contactsPage">Todos mis contactos</a></p> -->
 	
@@ -22,7 +22,7 @@
 			</select>
 		</p>
 		<br/>
-		Text: 
+		<wicket:message key="text">Text</wicket:message>: 
 		<p><textarea wicket:id="text" cols="60" rows="15"></textarea></p>
 		
 		<input type="button" wicket:id="sendMessage" value="Send"/>

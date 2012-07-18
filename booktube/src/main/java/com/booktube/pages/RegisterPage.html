@@ -11,37 +11,37 @@
 				<wicket:container wicket:id="text"></wicket:container>
 			</div>
 
-			<h2>Registro</h2>
+			<h2><wicket:message key="registerPage">Register Page</wicket:message></h2>
 
 			<span wicket:id="feedback"></span>
 
 			<form wicket:id="form">
 
 				<p>
-					Username: <input type="text" wicket:id="username" value="" />
+					<wicket:message key="username">Usenrame</wicket:message>: <input type="text" wicket:id="username" value="" />
 				</p>
 				<p>
-					Nombre: <input type="text" wicket:id="firstname" value="" />
+					<wicket:message key="firstname">Firstname</wicket:message>: <input type="text" wicket:id="firstname" value="" />
 				</p>
 				<p>
-					Apellido: <input type="text" wicket:id="lastname" value="" />
+					<wicket:message key="lastname">Lastname</wicket:message>: <input type="text" wicket:id="lastname" value="" />
 				</p>
 				<p>
-					E-Mail: <input type="text" wicket:id="email" value="" />
+					<wicket:message key="email">E-Mail</wicket:message>: <input type="text" wicket:id="email" value="" />
 				</p>
 				<p>
-					Fecha nacimiento: <input type="text" wicket:id="birthdate" value="" />
+					<wicket:message key="birthDate">Birth Date</wicket:message>: <input type="text" wicket:id="birthdate" value="" />
  					 ( <span wicket:id="date_format"></span> )
 				</p>
-				<p>Sexo:
+				<p><wicket:message key="gender">Gender</wicket:message>:
 					<select name="gender" wicket:id="gender">
-						<option value="" selected="selected">Seleccione su sexo</option>
+						<option value="" selected="selected" wicket:message="value:selectGender">Select Gender</option>
 					</select>
 				</p>
 
-				<p>Pais:
+				<p><wicket:message key="country">Country</wicket:message>:
 					<select name="country" wicket:id="country">
-						<option value="" selected="selected">Seleccione su pais</option>
+						<option value="" selected="selected" wicket:message="value:selectCountry">Select Country</option>
 						<option value="Afghanistan">Afghanistan</option>
 						<option value="Albania">Albania</option>
 						<option value="Algeria">Algeria</option>
@@ -313,17 +313,17 @@
 					</select>
 				</p>
 				<p>
-					Ciudad: <input type="text" wicket:id="city" value="" />
+					<wicket:message key="city">City</wicket:message>: <input type="text" wicket:id="city" value="" />
 				</p>
 				<p>
-					Password: <input type="password" wicket:id="password1" value="" />
+					<wicket:message key="password">Password</wicket:message>: <input type="password" wicket:id="password1" value="" />
 				</p>
 				<p>
-					Repita Password: <input type="password" wicket:id="password2"
+					<wicket:message key="repeatPassword">Repeat Password</wicket:message>: <input type="password" wicket:id="password2"
 						value="" />
 				</p>
 
-				<input type="button" wicket:id="save" value="Enviar" />
+				<input type="button" wicket:id="save" value="Enviar" wicket:message="value:send" />
 			</form>
 
 		</div>

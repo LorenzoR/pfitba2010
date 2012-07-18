@@ -5,21 +5,21 @@
 </head>
 <body>
 <wicket:extend>
-<h3>Edit Book <span wicket:id="bookId"></span></h3>
+<h3><wicket:message key="editBook">Edit Book</wicket:message> <span wicket:id="bookId"></span></h3>
 <form wicket:id="editBookForm">
-	<p>Autor: <select wicket:id="author"></select></p>
-	<p>Titulo: <input type="text" wicket:id="title" value=""/></p>
-	<p>Categoria: <input type="text" wicket:id="category" value=""/></p>
-	<p>Subcategoria: <input type="text" wicket:id="subcategory" value=""/></p>
-	<p>Tags: <input type="text" wicket:id="tags" value=""/></p>
-	<p>Fecha de Publicacion: 
+	<p><wicket:message key="author">Author</wicket:message>: <select wicket:id="author"></select></p>
+	<p><wicket:message key="title">Title</wicket:message>: <input type="text" wicket:id="title" value=""/></p>
+	<p><wicket:message key="category">Category</wicket:message>: <input type="text" wicket:id="category" value=""/></p>
+	<p><wicket:message key="subcategory">Subcategory</wicket:message>: <input type="text" wicket:id="subcategory" value=""/></p>
+	<p><wicket:message key="tags">Tags</wicket:message>: <input type="text" wicket:id="tags" value=""/></p>
+	<p><wicket:message key="publishDate">Publish Date</wicket:message>: 
 		<input type="text" wicket:id="publishDate" value=""/>
 		&nbsp; ( <span wicket:id="date_format"></span> )
 	</p>
-	<p># Hits: <input type="text" wicket:id="hits" value=""/></p>
-	<p>Rating: <a href="#" wicket:id="reset1">Reset rating</a></p>
+	<p># <wicket:message key="hits">Hits</wicket:message>: <input type="text" wicket:id="hits" value=""/></p>
+	<p><wicket:message key="rating">Rating</wicket:message>: <a href="#" wicket:id="reset1"><wicket:message key="resetRating">Reset Rating</wicket:message></a></p>
 	<p><textarea wicket:id="text" cols="120" rows="50"></textarea></p>
-	<input type="button" wicket:id="save" value="Edit Book"/>
+	<input type="button" wicket:id="save" value="Edit Book" wicket:message="value:edit"/>
 </form>
 </wicket:extend>
 </body>

@@ -8,25 +8,25 @@
 <div wicket:id="success_dialog">
 	<wicket:container wicket:id="text"></wicket:container>
 </div>
-<h3>Edit Writer <span wicket:id="writerId"></span></h3>
+<h3><wicket:message key="editWriter">Edit Writer</wicket:message> <span wicket:id="writerId"></span></h3>
 <form wicket:id="editWriterForm">
-	<p>Username: <input type="text" wicket:id="username" value=""/></p>
-	<p>Name: <input type="text" wicket:id="firstname" value=""/></p>
-	<p>Lastname: <input type="text" wicket:id="lastname" value=""/></p>
-	<p>E-Mail: <input type="text" wicket:id="email" value=""/></p>
-	<p wicket:id="level_p">Level: <select wicket:id="level"></select></p>
+	<p><wicket:message key="username">Username</wicket:message>: <input type="text" wicket:id="username" value=""/></p>
+	<p><wicket:message key="firstname">Firstname</wicket:message>: <input type="text" wicket:id="firstname" value=""/></p>
+	<p><wicket:message key="lastname">Lastname</wicket:message>: <input type="text" wicket:id="lastname" value=""/></p>
+	<p><wicket:message key="email">E-Mail</wicket:message>: <input type="text" wicket:id="email" value=""/></p>
+	<p wicket:id="level_p"><wicket:message key="level">Level</wicket:message>: <select wicket:id="level"></select></p>
 	<p>
-		Fecha nacimiento: <input type="text" wicket:id="birthdate" value="" />
+		<wicket:message key="birthDate">Birth Date</wicket:message>: <input type="text" wicket:id="birthdate" value="" />
 			 ( <span wicket:id="date_format"></span> )
 	</p>
-	<p>Sexo:
+	<p><wicket:message key="gender">Gender</wicket:message>:
 		<select name="gender" wicket:id="gender">
-			<option value="" selected="selected">Seleccione su sexo</option>
+			<option value="" selected="selected" wicket:message="value:selectGender">Select Gender</option>
 		</select>
 	</p>
-	<p>Pais:
+	<p><wicket:message key="country">Country</wicket:message>:
 		<select name="country" wicket:id="country">
-			<option value="" selected="selected">Seleccione su pais</option>
+			<option value="" selected="selected" wicket:message="value:selectCountry">Select Country</option>
 			<option value="Afghanistan">Afghanistan</option>
 			<option value="Albania">Albania</option>
 			<option value="Algeria">Algeria</option>
@@ -298,9 +298,9 @@
 		</select>
 	</p>
 	<p>
-		Ciudad: <input type="text" wicket:id="city" value="" />
+		<wicket:message key="city">City</wicket:message>: <input type="text" wicket:id="city" value="" />
 	</p>
-	<input type="button" wicket:id="save" value="Edit User"/>
+	<input type="button" wicket:id="save" value="Edit User" wicket:message="value:edit"/>
 </form>
 </wicket:extend>
 </body>

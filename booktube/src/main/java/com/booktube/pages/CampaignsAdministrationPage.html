@@ -17,7 +17,7 @@
 	    
 		<h3 wicket:id="pageTitle" class="pageTitle"></h3>
 		
-		<h2><a href="#" wicket:id="searchCampaignLink" onclick="return false;" class="searchLink">Buscar</a></h2>
+		<h2><a href="#" wicket:id="searchCampaignLink" onclick="return false;" class="searchLink"><wicket:message key="search">Search</wicket:message></a></h2>
 		
 		<form id="searchCampaignForm" wicket:id="searchCampaignForm"  class="searchForm">
 			<div id="searchFields" wicket:id="searchFields">
@@ -25,25 +25,25 @@
 				<tr>
 					<td><b>ID:</b></td>
 					<td><input type="text" wicket:id="id" value="" /></td>
-					<td><b>Tema:</b></td>
+					<td><b><wicket:message key="subject">Subject</wicket:message>:</b></td>
 					<td><input type="text" wicket:id="subject" value="" /></td>
 				</tr>
 				<tr>
-					<td><b>Autor</b></td>
+					<td><b><wicket:message key="author">Author</wicket:message></b></td>
 					<td><input type="text" wicket:id="sender" value="" /></td>
-					<td><b>Destinatario</b></td>
+					<td><b><wicket:message key="receiver">Receiver</wicket:message></b></td>
 					<td><input type="text" wicket:id="receiver" value="" /></td>
 				</tr>
 				<tr>
 					<td colspan="4">
-						<b>Fecha Envio:</b> &nbsp;
-						Desde: <input type="text" wicket:id="lowCampaignDate" value="" />
-						Hasta: <input type="text" wicket:id="highCampaignDate" value="" />
+						<b><wicket:message key="sendDate">Send Date</wicket:message>:</b> &nbsp;
+						<wicket:message key="from">From</wicket:message>: <input type="text" wicket:id="lowCampaignDate" value="" />
+						<wicket:message key="to">To</wicket:message>: <input type="text" wicket:id="highCampaignDate" value="" />
 					</td>					
 				</tr>
 			</table>			
 			
-			<input type="button" wicket:id="searchCampaign" value="Search" class="buttons"/>
+			<input type="button" wicket:id="searchCampaign" value="Search" wicket:message="value:search" class="buttons"/>
 			
 			<div wicket:id="feedbackMessage"></div>
 		
@@ -54,11 +54,11 @@
 			<tbody>
 				<tr>
 					<th class="title"><input type="checkbox" wicket:id="groupSelector" /></th>
-					<th class="title">Autor</th>
+					<th class="title"><wicket:message key="author">Author</wicket:message></th>
 <!-- 					<th class="title">Destinatario</th> -->
-					<th class="title">Tema</th>
-					<th class="title">Fecha</th>
-					<th class="title">Acciones</th>
+					<th class="title"><wicket:message key="subject">Subject</wicket:message></th>
+					<th class="title"><wicket:message key="date">Date</wicket:message></th>
+					<th class="title"><wicket:message key="actions">Actions</wicket:message></th>
 				</tr>	
 				<tr wicket:id="campaignsList">
 					<td class="list"><input type="checkbox" wicket:id="checkbox" /></td>
@@ -76,7 +76,7 @@
 		</table>
 		</div>
 		
-		<input type="button" wicket:id="deleteCampaign" value="Delete Selected Campaigns" class="buttons"/>
+		<input type="button" wicket:id="deleteCampaign" value="Delete Selected Campaigns" wicket:message="value:deleteSelected" class="buttons"/>
 		
 		</form>
 

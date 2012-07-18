@@ -11,45 +11,45 @@
 				<wicket:container wicket:id="text"></wicket:container>
 			</div>
 
-			<h2>Nueva Campa&ntilde;a</h2>		
+			<h2><wicket:message key="newCampaign">New Campaign</wicket:message></h2>		
 
 			<form wicket:id="form">
 			
-				<p><b>Filtros</b></p>
+				<p><b><wicket:message key="filters">Filters</wicket:message></b></p>
 				<p>
-					<b>Por sexo:</b> &nbsp;
+					<b><wicket:message key="byGender">By Gender</wicket:message>:</b> &nbsp;
 					<select wicket:id="gender">
 						<option value="optionValue">OptionValue</option>
 					</select>
 				</p>
 				
 				<p>
-					<b>Por Edad:</b> &nbsp;
-					Desde: <input type="text" wicket:id="lowAge" value="" />
-					Hasta: <input type="text" wicket:id="highAge" value="" />
+					<b><wicket:message key="byAge">By Age</wicket:message>:</b> &nbsp;
+					<wicket:message key="from">From</wicket:message>: <input type="text" wicket:id="lowAge" value="" />
+					<wicket:message key="to">To</wicket:message>: <input type="text" wicket:id="highAge" value="" />
 				</p>
 				
-				<p><b>Por Pais:</b>
+				<p><b><wicket:message key="byCountry">By Country</wicket:message>:</b>
 					<select name="country" wicket:id="country">
 					</select>
 				</p>
 			
 				<p>
-					<b>Por Antiguedad:</b> &nbsp;
-					Desde: <input type="text" wicket:id="lowRegistrationDate" value="" />
-					Hasta: <input type="text" wicket:id="highRegistrationDate" value="" />
+					<b><wicket:message key="byAnt">By Ant</wicket:message>:</b> &nbsp;
+					<wicket:message key="from">From</wicket:message>: <input type="text" wicket:id="lowRegistrationDate" value="" />
+					<wicket:message key="to">To</wicket:message>: <input type="text" wicket:id="highRegistrationDate" value="" />
 				</p>
 						
 				<hr />
 				
-				<p><b>Mensaje</b></p>
+				<p><b><wicket:message key="message">Message</wicket:message></b></p>
 			
 				<p> 
-					<b>Asunto:</b> &nbsp;
+					<b><wicket:message key="subject">Subject</wicket:message>:</b> &nbsp;
 					<input type="text" wicket:id="subject" value="" />
 				</p>
 				<br /> 
-				<b>Text:</b>
+				<b><wicket:message key="text">Text</wicket:message>:</b>
 				<p>
 					<textarea wicket:id="campaignText" cols="60" rows="15"></textarea>
 				</p>

@@ -12,16 +12,16 @@
 	<wicket:extend>
 		<div wicket:id="bookDetails"
 			style="margin-bottom: 1px; padding-left: 2px;">
-			<h2 wicket:id="title"></h2> by <span wicket:id="author.username">Author goes here</span>
+			<h2 wicket:id="title"></h2> <wicket:message key="by">By</wicket:message> <span wicket:id="author.username">Author goes here</span>
 			<p>
-				Publish Date: 
+				<wicket:message key="publishDate">Publish Date</wicket:message>: 
 				<span wicket:id="publishDate">Date goes here</span>
 			</p>
 
 
 			<table>
 				<tr>
-					<td>Rate this:</td>
+					<td><wicket:message key="rate">Rate</wicket:message>:</td>
 					<td><span wicket:id="rating1"></span></td>
 				</tr>
 <!-- 				<tr> -->
@@ -31,10 +31,10 @@
 			</table>
 			
 			<p>
-				Cantidad Visitas <span wicket:id="hits"></span>
+				# <wicket:message key="hits">Hits</wicket:message> <span wicket:id="hits"></span>
 			</p>
 
-			Text: 
+			<wicket:message key="text">Text</wicket:message>: 
 			<p>
 				<span wicket:id="text">Text goes here</span> 
 			</p>
@@ -47,11 +47,11 @@
 			<a wicket:id="tweetButton"></a>
 
 			<hr />
-			<h2>Comments</h2>
+			<h2><wicket:message key="comments">Comments</wicket:message></h2>
 			<div wicket:id="facebookComments"></div>
 			
 			<p>
-				<a href="#" wicket:id="goBack">Back</a>
+				<a href="#" wicket:id="goBack"><wicket:message key="back">Back</wicket:message></a>
 			</p>
 			
 		</div>
