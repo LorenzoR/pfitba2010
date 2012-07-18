@@ -20,23 +20,23 @@
 	    <h3 wicket:id="pageTitle" class="pageTitle"></h3>
 	    
 		<h2>
-			<a href="#" wicket:id="searchUserLink" onclick="return false;" class="searchLink">Buscar</a>
-			<a href="#" wicket:id="createUser" class="searchLink">Crear Usuario</a>
+			<a href="#" wicket:id="searchUserLink" onclick="return false;" class="searchLink"><wicket:message key="search">Search</wicket:message></a>
+			<a href="#" wicket:id="createUser" class="searchLink"><wicket:message key="createUser">Create User</wicket:message></a>
 		</h2>
 			<form id="searchUserFormId" wicket:id="searchUserForm" class="searchForm">
 				<div id="searchFields" wicket:id="searchFields">
 					<table class="searchview">
 						<tr>
 							<td><b>ID:</b></td><td> <input type="text" wicket:id="userId" value="" /></td>
-							<td><b>Usuario:</b></td> <td> <input type="text" wicket:id="username" value="" /></td>
+							<td><b><wicket:message key="username">Username</wicket:message>:</b></td> <td> <input type="text" wicket:id="username" value="" /></td>
 						</tr>
 						<tr>
-							<td><b>Pa&iacute;s:</b></td>
+							<td><b><wicket:message key="country">Country</wicket:message>:</b></td>
 							<td>
 								<select name="country" wicket:id="country">
 								</select>
 							</td>
-							<td><b>Sexo:</b> &nbsp;</td>
+							<td><b><wicket:message key="gender">Gender</wicket:message>:</b> &nbsp;</td>
 							<td>
 								<select wicket:id="gender">
 									<option value="optionValue">OptionValue</option>
@@ -44,19 +44,19 @@
 							</td>
 						</tr>
 						<tr>
-							<td><b>Edad:</b> &nbsp;</td>
-							<td>Desde:<input type="text" wicket:id="lowAge" value="" /></td>
-							<td colspan="2">Hasta:<input type="text" wicket:id="highAge" value="" /></td>											
+							<td><b><wicket:message key="age">Age</wicket:message>:</b> &nbsp;</td>
+							<td><wicket:message key="from">From</wicket:message>:<input type="text" wicket:id="lowAge" value="" /></td>
+							<td colspan="2"><wicket:message key="to">To</wicket:message>:<input type="text" wicket:id="highAge" value="" /></td>											
 						</tr>
 						<tr>
-							<td><b>Registraci&oacute;n:</b> &nbsp;</td>
-							<td>Desde:<input type="text" wicket:id="lowRegistrationDate" value="" /></td>
-							<td colspan="2">Hasta:<input type="text" wicket:id="highRegistrationDate" value="" /></td>							
+							<td><b><wicket:message key="registrationDate">Registration Date</wicket:message>:</b> &nbsp;</td>
+							<td><wicket:message key="from">from</wicket:message>:<input type="text" wicket:id="lowRegistrationDate" value="" /></td>
+							<td colspan="2"><wicket:message key="to">To</wicket:message>:<input type="text" wicket:id="highRegistrationDate" value="" /></td>							
 						</tr>
 						
 					</table>
 				
-					<input type="button" wicket:id="searchUser" value="Buscar" class="buttons"/>
+					<input type="button" wicket:id="searchUser" value="Buscar" wicket:message="value:search" class="buttons"/>
 					
 					<div wicket:id="feedbackMessage"></div>
 				
@@ -67,10 +67,10 @@
 					<tbody>
 						<tr>
 							<th class="title"><input type="checkbox" wicket:id="groupSelector" /></th>
-							<th class="title">Usuario</th>
-							<th class="title">Nombre</th>
-							<th class="title">Apellido</th>
-							<th class="title">Acciones</th>
+							<th class="title"><wicket:message key="username">Username</wicket:message></th>
+							<th class="title"><wicket:message key="firstname">Firstname</wicket:message></th>
+							<th class="title"><wicket:message key="lastname">Lastname</wicket:message></th>
+							<th class="title"><wicket:message key="actions">Actions</wicket:message></th>
 						</tr>
 						<tr wicket:id="writerList">
 							<td class="list"><input type="checkbox" wicket:id="checkbox" /></td>
@@ -87,7 +87,7 @@
 				</table>
 				</div>
 				
-				<input type="button" wicket:id="deleteUser" value="Delete Selected Users" class="buttons"/>
+				<input type="button" wicket:id="deleteUser" value="Delete Selected Users" wicket:message="value:deleteSelected" class="buttons"/>
 
 			</form>
 

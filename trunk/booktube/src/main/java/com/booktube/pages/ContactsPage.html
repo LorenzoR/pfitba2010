@@ -7,33 +7,33 @@
 <wicket:extend>
 <div wicket:id="messages">
 
-	<h2>Messages Sent</h2>
+	<h2><wicket:message key="messagesSent">Messages Sent</wicket:message></h2>
 	
 	<div wicket:id="messageFromList"  style="border: 1px black solid; margin-bottom: 5px; padding-left: 2px;">
-		<p>Date: <span wicket:id="date">Date goes here</span></p>
-		<p>Subject: <span wicket:id="subject">Subject goes here</span></p>
-		<p>Message: <span wicket:id="text">Message goes here</span></p>
+		<p><wicket:message key="date">Date</wicket:message>: <span wicket:id="date">Date goes here</span></p>
+		<p><wicket:message key="subject">Subject</wicket:message>: <span wicket:id="subject">Subject goes here</span></p>
+		<p><wicket:message key="message">Message</wicket:message>: <span wicket:id="text">Message goes here</span></p>
 		Answer:
 		<div wicket:id="answers"  style="border: 1px black solid; margin-bottom: 5px; padding-left: 2px;"> 
-			<p>Date: <span wicket:id="date">Date goes here</span></p>
-			<p>Subject: <span wicket:id="subject">Subject goes here</span></p>
-			<p>Message: <span wicket:id="text">Message goes here</span></p>
+			<p><wicket:message key="date">Date</wicket:message>: <span wicket:id="date">Date goes here</span></p>
+			<p><wicket:message key="subject">Subject</wicket:message>: <span wicket:id="subject">Subject goes here</span></p>
+			<p><wicket:message key="message">Message</wicket:message>: <span wicket:id="text">Message goes here</span></p>
 		</div>
 	</div>
 	
 	<hr/>
 	
-	<h2>Messages Received</h2>
+	<h2><wicket:message key="messagesReceived">Messages Received</wicket:message></h2>
 	
 	<div wicket:id="messageToList"  style="border: 1px black solid; margin-bottom: 5px; padding-left: 2px;">
-		<p>Date: <span wicket:id="date">Date goes here</span></p>
-		<p>Subject: <span wicket:id="subject">Subject goes here</span></p>
-		<p>Message: <span wicket:id="text">Message goes here</span></p>
-		Answer:
+		<p><wicket:message key="date">Date</wicket:message>: <span wicket:id="date">Date goes here</span></p>
+		<p><wicket:message key="subject">Subject</wicket:message>: <span wicket:id="subject">Subject goes here</span></p>
+		<p><wicket:message key="message">Message</wicket:message>: <span wicket:id="text">Message goes here</span></p>
+		<wicket:message key="answer">Answer</wicket:message>:
 		<div wicket:id="answers"  style="border: 1px black solid; margin-bottom: 5px; padding-left: 2px;"> 
-			<p>Date: <span wicket:id="date">Date goes here</span></p>
-			<p>Subject: <span wicket:id="subject">Subject goes here</span></p>
-			<p>Message: <span wicket:id="text">Message goes here</span></p>
+			<p><wicket:message key="date">Date</wicket:message>: <span wicket:id="date">Date goes here</span></p>
+			<p><wicket:message key="subject">Subject</wicket:message>: <span wicket:id="subject">Subject goes here</span></p>
+			<p><wicket:message key="message">Message</wicket:message>: <span wicket:id="text">Message goes here</span></p>
 		</div>
 	</div>
 
