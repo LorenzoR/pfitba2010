@@ -17,8 +17,6 @@ public class WiaSession extends WebSession {
 		return (WiaSession) Session.get();
 	}
 
-	
-
 	public WiaSession(Request request) {
 		super(request);
 		setLocale(Locale.getDefault());
@@ -40,4 +38,10 @@ public class WiaSession extends WebSession {
 	public synchronized void logOutUser() {
 		this.user = null;
 	}
+	
+//	// TEST
+//	@Override
+//	public void setLocale(Locale locale) {
+//		super.setLocale(new Locale("en", "GB"));
+//	}
 }

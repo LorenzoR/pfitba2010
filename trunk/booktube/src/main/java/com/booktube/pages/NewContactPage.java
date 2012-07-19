@@ -12,6 +12,7 @@ import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import com.booktube.WiaSession;
@@ -55,7 +56,7 @@ public class NewContactPage extends BasePage {
 		parent.add(form);
 
 		Label registerMessage = new Label("registerMessage",
-				"Debe registrarse para poder contactarnos.");
+				new ResourceModel("registerMessage"));
 		parent.add(registerMessage);
 
 //		parent.add(new BookmarkablePageLink<String>("contactsPage",

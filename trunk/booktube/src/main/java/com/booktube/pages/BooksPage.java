@@ -22,6 +22,7 @@ import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
 
@@ -117,7 +118,8 @@ public class BooksPage extends BasePage {
 		footerNavigator = new PagingNavigator("footerPaginator", dataView);
 		parent.add(footerNavigator);
 		
-		Label feedbackMessage = new Label("feedbackMessage", "No se encontraron resultados.");
+		final Label feedbackMessage = new Label("feedbackMessage", new ResourceModel("noResults"));
+//		Label feedbackMessage = new Label("feedbackMessage", "No se encontraron resultados.");
 		parent.add(feedbackMessage);
 		
 		if ( dataView.getItemCount() <= 0 ) {

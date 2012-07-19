@@ -11,6 +11,7 @@ import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -57,7 +58,7 @@ public class AnswerMessagePage extends BasePage {
 		parent.add(form);
 
 		Label registerMessage = new Label("registerMessage",
-				"Debe registrarse para poder contactarnos.");
+				new ResourceModel("registerMessage"));
 		parent.add(registerMessage);
 
 		if (user == null) {

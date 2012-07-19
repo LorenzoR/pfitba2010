@@ -140,7 +140,7 @@ public class WorksAdministrationPage extends AdministrationPage {
 		//deleteConfirmationLabel.setOutputMarkupId(true);
 		//successDialogLabel.setOutputMarkupId(true);
 		
-		parent.add(new Label("pageTitle", "Works Administration Page"));
+//		parent.add(new Label("pageTitle", "Works Administration Page"));
 
 		dataView = bookList("bookList");
 

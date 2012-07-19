@@ -28,6 +28,7 @@ import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.odlabs.wiquery.ui.datepicker.DatePicker;
 
@@ -41,7 +42,8 @@ public class AdvancedSearchPage extends BasePage {
 
 	private static final int ITEMS_PER_PAGE = 5;
 	
-	final private Label feedbackMessage = new Label("feedbackMessage", "<h2>No se encontraron resultados.</h2>");
+	//final private Label feedbackMessage = new Label("feedbackMessage", "<h2>No se encontraron resultados.</h2>");
+	final private Label feedbackMessage = new Label("feedbackMessage", new ResourceModel("noResults"));
 	final private String dateFormat = "dd/mm/yy";
 	final private DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 	
@@ -132,10 +134,10 @@ public class AdvancedSearchPage extends BasePage {
 
 		form.add(new CustomDateValidator(lowPublishDate, highPublishDate));
 
-		final TextField<String> lowRating = new TextField<String>("lowRating", new Model<String>(""));
+		final TextField<Double> lowRating = new TextField<Double>("lowRating", new Model<Double>(), Double.class);
 		form.add(lowRating);
 		
-		final TextField<String> highRating = new TextField<String>("highRating", new Model<String>(""));
+		final TextField<Double> highRating = new TextField<Double>("highRating", new Model<Double>(), Double.class);
 		form.add(highRating);
 		
 		form.add(new AjaxSubmitLink("searchBook") {
@@ -202,20 +204,24 @@ public class AdvancedSearchPage extends BasePage {
 					searchHighPublishDate = null;
 				}
 
+				searchLowRating = lowRating.getConvertedInput();
+				searchHighRating = highRating.getConvertedInput();
+//				try {
+//					searchLowRating = new Double(lowRating
+//							.getDefaultModelObjectAsString());
+//				} catch (NumberFormatException ex) {
+//					searchLowRating = null;
+//				}
+//				
+//				try {
+//					searchHighRating = new Double(highRating
+//							.getDefaultModelObjectAsString());
+//				} catch (NumberFormatException ex) {
+//					searchHighRating = null;
+//				}
 				
-				try {
-					searchLowRating = new Double(lowRating
-							.getDefaultModelObjectAsString());
-				} catch (NumberFormatException ex) {
-					searchLowRating = null;
-				}
 				
-				try {
-					searchHighRating = new Double(highRating
-							.getDefaultModelObjectAsString());
-				} catch (NumberFormatException ex) {
-					searchHighRating = null;
-				}
+				
 				// System.out.println(bookService.getBook(Long
 				// .valueOf(bookIdString)));
 

@@ -8,6 +8,7 @@ import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.odlabs.wiquery.core.effects.Effect;
 import org.odlabs.wiquery.core.events.Event;
@@ -35,8 +36,9 @@ public class AdministrationPage extends BasePage {
 	final protected String dateFormat = "dd/mm/yy";
 	final protected DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 	
-	final protected Label feedbackMessage = new Label("feedbackMessage", "<h2>No se encontraron resultados.</h2>");
-
+	//final protected Label feedbackMessage = new Label("feedbackMessage", "<h2>No se encontraron resultados.</h2>");
+	final protected Label feedbackMessage = new Label("feedbackMessage", new ResourceModel("noResults"));
+	
 	public AdministrationPage() {
 			super();
 			
