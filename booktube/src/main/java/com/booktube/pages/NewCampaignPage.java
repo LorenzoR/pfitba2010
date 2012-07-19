@@ -22,6 +22,7 @@ import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.CheckGroupSelector;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.odlabs.wiquery.ui.datepicker.DatePicker;
@@ -69,7 +70,7 @@ public class NewCampaignPage extends BasePage {
 		parent.add(form);
 
 		Label registerMessage = new Label("registerMessage",
-				"Debe registrarse para poder contactarnos.");
+				new ResourceModel("registerMessage"));
 		parent.add(registerMessage);
 
 		parameters = new PageParameters();

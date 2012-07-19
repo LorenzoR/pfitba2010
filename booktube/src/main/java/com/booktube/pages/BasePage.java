@@ -10,6 +10,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -23,9 +24,12 @@ import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
 import org.odlabs.wiquery.ui.dialog.AjaxDialogButton;
@@ -83,6 +87,8 @@ public abstract class BasePage extends WebPage {
 	
 	private DynamicLabel breadcrumbs = new DynamicLabel("breadcrumbs", new Model<String>());
 	
+	private String loggedUsername;
+	
 	public BasePage() {
 				
 //		breadcrumbs = new DynamicLabel("breadcrumbs");
@@ -109,14 +115,31 @@ public abstract class BasePage extends WebPage {
 		editProfile.add(editProfileLink);
 		add(editProfile);
 		
+//		if (WiaSession.get().isAuthenticated()) {
+//			add(new Label("welcome", "Bienvenido "
+//					+ WiaSession.get().getLoggedInUser().getUsername() + " | "));
+//			editProfile.setVisible(true);
+//		} else {
+//			add(new Label("welcome"));
+//			editProfile.setVisible(false);
+//		}
+		
+		Label welcomeLabel = new Label("welcome", new StringResourceModel("welcomeMessage", this, new Model<BasePage>(BasePage.this)));
+		
 		if (WiaSession.get().isAuthenticated()) {
-			add(new Label("welcome", "Bienvenido "
-					+ WiaSession.get().getLoggedInUser().getUsername() + " | "));
+//			add(new Label("welcome", "Bienvenido "
+//					+ WiaSession.get().getLoggedInUser().getUsername() + " | "));
+			loggedUsername = WiaSession.get().getLoggedInUser().getUsername();
 			editProfile.setVisible(true);
+			welcomeLabel.setVisible(true);
 		} else {
-			add(new Label("welcome"));
+//			add(new Label("welcome"));
+			loggedUsername = null;
 			editProfile.setVisible(false);
+			welcomeLabel.setVisible(false);
 		}
+		
+		add(welcomeLabel);
 
 		String[][] quoteArray = getQuoteArray();
 
@@ -602,6 +625,35 @@ public abstract class BasePage extends WebPage {
 
 	}
 	
+	public void setBreadcrumbs(List<String> texts) {
+		ListView<String> listview = new ListView<String>("listview", texts) {
+
+			private static final long serialVersionUID = 1L;
+
+			protected void populateItem(final ListItem<String> item) {
+//				AjaxLink<?> link = new AjaxLink<Void>("link") {
+//
+//					private static final long serialVersionUID = 1L;
+//
+//					@Override
+//					public void onClick(AjaxRequestTarget target) {
+//						searchUsername = item.getModelObject() +"%s";
+//						System.out.println("{{{{{{{ SearchUserName: " + searchUsername);
+//						setBreadcrumbs("Escritores > " + item.getModelObject());
+//						//breadcrumbs.setLabel("Escritores > " + item.getModelObject());
+//						target.add(getBreadcrumbsLabel());
+//						target.add(parent);
+//					}
+//				};
+				
+				Label label = new Label("label", item.getModel());
+//				link.add(label);
+//				item.add(link);
+				item.add(label);
+			}
+		};
+	}
+	
 	public void setBreadcrumbs(String text) {
 		this.breadcrumbs.setLabel(text);
 	}
@@ -612,6 +664,11 @@ public abstract class BasePage extends WebPage {
 	
 	public Label getBreadcrumbsLabel() {
 		return this.breadcrumbs;
+	}
+	
+	@SuppressWarnings("unused")
+	private String getLoggedUsername() {
+		return this.loggedUsername;
 	}
 
 	private String[][] getQuoteArray() {

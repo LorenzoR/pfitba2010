@@ -65,7 +65,7 @@
 
 - Ver pagina de escritores, mensajes, campañas cuando no hay datos
 
-- Formato de rating en busqueda avanzada (numeros con punto o coma)
+----- Formato de rating en busqueda avanzada (numeros con punto o coma) (OK)
 
 - Mensaje de error en enviar campaña cuando no se seleccionan destinatarios
 

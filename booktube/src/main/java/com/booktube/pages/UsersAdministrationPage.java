@@ -154,7 +154,7 @@ public class UsersAdministrationPage extends AdministrationPage {
 		// deleteConfirmationLabel.setOutputMarkupId(true);
 		// successDialogLabel.setOutputMarkupId(true);
 
-		parent.add(new Label("pageTitle", "Users Administration Page"));
+//		parent.add(new Label("pageTitle", "Users Administration Page"));
 
 		dataView = writerList("writerList");
 		

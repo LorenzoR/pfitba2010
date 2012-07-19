@@ -70,7 +70,7 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 
 		setBreadcrumbs("Administración > Campañas");
 		
-		parent.add(new Label("pageTitle", "Campaigns Administration Page"));
+//		parent.add(new Label("pageTitle", "Campaigns Administration Page"));
 
 		dataView = campaignList("campaignsList");
 
