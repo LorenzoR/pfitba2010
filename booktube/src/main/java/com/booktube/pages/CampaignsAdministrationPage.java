@@ -49,6 +49,8 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 
 	private final DataView<Campaign> dataView;
 	private final PagingNavigator footerNavigator;
+	private final WebMarkupContainer searchButton;
+	private final Form<Campaign> searchForm;
 
 	private final CheckGroup<Campaign> group;
 
@@ -81,12 +83,12 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 		footerNavigator = new PagingNavigator("footerPaginator", dataView);
 		parent.add(footerNavigator);
 
-		Form<Campaign> searchForm = searchCampaignForm(parent);
+		searchForm = searchCampaignForm(parent);
 		parent.add(searchForm);
 
 		searchForm.add(group);
 
-		WebMarkupContainer searchButton = createButtonWithEffect(
+		searchButton = createButtonWithEffect(
 				"searchCampaignLink", "searchFields", new SlideToggle());
 		parent.add(searchButton);
 		
@@ -159,6 +161,8 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 				deleteDialog.open(target);
 				// setResponsePage(MessagesAdministrationPage.class);
 				dialog.close(target);
+				
+				showOrHideTable();
 			}
 		};
 
@@ -297,15 +301,17 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 					campaignService.deleteCampaign(aCampaign);
 				}
 
-				if (dataView.getItemCount() <= 0) {
-					this.setVisible(false);
-					footerNavigator.setVisible(false);
-					feedbackMessage.setVisible(true);
-				} else {
-					this.setVisible(true);
-					footerNavigator.setVisible(true);
-					feedbackMessage.setVisible(false);
-				}
+				showOrHideTable();
+				
+//				if (dataView.getItemCount() <= 0) {
+//					this.setVisible(false);
+//					footerNavigator.setVisible(false);
+//					feedbackMessage.setVisible(true);
+//				} else {
+//					this.setVisible(true);
+//					footerNavigator.setVisible(true);
+//					feedbackMessage.setVisible(false);
+//				}
 
 				target.add(parent);
 
@@ -402,16 +408,32 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 		return form;
 
 	}
-
-	private String getReceivers(Campaign campaign) {
-		String receivers = "";
-		for (CampaignDetail aCampaignDetail : campaign.getReceiver()) {
-			if (aCampaignDetail.getReceiver() != null) {
-				receivers += aCampaignDetail.getReceiver().getUsername() + ", ";
-			}
+	
+	private void showOrHideTable() {
+		if (dataView.getItemCount() <= 0) {
+			searchForm.setVisible(false);
+			dataView.setVisible(false);
+			footerNavigator.setVisible(false);
+			searchButton.setVisible(false);
+			feedbackMessage.setVisible(true);
+		} else {
+			searchForm.setVisible(true);
+			dataView.setVisible(true);
+			footerNavigator.setVisible(true);
+			searchButton.setVisible(true);
+			feedbackMessage.setVisible(false);
 		}
-		return receivers;
 	}
+
+//	private String getReceivers(Campaign campaign) {
+//		String receivers = "";
+//		for (CampaignDetail aCampaignDetail : campaign.getReceiver()) {
+//			if (aCampaignDetail.getReceiver() != null) {
+//				receivers += aCampaignDetail.getReceiver().getUsername() + ", ";
+//			}
+//		}
+//		return receivers;
+//	}
 
 	class CampaignProvider implements IDataProvider<Campaign> {
 

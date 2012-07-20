@@ -133,6 +133,8 @@ public class UsersAdministrationPage extends AdministrationPage {
 
 	private final DataView<User> dataView;
 	private final PagingNavigator footerNavigator;
+	private final WebMarkupContainer searchButton;
+	private final Form<User> searchUserForm;
 
 	final LoadableDetachableModel<List<User>> resultsModel = new LoadableDetachableModel<List<User>>() {
 		private static final long serialVersionUID = 1L;
@@ -172,13 +174,13 @@ public class UsersAdministrationPage extends AdministrationPage {
 		deleteConfirmationDialog = deleteConfirmationDialog();
 		parent.add(deleteConfirmationDialog);
 
-		final Form<User> searchUserForm = searchUserForm(parent);
+		searchUserForm = searchUserForm(parent);
 
 		parent.add(searchUserForm);
 
 		searchUserForm.add(group);
 
-		WebMarkupContainer searchButton = createButtonWithEffect(
+		searchButton = createButtonWithEffect(
 				"searchUserLink", "searchFields", new SlideToggle());
 		parent.add(searchButton);
 		
@@ -339,6 +341,8 @@ public class UsersAdministrationPage extends AdministrationPage {
 				successDialog.open(target);
 				// setResponsePage(MessagesAdministrationPage.class);
 				dialog.close(target);
+				
+				showOrHideTable();
 			}
 		};
 
@@ -434,15 +438,22 @@ public class UsersAdministrationPage extends AdministrationPage {
 //					userService.deleteUser(aUser);
 //				}
 				
-				if (dataView.getItemCount() <= 0) {
-					this.setVisible(false);
-					footerNavigator.setVisible(false);
-					feedbackMessage.setVisible(true);
-				} else {
-					this.setVisible(true);
-					footerNavigator.setVisible(true);
-					feedbackMessage.setVisible(false);
-				}
+				
+//				if (dataView.getItemCount() <= 0) {
+//					//this.setVisible(false);
+//					form.setVisible(false);
+//					dataView.setVisible(false);
+//					footerNavigator.setVisible(false);
+//					feedbackMessage.setVisible(true);
+//				} else {
+//					//this.setVisible(true);
+//					form.setVisible(true);
+//					dataView.setVisible(true);
+//					footerNavigator.setVisible(true);
+//					feedbackMessage.setVisible(false);
+//				}
+				
+				showOrHideTable();
 
 				target.add(parent);
 
@@ -577,6 +588,22 @@ public class UsersAdministrationPage extends AdministrationPage {
 
 		return form;
 
+	}
+	
+	private void showOrHideTable() {
+		if (dataView.getItemCount() <= 0) {
+			searchUserForm.setVisible(false);
+			dataView.setVisible(false);
+			footerNavigator.setVisible(false);
+			searchButton.setVisible(false);
+			feedbackMessage.setVisible(true);
+		} else {
+			searchUserForm.setVisible(true);
+			dataView.setVisible(true);
+			footerNavigator.setVisible(true);
+			searchButton.setVisible(true);
+			feedbackMessage.setVisible(false);
+		}
 	}
 
 	class WriterProvider implements IDataProvider<User> {

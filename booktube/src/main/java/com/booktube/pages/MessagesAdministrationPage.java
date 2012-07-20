@@ -50,9 +50,11 @@ public class MessagesAdministrationPage extends AdministrationPage {
 
 	private final DataView<Message> dataView;
 	private final PagingNavigator footerNavigator;
-
+	private final WebMarkupContainer searchButton;
+	private final Form<Message> searchForm;
+	
 	private final CheckGroup<Message> group;
-
+	
 	private Message deleteMessage;
 
 	private Long searchMessageId;
@@ -78,7 +80,7 @@ public class MessagesAdministrationPage extends AdministrationPage {
 		footerNavigator = new PagingNavigator("footerPaginator", dataView);
 		parent.add(footerNavigator);
 
-		Form<Message> searchForm = searchMessageForm(parent);
+		searchForm = searchMessageForm(parent);
 		parent.add(searchForm);
 
 		group = new CheckGroup<Message>("group", new ArrayList<Message>());
@@ -87,7 +89,7 @@ public class MessagesAdministrationPage extends AdministrationPage {
 
 		searchForm.add(group);
 
-		WebMarkupContainer searchButton = createButtonWithEffect(
+		searchButton = createButtonWithEffect(
 				"searchMessageLink", "searchFields", new SlideToggle());
 		parent.add(searchButton);
 		
@@ -159,6 +161,8 @@ public class MessagesAdministrationPage extends AdministrationPage {
 				deleteDialog.open(target);
 				// setResponsePage(MessagesAdministrationPage.class);
 				dialog.close(target);
+				
+				showOrHideTable();
 			}
 		};
 
@@ -304,15 +308,17 @@ public class MessagesAdministrationPage extends AdministrationPage {
 					}
 				}
 
-				if (dataView.getItemCount() <= 0) {
-					this.setVisible(false);
-					footerNavigator.setVisible(false);
-					feedbackMessage.setVisible(true);
-				} else {
-					this.setVisible(true);
-					footerNavigator.setVisible(true);
-					feedbackMessage.setVisible(false);
-				}
+				showOrHideTable();
+				
+//				if (dataView.getItemCount() <= 0) {
+//					this.setVisible(false);
+//					footerNavigator.setVisible(false);
+//					feedbackMessage.setVisible(true);
+//				} else {
+//					this.setVisible(true);
+//					footerNavigator.setVisible(true);
+//					feedbackMessage.setVisible(false);
+//				}
 
 				target.add(parent);
 
@@ -408,6 +414,22 @@ public class MessagesAdministrationPage extends AdministrationPage {
 
 		return form;
 
+	}
+	
+	private void showOrHideTable() {
+		if (dataView.getItemCount() <= 0) {
+			searchForm.setVisible(false);
+			dataView.setVisible(false);
+			footerNavigator.setVisible(false);
+			searchButton.setVisible(false);
+			feedbackMessage.setVisible(true);
+		} else {
+			searchForm.setVisible(true);
+			dataView.setVisible(true);
+			footerNavigator.setVisible(true);
+			searchButton.setVisible(true);
+			feedbackMessage.setVisible(false);
+		}
 	}
 
 	/*

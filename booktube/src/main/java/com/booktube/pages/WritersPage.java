@@ -19,6 +19,7 @@ import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import com.booktube.model.User;
@@ -52,7 +53,7 @@ public class WritersPage extends BasePage {
 		List<String> list = Arrays.asList(new String[] { "A", "B", "C", "D",
 				"E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P",
 				"Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" });
-		ListView<String> listview = new ListView<String>("listview", list) {
+		ListView<String> lettersListView = new ListView<String>("letters", list) {
 
 			private static final long serialVersionUID = 1L;
 
@@ -81,12 +82,28 @@ public class WritersPage extends BasePage {
 				item.add(link);
 			}
 		};
-		parent.add(listview);
+		parent.add(lettersListView);
 		// parent.add(listWriters("writerList", users));
 		DataView<User> dataView = writerList("writerList");
 
 		parent.add(dataView);
-		parent.add(new PagingNavigator("footerPaginator", dataView));
+		
+		PagingNavigator footerNavigator = new PagingNavigator("footerPaginator", dataView);
+		parent.add(footerNavigator);
+		
+		final Label feedbackMessage = new Label("feedbackMessage", new ResourceModel("noResults"));
+		parent.add(feedbackMessage);
+		
+		if ( dataView.getItemCount() > 0 ) {
+			footerNavigator.setVisible(true);
+			lettersListView.setVisible(true);
+			feedbackMessage.setVisible(false);
+		}
+		else {
+			footerNavigator.setVisible(false);
+			lettersListView.setVisible(false);
+			feedbackMessage.setVisible(true);
+		}
 
 	}
 

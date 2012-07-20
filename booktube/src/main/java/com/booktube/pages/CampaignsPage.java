@@ -11,6 +11,7 @@ import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -46,7 +47,21 @@ public class CampaignsPage extends BasePage {
 		DataView<Campaign> dataView = campaignList("campaignList");
 
 		parent.add(dataView);
-		parent.add(new PagingNavigator("footerPaginator", dataView));
+		
+		PagingNavigator footerNavigator = new PagingNavigator("footerPaginator", dataView);
+		parent.add(footerNavigator);
+		
+		final Label feedbackMessage = new Label("feedbackMessage", new ResourceModel("noResults"));
+		parent.add(feedbackMessage);
+		
+		if ( dataView.getItemCount() > 0 ) {
+			footerNavigator.setVisible(true);
+			feedbackMessage.setVisible(false);
+		}
+		else {
+			footerNavigator.setVisible(false);
+			feedbackMessage.setVisible(true);
+		}
 
 	}
 
