@@ -113,6 +113,9 @@ public class WorksAdministrationPage extends AdministrationPage {
 	
 	private final DataView<Book> dataView;
 	private final PagingNavigator footerNavigator;
+	
+	private final Form<Book> searchBookForm;
+	private final WebMarkupContainer searchButton;
 
 	private final CheckGroup<Book> group;
 
@@ -160,13 +163,13 @@ public class WorksAdministrationPage extends AdministrationPage {
 		deleteConfirmationDialog = deleteConfirmationDialog();
 		parent.add(deleteConfirmationDialog);
 
-		final Form<Book> searchBookForm = searchBookForm(parent);
+		searchBookForm = searchBookForm(parent);
 
 		parent.add(searchBookForm);
 
 		searchBookForm.add(group);
 
-		WebMarkupContainer searchButton = createButtonWithEffect(
+		searchButton = createButtonWithEffect(
 				"searchBookLink", "searchFields", new SlideToggle());
 		parent.add(searchButton);
 		
@@ -370,6 +373,9 @@ public class WorksAdministrationPage extends AdministrationPage {
 				target.add(successDialog);
 				// deleteConfirmationdialog.close(target);
 				successDialog.open(target);
+				
+				showOrHideTable();
+				
 				//JsScope.quickScope(dialog.close().render());
 				//dialog.close().render();
 				// setResponsePage(MessagesAdministrationPage.class);
@@ -476,17 +482,17 @@ public class WorksAdministrationPage extends AdministrationPage {
 				// group.setVisible(false);
 				// }
 				
+				showOrHideTable();
 				
-				
-				if (dataView.getItemCount() <= 0) {
-					this.setVisible(false);
-					footerNavigator.setVisible(false);
-					feedbackMessage.setVisible(true);
-				} else {
-					this.setVisible(true);
-					footerNavigator.setVisible(true);
-					feedbackMessage.setVisible(false);
-				}
+//				if (dataView.getItemCount() <= 0) {
+//					this.setVisible(false);
+//					footerNavigator.setVisible(false);
+//					feedbackMessage.setVisible(true);
+//				} else {
+//					this.setVisible(true);
+//					footerNavigator.setVisible(true);
+//					feedbackMessage.setVisible(false);
+//				}
 //
 //				target.add(parent);
 
@@ -618,6 +624,22 @@ public class WorksAdministrationPage extends AdministrationPage {
 
 		return form;
 
+	}
+	
+	private void showOrHideTable() {
+		if (dataView.getItemCount() <= 0) {
+			searchBookForm.setVisible(false);
+			dataView.setVisible(false);
+			footerNavigator.setVisible(false);
+			searchButton.setVisible(false);
+			feedbackMessage.setVisible(true);
+		} else {
+			searchBookForm.setVisible(true);
+			dataView.setVisible(true);
+			footerNavigator.setVisible(true);
+			searchButton.setVisible(true);
+			feedbackMessage.setVisible(false);
+		}
 	}
 
 	class BookProvider implements IDataProvider<Book> {
