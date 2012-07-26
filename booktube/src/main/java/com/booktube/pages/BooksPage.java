@@ -9,13 +9,14 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
-import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
@@ -43,7 +44,7 @@ public class BooksPage extends BasePage {
 
 	public static final int BOOKS_PER_PAGE = 5;
 
-	private final PagingNavigator footerNavigator;
+	private final AjaxPagingNavigator footerNavigator;
 	
 	private String author = null;
 	private String title = null;
@@ -115,7 +116,16 @@ public class BooksPage extends BasePage {
 
 		parent.add(dataView);
 		
-		footerNavigator = new PagingNavigator("footerPaginator", dataView);
+		footerNavigator = new AjaxPagingNavigator("footerPaginator", dataView) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onAjaxEvent(AjaxRequestTarget target) {
+				target.appendJavaScript("scrollTo(0, 0)");
+				target.add(parent);
+			}
+		};
 		parent.add(footerNavigator);
 		
 		final Label feedbackMessage = new Label("feedbackMessage", new ResourceModel("noResults"));

@@ -11,6 +11,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
+import org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Check;
@@ -19,7 +20,6 @@ import org.apache.wicket.markup.html.form.CheckGroupSelector;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
@@ -112,7 +112,7 @@ public class WorksAdministrationPage extends AdministrationPage {
 //	private String successDialogText;
 	
 	private final DataView<Book> dataView;
-	private final PagingNavigator footerNavigator;
+	private final AjaxPagingNavigator footerNavigator;
 	
 	private final Form<Book> searchBookForm;
 	private final WebMarkupContainer searchButton;
@@ -151,7 +151,17 @@ public class WorksAdministrationPage extends AdministrationPage {
 		group.add(dataView);
 		group.add(new CheckGroupSelector("groupSelector"));
 		
-		footerNavigator = new PagingNavigator("footerPaginator", dataView);
+		footerNavigator = new AjaxPagingNavigator("footerPaginator", dataView) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onAjaxEvent(AjaxRequestTarget target) {
+				target.add(parent);
+				
+			}
+		};
+		//footerNavigator = new PagingNavigator("footerPaginator", dataView);
 		parent.add(footerNavigator);
 
 		//deleteDialog = deleteDialog(successDialogLabel, WorksAdministrationPage.class);
