@@ -12,6 +12,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
+import org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Check;
@@ -49,7 +50,7 @@ public class MessagesAdministrationPage extends AdministrationPage {
 	private static Dialog deleteConfirmationDialog;
 
 	private final DataView<Message> dataView;
-	private final PagingNavigator footerNavigator;
+	private final AjaxPagingNavigator footerNavigator;
 	private final WebMarkupContainer searchButton;
 	private final Form<Message> searchForm;
 	
@@ -77,7 +78,15 @@ public class MessagesAdministrationPage extends AdministrationPage {
 
 		dataView = messageList("messageList");
 
-		footerNavigator = new PagingNavigator("footerPaginator", dataView);
+		footerNavigator = new AjaxPagingNavigator("footerPaginator", dataView) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onAjaxEvent(AjaxRequestTarget target) {
+				target.add(parent);
+			}
+		};
 		parent.add(footerNavigator);
 
 		searchForm = searchMessageForm(parent);

@@ -3,7 +3,6 @@ package com.booktube.pages;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -13,6 +12,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
+import org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Check;
@@ -23,7 +23,6 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
@@ -132,7 +131,7 @@ public class UsersAdministrationPage extends AdministrationPage {
 	private final CheckGroup<User> group;
 
 	private final DataView<User> dataView;
-	private final PagingNavigator footerNavigator;
+	private final AjaxPagingNavigator footerNavigator;
 	private final WebMarkupContainer searchButton;
 	private final Form<User> searchUserForm;
 
@@ -164,7 +163,15 @@ public class UsersAdministrationPage extends AdministrationPage {
 		group.add(dataView);
 		group.add(new CheckGroupSelector("groupSelector"));
 
-		footerNavigator = new PagingNavigator("footerPaginator", dataView);
+		footerNavigator = new AjaxPagingNavigator("footerPaginator", dataView) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onAjaxEvent(AjaxRequestTarget target) {
+				target.add(parent);
+			}
+		};
 		parent.add(footerNavigator);
 
 		successDialog = new SuccessDialog<UsersAdministrationPage>(

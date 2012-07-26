@@ -7,13 +7,13 @@ import java.util.List;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
@@ -23,7 +23,6 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import com.booktube.model.User;
-import com.booktube.pages.customComponents.DynamicLabel;
 import com.booktube.service.UserService;
 
 public class WritersPage extends BasePage {
@@ -88,7 +87,16 @@ public class WritersPage extends BasePage {
 
 		parent.add(dataView);
 		
-		PagingNavigator footerNavigator = new PagingNavigator("footerPaginator", dataView);
+		AjaxPagingNavigator footerNavigator = new AjaxPagingNavigator("footerPaginator", dataView) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onAjaxEvent(AjaxRequestTarget target) {
+				target.appendJavaScript("scrollTo(0, 0)");
+				target.add(parent);			
+			}
+		};
 		parent.add(footerNavigator);
 		
 		final Label feedbackMessage = new Label("feedbackMessage", new ResourceModel("noResults"));
