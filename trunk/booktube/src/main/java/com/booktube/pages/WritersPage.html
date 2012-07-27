@@ -16,13 +16,14 @@
 	</span>
 	
 	<div wicket:id="writerList"  style="border: 1px black solid; margin-bottom: 5px; padding-left: 2px;">
+		<img wicket:id="avatar" style="float: left; padding-right: 5px; margin-top: 2px;"/>
 		<p>User Id: <span wicket:id="id">User Id goes here</span></p>
 		<p><wicket:message key="username">Username</wicket:message>: <span wicket:id="username">Username goes here</span></p>
 		<p><wicket:message key="firstname">Firstname</wicket:message>: <span wicket:id="firstname">Firstname goes here</span></p>
 		<p><wicket:message key="lastname">Lastname</wicket:message>: <span wicket:id="lastname">Lastname goes here</span></p>
 		<p>
 			<a href="#" wicket:id="worksLink"><wicket:message key="viewWorks">View Works</wicket:message></a> | 
-			<a href="#" wicket:id="detailsLink"><wicket:message key="view">View</wicket:message></a> | 
+			<a href="#" wicket:id="detailsLink"><wicket:message key="details">Details</wicket:message></a> | 
 			<a href="#" wicket:id="deleteLink"><wicket:message key="delete">Delete</wicket:message></a> | 
 			<a href="#" wicket:id="editLink"><wicket:message key="edit">Edit</wicket:message></a>
 		</p>

@@ -13,6 +13,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import com.booktube.WiaSession;
 import com.booktube.model.Campaign;
+import com.booktube.model.CampaignDetail;
 import com.booktube.model.User;
 import com.booktube.model.User.Level;
 import com.booktube.service.CampaignService;
@@ -29,8 +30,17 @@ public class ShowCampaignPage extends BasePage {
 
 	public ShowCampaignPage(final PageParameters pageParameters) {
 
+		Long campaignId = null;
+		
 		user = WiaSession.get().getLoggedInUser();
-		Long campaignId = pageParameters.get("campaignId").toLong();
+		
+		if ( pageParameters.get("campaignId") == null ) {
+			System.out.println("ERRRORRRR");
+			//TODO
+		}
+		else {
+			campaignId = pageParameters.get("campaignId").toLong();
+		}
 
 		campaign = campaignService.getCampaign(campaignId);
 
@@ -64,12 +74,30 @@ public class ShowCampaignPage extends BasePage {
 				item.add(new Label("sender"));
 				item.add(new Label("date"));
 				item.add(new Label("text"));
+				
+				List<CampaignDetail> campaignDetailList = new ArrayList<CampaignDetail>(campaign.getReceiver());
+				
+				ListView<CampaignDetail> listview = new ListView<CampaignDetail>("receiverList", campaignDetailList) {
+					private static final long serialVersionUID = 1L;
+
+					protected void populateItem(ListItem<CampaignDetail> item) {
+						final CampaignDetail campaignDetail = (CampaignDetail) item.getModelObject();
+						CompoundPropertyModel<CampaignDetail> model = new CompoundPropertyModel<CampaignDetail>(
+								campaignDetail);
+						item.setDefaultModel(model);
+						
+						item.add(new Label("username", campaignDetail.getReceiver().getUsername()));
+
+					}
+				};
+				
+				item.add(listview);
 			}
 		};
 
 		parent.add(listview);
 
-		if (user.getLevel() != Level.ADMIN) {
+		if (user != null && user.getLevel() != Level.ADMIN) {
 			campaignService.getCampaignDetail(campaign, user).setRead(true);
 			campaignService.updateCampaign(campaign);
 		}

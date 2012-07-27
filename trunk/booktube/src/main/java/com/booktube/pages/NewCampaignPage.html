@@ -16,7 +16,7 @@
 
 			<form wicket:id="form">
 			
-				<p><b><wicket:message key="filters">Filters</wicket:message></b></p>
+				<p><b><wicket:message key="filters">Select Filters</wicket:message></b></p>
 				<p>
 					<b><wicket:message key="byGender">By Gender</wicket:message>:</b> &nbsp;
 					<select wicket:id="gender">
@@ -45,6 +45,14 @@
 					<input type="button" wicket:id="addFilter" value="Agregar Filtro" />
 				</p>
 				
+				<p>
+					<b>Seleccione Usuario:</b> <input type="text" wicket:id="addReceiver" /> <input type="button" wicket:id="addReceiverButton" value="Agregar Usuario" />
+				</p>
+				
+				<p>
+					<b>Lista de Filtros:</b>
+				</p>
+				
 				<span wicket:id="filters">
 					<table cellpadding="0" class="cf hX">
 						<tbody>
@@ -58,11 +66,15 @@
 							<tr class="hR">
 								<td style="background-color: rgb(90, 105, 134); color: rgb(222, 229, 242);" class="hT hU hM"></td>
 								<td style="background-color: rgb(90, 105, 134); color: rgb(222, 229, 242);" class="hU hM">
-									<div tabindex="0" role="button" title="Search for all messages with label PF" name="PF" class="hN"><wicket:container wicket:id="filter"></wicket:container></div>
+									<div tabindex="0" role="button" title="Search for all messages with label PF" name="PF" class="hN">
+										<wicket:container wicket:id="filter"></wicket:container>
+									</div>
 								</td>
 								<td style="background-color: #dee5f2" class="hS hM"></td>
-								<td style="background-color: #5a6986; color: #dee5f2" class="hV hM">
-									<span tabindex="0" role="button" title="Remove label PF from this conversation" name="PF" class="hO">x</span>
+								<td wicket:id="removeFilter" style="background-color: #5a6986; color: #dee5f2" class="hV hM">
+									<span tabindex="0" role="button" title="Remove label PF from this conversation" name="PF" class="hO">
+										x
+									</span>
 								</td>
 								<td style="background-color: #5a6986" class="hW hV hM"></td>
 							</tr>
@@ -76,46 +88,90 @@
 						</tbody>
 					</table> 
 				</span>
-						
-				<hr />
 				
-				<p><b><wicket:message key="message">Message</wicket:message></b></p>
-			
-				<p> 
-					<b><wicket:message key="subject">Subject</wicket:message>:</b> &nbsp;
-					<input type="text" wicket:id="subject" value="" />
-				</p>
-				<br /> 
-				<b><wicket:message key="text">Text</wicket:message>:</b>
 				<p>
-					<textarea wicket:id="campaignText" cols="60" rows="15"></textarea>
+					<b>Lista de Destinatarios:</b>
 				</p>
-
-				<div wicket:id="group">
-					<table>
-						<tr>
-							<td valign="top">Select persons</td>
-							<td><input type="checkbox" wicket:id="groupselector" />check/uncheck
-								all <br />
-								<table>
-									<tr>
-										<td><b>Select</b></td>
-										<td><b>First Name</b></td>
-										<td><b>Last Name</b></td>
-									</tr>
-									<tr wicket:id="persons">
-										<td><input type="checkbox" wicket:id="checkbox" /></td>
-										<td><span wicket:id="firstname">[this is where name
-												will be]</span></td>
-										<td><span wicket:id="lastname">[this is where
-												lastname will be]</span></td>
-									</tr>
-								</table>
-							</td>
-						</tr>
-					</table>
-				</div> 
-				<input type="button" wicket:id="sendCampaign" value="Send" />
+				
+				<span wicket:id="receiverList">
+					<table cellpadding="0" class="cf hX">
+						<tbody>
+							<tr class="hY hM">
+								<td class="hT hM"></td>
+								<td style="background-color: rgb(90, 105, 134); color: rgb(222, 229, 242);" class="hU hM"></td>
+								<td style="background-color: #5a6986" class="hS hM"></td>
+								<td style="background-color: #5a6986" class="hV hM"></td>
+								<td class="hW hM"></td>
+							</tr>
+							<tr class="hR">
+								<td style="background-color: rgb(90, 105, 134); color: rgb(222, 229, 242);" class="hT hU hM"></td>
+								<td style="background-color: rgb(90, 105, 134); color: rgb(222, 229, 242);" class="hU hM">
+									<div tabindex="0" role="button" title="Search for all messages with label PF" name="PF" class="hN">
+										<wicket:container wicket:id="username"></wicket:container>
+									</div>
+								</td>
+								<td style="background-color: #dee5f2" class="hS hM"></td>
+								<td wicket:id="removeReceiver" style="background-color: #5a6986; color: #dee5f2" class="hV hM">
+									<span tabindex="0" role="button" title="Remove label PF from this conversation" name="PF" class="hO">
+										x
+									</span>
+								</td>
+								<td style="background-color: #5a6986" class="hW hV hM"></td>
+							</tr>
+							<tr class="hY hM">
+								<td class="hT hM"></td>
+								<td style="background-color: rgb(90, 105, 134); color: rgb(222, 229, 242);" class="hU hM"></td>
+								<td style="background-color: #5a6986" class="hS hM"></td>
+								<td style="background-color: #5a6986" class="hV hM"></td>
+								<td class="hW hM"></td>
+							</tr>
+						</tbody>
+					</table> 
+				</span>
+							
+				<div wicket:id="newCampaignContainer">
+				
+					<hr />
+				
+					<p><b><wicket:message key="message">Message</wicket:message></b></p>
+				
+					<p> 
+						<b><wicket:message key="subject">Subject</wicket:message>:</b> &nbsp;
+						<input type="text" wicket:id="subject" value="" />
+					</p>
+					<br /> 
+					<b><wicket:message key="text">Text</wicket:message>:</b>
+					<p>
+						<textarea wicket:id="campaignText" cols="60" rows="15"></textarea>
+					</p>
+	
+	<!-- 				<div wicket:id="group"> -->
+	<!-- 					<table> -->
+	<!-- 						<tr> -->
+	<!-- 							<td valign="top">Select persons</td> -->
+	<!-- 							<td><input type="checkbox" wicket:id="groupselector" />check/uncheck -->
+	<!-- 								all <br /> -->
+	<!-- 								<table> -->
+	<!-- 									<tr> -->
+	<!-- 										<td><b>Select</b></td> -->
+	<!-- 										<td><b>First Name</b></td> -->
+	<!-- 										<td><b>Last Name</b></td> -->
+	<!-- 									</tr> -->
+	<!-- 									<tr wicket:id="persons"> -->
+	<!-- 										<td><input type="checkbox" wicket:id="checkbox" /></td> -->
+	<!-- 										<td><span wicket:id="firstname">[this is where name -->
+	<!-- 												will be]</span></td> -->
+	<!-- 										<td><span wicket:id="lastname">[this is where -->
+	<!-- 												lastname will be]</span></td> -->
+	<!-- 									</tr> -->
+	<!-- 								</table> -->
+	<!-- 							</td> -->
+	<!-- 						</tr> -->
+	<!-- 					</table> -->
+	<!-- 				</div>  -->
+					
+					<input type="button" wicket:id="sendCampaign" value="Send" />
+				</div>
 			</form>
 
 			<span wicket:id="registerMessage">Register message</span>

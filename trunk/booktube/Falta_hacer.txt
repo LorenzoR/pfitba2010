@@ -69,3 +69,5 @@
 
 - Mensaje de error en enviar campaña cuando no se seleccionan destinatarios
 
+- Cambiar el getUsers(...) largo en NewCampaignPage por getUsers individuales y sacar a los admin
+

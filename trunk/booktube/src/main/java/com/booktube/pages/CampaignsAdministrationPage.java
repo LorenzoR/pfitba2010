@@ -201,7 +201,7 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 				item.setDefaultModel(model);
 
 				final PageParameters parameters = new PageParameters();
-				parameters.set("messageId", campaign.getId());
+				parameters.set("campaignId", campaign.getId());
 				// item.add(new Label("id"));
 				item.add(new Check<Campaign>("checkbox", item.getModel()));
 //				item.add(new Label("id"));
@@ -214,7 +214,7 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 					private static final long serialVersionUID = 1L;
 
 					public void onClick() {
-						setResponsePage(ShowMessagePage.class, parameters);
+						setResponsePage(ShowCampaignPage.class, parameters);
 					}
 
 				});
@@ -222,7 +222,7 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 					private static final long serialVersionUID = 1L;
 
 					public void onClick() {
-						setResponsePage(ShowMessagePage.class, parameters);
+						setResponsePage(ShowCampaignPage.class, parameters);
 						// setResponsePage(new EditWriterPage(user.getId(),
 						// MessagePage.this));
 					}
