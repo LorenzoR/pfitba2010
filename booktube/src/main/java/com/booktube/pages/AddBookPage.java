@@ -1,5 +1,6 @@
 package com.booktube.pages;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -51,7 +52,7 @@ public class AddBookPage extends BasePage {
 		add(parent);
 
 		setBreadcrumbs("Agregar Obra >");
-		
+
 		user = WiaSession.get().getLoggedInUser();
 
 		// Label registerMessage = new Label("registerMessage",
@@ -90,29 +91,30 @@ public class AddBookPage extends BasePage {
 			registerMessage.setVisible(false);
 		}
 
-//		AjaxDialogButton ok = new AjaxDialogButton("OK") {
-//
-//			private static final long serialVersionUID = 1L;
-//
-//			@Override
-//			protected void onButtonClicked(AjaxRequestTarget target) {
-//				// do your cancel logic here
-//				System.out.println("BUTTON CLICKED!!");
-//				setResponsePage(HomePage.class);
-//				if (lastInsertedId != null) {
-//					PageParameters pageParameters = new PageParameters();
-//					pageParameters.set("book", lastInsertedId);
-//					setResponsePage(ShowBookPage.class, pageParameters);
-//				}
-//
-//			}
-//		};
-//
-//		dialog = new Dialog("success_dialog");
-//		dialog.setButtons(ok);
-//		dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
-		
-		dialog = new SuccessDialog<ShowBookPage>("success_dialog", "Obra agragada con éxito!", ShowBookPage.class, pageParameters);
+		// AjaxDialogButton ok = new AjaxDialogButton("OK") {
+		//
+		// private static final long serialVersionUID = 1L;
+		//
+		// @Override
+		// protected void onButtonClicked(AjaxRequestTarget target) {
+		// // do your cancel logic here
+		// System.out.println("BUTTON CLICKED!!");
+		// setResponsePage(HomePage.class);
+		// if (lastInsertedId != null) {
+		// PageParameters pageParameters = new PageParameters();
+		// pageParameters.set("book", lastInsertedId);
+		// setResponsePage(ShowBookPage.class, pageParameters);
+		// }
+		//
+		// }
+		// };
+		//
+		// dialog = new Dialog("success_dialog");
+		// dialog.setButtons(ok);
+		// dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
+
+		dialog = new SuccessDialog<ShowBookPage>("success_dialog",
+				"Obra agragada con éxito!", ShowBookPage.class, pageParameters);
 		parent.add(dialog);
 
 	}
@@ -127,7 +129,8 @@ public class AddBookPage extends BasePage {
 
 		form.setDefaultModel(model);
 
-		final RequiredTextField<Book> titleField = new RequiredTextField<Book>("title");
+		final RequiredTextField<Book> titleField = new RequiredTextField<Book>(
+				"title");
 
 		form.add(titleField);
 
@@ -157,8 +160,22 @@ public class AddBookPage extends BasePage {
 				"category", new PropertyModel<Book>(newBook, "category")) {
 			private static final long serialVersionUID = 1L;
 
-			protected final List<String> getChoiceList(final String input) {
-				return bookService.getCategories(0, Integer.MAX_VALUE);
+			@Override
+			protected final List<String> getChoiceList(final String searchTextInput) {
+				List<String> choices = new ArrayList<String>(10);
+
+				for (final String aCategory : bookService.getCategories(0, Integer.MAX_VALUE)) {
+
+					if (aCategory.toUpperCase().startsWith(
+							searchTextInput.toUpperCase())) {
+						choices.add(aCategory);
+						if (choices.size() == 10) {
+							break;
+						}
+					}
+				}
+
+				return choices;
 			}
 
 			protected final String getChoiceValue(final String choice)
@@ -173,8 +190,22 @@ public class AddBookPage extends BasePage {
 				"subcategory", new PropertyModel<Book>(newBook, "subcategory")) {
 			private static final long serialVersionUID = 1L;
 
-			protected final List<String> getChoiceList(final String input) {
-				return bookService.getSubcategories(0, Integer.MAX_VALUE, null);
+			@Override
+			protected List<String> getChoiceList(String searchTextInput) {
+				List<String> choices = new ArrayList<String>(10);
+
+				for (final String aSubcategory : bookService.getSubcategories(0, Integer.MAX_VALUE, null)) {
+
+					if (aSubcategory.toUpperCase().startsWith(
+							searchTextInput.toUpperCase())) {
+						choices.add(aSubcategory);
+						if (choices.size() == 10) {
+							break;
+						}
+					}
+				}
+
+				return choices;
 			}
 
 			protected final String getChoiceValue(final String choice)
@@ -197,31 +228,31 @@ public class AddBookPage extends BasePage {
 				System.out.println("--- SUBCATEGORY: "
 						+ newBook.getSubCategory());
 				System.out.println("--- TAGS: " + newBook.getTags().toString());
-//				String text = editor.getDefaultModelObjectAsString();
-//				String username = user.getUsername();
-//				String title = titleField.getDefaultModelObjectAsString();
-//				Set<BookTag> tagSet = (Set<BookTag>) tagField
-//						.getDefaultModelObject();
-//				String subcategoryString = subcategory
-//						.getDefaultModelObjectAsString();
-//				String categoryString = category
-//						.getDefaultModelObjectAsString();
-//
-//				System.out.println("Tags: " + tagSet.toString());
-//
-//				Book book = new Book(title, text, user);
-//
-//				Set<String> bookTagSet = new HashSet<String>();
-//
-//				// for (String aTag : tagSet) {
-//				// //aTag.setBook(book);
-//				// bookTagSet.add(aTag);
-//				// }
-//
-//				// book.setTags(bookTagSet);
-//				book.setCategory(categoryString);
-//				book.setSubCategory(subcategoryString);
-				
+				// String text = editor.getDefaultModelObjectAsString();
+				// String username = user.getUsername();
+				// String title = titleField.getDefaultModelObjectAsString();
+				// Set<BookTag> tagSet = (Set<BookTag>) tagField
+				// .getDefaultModelObject();
+				// String subcategoryString = subcategory
+				// .getDefaultModelObjectAsString();
+				// String categoryString = category
+				// .getDefaultModelObjectAsString();
+				//
+				// System.out.println("Tags: " + tagSet.toString());
+				//
+				// Book book = new Book(title, text, user);
+				//
+				// Set<String> bookTagSet = new HashSet<String>();
+				//
+				// // for (String aTag : tagSet) {
+				// // //aTag.setBook(book);
+				// // bookTagSet.add(aTag);
+				// // }
+				//
+				// // book.setTags(bookTagSet);
+				// book.setCategory(categoryString);
+				// book.setSubCategory(subcategoryString);
+
 				/* Insert book */
 				Long lastInsertedId = bookService.insertBook(newBook);
 				pageParameters.set("book", lastInsertedId);
@@ -233,10 +264,10 @@ public class AddBookPage extends BasePage {
 				System.out.println("SubCategory: " + newBook.getSubCategory());
 
 				user.addBook(newBook);
-				
-				///* Clear values */
-				//editor.setModel(new Model<Book>());
-				//titleField.setModel(new Model<Book>());
+
+				// /* Clear values */
+				// editor.setModel(new Model<Book>());
+				// titleField.setModel(new Model<Book>());
 				target.add(parent);
 
 				dialog.open(target);
@@ -272,7 +303,7 @@ public class AddBookPage extends BasePage {
 		};
 
 		dialog.setButtons(ok);
-		//dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
+		// dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
 
 		return dialog;
 
@@ -301,40 +332,40 @@ public class AddBookPage extends BasePage {
 		form.add(username);
 		form.add(password);
 
-//		form.add(new Button("button1", new Model<String>("")) {
-//			private static final long serialVersionUID = 6743737357599494567L;
-//
-//			@Override
-//			public void onSubmit() {
-//				String userString = username.getDefaultModelObjectAsString();
-//				String passwordString = User.hash(
-//						password.getDefaultModelObjectAsString(), "SHA-1");
-//
-//				username.setModel(new Model<String>(""));
-//
-//				System.out.println("User: " + userString + " Pass: "
-//						+ passwordString);
-//
-//				User user = userService.getUser(userString);
-//
-//				if (user != null && user.getPassword().equals(passwordString)) {
-//					WiaSession.get().logInUser(user);
-//				} else {
-//					// TODO Auto-generated method stub
-//					/* TERMINAR MENSAJE DE LOGIN INCORRECTO */
-//					System.out.println("Login failed!");
-//					info("aaaaaaaaaaaa");
-//					// loginMsg.setVisible(true);
-//				}
-//
-//				if (!continueToOriginalDestination()) {
-//					setResponsePage(HomePage.class);
-//				}
-//
-//				// setResponsePage(BasePage.this);
-//
-//			}
-//		});
+		// form.add(new Button("button1", new Model<String>("")) {
+		// private static final long serialVersionUID = 6743737357599494567L;
+		//
+		// @Override
+		// public void onSubmit() {
+		// String userString = username.getDefaultModelObjectAsString();
+		// String passwordString = User.hash(
+		// password.getDefaultModelObjectAsString(), "SHA-1");
+		//
+		// username.setModel(new Model<String>(""));
+		//
+		// System.out.println("User: " + userString + " Pass: "
+		// + passwordString);
+		//
+		// User user = userService.getUser(userString);
+		//
+		// if (user != null && user.getPassword().equals(passwordString)) {
+		// WiaSession.get().logInUser(user);
+		// } else {
+		// // TODO Auto-generated method stub
+		// /* TERMINAR MENSAJE DE LOGIN INCORRECTO */
+		// System.out.println("Login failed!");
+		// info("aaaaaaaaaaaa");
+		// // loginMsg.setVisible(true);
+		// }
+		//
+		// if (!continueToOriginalDestination()) {
+		// setResponsePage(HomePage.class);
+		// }
+		//
+		// // setResponsePage(BasePage.this);
+		//
+		// }
+		// });
 
 		return form;
 	}

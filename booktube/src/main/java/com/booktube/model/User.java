@@ -117,6 +117,10 @@ public class User implements Serializable {
     	this.userVotes.add(userVote);
     }
     
+    @Basic
+	@Column(name = "IMAGE", nullable = false)
+	private String imageURL;
+    
 ////	@ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE},
 ////		      mappedBy="userVotes")
 ////	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
@@ -130,6 +134,7 @@ public class User implements Serializable {
 	public User() {
 		this.registrationDate = Calendar.getInstance().getTime();
 		this.books = new ArrayList<Book>();
+		this.imageURL = "defaultAvatar.png";
 		//this.votes = new HashSet<Book>();
 	}
 
@@ -320,6 +325,14 @@ public class User implements Serializable {
 	
 	public boolean isAdmin() {
 		return this.level == Level.ADMIN;
+	}
+
+	public String getImageURL() {
+		return imageURL;
+	}
+
+	public void setImageURL(String imageURL) {
+		this.imageURL = imageURL;
 	}
 
 //	public Set<Book> getVotes() {

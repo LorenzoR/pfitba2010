@@ -285,6 +285,7 @@ public abstract class AbstractAutoCompleteTextField<CHOICE> extends TextField {
 		choiceList = getChoiceList(searchTextInput);
 		return choiceList.iterator();
 	}
+//	protected abstract Iterator<CHOICE> getChoices(final String searchTextInput);
 
 	/**
 	 * Call-back method that should return a list of all possible assist choice

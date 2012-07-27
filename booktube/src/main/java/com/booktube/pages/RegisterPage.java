@@ -16,16 +16,18 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.form.validation.EqualPasswordInputValidator;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.util.GenericBaseModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.EmailAddressValidator;
 import org.odlabs.wiquery.ui.dialog.Dialog;
 import org.apache.wicket.datetime.PatternDateConverter;
-import org.apache.wicket.extensions.validation.validator.RfcCompliantEmailAddressValidator;
 
 import com.booktube.WicketApplication;
 import com.booktube.model.User;
@@ -81,6 +83,7 @@ public class RegisterPage extends BasePage {
 			final FeedbackPanel feedback) {
 
 		Form<User> form = new Form<User>("form");
+		form.setMultiPart(true);
 		
 		final User newUser = new User();
 
@@ -126,6 +129,9 @@ public class RegisterPage extends BasePage {
 				new EnumChoiceRenderer<Gender>(this));
 		
 		final TextField<User> cityField = new TextField<User>("city");
+		
+		final FileUploadField fileUpload = new FileUploadField("imgUpload", null);
+		form.add(fileUpload);
 		
 		birthdateField.setRequired(true);
 		countrySelect.setRequired(true);
@@ -218,9 +224,11 @@ public class RegisterPage extends BasePage {
 				System.out.println("Gender: " + newUser.getGender());
 				System.out.println("Birthdate: " + newUser.getBirthdate());
 
+				System.out.println("IMAGEEE : " + fileUpload.getConvertedInput().toString());
+				
 				target.add(parent);
 
-				dialog.open(target);
+				//dialog.open(target);
 
 			}
 
