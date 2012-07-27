@@ -6,7 +6,9 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -22,6 +24,7 @@ import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.CheckGroupSelector;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -52,8 +55,16 @@ public class NewCampaignPage extends BasePage {
 	private final SuccessDialog<?> dialog;
 
 	final PageParameters parameters;
+	
+	private final List<String> filters = new ArrayList<String>();
+	
+	private final List<List<User>> receiverList = new ArrayList<List<User>>();
 
 	public NewCampaignPage() {
+		
+		filters.add("Filtro 1");
+		filters.add("Filtro 2");
+		filters.add("Filtro 3");
 
 		// User user = new User("username", "firstname", "lastname");
 		// userService.insertUser(user);
@@ -81,6 +92,8 @@ public class NewCampaignPage extends BasePage {
 				parameters);
 		parent.add(dialog);
 
+		
+		
 		if (user == null) {
 			form.setVisible(false);
 		} else {
@@ -146,6 +159,16 @@ public class NewCampaignPage extends BasePage {
 				new Model<String>());
 		text.setOutputMarkupId(true);
 
+		final ListView<String> filtersListView = new ListView<String>("filters", filters) {
+
+			private static final long serialVersionUID = 1L;
+
+			protected void populateItem(final ListItem<String> item) {
+				item.add(new Label("filter", item.getModelObject()));
+			}
+		};
+		form.add(filtersListView);
+		
 		List<User> personsList = userService.getAllUsers(0, Integer.MAX_VALUE);
 
 		/* Saco al admin actual de la lista */
@@ -189,6 +212,53 @@ public class NewCampaignPage extends BasePage {
 		group.add(persons);
 
 		form.add(text);
+		
+		form.add(new AjaxSubmitLink("addFilter") {
+
+			@Override
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+				// TODO Auto-generated method stub
+				String country = countrySelect.getConvertedInput();
+
+				if ( StringUtils.isNotBlank(country) ) {
+					filters.add(country);
+				}
+				
+				Gender gender = genderSelect.getConvertedInput();
+
+				if ( gender != null ) {
+					filters.add(new ResourceModel("Gender."+gender.toString()).getObject());
+				}
+				
+				Integer lowAge = lowAgeField.getConvertedInput();
+				Integer highAge = highAgeField.getConvertedInput();
+
+				if ( lowAge != null || highAge != null ) {
+					String newFilter = lowAge + " - " + highAge;
+					newFilter.replace("\0", "");
+					filters.add(newFilter);
+				}
+				
+				Date lowDate = lowRegistrationDateField.getConvertedInput();
+				Date highDate = highRegistrationDateField.getConvertedInput();
+				
+				if ( lowDate != null || highDate != null ) {
+					String newFilter = lowDate + " - " + highDate;
+					newFilter.replace("\0", "");
+					filters.add(newFilter);
+				}
+				
+				target.add(form);
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		
 		form.add(new AjaxSubmitLink("sendCampaign") {
 
 			private static final long serialVersionUID = 1L;
