@@ -75,7 +75,7 @@ public class User implements Serializable {
 	private String city;
 	
 	@Basic
-	@Column(name = "EMAIL", nullable = false)
+	@Column(name = "EMAIL", nullable = false, unique = true)
 	private String email;
 	
 	@Enumerated(EnumType.ORDINAL)
@@ -118,7 +118,7 @@ public class User implements Serializable {
     }
     
     @Basic
-	@Column(name = "IMAGE", nullable = false)
+	@Column(name = "IMAGE")
 	private String imageURL;
     
 ////	@ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE},
@@ -134,7 +134,7 @@ public class User implements Serializable {
 	public User() {
 		this.registrationDate = Calendar.getInstance().getTime();
 		this.books = new ArrayList<Book>();
-		this.imageURL = "defaultAvatar.png";
+		//this.imageURL = "defaultAvatar.png";
 		//this.votes = new HashSet<Book>();
 	}
 

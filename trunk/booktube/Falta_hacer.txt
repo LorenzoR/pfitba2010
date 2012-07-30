@@ -31,7 +31,7 @@
 
 - Terminar de poner estilo a las paginas
 
-- Poner un AVATAR a los usuarios
+----- Poner un AVATAR a los usuarios (OK)
 
 - Para escribir y editar un trabajo poner texto enriquecido ( cosas basicas )
 
@@ -39,13 +39,14 @@
 
 - Falta la posibilidad de agregar capitulos a los libros
 
-- Para usuarios comunes, en Contactenos. Al enviar un nuevo mensaje o responder, nada avisa que se envio con exito
+---- Para usuarios comunes, en Contactenos. Al enviar un nuevo mensaje o responder, 
+		nada avisa que se envio con exito (OK)
 
 ---- Al ver detalles de un mensaje, sacar los links que permiten responder, eliminar. Sacar EDITAR (OK)
 
 ---- EN campa�as sacar la opcion editar (OK)
 
-- Pasar todo a castellano
+---- Pasar todo a castellano (OK)
 
 ----- Agregar que un usuario comun pueda editar su perfil (datos, imagen) (OK, falta agregar avatar)
 
@@ -63,7 +64,7 @@
 
 - sacar Wicket ajax debug 	
 
-- Ver pagina de escritores, mensajes, campañas cuando no hay datos
+----- Ver pagina de escritores, mensajes, campañas cuando no hay datos (OK)
 
 ----- Formato de rating en busqueda avanzada (numeros con punto o coma) (OK)
 

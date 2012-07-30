@@ -71,7 +71,7 @@ public class WritersPage extends BasePage {
 
 					@Override
 					public void onClick(AjaxRequestTarget target) {
-						searchUsername = item.getModelObject() +"%s";
+						searchUsername = item.getModelObject() +"%";
 						System.out.println("{{{{{{{ SearchUserName: " + searchUsername);
 						setBreadcrumbs("Escritores > " + item.getModelObject());
 						//breadcrumbs.setLabel("Escritores > " + item.getModelObject());
@@ -143,7 +143,18 @@ public class WritersPage extends BasePage {
 				System.out.println("IMAGE: " + user.getImageURL());
 				
 				Image avatar = new Image("avatar", new Model<String>());
-				avatar.add(new AttributeModifier("src", new Model<String>("img/" + user.getImageURL())));
+				
+				if ( user.getImageURL() == null ) {
+					avatar.add(new AttributeModifier("src", new Model<String>("img/defaultAvatar.png")));
+				}
+				else {
+					avatar.add(new AttributeModifier("src", new Model<String>("img/avatar/" + user.getImageURL())));
+				}
+				
+				avatar.add(new AttributeModifier("width", new Model<String>("116px")));
+				avatar.add(new AttributeModifier("height", new Model<String>("116px")));
+
+				
 				item.add(avatar);
 				//item.add(new Image("avatar", new Model<String>("img/defaultAvatar.png")));
 				
@@ -207,12 +218,12 @@ public class WritersPage extends BasePage {
 			// this.users = userService.getAllUsers(first, count);
 			// return this.users.iterator();
 			return userService.getUsers(first, count, null, searchUsername,
-					null, null, null, null, null, null).iterator();
+					null, null, null, null, null, null, null).iterator();
 		}
 
 		public int size() {
 			return userService.getCount(null, searchUsername, null, null, null,
-					null, null, null);
+					null, null, null, null);
 		}
 
 		public IModel<User> model(User user) {

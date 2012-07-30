@@ -19,6 +19,7 @@ import org.apache.wicket.markup.html.form.Check;
 import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.CheckGroupSelector;
 import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -41,6 +42,7 @@ import org.odlabs.wiquery.ui.dialog.DialogButton;
 
 import com.booktube.model.User;
 import com.booktube.model.User.Gender;
+import com.booktube.model.User.Level;
 import com.booktube.pages.customComponents.DynamicLabel;
 import com.booktube.pages.customComponents.SuccessDialog;
 import com.booktube.service.UserService;
@@ -127,6 +129,7 @@ public class UsersAdministrationPage extends AdministrationPage {
 	private Date searchLowRegistrationDate;
 	private Date searchHighRegistrationDate;
 	private String searchCountry;
+	private Level searchLevel;
 
 	private final CheckGroup<User> group;
 
@@ -390,11 +393,20 @@ public class UsersAdministrationPage extends AdministrationPage {
 		List<String> genderList = Arrays.asList(new String[] { "Masculino",
 				"Femenino" });
 
-		final DropDownChoice<String> gender = new DropDownChoice<String>(
-				"gender", new Model<String>(), genderList);
+//		final DropDownChoice<String> gender = new DropDownChoice<String>(
+//				"gender", new Model<String>(), genderList);
 
-		searchFields.add(gender);
+		final DropDownChoice<Gender> genderDDC = new DropDownChoice<Gender>(
+				"gender", Arrays.asList(Gender.values()),
+				new EnumChoiceRenderer<Gender>(this));
+		searchFields.add(genderDDC);
 
+		final DropDownChoice<Level> levelDDC = new DropDownChoice<Level>(
+				"level", Arrays.asList(Level.values()),
+				new EnumChoiceRenderer<Level>(this));
+		
+		searchFields.add(levelDDC);
+		
 		final DropDownChoice<String> country = new DropDownChoice<String>(
 				"country", new Model<String>(), userService.getAllCountries());
 
@@ -512,14 +524,17 @@ public class UsersAdministrationPage extends AdministrationPage {
 				searchUsername = new String(username
 						.getDefaultModelObjectAsString());
 
-				if (gender.getDefaultModelObjectAsString().equals("Masculino")) {
-					searchGender = Gender.MALE;
-				} else if (gender.getDefaultModelObjectAsString().equals(
-						"Femenino")) {
-					searchGender = Gender.FEMALE;
-				} else {
-					searchGender = null;
-				}
+				searchGender = genderDDC.getModelObject();
+				
+				searchLevel = levelDDC.getModelObject();
+//				if (genderDDC.getDefaultModelObjectAsString().equals("Masculino")) {
+//					searchGender = Gender.MALE;
+//				} else if (gender.getDefaultModelObjectAsString().equals(
+//						"Femenino")) {
+//					searchGender = Gender.FEMALE;
+//				} else {
+//					searchGender = null;
+//				}
 
 				
 				searchHighAge = highAge.getModelObject();
@@ -626,13 +641,13 @@ public class UsersAdministrationPage extends AdministrationPage {
 			return userService.getUsers(first, count, searchUserId,
 					searchUsername, searchGender, searchLowAge, searchHighAge,
 					searchCountry, searchLowRegistrationDate,
-					searchHighRegistrationDate).iterator();
+					searchHighRegistrationDate, searchLevel).iterator();
 		}
 
 		public int size() {
 			return userService.getCount(searchUserId, searchUsername,
 					searchGender, searchLowAge, searchHighAge, searchCountry,
-					searchLowRegistrationDate, searchHighRegistrationDate);
+					searchLowRegistrationDate, searchHighRegistrationDate, searchLevel);
 		}
 
 		public IModel<User> model(User user) {

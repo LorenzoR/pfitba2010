@@ -9,6 +9,9 @@
 	<wicket:container wicket:id="text"></wicket:container>
 </div>
 <h3><wicket:message key="editWriter">Edit Writer</wicket:message> <span wicket:id="writerId"></span></h3>
+
+<span wicket:id="feedback"></span>
+
 <form wicket:id="editWriterForm">
 	<p><wicket:message key="username">Username</wicket:message>: <input type="text" wicket:id="username" value=""/></p>
 	<p><wicket:message key="firstname">Firstname</wicket:message>: <input type="text" wicket:id="firstname" value=""/></p>
@@ -300,7 +303,16 @@
 	<p>
 		<wicket:message key="city">City</wicket:message>: <input type="text" wicket:id="city" value="" />
 	</p>
+	<p>
+		<img wicket:id="avatar" />
+	</p>
+	
+	<p>
+		Avatar: <input wicket:id="imgUpload" type="file"/>
+	</p>
+	
 	<input type="button" wicket:id="save" value="Edit User" wicket:message="value:edit"/>
+	
 </form>
 </wicket:extend>
 </body>

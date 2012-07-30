@@ -1,9 +1,13 @@
 package com.booktube.pages;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+
+import javax.servlet.ServletContext;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
@@ -19,11 +23,13 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.form.validation.EqualPasswordInputValidator;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.util.GenericBaseModel;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.EmailAddressValidator;
 import org.odlabs.wiquery.ui.dialog.Dialog;
@@ -35,6 +41,7 @@ import com.booktube.model.User.Gender;
 import com.booktube.model.User.Level;
 import com.booktube.pages.customComponents.SuccessDialog;
 import com.booktube.pages.validators.BirthdayValidator;
+import com.booktube.pages.validators.UniqueEmailValidator;
 import com.booktube.pages.validators.UniqueUsernameValidator;
 import com.booktube.service.UserService;
 
@@ -46,6 +53,8 @@ public class RegisterPage extends BasePage {
 	UserService userService;
 
 	private static Dialog dialog;
+
+	private final String UPLOAD_FOLDER = "./img/avatar/";
 
 	public RegisterPage() {
 
@@ -60,8 +69,9 @@ public class RegisterPage extends BasePage {
 		// parent.add(new FeedbackPanel("feedback").setOutputMarkupId(true));
 
 		parent.add(registerForm(parent, feedback));
-		
-		dialog = new SuccessDialog<HomePage>("success_dialog", "Usuario registrado con éxito!", HomePage.class, null);
+
+		dialog = new SuccessDialog<HomePage>("success_dialog",
+				"Usuario registrado con éxito!", HomePage.class, null);
 
 		parent.add(dialog);
 
@@ -84,32 +94,37 @@ public class RegisterPage extends BasePage {
 
 		Form<User> form = new Form<User>("form");
 		form.setMultiPart(true);
-		
+
 		final User newUser = new User();
 
 		CompoundPropertyModel<User> model = new CompoundPropertyModel<User>(
 				newUser);
 
 		form.setDefaultModel(model);
-		
-		final RequiredTextField<User> usernameField = new RequiredTextField<User>("username");
-		final RequiredTextField<User> firstnameField = new RequiredTextField<User>("firstname");
-		final RequiredTextField<User> lastnameField = new RequiredTextField<User>("lastname");
-		final RequiredTextField<User> email = new RequiredTextField<User>("email");
+
+		final RequiredTextField<User> usernameField = new RequiredTextField<User>(
+				"username");
+		final RequiredTextField<User> firstnameField = new RequiredTextField<User>(
+				"firstname");
+		final RequiredTextField<User> lastnameField = new RequiredTextField<User>(
+				"lastname");
+		final RequiredTextField<User> email = new RequiredTextField<User>(
+				"email");
 		email.add(EmailAddressValidator.getInstance());
-		
-//		final TextField<Date> birthdateField = new TextField<Date>(
-//				"birthdate", new PropertyModel<Date>(model, "birthdate"));
-		
-//		 DateTextField birthdateField = new DateTextField("birthdateField", new PropertyModel<Date>(
-//		            model, "birthdateField"), new StyleDateConverter("S-", true));
-		
-		final DateTextField birthdateField = new DateTextField("birthdate", new 
-				PropertyModel<Date>( 
-			            model, "birthdate"), new PatternDateConverter(WicketApplication.DATE_FORMAT, true));
-		
+
+		// final TextField<Date> birthdateField = new TextField<Date>(
+		// "birthdate", new PropertyModel<Date>(model, "birthdate"));
+
+		// DateTextField birthdateField = new DateTextField("birthdateField",
+		// new PropertyModel<Date>(
+		// model, "birthdateField"), new StyleDateConverter("S-", true));
+
+		final DateTextField birthdateField = new DateTextField("birthdate",
+				new PropertyModel<Date>(model, "birthdate"),
+				new PatternDateConverter(WicketApplication.DATE_FORMAT, true));
+
 		form.add(new Label("date_format", WicketApplication.DATE_FORMAT_ES));
-		
+
 		final PasswordTextField passwordField1 = new PasswordTextField(
 				"password1", new PropertyModel<String>(model, "password"));
 		final PasswordTextField passwordField2 = new PasswordTextField(
@@ -123,29 +138,32 @@ public class RegisterPage extends BasePage {
 		countryList.add("Country 5");
 		final DropDownChoice<String> countrySelect = new DropDownChoice<String>(
 				"country", countryList);
-		
+
 		final DropDownChoice<Gender> genderSelect = new DropDownChoice<Gender>(
 				"gender", Arrays.asList(Gender.values()),
 				new EnumChoiceRenderer<Gender>(this));
-		
+
 		final TextField<User> cityField = new TextField<User>("city");
-		
-		final FileUploadField fileUpload = new FileUploadField("imgUpload", null);
-		form.add(fileUpload);
-		
+
+		// final FileUploadField fileUpload = new FileUploadField("imgUpload",
+		// ));
+		IModel imgModel = new Model<FileUpload>();
+		final FileUploadField fileUploadField = new FileUploadField(
+				"imgUpload", imgModel);
+		form.add(fileUploadField);
+
 		birthdateField.setRequired(true);
 		countrySelect.setRequired(true);
-		//passwordField1.setRequired(true);
-		//passwordField2.setRequired(true);
+		// passwordField1.setRequired(true);
+		// passwordField2.setRequired(true);
 
-		UniqueUsernameValidator usernameValidator = new UniqueUsernameValidator();
-		usernameField.add(usernameValidator);
-		
-		BirthdayValidator birthdayValidator = new BirthdayValidator();
-		birthdateField.add(birthdayValidator);
+		usernameField.add(new UniqueUsernameValidator(newUser.getUsername()));
+		email.add(new UniqueEmailValidator(newUser.getEmail()));
+
+		birthdateField.add(new BirthdayValidator());
 
 		form.add(new EqualPasswordInputValidator(passwordField1, passwordField2));
-		
+
 		form.add(usernameField);
 		form.add(firstnameField);
 		form.add(lastnameField);
@@ -170,49 +188,98 @@ public class RegisterPage extends BasePage {
 				// target.addComponent(parent);
 				// target.focusComponent(editor);
 				// System.out.println("ACA 1");
-//				String username = usernameField.getDefaultModelObjectAsString();
-//				String firstname = firstnameField
-//						.getDefaultModelObjectAsString();
-//				String lastname = lastnameField.getDefaultModelObjectAsString();
-//				String country = countrySelect.getDefaultModelObjectAsString();
-//				String gender = genderSelect.getDefaultModelObjectAsString();
-//				String city = cityField.getDefaultModelObjectAsString();
-//				String password = passwordField1
-//						.getDefaultModelObjectAsString();
-				
-				String birthdate = birthdateField.getDefaultModelObjectAsString();
+				// String username =
+				// usernameField.getDefaultModelObjectAsString();
+				// String firstname = firstnameField
+				// .getDefaultModelObjectAsString();
+				// String lastname =
+				// lastnameField.getDefaultModelObjectAsString();
+				// String country =
+				// countrySelect.getDefaultModelObjectAsString();
+				// String gender = genderSelect.getDefaultModelObjectAsString();
+				// String city = cityField.getDefaultModelObjectAsString();
+				// String password = passwordField1
+				// .getDefaultModelObjectAsString();
+
+				String birthdate = birthdateField
+						.getDefaultModelObjectAsString();
 				System.out.println(birthdate);
 
-//				User user = new User(username, password, firstname, lastname,
-//						User.Level.USER);
-				
-//				System.out.println("GENDER: " + gender);
-				
-//				if ( gender.equals("Masculino") ) {
-//					user.setGender(Gender.MALE);
-//				}
-//				else {
-//					user.setGender(Gender.FEMALE);
-//				}
-//				
-//				if ( StringUtils.isNotBlank(city) ) {
-//					user.setCity(city);
-//				}
-				
-				//user.setCountry(country);
-				
-//				SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-				
-//				try {
-//					newUser.setBirthdate(sdf.parse(birthdate));
-//				} catch (ParseException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-				
+				// User user = new User(username, password, firstname, lastname,
+				// User.Level.USER);
+
+				// System.out.println("GENDER: " + gender);
+
+				// if ( gender.equals("Masculino") ) {
+				// user.setGender(Gender.MALE);
+				// }
+				// else {
+				// user.setGender(Gender.FEMALE);
+				// }
+				//
+				// if ( StringUtils.isNotBlank(city) ) {
+				// user.setCity(city);
+				// }
+
+				// user.setCountry(country);
+
+				// SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+
+				// try {
+				// newUser.setBirthdate(sdf.parse(birthdate));
+				// } catch (ParseException e) {
+				// // TODO Auto-generated catch block
+				// e.printStackTrace();
+				// }
+
 				newUser.setLevel(Level.USER);
-				//newUser.setPassword(password);
-				
+				// newUser.setPassword(password);
+
+				final FileUpload uploadedFile = fileUploadField.getFileUpload();
+
+				if (uploadedFile != null) {
+
+					// ServletContext context = ((WebApplication)
+					// getApplication()).getServletContext();
+					String imgPath = ((WebApplication) getApplication())
+							.getServletContext().getRealPath("img");
+
+					System.out.println("REAL PATH ES " + imgPath);
+
+					final String extension = uploadedFile.getClientFileName()
+							.substring(
+									uploadedFile.getClientFileName()
+											.lastIndexOf('.') + 1);
+					System.out.println("EXTENSION: " + extension);
+
+					final String imgFilename = newUser.getUsername() + '.'
+							+ extension;
+
+					String filePath = imgPath + "\\avatar\\" + imgFilename;
+
+					System.out.println("***** FILENAME> " + imgPath + '/'
+							+ newUser.getUsername() + '.' + extension);
+
+					// write to a new file
+					File newFile = new File(filePath);
+
+					if (newFile.exists()) {
+						newFile.delete();
+					}
+
+					try {
+						newFile.createNewFile();
+						uploadedFile.writeTo(newFile);
+
+						// info("saved file: " +
+						// uploadedFile.getClientFileName());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+					newUser.setImageURL(imgFilename);
+				}
+
 				/* Insert user */
 				userService.insertUser(newUser);
 				System.out.println("User inserted.");
@@ -224,11 +291,12 @@ public class RegisterPage extends BasePage {
 				System.out.println("Gender: " + newUser.getGender());
 				System.out.println("Birthdate: " + newUser.getBirthdate());
 
-				System.out.println("IMAGEEE : " + fileUpload.getConvertedInput().toString());
-				
+				System.out.println("IMAGEEE : "
+						+ fileUploadField.getConvertedInput().toString());
+
 				target.add(parent);
 
-				//dialog.open(target);
+				// dialog.open(target);
 
 			}
 
