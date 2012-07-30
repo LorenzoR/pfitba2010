@@ -36,21 +36,21 @@
 				</p>
 			
 				<p>
-					<b><wicket:message key="byAnt">By Ant</wicket:message>:</b> &nbsp;
+					<b><wicket:message key="byRegistrationDate">By Registration Date</wicket:message>:</b> &nbsp;
 					<wicket:message key="from">From</wicket:message>: <input type="text" wicket:id="lowRegistrationDate" value="" />
 					<wicket:message key="to">To</wicket:message>: <input type="text" wicket:id="highRegistrationDate" value="" />
 				</p>
 				
 				<p>
-					<input type="button" wicket:id="addFilter" value="Agregar Filtro" />
+					<input type="button" wicket:id="addFilter" value="Agregar Filtro" wicket:message="value:addFilter" />
 				</p>
 				
 				<p>
-					<b>Seleccione Usuario:</b> <input type="text" wicket:id="addReceiver" /> <input type="button" wicket:id="addReceiverButton" value="Agregar Usuario" />
+					<b><wicket:message key="selectUser">Select User</wicket:message>:</b> <input type="text" wicket:id="addReceiver" /> <input type="button" wicket:id="addReceiverButton" value="Agregar Usuario" wicket:message="value:addReceiver" />
 				</p>
 				
 				<p>
-					<b>Lista de Filtros:</b>
+					<b><wicket:message key="filterList">Filter List</wicket:message>:</b>
 				</p>
 				
 				<span wicket:id="filters">
@@ -90,7 +90,7 @@
 				</span>
 				
 				<p>
-					<b>Lista de Destinatarios:</b>
+					<b><wicket:message key="receiverList">Receiver List</wicket:message>:</b>
 				</p>
 				
 				<span wicket:id="receiverList">
@@ -133,7 +133,7 @@
 				
 					<hr />
 				
-					<p><b><wicket:message key="message">Message</wicket:message></b></p>
+					<p><b><wicket:message key="campaign">Campaign</wicket:message></b></p>
 				
 					<p> 
 						<b><wicket:message key="subject">Subject</wicket:message>:</b> &nbsp;

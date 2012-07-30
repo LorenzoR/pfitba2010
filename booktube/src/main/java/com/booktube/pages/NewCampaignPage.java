@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.spi.Filter;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
@@ -34,6 +35,7 @@ import com.booktube.WiaSession;
 import com.booktube.model.Campaign;
 import com.booktube.model.User;
 import com.booktube.model.User.Gender;
+import com.booktube.model.User.Level;
 import com.booktube.pages.customComponents.AbstractAutoCompleteTextField;
 import com.booktube.pages.customComponents.SuccessDialog;
 import com.booktube.service.MessageService;
@@ -212,6 +214,12 @@ public class NewCampaignPage extends BasePage {
 							newCampaignContainer.setVisible(false);
 						}
 
+						if ( receiverList.size() > 0 ) {
+							for (List<User> aList : receiverList) {
+								allReceiverSet.addAll(aList);
+							}
+						}
+
 						target.add(form);
 					}
 
@@ -315,14 +323,17 @@ public class NewCampaignPage extends BasePage {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				// TODO Auto-generated method stub
+				String newFilter = "";
+				
 				String country = countrySelect.getConvertedInput();
 
 				if (StringUtils.isNotBlank(country)
 						&& !filters.contains(country)) {
-					filters.add(country);
-					receiverList.add(filters.indexOf(country), userService
-							.getUsers(0, Integer.MAX_VALUE, null, null, null,
-									null, null, country, null, null));
+					newFilter += country + " / ";
+//					filters.add(country);
+//					receiverList.add(filters.indexOf(country), userService
+//							.getUsers(0, Integer.MAX_VALUE, null, null, null,
+//									null, null, country, null, null));
 				}
 
 				Gender gender = genderSelect.getConvertedInput();
@@ -330,12 +341,12 @@ public class NewCampaignPage extends BasePage {
 				if (gender != null
 						&& !filters.contains(new ResourceModel("Gender."
 								+ gender.toString()).getObject())) {
-					String genderString = new ResourceModel("Gender."
-							+ gender.toString()).getObject();
-					filters.add(genderString);
-					receiverList.add(filters.indexOf(genderString), userService
-							.getUsers(0, Integer.MAX_VALUE, null, null, gender,
-									null, null, null, null, null));
+					newFilter += new ResourceModel("Gender."
+							+ gender.toString()).getObject() + " / ";
+//					filters.add(genderString);
+//					receiverList.add(filters.indexOf(genderString), userService
+//							.getUsers(0, Integer.MAX_VALUE, null, null, gender,
+//									null, null, null, null, null));
 				}
 
 				Integer lowAge = lowAgeField.getConvertedInput();
@@ -343,13 +354,13 @@ public class NewCampaignPage extends BasePage {
 
 				if ((lowAge != null || highAge != null)
 						&& !filters.contains(lowAge + " - " + highAge)) {
-					String newFilter = lowAge + " - " + highAge;
+					newFilter += lowAge + " - " + highAge + " / ";
 					// newFilter.replace("\0", "");
-					filters.add(newFilter);
-
-					receiverList.add(filters.indexOf(newFilter), userService
-							.getUsers(0, Integer.MAX_VALUE, null, null, null,
-									lowAge, highAge, null, null, null));
+//					filters.add(newFilter);
+//
+//					receiverList.add(filters.indexOf(newFilter), userService
+//							.getUsers(0, Integer.MAX_VALUE, null, null, null,
+//									lowAge, highAge, null, null, null));
 
 				}
 
@@ -358,15 +369,40 @@ public class NewCampaignPage extends BasePage {
 
 				if ((lowDate != null || highDate != null)
 						&& !filters.contains(lowDate + " - " + highDate)) {
-					String newFilter = lowDate + " - " + highDate;
+					newFilter += lowDate + " - " + highDate + " / ";
 					// newFilter.replace("\0", "");
-					filters.add(newFilter);
-
-					receiverList.add(filters.indexOf(newFilter), userService
-							.getUsers(0, Integer.MAX_VALUE, null, null, null,
-									null, null, null, lowDate, highDate));
+//					filters.add(newFilter);
+//
+//					receiverList.add(filters.indexOf(newFilter), userService
+//							.getUsers(0, Integer.MAX_VALUE, null, null, null,
+//									null, null, null, lowDate, highDate));
 				}
+			
+				if ( newFilter.equals("") ) {
+					newFilter = new ResourceModel("all").getObject();
+				}
+				
+				List<User> newReceivers = userService
+						.getUsers(0, Integer.MAX_VALUE, null, null, gender,
+								lowAge, highAge, country, lowDate, highDate, Level.USER);
+				
+				if ( !filters.contains(newFilter) ) {
+					filters.add(newFilter);
+					
+					receiverList.add(filters.indexOf(newFilter), newReceivers);
 
+				}
+				else {
+					System.out.println("ACAAAAAAAAA");
+					
+					int index = filters.indexOf(newFilter);
+					List<User> oldReceivers = receiverList.get(index);
+					
+					if ( newReceivers.size() != oldReceivers.size() ) {
+						receiverList.set(index, newReceivers);
+					}
+				}
+				
 				for (List<User> aList : receiverList) {
 					allReceiverSet.addAll(aList);
 				}
@@ -374,7 +410,9 @@ public class NewCampaignPage extends BasePage {
 				System.out.println("ALL RECEIVERS: "
 						+ allReceiverSet.toString());
 
-				newCampaignContainer.setVisible(true);
+				if ( filters.size() > 0 ) {
+					newCampaignContainer.setVisible(true);
+				}
 
 				target.add(form);
 			}

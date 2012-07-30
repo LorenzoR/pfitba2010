@@ -501,9 +501,9 @@ public abstract class BasePage extends WebPage {
 
 	private Form<Object> loginForm(String label) {
 		final Form<Object> form = new Form<Object>(label);
-		final TextField<String> username = new TextField<String>("username",
+		final TextField<String> username = new TextField<String>("usernameLogin",
 				new Model<String>(""));
-		final PasswordTextField password = new PasswordTextField("password",
+		final PasswordTextField password = new PasswordTextField("passwordLogin",
 				new Model<String>(""));
 
 		username.setRequired(true);

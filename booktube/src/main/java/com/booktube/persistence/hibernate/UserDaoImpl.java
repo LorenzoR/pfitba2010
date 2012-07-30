@@ -47,6 +47,10 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 	public boolean usernameExists(String username) {
 		return getUser(username) != null;
 	}
+	
+	public boolean emailExists(String email) {
+		return getUserByEmail(email) != null;
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<User> getAllUsers(int first, int count) {
@@ -59,10 +63,13 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 	@SuppressWarnings("unchecked")
 	public List<User> getUsers(int first, int count, Long userId,
 			String username, Gender gender, Integer lowerAge,
-			Integer higherAge, String country, Date lowDate, Date highDate) {
+			Integer higherAge, String country, Date lowDate, Date highDate, Level level) {
 		return (List<User>) createCriteria(userId, username, gender, lowerAge,
-				higherAge, country, lowDate, highDate).setFirstResult(first)
-				.setMaxResults(count).list();
+				higherAge, country, lowDate, highDate, level)
+				.setFirstResult(first)
+				.setMaxResults(count)
+				.addOrder(Order.asc("username"))
+				.list();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -118,6 +125,12 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 	public User getUser(String username) {
 		return (User) getSession().getNamedQuery("user.username")
 				.setString("username", username).setMaxResults(1)
+				.uniqueResult();
+	}
+	
+	public User getUserByEmail(String email) {
+		return (User) getSession().createCriteria(User.class)
+				.add(Restrictions.ilike("email", email))
 				.uniqueResult();
 	}
 
@@ -183,16 +196,16 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 
 	public int getCount(Long userId, String username, Gender gender,
 			Integer lowerAge, Integer higherAge, String country, Date lowDate,
-			Date highDate) {
+			Date highDate, Level level) {
 		Criteria criteria = createCriteria(userId, username, gender, lowerAge,
-				higherAge, country, lowDate, highDate);
+				higherAge, country, lowDate, highDate, level);
 		criteria.setProjection(Projections.rowCount());
 		return ((Number) criteria.uniqueResult()).intValue();
 	}
 
 	private Criteria createCriteria(Long userId, String username,
 			Gender gender, Integer lowerAge, Integer higherAge, String country,
-			Date lowDate, Date highDate) {
+			Date lowDate, Date highDate, Level level) {
 
 		Criteria criteria = getSession().createCriteria(User.class);
 
@@ -201,7 +214,8 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 		}
 
 		if (StringUtils.isNotBlank(username)) {
-			criteria.add(Restrictions.ilike("username", "%" + username + "%"));
+			//criteria.add(Restrictions.ilike("username", "%" + username + "%"));
+			criteria.add(Restrictions.ilike("username", username));
 		}
 
 		if (lowDate != null) {
@@ -230,6 +244,10 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 
 		if (StringUtils.isNotBlank(country)) {
 			criteria.add(Restrictions.eq("country", country));
+		}
+		
+		if ( level != null ) {
+			criteria.add(Restrictions.eq("level", level));
 		}
 
 		return criteria;

@@ -6,24 +6,24 @@ import org.apache.wicket.validation.validator.StringValidator;
 
 import com.booktube.service.UserService;
 
-public class UniqueUsernameValidator extends StringValidator {
+public class UniqueEmailValidator extends StringValidator {
 
 	private static final long serialVersionUID = 1L;
 
-	private final String currentUsername;
+	private final String currentEmail;
 
 	@SpringBean
 	UserService userService;
 
-	public UniqueUsernameValidator(String currentUsername) {
-		this.currentUsername = currentUsername;
+	public UniqueEmailValidator(String currentEmail) {
+		this.currentEmail = currentEmail;
 	}
 
 	@Override
 	protected void onValidate(IValidatable<String> validatable) {
 
-		if (!currentUsername.equals(validatable.getValue())
-				&& userService.usernameExists(validatable.getValue())) {
+		if (!currentEmail.equals(validatable.getValue())
+				&& userService.emailExists(validatable.getValue())) {
 			error(validatable);
 		}
 
