@@ -2,11 +2,15 @@ package com.booktube.pages;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -51,7 +55,7 @@ public class AdministrationPage extends BasePage {
 			
 			parent.add(new LeftMenuPanel("leftPaneDiv"));
 			
-			setBreadcrumbs("Administración > ");
+			addBreadcrumb(new BookmarkablePageLink<Object>("link", AdministrationPage.class), "Administracion");
 			
 		}
 

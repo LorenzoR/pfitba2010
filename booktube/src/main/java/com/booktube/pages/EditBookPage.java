@@ -1,5 +1,6 @@
 package com.booktube.pages;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -13,7 +14,9 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -55,6 +58,8 @@ public class EditBookPage extends BasePage {
 		}
 
 		book = bookService.getBook(bookId);
+		
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", EditBookPage.class, pageParameters), "Editar " + book.getTitle());
 
 		if (book == null) {
 			setResponsePage(HomePage.class);

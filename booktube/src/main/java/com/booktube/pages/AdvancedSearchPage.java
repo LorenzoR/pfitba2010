@@ -19,6 +19,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -67,6 +68,8 @@ public class AdvancedSearchPage extends BasePage {
 				"advancedSearch");
 		parent.setOutputMarkupId(true);
 		add(parent);
+		
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", AdvancedSearchPage.class), "Busqueda Avanzada");
 		
 		final FeedbackPanel formFeedback = new FeedbackPanel("formFeedback");
 		formFeedback.setOutputMarkupId(true);

@@ -5,7 +5,9 @@ import java.util.List;
 
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -37,6 +39,8 @@ public class ContactsPage extends BasePage {
 		final WebMarkupContainer parent = new WebMarkupContainer("messages");
 		parent.setOutputMarkupId(true);
 		add(parent);
+		
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", ContactsPage.class), "Contactos");
 		
 		user = WiaSession.get().getLoggedInUser();
 		

@@ -207,7 +207,11 @@
 			<!-- id=hd -->
 
 			<div id="bd">
-				<span wicket:id="breadcrumbs">Breadcrumbs</span>
+				<div wicket:id="breadcrumbsContainer">
+					<span wicket:id="breadcrumbs">
+						<a href="#" wicket:id="link"><span wicket:id="textLink"></span></a>&nbsp; &gt;
+					</span>
+				</div>
 				<div id="yui-main">
 					<div class="yui-b">
 						<wicket:child />

@@ -1,8 +1,12 @@
 package com.booktube.pages;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.list.ListView;
 
 public class ReportsAdministrationPage extends AdministrationPage{
 	private static final long serialVersionUID = -1116385333477058852L;
@@ -15,7 +19,7 @@ public class ReportsAdministrationPage extends AdministrationPage{
 			parent.setOutputMarkupId(true);
 			add(parent);
 			
-			setBreadcrumbs("Administración > Reportes");
+			addBreadcrumb(new BookmarkablePageLink<Object>("link", ReportsAdministrationPage.class), "Reportes");
 			
 			parent.add(new BookmarkablePageLink<String>("usersEvolutionReport", UsersEvolutionReport.class));
 			parent.add(new BookmarkablePageLink<String>("usersDistributionReport", UsersDistributionReport.class));

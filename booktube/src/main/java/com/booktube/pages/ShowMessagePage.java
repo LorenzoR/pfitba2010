@@ -1,9 +1,11 @@
 package com.booktube.pages;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -38,6 +40,8 @@ public class ShowMessagePage extends BasePage {
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 		
 		List<Message> messageList = message.getAllAnswers();
+		
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", ShowMessagePage.class, pageParameters), message.getSubject());
 		
 		//List<Message> messageList = getAnswers(message);
 		
