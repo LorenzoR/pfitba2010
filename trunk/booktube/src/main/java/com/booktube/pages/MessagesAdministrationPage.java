@@ -20,7 +20,9 @@ import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.CheckGroupSelector;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
@@ -71,7 +73,7 @@ public class MessagesAdministrationPage extends AdministrationPage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
-		setBreadcrumbs("Administración > Mensajes");
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", MessagesAdministrationPage.class), "Mensajes");
 		
 //		parent.add(new Label("pageTitle", "Messages Administration Page"));
 

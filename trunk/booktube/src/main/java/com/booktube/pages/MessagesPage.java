@@ -1,12 +1,15 @@
 package com.booktube.pages;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
@@ -44,6 +47,8 @@ public class MessagesPage extends BasePage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", MessagesPage.class), "Mensajes");
+		
 		//parent.add(listWriters("writerList", users));
 		DataView<Message> dataView = messageList("messagesList");
 

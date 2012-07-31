@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -44,6 +45,8 @@ public class ShowCampaignPage extends BasePage {
 
 		campaign = campaignService.getCampaign(campaignId);
 
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", ShowCampaignPage.class, pageParameters), campaign.getSubject());
+		
 		final WebMarkupContainer parent = new WebMarkupContainer(
 				"campaignDetails");
 		parent.setOutputMarkupId(true);

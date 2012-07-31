@@ -27,6 +27,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -84,18 +85,33 @@ public abstract class BasePage extends WebPage {
 //		}
 //	};
 	
-	private DynamicLabel breadcrumbs = new DynamicLabel("breadcrumbs", new Model<String>());
+//	private DynamicLabel breadcrumbs = new DynamicLabel("breadcrumbs", new Model<String>());
 	
 	private String loggedUsername;
+	
+	protected WebMarkupContainer breadcrumbContainer;
 	
 	public BasePage() {
 				
 //		breadcrumbs = new DynamicLabel("breadcrumbs");
-		breadcrumbs.setOutputMarkupId(true);
-		setBreadcrumbs("");
-		add(breadcrumbs);
+//		breadcrumbs.setOutputMarkupId(true);
+//		setBreadcrumbs("");
+//		add(breadcrumbs);
+//		
+//		setBreadcrumbs("");
 		
-		setBreadcrumbs("");
+		List<BookmarkablePageLink> linkList = new ArrayList<BookmarkablePageLink>();
+//		BookmarkablePageLink link = new BookmarkablePageLink("link", HomePage.class);
+//		link.add(new Label("textLink", "Inicio"));
+//		linkList.add(link);
+		breadcrumbsModel.setObject(linkList);
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", HomePage.class), "Inicio");
+		ListView breadcrumbs = createBreadcrumbs();
+		breadcrumbContainer = new WebMarkupContainer("breadcrumbsContainer");
+		breadcrumbContainer.setOutputMarkupId(true);
+		breadcrumbContainer.add(breadcrumbs);
+		add(breadcrumbContainer);
+		
 		
 		Link<User> editProfileLink = new Link<User>("editProfileLink") {
 			private static final long serialVersionUID = 1L;
@@ -624,12 +640,79 @@ public abstract class BasePage extends WebPage {
 
 	}
 	
-	public void setBreadcrumbs(List<String> texts) {
-		ListView<String> listview = new ListView<String>("listview", texts) {
+	protected final IModel<List<BookmarkablePageLink>> breadcrumbsModel = new IModel<List<BookmarkablePageLink>>() {
+
+		List<BookmarkablePageLink> linkList;
+		
+		
+		public void addLink(BookmarkablePageLink link) {
+			linkList.add(link);
+		}
+		
+		public void removeLink(int index) {
+			linkList.remove(index);
+		}
+		
+		public void clearList() {
+			linkList.clear();
+		}
+		
+		public void detach() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public List<BookmarkablePageLink> getObject() {
+			return linkList;
+		}
+
+		public void setObject(List<BookmarkablePageLink> linkList) {
+//			BookmarkablePageLink link = new BookmarkablePageLink("link", HomePage.class);
+//			link.add(new Label("textLink", "Inicio"));
+//			linkList.add(link);
+			this.linkList = linkList;
+		}
+		
+	};
+	
+	protected void addBreadcrumb(BookmarkablePageLink<Object> link, String label) {
+		List<BookmarkablePageLink> linkList = breadcrumbsModel.getObject();
+		link.add(new Label("textLink", label));
+		linkList.add(link);
+		System.out.println("****** LINK " + link.getPageClass());
+		breadcrumbsModel.setObject(linkList);
+	}
+	
+	protected void removeLastBreadcrumb() {
+		List<BookmarkablePageLink> linkList = breadcrumbsModel.getObject();
+		linkList.remove(linkList.size() - 1);
+		breadcrumbsModel.setObject(linkList);
+	}
+	
+	public ListView createBreadcrumbs() {
+		
+		ListView<BookmarkablePageLink> listview = new ListView<BookmarkablePageLink>("breadcrumbs", breadcrumbsModel) {
 
 			private static final long serialVersionUID = 1L;
+			
+			protected void populateItem(final ListItem<BookmarkablePageLink> item) {
+				
+				BookmarkablePageLink link = item.getModelObject();
+				item.add(link);
+			}
+		};
+		
+		return listview;
+	}
+	
+	public ListView setBreadcrumbs(final List<BookmarkablePageLink<Object>> links, final List<String> labels) {
+		
+		ListView<BookmarkablePageLink> listview = new ListView<BookmarkablePageLink>("breadcrumbs", breadcrumbsModel) {
 
-			protected void populateItem(final ListItem<String> item) {
+			private static final long serialVersionUID = 1L;
+			
+			protected void populateItem(final ListItem<BookmarkablePageLink> item) {
+				
 //				AjaxLink<?> link = new AjaxLink<Void>("link") {
 //
 //					private static final long serialVersionUID = 1L;
@@ -644,26 +727,34 @@ public abstract class BasePage extends WebPage {
 //						target.add(parent);
 //					}
 //				};
+				BookmarkablePageLink link = item.getModelObject();
+				item.add(link);
+				//item.getModelObject().set
+//				BookmarkablePageLink newLink = new BookmarkablePageLink("link", link.getPageClass(), link.getPageParameters());
+//				newLink.add(new Label("textLink", labels.get(item.getIndex())));
+//				item.add(newLink);
 				
-				Label label = new Label("label", item.getModel());
+				//Label label = new Label("label", item.getModel());
 //				link.add(label);
 //				item.add(link);
-				item.add(label);
+				//item.add(label);
 			}
 		};
+		
+		return listview;
 	}
 	
-	public void setBreadcrumbs(String text) {
-		this.breadcrumbs.setLabel(text);
-	}
+//	public void setBreadcrumbs(String text) {
+//		this.breadcrumbs.setLabel(text);
+//	}
 	
 //	public Model getBreadcrumbs() {
 //		return this.breadcrumbs.get;
 //	}
 	
-	public Label getBreadcrumbsLabel() {
-		return this.breadcrumbs;
-	}
+//	public Label getBreadcrumbsLabel() {
+//		return this.breadcrumbs;
+//	}
 	
 	@SuppressWarnings("unused")
 	private String getLoggedUsername() {

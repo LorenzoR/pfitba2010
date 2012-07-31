@@ -1,7 +1,12 @@
 package com.booktube.pages;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.wicketstuff.facebook.plugins.LikeBox;
 
@@ -10,7 +15,10 @@ public class HomePage extends BasePage {
 	private static final long serialVersionUID = 1L;
 
 	public HomePage() {
-
+		
+//		addBreadcrumb(new BookmarkablePageLink<Object>("link", this.getClass()), "Inicio");
+//		add(createBreadcrumbs());
+		
 		final WebMarkupContainer parent = new WebMarkupContainer("homePage");
 		parent.setOutputMarkupId(true);
 		add(parent);

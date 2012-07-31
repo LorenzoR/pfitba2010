@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.spi.Filter;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
@@ -21,6 +20,7 @@ import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -102,6 +102,8 @@ public class NewCampaignPage extends BasePage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", NewCampaignPage.class), "Nueva Campaña");
+		
 		user = WiaSession.get().getLoggedInUser();
 
 		Form<?> form = newContactForm();

@@ -20,6 +20,7 @@ import org.apache.wicket.markup.html.form.CheckGroupSelector;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
@@ -138,7 +139,7 @@ public class WorksAdministrationPage extends AdministrationPage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
-		setBreadcrumbs("Administración > Obras");
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", WorksAdministrationPage.class), "Obras");
 		
 		//deleteConfirmationLabel.setOutputMarkupId(true);
 		//successDialogLabel.setOutputMarkupId(true);

@@ -24,6 +24,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
@@ -153,7 +154,7 @@ public class UsersAdministrationPage extends AdministrationPage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
-		setBreadcrumbs("Administración > Usuarios");
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", UsersAdministrationPage.class), "Usuarios");
 		
 		// deleteConfirmationLabel.setOutputMarkupId(true);
 		// successDialogLabel.setOutputMarkupId(true);

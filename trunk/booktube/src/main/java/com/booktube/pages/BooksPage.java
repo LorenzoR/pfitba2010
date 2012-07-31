@@ -16,6 +16,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
@@ -68,6 +69,36 @@ public class BooksPage extends BasePage {
 
 	public BooksPage(final PageParameters parameters) {
 
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", BooksPage.class), "Leer");
+		
+		if (StringUtils.isNotBlank(parameters.get("author").toString())) {
+			author = parameters.get("author").toString();
+			parameters.set("author", author);
+			addBreadcrumb(new BookmarkablePageLink<Object>("link", AnswerMessagePage.class, parameters), "Autor " + author);
+		}
+
+		if (StringUtils.isNotBlank(parameters.get("tag").toString())) {
+			tag = parameters.get("tag").toString();
+			parameters.set("tag", tag);
+			addBreadcrumb(new BookmarkablePageLink<Object>("link", BooksPage.class, parameters), "Tag " + tag);
+		}
+
+		if (StringUtils.isNotBlank(parameters.get("title").toString())) {
+			title = parameters.get("title").toString();
+		}
+		
+		if (StringUtils.isNotBlank(parameters.get("category").toString())) {
+			category = parameters.get("category").toString();
+			parameters.set("category", category);
+			addBreadcrumb(new BookmarkablePageLink<Object>("link", BooksPage.class, parameters), "Categoria " + category);
+		}
+		
+		if (StringUtils.isNotBlank(parameters.get("subcategory").toString())) {
+			subcategory = parameters.get("subcategory").toString();
+			parameters.set("subcategory", subcategory);
+			addBreadcrumb(new BookmarkablePageLink<Object>("link", BooksPage.class, parameters), "Subcategoria " + subcategory);
+		}
+		
 		final WebMarkupContainer parent = new WebMarkupContainer("books");
 		parent.setOutputMarkupId(true);
 		add(parent);
@@ -81,30 +112,6 @@ public class BooksPage extends BasePage {
 				+ newUrl + "';");
 		myScript.setEscapeModelStrings(false);
 		add(myScript);
-		
-		if (StringUtils.isNotBlank(parameters.get("author").toString())) {
-			author = parameters.get("author").toString();
-		}
-
-		if (StringUtils.isNotBlank(parameters.get("rating").toString())) {
-			//rating = parameters.get("rating").toString();
-		}
-
-		if (StringUtils.isNotBlank(parameters.get("tag").toString())) {
-			tag = parameters.get("tag").toString();
-		}
-
-		if (StringUtils.isNotBlank(parameters.get("title").toString())) {
-			title = parameters.get("title").toString();
-		}
-		
-		if (StringUtils.isNotBlank(parameters.get("category").toString())) {
-			category = parameters.get("category").toString();
-		}
-		
-		if (StringUtils.isNotBlank(parameters.get("subcategory").toString())) {
-			subcategory = parameters.get("subcategory").toString();
-		}
 
 		DataView<Book> dataView = bookList("bookList");
 
@@ -134,7 +141,7 @@ public class BooksPage extends BasePage {
 		
 		if ( dataView.getItemCount() <= 0 ) {
 			footerNavigator.setVisible(false);
-			categoryMenu.setVisible(false);
+			categoryMenu.setVisible(true);
 			feedbackMessage.setVisible(true);
 		}
 		else {

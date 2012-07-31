@@ -179,7 +179,7 @@ public class LoadDataPage extends BasePage {
 		admin2.setGender(Gender.MALE);
 		admin2.setCountry("Country 1");
 		admin2.setCity("City 1");
-		admin2.setEmail(this.admin.getUsername() + "@mail.com");
+		admin2.setEmail(admin2.getUsername() + "@mail.com");
 		userService.insertUser(admin2);
 		
 		

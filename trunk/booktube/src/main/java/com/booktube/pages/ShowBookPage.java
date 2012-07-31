@@ -1,6 +1,9 @@
 package com.booktube.pages;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -12,6 +15,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -63,11 +67,16 @@ public class ShowBookPage extends BasePage {
 		
 		final Long bookId = pageParameters.get("book").toLong();		
 		
-		//user = WiaSession.get().getLoggedInUser();
-
 		book = bookService.getBook(bookId);
 		book.increaseHits();
 		bookService.updateBook(book);
+		
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", BooksPage.class), "Leer");
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", ShowBookPage.class, pageParameters), book.getTitle());
+		
+		//user = WiaSession.get().getLoggedInUser();
+
+		
 		//book = bookModel.getObject();
 		
 		final WebMarkupContainer parent = new WebMarkupContainer("bookDetails");

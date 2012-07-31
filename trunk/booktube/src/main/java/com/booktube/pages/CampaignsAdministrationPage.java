@@ -19,7 +19,9 @@ import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.CheckGroupSelector;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
@@ -69,7 +71,7 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
-		setBreadcrumbs("Administración > Campañas");
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", CampaignsAdministrationPage.class), "Campañas");
 		
 //		parent.add(new Label("pageTitle", "Campaigns Administration Page"));
 

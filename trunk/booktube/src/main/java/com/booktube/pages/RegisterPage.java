@@ -22,6 +22,8 @@ import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.form.validation.EqualPasswordInputValidator;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -66,6 +68,8 @@ public class RegisterPage extends BasePage {
 		feedback.setOutputMarkupId(true);
 		parent.add(feedback);
 
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", RegisterPage.class), "Registracion");
+		
 		// parent.add(new FeedbackPanel("feedback").setOutputMarkupId(true));
 
 		parent.add(registerForm(parent, feedback));

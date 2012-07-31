@@ -1,6 +1,7 @@
 package com.booktube.pages;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -21,6 +22,8 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.image.Image;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
@@ -64,9 +67,9 @@ public class EditWriterPage extends BasePage {
 			return;
 		}
 
-		add(new Label("writerId", user.getId().toString()));
-
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", EditWriterPage.class), "Editar " + user.getUsername() );
 		
+		add(new Label("writerId", user.getId().toString()));
 
 		dialog = new SuccessDialog<EditWriterPage>("success_dialog",
 				"Usuario editado con éxito!", backPage);

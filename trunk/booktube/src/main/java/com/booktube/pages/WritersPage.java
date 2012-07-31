@@ -1,8 +1,10 @@
 package com.booktube.pages;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -45,11 +47,21 @@ public class WritersPage extends BasePage {
 		final WebMarkupContainer parent = new WebMarkupContainer("writers");
 		parent.setOutputMarkupId(true);
 		add(parent);
+		
+		final AtomicBoolean writerByLetter = new AtomicBoolean(false);
 
-		//final DynamicLabel breadcrumbs = new DynamicLabel("breadcrumbs");
-		//breadcrumbs.setLabel("Escritores >");
-		setBreadcrumbs("Escritores >");
-		//parent.add(breadcrumbs);
+//		//final DynamicLabel breadcrumbs = new DynamicLabel("breadcrumbs");
+//		//breadcrumbs.setLabel("Escritores >");
+//		final List<BookmarkablePageLink<Object>> links = new ArrayList<BookmarkablePageLink<Object>>();
+//		links.add(new BookmarkablePageLink<Object>("link", HomePage.class));
+//		links.add(new BookmarkablePageLink<Object>("link", this.getClass()));
+//		final List<String> labels = new ArrayList<String>();
+//		labels.add("Inicio");
+//		labels.add("Escritores");
+//		final ListView<?> breadscrumbsLV = setBreadcrumbs(links, labels);
+//		add(breadscrumbsLV);
+//		//parent.add(breadcrumbs);
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", WritersPage.class), "Escritores");
 		
 		searchUsername = null;
 		
@@ -73,10 +85,22 @@ public class WritersPage extends BasePage {
 					public void onClick(AjaxRequestTarget target) {
 						searchUsername = item.getModelObject() +"%";
 						System.out.println("{{{{{{{ SearchUserName: " + searchUsername);
-						setBreadcrumbs("Escritores > " + item.getModelObject());
+						
+						if ( writerByLetter.get() ) {
+							removeLastBreadcrumb();
+						}
+						
+						addBreadcrumb(new BookmarkablePageLink<Object>("link", WritersPage.class), item.getModelObject());
+						//setBreadcrumbs("Escritores > " + item.getModelObject());
 						//breadcrumbs.setLabel("Escritores > " + item.getModelObject());
-						target.add(getBreadcrumbsLabel());
+						//target.add(getBreadcrumbsLabel());
+//						labels.add(item.getModelObject());
+//						links.add(new BookmarkablePageLink<Object>("link", WritersPage.this.getClass()));
 						target.add(parent);
+						target.add(breadcrumbContainer);
+						
+						writerByLetter.set(true);
+//						target.add(breadscrumbsLV.get(1));
 					}
 				};
 				

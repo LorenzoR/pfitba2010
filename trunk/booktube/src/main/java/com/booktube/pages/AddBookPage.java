@@ -13,6 +13,7 @@ import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -51,7 +52,7 @@ public class AddBookPage extends BasePage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
-		setBreadcrumbs("Agregar Obra >");
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", AddBookPage.class, pageParameters), "Agregar Obra");
 
 		user = WiaSession.get().getLoggedInUser();
 

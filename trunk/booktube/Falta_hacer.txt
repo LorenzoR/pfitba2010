@@ -60,7 +60,7 @@
 
 - En los menues debe quedar seleccionado la opcion elegida
 
-- Agregar bread scrums (FALTA TERMINAR)
+----- Agregar bread scrums (OK)
 
 - sacar Wicket ajax debug 	
 
