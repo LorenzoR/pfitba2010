@@ -5,6 +5,8 @@ import java.util.List;
 
 import java.util.Map;
 
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import org.jfree.data.xy.XYSeries;
@@ -31,6 +33,9 @@ public class UsersEvolutionReport extends ReportPage {
 		addAgeFilterOption();
 		addGenderFilterOption(allGendersList);		
 				
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", ReportsAdministrationPage.class), "Reportes");
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", UsersEvolutionReport.class), new ResourceModel("usersEvolutionReport").getObject());
+		
 		// Especifico Titulo ( y etiquetas, si corresponde)
 		labels = new String[]{"Evolución de Usuarios en el tiempo", "Año", "Usuarios"};
 		
@@ -67,8 +72,9 @@ public class UsersEvolutionReport extends ReportPage {
 		List<?> data = userService.getUserEvolutionByYear(originFilter, ageFilter, customizedMisc);		  
 		final XYSeries serie = new XYSeries("Evolucion de Usuarios en el tiempo");				 
 		for(Object object : data){
-           Map<?, ?> row = (Map<?, ?>)object;
-           serie.add(Double.valueOf((String)row.get("year")),Double.valueOf((String)row.get("total")) ); 
+           @SuppressWarnings("unchecked")
+           Map<String, Integer> row = (Map<String, Integer>)object;
+           serie.add(row.get("year"), row.get("total") ); 
         }
 		final XYSeriesCollection collection = new XYSeriesCollection();
 	    collection.addSeries(serie);

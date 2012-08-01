@@ -113,7 +113,7 @@ public class WorksAdministrationPage extends AdministrationPage {
 //	private String successDialogText;
 	
 	private final DataView<Book> dataView;
-	private final AjaxPagingNavigator footerNavigator;
+	private AjaxPagingNavigator footerNavigator;
 	
 	private final Form<Book> searchBookForm;
 	private final WebMarkupContainer searchButton;
@@ -152,18 +152,8 @@ public class WorksAdministrationPage extends AdministrationPage {
 		group.add(dataView);
 		group.add(new CheckGroupSelector("groupSelector"));
 		
-		footerNavigator = new AjaxPagingNavigator("footerPaginator", dataView) {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onAjaxEvent(AjaxRequestTarget target) {
-				target.add(parent);
-				
-			}
-		};
 		//footerNavigator = new PagingNavigator("footerPaginator", dataView);
-		parent.add(footerNavigator);
+		//parent.add(footerNavigator);
 
 		//deleteDialog = deleteDialog(successDialogLabel, WorksAdministrationPage.class);
 //		deleteDialog = deleteDialog(parent);
@@ -420,6 +410,19 @@ public class WorksAdministrationPage extends AdministrationPage {
 
 		form.setDefaultModel(model);
 
+		footerNavigator = new AjaxPagingNavigator("footerPaginator", dataView) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onAjaxEvent(AjaxRequestTarget target) {
+				target.add(parent);
+				
+			}
+		};
+		
+		form.add(footerNavigator);
+		
 		final WebMarkupContainer searchFields = new WebMarkupContainer(
 				"searchFields");
 		searchFields.add(AttributeModifier.replace("style", "display: none;"));

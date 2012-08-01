@@ -17,7 +17,8 @@
 	    
 		<h3 class="pageTitle"><wicket:message key="campaignsAdministrationPageTitle">Campaigns Administration Page Title</wicket:message></h3>
 		
-		<h2><a href="#" wicket:id="searchCampaignLink" onclick="return false;" class="searchLink"><wicket:message key="search">Search</wicket:message></a></h2>
+		<input type="button" wicket:id="searchCampaignLink" value="Search" wicket:message="value:search" class="buttons"/>
+<!-- 		<h2><a href="#" wicket:id="searchCampaignLink" onclick="return false;" class="searchLink"><wicket:message key="search">Search</wicket:message></a></h2> -->
 		
 		<form id="searchCampaignForm" wicket:id="searchCampaignForm"  class="searchForm">
 			<div id="searchFields" wicket:id="searchFields">
@@ -76,11 +77,11 @@
 		</table>
 		</div>
 		
+		<div wicket:id="footerPaginator" class="footerPaginator"></div> 
+		
 		<input type="button" wicket:id="deleteCampaign" value="Delete Selected Campaigns" wicket:message="value:deleteSelected" class="buttons"/>
 		
-		</form>
-
-		<div wicket:id="footerPaginator" class="footerPaginator"></div>  
+		</form> 
 		
 	</div>
 </wicket:extend>
