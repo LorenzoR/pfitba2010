@@ -56,6 +56,13 @@ public class EditWriterPage extends BasePage {
 	UserService userService;
 
 	private static Dialog dialog;
+	
+	private final String DEFAULT_AVATAR = "defaultAvatar.png";
+	private final String IMG_DIR = "img/";
+	private final String AVATAR_DIR = "avatar/";
+	private final String IMG_HEIGHT = "116px";
+	private final String IMG_WIDTH = "116px";
+	private final String IMG_DIR_NAME = "img";
 
 	public EditWriterPage(IModel<User> model, final WebPage backPage) {
 
@@ -177,18 +184,18 @@ public class EditWriterPage extends BasePage {
 
 		Image avatar = new Image("avatar", new Model<String>());
 		if ( writer.getImageURL() == null ) {
-			avatar.add(new AttributeModifier("src", new Model<String>("img/defaultAvatar.png")));
+			avatar.add(new AttributeModifier("src", new Model<String>(IMG_DIR + DEFAULT_AVATAR)));
 		}
 		else {
-			avatar.add(new AttributeModifier("src", new Model<String>("img/avatar/" + writer.getImageURL())));
+			avatar.add(new AttributeModifier("src", new Model<String>(IMG_DIR + AVATAR_DIR + writer.getImageURL())));
 		}
-		avatar.add(new AttributeModifier("width", new Model<String>("116px")));
-		avatar.add(new AttributeModifier("height", new Model<String>("116px")));
+		avatar.add(new AttributeModifier("width", new Model<String>(IMG_WIDTH)));
+		avatar.add(new AttributeModifier("height", new Model<String>(IMG_HEIGHT)));
 		form.add(avatar);
 
-		IModel imgModel = new Model<FileUpload>();
+		@SuppressWarnings({ "unchecked", "rawtypes" })
 		final FileUploadField fileUploadField = new FileUploadField(
-				"imgUpload", imgModel);
+				"imgUpload", (IModel) new Model<FileUpload>());
 		form.add(fileUploadField);
 
 		form.add(new AjaxSubmitLink("save") {
@@ -205,7 +212,7 @@ public class EditWriterPage extends BasePage {
 					// ServletContext context = ((WebApplication)
 					// getApplication()).getServletContext();
 					String imgPath = ((WebApplication) getApplication())
-							.getServletContext().getRealPath("img");
+							.getServletContext().getRealPath(IMG_DIR_NAME);
 
 					System.out.println("REAL PATH ES " + imgPath);
 
@@ -218,7 +225,7 @@ public class EditWriterPage extends BasePage {
 					final String imgFilename = writer.getUsername() + '.'
 							+ extension;
 
-					String filePath = imgPath + "\\avatar\\" + imgFilename;
+					String filePath = imgPath + "/" + AVATAR_DIR + imgFilename;
 
 					System.out.println("***** FILENAME> " + imgPath + '/'
 							+ writer.getUsername() + '.' + extension);

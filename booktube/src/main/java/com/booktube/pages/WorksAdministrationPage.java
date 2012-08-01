@@ -20,7 +20,6 @@ import org.apache.wicket.markup.html.form.CheckGroupSelector;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
@@ -159,7 +158,7 @@ public class WorksAdministrationPage extends AdministrationPage {
 		//deleteDialog = deleteDialog(successDialogLabel, WorksAdministrationPage.class);
 //		deleteDialog = deleteDialog(parent);
 //		parent.add(deleteDialog);
-		successDialog = new SuccessDialog<WorksAdministrationPage>("success_dialog", "Obra eliminada.", parent);
+		successDialog = new SuccessDialog<WorksAdministrationPage>("success_dialog",  new ResourceModel("bookDeleted").getObject(), parent);
 		parent.add(successDialog);
 
 		deleteConfirmationDialog = deleteConfirmationDialog();
@@ -185,8 +184,8 @@ public class WorksAdministrationPage extends AdministrationPage {
 			searchButton.setVisible(false);
 		}
 
-		String newTitle = "Booktube - Works Administration";
-		super.get("pageTitle").setDefaultModelObject(newTitle);
+		//String newTitle = "Booktube - Works Administration";
+		//super.get("pageTitle").setDefaultModelObject(newTitle);
 
 	}
 
@@ -349,10 +348,10 @@ public class WorksAdministrationPage extends AdministrationPage {
 				if ( deleteBook != null ) {
 					bookService.deleteBook(deleteBook);
 					deleteBook = null;
-					successDialog.setText("Obra eliminada.");
+					successDialog.setText( new ResourceModel("bookDeleted").getObject());
 				}
 				else if ( removedBooks != null ) {
-					successDialog.setText("Obras eliminadas.");
+					successDialog.setText( new ResourceModel("booksDeleted").getObject());
 					
 					for (Book aBook : removedBooks) {
 						bookService.deleteBook(aBook);
@@ -477,7 +476,7 @@ public class WorksAdministrationPage extends AdministrationPage {
 				deleteConfirmationDialog.open(target);
 
 				deleteConfirmationLabel
-						.setLabel("Esta seguro que desea eliminar las obras seleccionadas?");
+						.setLabel(new ResourceModel("deleteBooksQuestion").getObject());
 
 				target.add(deleteConfirmationLabel);
 				
@@ -561,6 +560,8 @@ public class WorksAdministrationPage extends AdministrationPage {
 				searchSubcategory = new String(subcategory
 						.getDefaultModelObjectAsString());
 
+				// TODO
+				// CAMBIAR DATES 
 				if (!StringUtils.isBlank(lowPublishDate
 						.getDefaultModelObjectAsString())) {
 					System.out.println("LowDate: "
