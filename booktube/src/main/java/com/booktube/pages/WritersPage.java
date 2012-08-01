@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ContextRelativeResource;
@@ -42,7 +43,7 @@ public class WritersPage extends BasePage {
 	
 	private static String searchUsername = null;
 
-	public WritersPage() {
+	public WritersPage(final PageParameters pageParameters) {
 
 		final WebMarkupContainer parent = new WebMarkupContainer("writers");
 		parent.setOutputMarkupId(true);
@@ -63,7 +64,19 @@ public class WritersPage extends BasePage {
 //		//parent.add(breadcrumbs);
 		addBreadcrumb(new BookmarkablePageLink<Object>("link", WritersPage.class), "Escritores");
 		
-		searchUsername = null;
+		if ( StringUtils.isNotBlank(pageParameters.get("letter").toString()) ) {
+			searchUsername = pageParameters.get("letter").toString() + "%";
+			if ( writerByLetter.get() ) {
+				removeLastBreadcrumb();
+			}
+			
+			addBreadcrumb(new BookmarkablePageLink<Object>("link", WritersPage.class, pageParameters.set("letter", pageParameters.get("letter").toString())), pageParameters.get("letter").toString());
+			
+			writerByLetter.set(true);
+		}
+		else {
+			searchUsername = null;
+		}
 		
 		List<String> list = Arrays.asList(new String[] { "A", "B", "C", "D",
 				"E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P",
@@ -90,7 +103,7 @@ public class WritersPage extends BasePage {
 							removeLastBreadcrumb();
 						}
 						
-						addBreadcrumb(new BookmarkablePageLink<Object>("link", WritersPage.class), item.getModelObject());
+						addBreadcrumb(new BookmarkablePageLink<Object>("link", WritersPage.class, pageParameters.set("letter", item.getModelObject())), item.getModelObject());
 						//setBreadcrumbs("Escritores > " + item.getModelObject());
 						//breadcrumbs.setLabel("Escritores > " + item.getModelObject());
 						//target.add(getBreadcrumbsLabel());
