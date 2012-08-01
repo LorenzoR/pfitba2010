@@ -30,6 +30,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.util.GenericBaseModel;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -68,14 +69,14 @@ public class RegisterPage extends BasePage {
 		feedback.setOutputMarkupId(true);
 		parent.add(feedback);
 
-		addBreadcrumb(new BookmarkablePageLink<Object>("link", RegisterPage.class), "Registracion");
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", RegisterPage.class), new ResourceModel("registerPageTitle").getObject());
 		
 		// parent.add(new FeedbackPanel("feedback").setOutputMarkupId(true));
 
 		parent.add(registerForm(parent, feedback));
 
 		dialog = new SuccessDialog<HomePage>("success_dialog",
-				"Usuario registrado con éxito!", HomePage.class, null);
+				new ResourceModel("newUser").getObject(), HomePage.class, null);
 
 		parent.add(dialog);
 
@@ -314,8 +315,7 @@ public class RegisterPage extends BasePage {
 
 	@Override
 	protected void setPageTitle() {
-		// TODO Auto-generated method stub
-		String newTitle = "Booktube - Register";
+		String newTitle = "Booktube - " + new ResourceModel("registerPageTitle").getObject();
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 

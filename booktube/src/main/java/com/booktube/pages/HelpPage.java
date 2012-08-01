@@ -1,13 +1,10 @@
 package com.booktube.pages;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.ResourceModel;
 
 public class HelpPage extends BasePage {	
 	private static final long serialVersionUID = -5126840475185084538L;
@@ -18,7 +15,7 @@ public class HelpPage extends BasePage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 		
-		addBreadcrumb(new BookmarkablePageLink<Object>("link", HelpPage.class), "Ayuda");
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", HelpPage.class), new ResourceModel("helpPageTitle").getObject());
 		
 		parent.add(new Label("aContent", "Aca va el contenido de la Help Page."));
 	}
@@ -26,7 +23,7 @@ public class HelpPage extends BasePage {
 	@Override
 	protected void setPageTitle() {
 		// TODO Auto-generated method stub
-		String newTitle = "Booktube - Help Page"; 
+		String newTitle = "Booktube - " + new ResourceModel("helpPageTitle").getObject(); 
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 	

@@ -1,7 +1,6 @@
 package com.booktube.pages;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -23,12 +22,12 @@ import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.EmailAddressValidator;
@@ -67,12 +66,12 @@ public class EditWriterPage extends BasePage {
 			return;
 		}
 
-		addBreadcrumb(new BookmarkablePageLink<Object>("link", EditWriterPage.class), "Editar " + user.getUsername() );
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", EditWriterPage.class), new ResourceModel("edit").getObject() + " " + user.getUsername() );
 		
 		add(new Label("writerId", user.getId().toString()));
 
 		dialog = new SuccessDialog<EditWriterPage>("success_dialog",
-				"Usuario editado con éxito!", backPage);
+				new ResourceModel("editedUserDialog").getObject(), backPage);
 		add(dialog);
 		
 		final FeedbackPanel feedback = new FeedbackPanel("feedback");
@@ -83,7 +82,7 @@ public class EditWriterPage extends BasePage {
 
 		// setResponsePage(backPage);
 		// goToLastPage();
-		String newTitle = "Booktube - Edit " + user.getUsername();
+		String newTitle = "Booktube - " + new ResourceModel("edit").getObject() + " " + user.getUsername();
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 

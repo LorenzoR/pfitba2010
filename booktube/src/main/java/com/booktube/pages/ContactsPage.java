@@ -7,8 +7,8 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.PropertyListView;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import com.booktube.WiaSession;
@@ -40,7 +40,7 @@ public class ContactsPage extends BasePage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 		
-		addBreadcrumb(new BookmarkablePageLink<Object>("link", ContactsPage.class), "Contactos");
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", ContactsPage.class), new ResourceModel("contactsPageTitle").getObject());
 		
 		user = WiaSession.get().getLoggedInUser();
 		
@@ -143,7 +143,7 @@ public class ContactsPage extends BasePage {
 	@Override
 	protected void setPageTitle() {
 		// TODO Auto-generated method stub
-		String newTitle = "Booktube - Contact"; 
+		String newTitle = "Booktube - " + new ResourceModel("contactsPageTitle").getObject(); 
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 }

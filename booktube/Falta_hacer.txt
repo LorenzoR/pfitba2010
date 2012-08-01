@@ -16,7 +16,7 @@
 
 ----- Formato del paginador y su ubicacion al lado del boton de borrar en los listados (OK)
 
-- En reportes dejar solo icono y titulo del reporte
+----- En reportes dejar solo icono y titulo del reporte (OK)
 
 - En los search de paginas de administracion:
 	----- Arreglar qu� pasa cuando no tira resultados (OK)

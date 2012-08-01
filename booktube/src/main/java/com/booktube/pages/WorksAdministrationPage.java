@@ -27,6 +27,7 @@ import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.odlabs.wiquery.core.effects.sliding.SlideToggle;
 import org.odlabs.wiquery.core.javascript.JsScope;
@@ -139,7 +140,7 @@ public class WorksAdministrationPage extends AdministrationPage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
-		addBreadcrumb(new BookmarkablePageLink<Object>("link", WorksAdministrationPage.class), "Obras");
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", WorksAdministrationPage.class), new ResourceModel("worksAdministrationPageTitle").getObject());
 		
 		//deleteConfirmationLabel.setOutputMarkupId(true);
 		//successDialogLabel.setOutputMarkupId(true);
@@ -334,7 +335,7 @@ public class WorksAdministrationPage extends AdministrationPage {
 		// System.out.println("USER: " + user);
 		// labelText = "original3";
 
-		AjaxDialogButton yesButton = new AjaxDialogButton("Si") {
+		AjaxDialogButton yesButton = new AjaxDialogButton(new ResourceModel("yes").getObject()) {
 
 			private static final long serialVersionUID = 1L;
 
@@ -391,7 +392,7 @@ public class WorksAdministrationPage extends AdministrationPage {
 			}
 		};
 
-		DialogButton noButton = new DialogButton("No",
+		DialogButton noButton = new DialogButton(new ResourceModel("no").getObject(),
 				JsScope.quickScope(dialog.close().render()));
 
 		dialog.setButtons(noButton, yesButton);

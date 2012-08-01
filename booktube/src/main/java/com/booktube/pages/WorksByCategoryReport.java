@@ -29,13 +29,13 @@ public class WorksByCategoryReport extends ReportPage {
 		addGenderFilterOption(allGendersList);
 		addYearFilterOption(allYearsList);
 		
-		addBreadcrumb(new BookmarkablePageLink<Object>("link", ReportsAdministrationPage.class), "Reportes");
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", ReportsAdministrationPage.class), new ResourceModel("reportsPageTitle").getObject());
 		addBreadcrumb(new BookmarkablePageLink<Object>("link", UsersEvolutionReport.class), new ResourceModel("worksByCategoryReport").getObject());
 		
 		// Especifico Titulo ( y etiquetas, si corresponde)
 		labels = new String[]{"Trabajos por Categoría"};
 		
-		String newTitle = "Booktube - Works by Category Report"; 
+		String newTitle = "Booktube - " + new ResourceModel("worksByCategoryReport").getObject(); 
 		super.get("pageTitle").setDefaultModelObject(newTitle);			
 		
 	}
@@ -63,7 +63,7 @@ public class WorksByCategoryReport extends ReportPage {
 
 	@Override
 	public String getReportTitle() {
-		return "Reporte Trabajos por Categoría";
+		return new ResourceModel("worksByCategoryReport").getObject();
 	}
 
 }

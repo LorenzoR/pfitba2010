@@ -1,6 +1,5 @@
 package com.booktube.pages;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -9,10 +8,14 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import com.booktube.WiaSession;
 import com.booktube.model.Message;
+import com.booktube.model.User;
+import com.booktube.model.User.Level;
 import com.booktube.service.MessageService;
 
 public class ShowMessagePage extends BasePage {
@@ -24,22 +27,34 @@ public class ShowMessagePage extends BasePage {
 
 
 	private final Message message;
+	
+	private final User user;
 
 	public ShowMessagePage(final PageParameters pageParameters) {
 
 		Long messageId = pageParameters.get("messageId").toLong();
 
 		message = messageService.getMessage(messageId);
+		
+		user = WiaSession.get().getLoggedInUser();
 
 		final WebMarkupContainer parent = new WebMarkupContainer(
 				"messageDetails");
 		parent.setOutputMarkupId(true);
 		add(parent);
 
-		String newTitle = "Booktube - Message " + message.getSubject();
+		String newTitle = "Booktube - " + new ResourceModel("messagesPageTitle").getObject() + " " + message.getSubject();
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 		
 		List<Message> messageList = message.getAllAnswers();
+		
+		if ( user.getLevel() == Level.ADMIN ) {
+			addBreadcrumb(new BookmarkablePageLink<Object>("link", AdministrationPage.class), new ResourceModel("administrationPageTitle").getObject());
+			addBreadcrumb(new BookmarkablePageLink<Object>("link", MessagesAdministrationPage.class), new ResourceModel("messageAdministrationPageTitle").getObject());
+		}
+		else {
+			addBreadcrumb(new BookmarkablePageLink<Object>("link", MessagesPage.class, pageParameters), new ResourceModel("messageAdministrationPageTitle").getObject());
+		}
 		
 		addBreadcrumb(new BookmarkablePageLink<Object>("link", ShowMessagePage.class, pageParameters), message.getSubject());
 		

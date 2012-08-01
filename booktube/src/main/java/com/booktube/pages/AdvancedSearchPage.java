@@ -19,7 +19,6 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -69,7 +68,7 @@ public class AdvancedSearchPage extends BasePage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 		
-		addBreadcrumb(new BookmarkablePageLink<Object>("link", AdvancedSearchPage.class), "Busqueda Avanzada");
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", AdvancedSearchPage.class), new ResourceModel("advancedSearchPageTitle").getObject());
 		
 		final FeedbackPanel formFeedback = new FeedbackPanel("formFeedback");
 		formFeedback.setOutputMarkupId(true);
@@ -374,8 +373,8 @@ public class AdvancedSearchPage extends BasePage {
 	
 	@Override
 	protected void setPageTitle() {
-		// TODO Auto-generated method stub
-
+		String newTitle = "Booktube - " + new ResourceModel("advancedSearchPageTitle").getObject();
+		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 	
 	class BookProvider implements IDataProvider<Book> {

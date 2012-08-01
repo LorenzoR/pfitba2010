@@ -1,14 +1,11 @@
 package com.booktube.pages;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
@@ -47,14 +44,7 @@ public class CampaignsPage extends BasePage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
-		List<BookmarkablePageLink<Object>> links = new ArrayList<BookmarkablePageLink<Object>>();
-		links.add(new BookmarkablePageLink<Object>("link", HomePage.class));
-		links.add(new BookmarkablePageLink<Object>("link", this.getClass()));
-		List<String> labels = new ArrayList<String>();
-		labels.add("Inicio");
-		labels.add("Campañas");
-		ListView<?> breadscrumbsLV = setBreadcrumbs(links, labels);
-		add(breadscrumbsLV);
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", CampaignsPage.class), new ResourceModel("campaignsPageTitle").getObject());
 		
 		//parent.add(listWriters("writerList", users));
 		DataView<Campaign> dataView = campaignList("campaignList");
@@ -164,7 +154,7 @@ public class CampaignsPage extends BasePage {
 	@Override
 	protected void setPageTitle() {
 		// TODO Auto-generated method stub
-		String newTitle = "Booktube - Campaigns"; 
+		String newTitle = "Booktube - " + new ResourceModel("campaignsPageTitle").getObject(); 
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 

@@ -33,7 +33,7 @@ public class UsersEvolutionReport extends ReportPage {
 		addAgeFilterOption();
 		addGenderFilterOption(allGendersList);		
 				
-		addBreadcrumb(new BookmarkablePageLink<Object>("link", ReportsAdministrationPage.class), "Reportes");
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", ReportsAdministrationPage.class), new ResourceModel("reportsPageTitle").getObject());
 		addBreadcrumb(new BookmarkablePageLink<Object>("link", UsersEvolutionReport.class), new ResourceModel("usersEvolutionReport").getObject());
 		
 		// Especifico Titulo ( y etiquetas, si corresponde)
@@ -52,7 +52,7 @@ public class UsersEvolutionReport extends ReportPage {
 //		customizedMisc.addElement(genderDropDownElement);
 //		reportFilter.addFilterOption(customizedMisc);
 		
-		String newTitle = "Booktube - Users Evolution Report"; 
+		String newTitle = "Booktube - " + new ResourceModel("usersEvolutionReport").getObject(); 
 		super.get("pageTitle").setDefaultModelObject(newTitle);		
 		
 		
@@ -84,7 +84,7 @@ public class UsersEvolutionReport extends ReportPage {
 
 	@Override
 	public String getReportTitle() {
-		return "Reporte Evolución de Usuarios en el Tiempo";
+		return new ResourceModel("usersEvolutionReport").getObject();
 	}
 	
 }

@@ -39,7 +39,6 @@ import org.wicketstuff.facebook.FacebookSdk;
 import com.booktube.WiaSession;
 import com.booktube.model.User;
 import com.booktube.model.User.Level;
-import com.booktube.pages.customComponents.DynamicLabel;
 import com.booktube.pages.customComponents.MenuLink;
 import com.booktube.service.BookService;
 import com.booktube.service.CampaignService;
@@ -100,13 +99,13 @@ public abstract class BasePage extends WebPage {
 //		
 //		setBreadcrumbs("");
 		
-		List<BookmarkablePageLink> linkList = new ArrayList<BookmarkablePageLink>();
+		List<BookmarkablePageLink<Object>> linkList = new ArrayList<BookmarkablePageLink<Object>>();
 //		BookmarkablePageLink link = new BookmarkablePageLink("link", HomePage.class);
 //		link.add(new Label("textLink", "Inicio"));
 //		linkList.add(link);
 		breadcrumbsModel.setObject(linkList);
 		addBreadcrumb(new BookmarkablePageLink<Object>("link", HomePage.class), "Inicio");
-		ListView breadcrumbs = createBreadcrumbs();
+		ListView<BookmarkablePageLink<Object>> breadcrumbs = createBreadcrumbs();
 		breadcrumbContainer = new WebMarkupContainer("breadcrumbsContainer");
 		breadcrumbContainer.setOutputMarkupId(true);
 		breadcrumbContainer.add(breadcrumbs);
@@ -640,33 +639,21 @@ public abstract class BasePage extends WebPage {
 
 	}
 	
-	protected final IModel<List<BookmarkablePageLink>> breadcrumbsModel = new IModel<List<BookmarkablePageLink>>() {
+	protected final IModel<List<BookmarkablePageLink<Object>>> breadcrumbsModel = new IModel<List<BookmarkablePageLink<Object>>>() {
 
-		List<BookmarkablePageLink> linkList;
-		
-		
-		public void addLink(BookmarkablePageLink link) {
-			linkList.add(link);
-		}
-		
-		public void removeLink(int index) {
-			linkList.remove(index);
-		}
-		
-		public void clearList() {
-			linkList.clear();
-		}
+		private static final long serialVersionUID = 1L;
+		List<BookmarkablePageLink<Object>> linkList;
 		
 		public void detach() {
 			// TODO Auto-generated method stub
 			
 		}
 
-		public List<BookmarkablePageLink> getObject() {
+		public List<BookmarkablePageLink<Object>> getObject() {
 			return linkList;
 		}
 
-		public void setObject(List<BookmarkablePageLink> linkList) {
+		public void setObject(List<BookmarkablePageLink<Object>> linkList) {
 //			BookmarkablePageLink link = new BookmarkablePageLink("link", HomePage.class);
 //			link.add(new Label("textLink", "Inicio"));
 //			linkList.add(link);
@@ -676,7 +663,7 @@ public abstract class BasePage extends WebPage {
 	};
 	
 	protected void addBreadcrumb(BookmarkablePageLink<Object> link, String label) {
-		List<BookmarkablePageLink> linkList = breadcrumbsModel.getObject();
+		List<BookmarkablePageLink<Object>> linkList = breadcrumbsModel.getObject();
 		link.add(new Label("textLink", label));
 		linkList.add(link);
 		System.out.println("****** LINK " + link.getPageClass());
@@ -684,60 +671,21 @@ public abstract class BasePage extends WebPage {
 	}
 	
 	protected void removeLastBreadcrumb() {
-		List<BookmarkablePageLink> linkList = breadcrumbsModel.getObject();
+		List<BookmarkablePageLink<Object>> linkList = breadcrumbsModel.getObject();
 		linkList.remove(linkList.size() - 1);
 		breadcrumbsModel.setObject(linkList);
 	}
 	
-	public ListView createBreadcrumbs() {
+	public ListView<BookmarkablePageLink<Object>> createBreadcrumbs() {
 		
-		ListView<BookmarkablePageLink> listview = new ListView<BookmarkablePageLink>("breadcrumbs", breadcrumbsModel) {
+		ListView<BookmarkablePageLink<Object>> listview = new ListView<BookmarkablePageLink<Object>>("breadcrumbs", breadcrumbsModel) {
 
 			private static final long serialVersionUID = 1L;
 			
-			protected void populateItem(final ListItem<BookmarkablePageLink> item) {
+			protected void populateItem(final ListItem<BookmarkablePageLink<Object>> item) {
 				
-				BookmarkablePageLink link = item.getModelObject();
+				BookmarkablePageLink<Object> link = item.getModelObject();
 				item.add(link);
-			}
-		};
-		
-		return listview;
-	}
-	
-	public ListView setBreadcrumbs(final List<BookmarkablePageLink<Object>> links, final List<String> labels) {
-		
-		ListView<BookmarkablePageLink> listview = new ListView<BookmarkablePageLink>("breadcrumbs", breadcrumbsModel) {
-
-			private static final long serialVersionUID = 1L;
-			
-			protected void populateItem(final ListItem<BookmarkablePageLink> item) {
-				
-//				AjaxLink<?> link = new AjaxLink<Void>("link") {
-//
-//					private static final long serialVersionUID = 1L;
-//
-//					@Override
-//					public void onClick(AjaxRequestTarget target) {
-//						searchUsername = item.getModelObject() +"%s";
-//						System.out.println("{{{{{{{ SearchUserName: " + searchUsername);
-//						setBreadcrumbs("Escritores > " + item.getModelObject());
-//						//breadcrumbs.setLabel("Escritores > " + item.getModelObject());
-//						target.add(getBreadcrumbsLabel());
-//						target.add(parent);
-//					}
-//				};
-				BookmarkablePageLink link = item.getModelObject();
-				item.add(link);
-				//item.getModelObject().set
-//				BookmarkablePageLink newLink = new BookmarkablePageLink("link", link.getPageClass(), link.getPageParameters());
-//				newLink.add(new Label("textLink", labels.get(item.getIndex())));
-//				item.add(newLink);
-				
-				//Label label = new Label("label", item.getModel());
-//				link.add(label);
-//				item.add(link);
-				//item.add(label);
 			}
 		};
 		

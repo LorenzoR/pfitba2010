@@ -1,6 +1,5 @@
 package com.booktube.pages;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -16,11 +15,11 @@ import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -59,7 +58,7 @@ public class EditBookPage extends BasePage {
 
 		book = bookService.getBook(bookId);
 		
-		addBreadcrumb(new BookmarkablePageLink<Object>("link", EditBookPage.class, pageParameters), "Editar " + book.getTitle());
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", EditBookPage.class, pageParameters), new ResourceModel("edit").getObject() + " " + book.getTitle());
 
 		if (book == null) {
 			setResponsePage(HomePage.class);
@@ -70,7 +69,7 @@ public class EditBookPage extends BasePage {
 
 		add(editBookForm(book, currentPage));
 
-		String newTitle = "Booktube - Edit " + book.getTitle();
+		String newTitle = "Booktube - " + new ResourceModel("edit").getObject() + " " + book.getTitle();
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 
 	}
@@ -164,8 +163,6 @@ public class EditBookPage extends BasePage {
 	@Override
 	protected void setPageTitle() {
 		// TODO Auto-generated method stub
-		// String newTitle = "Booktube - Edit " + book.getTitle();
-		// super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 	
 	/**

@@ -13,10 +13,10 @@ import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.odlabs.wiquery.ui.dialog.AjaxDialogButton;
@@ -52,7 +52,7 @@ public class AddBookPage extends BasePage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
-		addBreadcrumb(new BookmarkablePageLink<Object>("link", AddBookPage.class, pageParameters), "Agregar Obra");
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", AddBookPage.class, pageParameters), new ResourceModel("addBookPageTitle").getObject());
 
 		user = WiaSession.get().getLoggedInUser();
 
@@ -115,7 +115,7 @@ public class AddBookPage extends BasePage {
 		// dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
 
 		dialog = new SuccessDialog<ShowBookPage>("success_dialog",
-				"Obra agragada con éxito!", ShowBookPage.class, pageParameters);
+				new ResourceModel("newBookDialog").getObject(), ShowBookPage.class, pageParameters);
 		parent.add(dialog);
 
 	}
@@ -373,7 +373,7 @@ public class AddBookPage extends BasePage {
 
 	@Override
 	protected void setPageTitle() {
-		String newTitle = "Booktube - New Book";
+		String newTitle = "Booktube - " + new ResourceModel("addBookPageTitle").getObject();
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 
