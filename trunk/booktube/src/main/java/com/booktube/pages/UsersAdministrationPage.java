@@ -24,13 +24,11 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -139,14 +137,6 @@ public class UsersAdministrationPage extends AdministrationPage {
 	private AjaxPagingNavigator footerNavigator;
 	private final WebMarkupContainer searchButton;
 	private final Form<User> searchUserForm;
-
-	final LoadableDetachableModel<List<User>> resultsModel = new LoadableDetachableModel<List<User>>() {
-		private static final long serialVersionUID = 1L;
-
-		protected List<User> load() {
-			return null;
-		}
-	};
 
 	public UsersAdministrationPage() {
 		super();

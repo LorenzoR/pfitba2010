@@ -3,11 +3,8 @@ package com.booktube.pages;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-
-import javax.servlet.ServletContext;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
@@ -23,7 +20,6 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.form.validation.EqualPasswordInputValidator;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -31,7 +27,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.model.util.GenericBaseModel;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.EmailAddressValidator;
@@ -57,8 +52,9 @@ public class RegisterPage extends BasePage {
 
 	private static Dialog dialog;
 
-	private final String UPLOAD_FOLDER = "./img/avatar/";
-
+	private final String AVATAR_DIR = "avatar/";
+	private final String IMG_DIR_NAME = "img";
+	
 	public RegisterPage() {
 
 		final WebMarkupContainer parent = new WebMarkupContainer("register");
@@ -152,9 +148,10 @@ public class RegisterPage extends BasePage {
 
 		// final FileUploadField fileUpload = new FileUploadField("imgUpload",
 		// ));
-		IModel imgModel = new Model<FileUpload>();
+
+		@SuppressWarnings({ "unchecked", "rawtypes" })
 		final FileUploadField fileUploadField = new FileUploadField(
-				"imgUpload", imgModel);
+				"imgUpload", (IModel) new Model<FileUpload>());
 		form.add(fileUploadField);
 
 		birthdateField.setRequired(true);
@@ -247,7 +244,7 @@ public class RegisterPage extends BasePage {
 					// ServletContext context = ((WebApplication)
 					// getApplication()).getServletContext();
 					String imgPath = ((WebApplication) getApplication())
-							.getServletContext().getRealPath("img");
+							.getServletContext().getRealPath(IMG_DIR_NAME);
 
 					System.out.println("REAL PATH ES " + imgPath);
 
@@ -260,7 +257,7 @@ public class RegisterPage extends BasePage {
 					final String imgFilename = newUser.getUsername() + '.'
 							+ extension;
 
-					String filePath = imgPath + "\\avatar\\" + imgFilename;
+					String filePath = imgPath + "/" + AVATAR_DIR + imgFilename;
 
 					System.out.println("***** FILENAME> " + imgPath + '/'
 							+ newUser.getUsername() + '.' + extension);
