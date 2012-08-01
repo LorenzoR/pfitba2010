@@ -9,6 +9,7 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -26,7 +27,7 @@ public class ShowCampaignPage extends BasePage {
 	@SpringBean
 	CampaignService campaignService;
 
-	private User user;
+	private final User user;
 	private final Campaign campaign;
 
 	public ShowCampaignPage(final PageParameters pageParameters) {
@@ -45,6 +46,15 @@ public class ShowCampaignPage extends BasePage {
 
 		campaign = campaignService.getCampaign(campaignId);
 
+		
+		if ( user.getLevel() == Level.ADMIN ) {
+			addBreadcrumb(new BookmarkablePageLink<Object>("link", AdministrationPage.class), new ResourceModel("administrationPageTitle").getObject());
+			addBreadcrumb(new BookmarkablePageLink<Object>("link", CampaignsAdministrationPage.class), new ResourceModel("campaigns").getObject());
+		}
+		else {
+			addBreadcrumb(new BookmarkablePageLink<Object>("link", CampaignsPage.class, pageParameters), new ResourceModel("campaigns").getObject());
+		}
+		
 		addBreadcrumb(new BookmarkablePageLink<Object>("link", ShowCampaignPage.class, pageParameters), campaign.getSubject());
 		
 		final WebMarkupContainer parent = new WebMarkupContainer(
@@ -52,7 +62,7 @@ public class ShowCampaignPage extends BasePage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
-		String newTitle = "Booktube - Campaign " + campaign.getSubject();
+		String newTitle = "Booktube - " + new ResourceModel("campaign").getObject() + " " + campaign.getSubject();
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 
 		// List<Campaign> campaignList = campaign.getAllAnswers();

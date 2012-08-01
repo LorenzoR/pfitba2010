@@ -1,6 +1,5 @@
 package com.booktube.pages;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -11,7 +10,6 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.ResourceModel;
@@ -50,7 +48,7 @@ public class AnswerMessagePage extends BasePage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
-		addBreadcrumb(new BookmarkablePageLink<Object>("link", AnswerMessagePage.class), "Responder");
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", AnswerMessagePage.class), new ResourceModel("answerMessagePageTitle").getObject());
 		
 		Long messageId = pageParameters.get("messageId").toLong();
 		message = messageService.getMessage(messageId);
@@ -246,7 +244,7 @@ public class AnswerMessagePage extends BasePage {
 	@Override
 	protected void setPageTitle() {
 		// TODO Auto-generated method stub
-		String newTitle = "Booktube - Reply message";
+		String newTitle = "Booktube - " + new ResourceModel("answerMessagePageTitle").getObject();
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 

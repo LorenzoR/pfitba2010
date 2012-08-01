@@ -1,15 +1,13 @@
 package com.booktube.pages;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -35,10 +33,10 @@ public class ShowUserPage extends BasePage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
-		String newTitle = "Booktube - User " + showUser.getUsername();
+		String newTitle = "Booktube - " + showUser.getUsername();
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 
-		addBreadcrumb(new BookmarkablePageLink<Object>("link", WritersPage.class), "Escritores");
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", WritersPage.class), new ResourceModel("writersPageTitle").getObject());
 		addBreadcrumb(new BookmarkablePageLink<Object>("link", ShowUserPage.class, pageParameters), showUser.getUsername());
 		
 		CompoundPropertyModel<User> model = new CompoundPropertyModel<User>(

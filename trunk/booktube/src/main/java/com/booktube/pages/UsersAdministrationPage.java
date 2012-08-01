@@ -32,6 +32,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.odlabs.wiquery.core.effects.sliding.SlideToggle;
@@ -154,7 +155,7 @@ public class UsersAdministrationPage extends AdministrationPage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
-		addBreadcrumb(new BookmarkablePageLink<Object>("link", UsersAdministrationPage.class), "Usuarios");
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", UsersAdministrationPage.class), new ResourceModel("usersAdministrationPageTitle").getObject());
 		
 		// deleteConfirmationLabel.setOutputMarkupId(true);
 		// successDialogLabel.setOutputMarkupId(true);
@@ -321,7 +322,7 @@ public class UsersAdministrationPage extends AdministrationPage {
 		// System.out.println("USER: " + user);
 		// labelText = "original3";
 
-		AjaxDialogButton yesButton = new AjaxDialogButton("Si") {
+		AjaxDialogButton yesButton = new AjaxDialogButton(new ResourceModel("yes").getObject()) {
 
 			private static final long serialVersionUID = 1L;
 
@@ -346,7 +347,7 @@ public class UsersAdministrationPage extends AdministrationPage {
 			}
 		};
 
-		DialogButton noButton = new DialogButton("No",
+		DialogButton noButton = new DialogButton(new ResourceModel("no").getObject(),
 				JsScope.quickScope(dialog.close().render()));
 
 		dialog.setButtons(noButton, yesButton);
@@ -390,12 +391,6 @@ public class UsersAdministrationPage extends AdministrationPage {
 		final TextField<String> username = new TextField<String>("username",
 				new Model<String>(""));
 		searchFields.add(username);
-
-		List<String> genderList = Arrays.asList(new String[] { "Masculino",
-				"Femenino" });
-
-//		final DropDownChoice<String> gender = new DropDownChoice<String>(
-//				"gender", new Model<String>(), genderList);
 
 		final DropDownChoice<Gender> genderDDC = new DropDownChoice<Gender>(
 				"gender", Arrays.asList(Gender.values()),

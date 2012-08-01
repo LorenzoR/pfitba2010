@@ -22,12 +22,12 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.hibernate.StaleStateException;
@@ -73,7 +73,7 @@ public class MessagesAdministrationPage extends AdministrationPage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
-		addBreadcrumb(new BookmarkablePageLink<Object>("link", MessagesAdministrationPage.class), "Mensajes");
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", MessagesAdministrationPage.class), new ResourceModel("messageAdministrationPageTitle").getObject());
 		
 //		parent.add(new Label("pageTitle", "Messages Administration Page"));
 
@@ -117,7 +117,7 @@ public class MessagesAdministrationPage extends AdministrationPage {
 
 		final Dialog dialog = new Dialog("success_dialog");
 
-		dialog.add(new Label("success_dialog_text", "Mensaje eliminado!"));
+		dialog.add(new Label("success_dialog_text", new ResourceModel("messageDeleted")));
 
 		AjaxDialogButton ok = new AjaxDialogButton("OK") {
 
@@ -143,9 +143,9 @@ public class MessagesAdministrationPage extends AdministrationPage {
 		final Dialog dialog = new Dialog("delete_confirmation_dialog");
 
 		dialog.add(new Label("delete_confirmation_dialog_text",
-				"Esta seguro que desea eliminar el mensaje?"));
+				new ResourceModel("deleteMessageQuestion")));
 
-		AjaxDialogButton yesButton = new AjaxDialogButton("Si") {
+		AjaxDialogButton yesButton = new AjaxDialogButton(new ResourceModel("yes").getObject()) {
 
 			private static final long serialVersionUID = 1L;
 
@@ -165,7 +165,7 @@ public class MessagesAdministrationPage extends AdministrationPage {
 			}
 		};
 
-		DialogButton noButton = new DialogButton("No",
+		DialogButton noButton = new DialogButton(new ResourceModel("no").getObject(),
 				JsScope.quickScope(dialog.close().render()));
 
 		dialog.setButtons(noButton, yesButton);

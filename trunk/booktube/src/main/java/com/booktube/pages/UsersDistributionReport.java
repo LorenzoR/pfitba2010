@@ -32,13 +32,13 @@ public class UsersDistributionReport extends ReportPage {
 		addGenderFilterOption(allGendersList);
 		addYearFilterOption(allYearsList);
 	
-		addBreadcrumb(new BookmarkablePageLink<Object>("link", ReportsAdministrationPage.class), "Reportes");
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", ReportsAdministrationPage.class), new ResourceModel("reportsPageTitle").getObject());
 		addBreadcrumb(new BookmarkablePageLink<Object>("link", UsersDistributionReport.class), new ResourceModel("usersDistributionReport").getObject());
 		
 		// Especifico Titulo ( y etiquetas, si corresponde)
 		labels = new String[]{"Distribución de Usuarios por país"};
 		
-		String newTitle = "Booktube - Users Distribution Report"; 
+		String newTitle = "Booktube - " + new ResourceModel("usersDistributionReport").getObject(); 
 		super.get("pageTitle").setDefaultModelObject(newTitle);		
 	}
 	
@@ -66,7 +66,7 @@ public class UsersDistributionReport extends ReportPage {
 
 	@Override
 	public String getReportTitle() {
-		return "Reporte Usuarios por País";
+		return new ResourceModel("usersDistributionReport").getObject();
 	}
 
 }

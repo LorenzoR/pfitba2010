@@ -1,6 +1,5 @@
 package com.booktube.pages;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,7 +12,6 @@ import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -53,7 +51,7 @@ public class NewContactPage extends BasePage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
-		addBreadcrumb(new BookmarkablePageLink<Object>("link", NewContactPage.class), "Nuevo Contacto");
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", NewContactPage.class), new ResourceModel("newContactPageTitle").getObject());
 		
 		user = WiaSession.get().getLoggedInUser();
 
@@ -67,7 +65,7 @@ public class NewContactPage extends BasePage {
 //		parent.add(new BookmarkablePageLink<String>("contactsPage",
 //				ContactsPage.class));
 
-		dialog = new SuccessDialog<MessagesPage>("success_dialog", "Mensaje enviado con éxito!", MessagesPage.class, null);
+		dialog = new SuccessDialog<MessagesPage>("success_dialog", new ResourceModel("newMessageDialog").getObject(), MessagesPage.class, null);
 		parent.add(dialog);
 		
 		if (user == null) {
@@ -196,8 +194,7 @@ public class NewContactPage extends BasePage {
 
 	@Override
 	protected void setPageTitle() {
-		// TODO Auto-generated method stub
-		String newTitle = "Booktube - New Contact"; 
+		String newTitle = "Booktube - " + new ResourceModel("newContactPageTitle").getObject(); 
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 }

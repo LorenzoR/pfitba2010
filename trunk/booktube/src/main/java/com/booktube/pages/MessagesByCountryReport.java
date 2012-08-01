@@ -30,13 +30,13 @@ public class MessagesByCountryReport extends ReportPage {
 		addGenderFilterOption(allGendersList);
 		addYearFilterOption(allYearsList);
 		
-		addBreadcrumb(new BookmarkablePageLink<Object>("link", ReportsAdministrationPage.class), "Reportes");
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", ReportsAdministrationPage.class), new ResourceModel("reportsPageTitle").getObject());
 		addBreadcrumb(new BookmarkablePageLink<Object>("link", MessagesByCountryReport.class), new ResourceModel("messagesByCountryReport").getObject());
 		
 		// Especifico Titulo ( y etiquetas, si corresponde)
 		labels = new String[]{"Mensajes por País"};
 		
-		String newTitle = "Booktube - Messages By Country"; 
+		String newTitle = "Booktube - " + new ResourceModel("messagesByCountryReport").getObject(); 
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 
@@ -63,7 +63,7 @@ public class MessagesByCountryReport extends ReportPage {
 
 	@Override
 	public String getReportTitle() {
-		return "Reporte Mensajes por País";
+		return new ResourceModel("messagesByCountryReport").getObject();
 	}
 
 }

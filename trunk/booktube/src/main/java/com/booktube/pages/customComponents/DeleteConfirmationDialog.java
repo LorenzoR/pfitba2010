@@ -2,6 +2,7 @@ package com.booktube.pages.customComponents;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.odlabs.wiquery.core.javascript.JsScope;
 import org.odlabs.wiquery.ui.dialog.AjaxDialogButton;
@@ -26,7 +27,7 @@ public class DeleteConfirmationDialog<C extends IRequestablePage> extends Dialog
 //		dynamicLabel.setLabel(text);
 		this.add(dynamicLabel);
 		
-		AjaxDialogButton yesButton = new AjaxDialogButton("Si") {
+		AjaxDialogButton yesButton = new AjaxDialogButton(new ResourceModel("yes").getObject()) {
 
 			private static final long serialVersionUID = 1L;
 
@@ -50,7 +51,7 @@ public class DeleteConfirmationDialog<C extends IRequestablePage> extends Dialog
 			}
 		};
 		
-		DialogButton noButton = new DialogButton("No",
+		DialogButton noButton = new DialogButton(new ResourceModel("no").getObject(),
 				JsScope.quickScope(dialog.close().render()));
 
 		setButtons(noButton, yesButton);

@@ -1,5 +1,6 @@
 package com.booktube.pages;
 
+import java.text.DateFormat;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -102,7 +103,7 @@ public class NewCampaignPage extends BasePage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
-		addBreadcrumb(new BookmarkablePageLink<Object>("link", NewCampaignPage.class), "Nueva Campaña");
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", NewCampaignPage.class), new ResourceModel("newCampaignPageTitle").getObject());
 		
 		user = WiaSession.get().getLoggedInUser();
 
@@ -117,7 +118,7 @@ public class NewCampaignPage extends BasePage {
 		// parameters.set("campaignId", campaign.getId());
 
 		dialog = new SuccessDialog<ShowCampaignPage>("success_dialog",
-				"Campaña enviada con éxito!", ShowCampaignPage.class,
+				new ResourceModel("newCampaignDialog").getObject(), ShowCampaignPage.class,
 				parameters);
 		parent.add(dialog);
 
@@ -321,6 +322,7 @@ public class NewCampaignPage extends BasePage {
 		form.add(new AjaxSubmitLink("addFilter") {
 
 			private static final long serialVersionUID = 1L;
+			private final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, getLocale());
 
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
@@ -368,10 +370,10 @@ public class NewCampaignPage extends BasePage {
 
 				Date lowDate = lowRegistrationDateField.getConvertedInput();
 				Date highDate = highRegistrationDateField.getConvertedInput();
-
+				
 				if ((lowDate != null || highDate != null)
 						&& !filters.contains(lowDate + " - " + highDate)) {
-					newFilter += lowDate + " - " + highDate + " / ";
+					newFilter += dateFormat.format(lowDate) + " - " + dateFormat.format(highDate) + " / ";
 					// newFilter.replace("\0", "");
 //					filters.add(newFilter);
 //
@@ -719,8 +721,7 @@ public class NewCampaignPage extends BasePage {
 
 	@Override
 	protected void setPageTitle() {
-		// TODO Auto-generated method stub
-		String newTitle = "Booktube - New Contact";
+		String newTitle = "Booktube - " + new ResourceModel("newCampaignPageTitle").getObject();
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 }

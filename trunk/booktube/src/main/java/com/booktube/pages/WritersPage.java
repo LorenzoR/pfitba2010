@@ -1,6 +1,5 @@
 package com.booktube.pages;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -9,7 +8,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.request.resource.ContextRelativeResource;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator;
@@ -62,7 +60,7 @@ public class WritersPage extends BasePage {
 //		final ListView<?> breadscrumbsLV = setBreadcrumbs(links, labels);
 //		add(breadscrumbsLV);
 //		//parent.add(breadcrumbs);
-		addBreadcrumb(new BookmarkablePageLink<Object>("link", WritersPage.class), "Escritores");
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", WritersPage.class), new ResourceModel("writersPageTitle").getObject());
 		
 		if ( StringUtils.isNotBlank(pageParameters.get("letter").toString()) ) {
 			searchUsername = pageParameters.get("letter").toString() + "%";
@@ -275,8 +273,7 @@ public class WritersPage extends BasePage {
 
 	@Override
 	protected void setPageTitle() {
-		// TODO Auto-generated method stub
-		String newTitle = "Booktube - Writers";
+		String newTitle = "Booktube - " + new ResourceModel("writersPageTitle").getObject();
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 

@@ -1,9 +1,5 @@
 package com.booktube.pages;
 
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -15,11 +11,11 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.wicketstuff.facebook.plugins.Comments;
 import org.wicketstuff.facebook.plugins.LikeButton;
@@ -71,7 +67,7 @@ public class ShowBookPage extends BasePage {
 		book.increaseHits();
 		bookService.updateBook(book);
 		
-		addBreadcrumb(new BookmarkablePageLink<Object>("link", BooksPage.class), "Leer");
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", BooksPage.class), new ResourceModel("showBookPageTitle").getObject());
 		addBreadcrumb(new BookmarkablePageLink<Object>("link", ShowBookPage.class, pageParameters), book.getTitle());
 		
 		//user = WiaSession.get().getLoggedInUser();
@@ -83,7 +79,7 @@ public class ShowBookPage extends BasePage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
-		String newTitle = "Booktube - " + book.getTitle() + " by " + book.getAuthor(); 
+		String newTitle = "Booktube - " + book.getTitle() + " " + new ResourceModel("by").getObject() + " " + book.getAuthor(); 
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 		
 		CompoundPropertyModel<Book> model = new CompoundPropertyModel<Book>(book);

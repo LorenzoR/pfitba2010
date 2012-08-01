@@ -29,18 +29,18 @@ public class MessagesBySubjectReport extends ReportPage {
 		addGenderFilterOption(allGendersList);
 		addYearFilterOption(allYearsList);
 		
-		addBreadcrumb(new BookmarkablePageLink<Object>("link", ReportsAdministrationPage.class), "Reportes");
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", ReportsAdministrationPage.class), new ResourceModel("reportsPageTitle").getObject());
 		addBreadcrumb(new BookmarkablePageLink<Object>("link", MessagesBySubjectReport.class), new ResourceModel("messagesBySubjectReport").getObject());
 		
 		// Especifico Titulo ( y etiquetas, si corresponde)
 		labels = new String[]{"Mensajes por Tema"};
 		
-		String newTitle = "Booktube - Messages By Subjetct"; 
+		String newTitle = "Booktube - " + new ResourceModel("messagesBySubjectReport").getObject(); 
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 	@Override
 	public Dataset getReportData() {
-		List<?> data = userService.getMessagesBySubject(ageFilter, customizedMisc);		
+		List<?> data = userService.getMessagesBySubject(ageFilter, customizedMisc);
 		DefaultPieDataset result = new DefaultPieDataset();
 		for(Object object : data){
            Map<?, ?> row = (Map<?, ?>)object;
@@ -60,7 +60,7 @@ public class MessagesBySubjectReport extends ReportPage {
 	}
 	@Override
 	public String getReportTitle() {
-		return "Reporte Mensajes por Tema";
+		return new ResourceModel("messagesBySubjectReport").getObject();
 	}
 
 }

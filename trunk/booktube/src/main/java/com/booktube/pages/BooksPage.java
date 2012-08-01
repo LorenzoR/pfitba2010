@@ -16,7 +16,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
@@ -69,7 +68,7 @@ public class BooksPage extends BasePage {
 
 	public BooksPage(final PageParameters parameters) {
 
-		addBreadcrumb(new BookmarkablePageLink<Object>("link", BooksPage.class), "Leer");
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", BooksPage.class), new ResourceModel("booksPageTitle").getObject());
 		
 		if (StringUtils.isNotBlank(parameters.get("author").toString())) {
 			author = parameters.get("author").toString();
@@ -301,7 +300,7 @@ public class BooksPage extends BasePage {
 	@Override
 	protected void setPageTitle() {
 		// TODO Auto-generated method stub
-		String newTitle = "Booktube - Books";
+		String newTitle = "Booktube - " + new ResourceModel("booksPageTitle").getObject();
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 

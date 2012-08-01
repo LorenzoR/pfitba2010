@@ -29,13 +29,13 @@ public class UsersBySexReport extends ReportPage {
 		addOriginFilterOption();
 		addAgeFilterOption();
 		
-		addBreadcrumb(new BookmarkablePageLink<Object>("link", ReportsAdministrationPage.class), "Reportes");
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", ReportsAdministrationPage.class), new ResourceModel("reportsPageTitle").getObject());
 		addBreadcrumb(new BookmarkablePageLink<Object>("link", UsersBySexReport.class), new ResourceModel("usersBySexReport").getObject());
 		
 		// Especifico Titulo ( y etiquetas, si corresponde)
 		labels = new String[]{"Evolución de Usuarios por Género", "Año", "Usuarios"};
 		
-		String newTitle = "Booktube - Users By Sex Report"; 
+		String newTitle = "Booktube - " + new ResourceModel("usersBySexReport").getObject(); 
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 
@@ -66,7 +66,7 @@ public class UsersBySexReport extends ReportPage {
 
 	@Override
 	public String getReportTitle() {
-		return "Reporte Evolución de Usuarios por Género";
+		return new ResourceModel("usersBySexReport").getObject();
 	}
 	
 }
