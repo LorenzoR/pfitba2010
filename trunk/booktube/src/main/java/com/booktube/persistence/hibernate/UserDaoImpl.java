@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 
 import org.apache.commons.lang.StringUtils;
@@ -310,15 +311,25 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 	
 	public List<Object> getUserEvolutionByYear(OriginFilterOption origin, AgeFilterOption age, MiscFilterOption misc) {
 		String whereClause = SqlUtilities.generateWhereClause(origin, age, misc);
-		String sql = "select year(registration_date) as year, count(user_id) as total from user "+whereClause+" group by year";
+		String sql = "select year(registration_date) as year, count(user_id) as total from user "+whereClause+" group by year order by year ASC";
 		
 		SQLQuery query = getSession().createSQLQuery(sql)
-				.addScalar("year", Hibernate.STRING)
-				.addScalar("total", Hibernate.STRING);
+				.addScalar("year", Hibernate.INTEGER)
+				.addScalar("total", Hibernate.INTEGER);
 
 		query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 		@SuppressWarnings("unchecked")
 		List<Object> data = (List<Object>) query.list();
+		
+		int lastUsers = 0;
+		
+		for (Object aData : data ) {
+			@SuppressWarnings("unchecked")
+			Map<String, Integer> row = (Map<String, Integer>) aData;
+			row.put("total", row.get("total") + lastUsers);
+			lastUsers = row.get("total");
+		}
+		
 		return data;
 	}
 	
@@ -350,7 +361,7 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 	
 	public List<Object> getUserEvolutionBySex(OriginFilterOption origin, AgeFilterOption age) {
 		String whereClause = SqlUtilities.generateWhereClause(origin, age, null);
-		String sql = "SELECT year(registration_date) as year,COALESCE(SUM(CASE WHEN gender = 0 THEN 1 END), 0) as female,COALESCE(SUM(CASE WHEN gender = 1 THEN 1 END), 0) as male FROM user "+whereClause+" GROUP BY year";
+		String sql = "SELECT year(registration_date) as year,COALESCE(SUM(CASE WHEN gender = 0 THEN 1 END), 0) as female,COALESCE(SUM(CASE WHEN gender = 1 THEN 1 END), 0) as male FROM user "+whereClause+" GROUP BY year ORDER BY year ASC";
 		
 		SQLQuery query = getSession().createSQLQuery(sql)
 				.addScalar("year", Hibernate.STRING)
@@ -360,6 +371,21 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 		query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 		@SuppressWarnings("unchecked")
 		List<Object> data = (List<Object>) query.list();
+		
+		int lastMaleUsers = 0;
+		int lastFemaleUsers = 0;
+		
+		for (Object aData : data ) {
+			@SuppressWarnings("unchecked")
+			Map<String, Integer> row = (Map<String, Integer>) aData;
+			
+			row.put("male", row.get("male") + lastMaleUsers);
+			lastMaleUsers = row.get("male");
+			
+			row.put("female",row.get("female") + lastFemaleUsers);
+			lastFemaleUsers = row.get("female");
+		}
+		
 		return data;
 
 	}

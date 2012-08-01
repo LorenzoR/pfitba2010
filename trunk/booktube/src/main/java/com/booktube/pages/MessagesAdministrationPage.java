@@ -51,7 +51,7 @@ public class MessagesAdministrationPage extends AdministrationPage {
 	private static Dialog deleteConfirmationDialog;
 
 	private final DataView<Message> dataView;
-	private final AjaxPagingNavigator footerNavigator;
+	private AjaxPagingNavigator footerNavigator;
 	private final WebMarkupContainer searchButton;
 	private final Form<Message> searchForm;
 	
@@ -78,17 +78,6 @@ public class MessagesAdministrationPage extends AdministrationPage {
 //		parent.add(new Label("pageTitle", "Messages Administration Page"));
 
 		dataView = messageList("messageList");
-
-		footerNavigator = new AjaxPagingNavigator("footerPaginator", dataView) {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onAjaxEvent(AjaxRequestTarget target) {
-				target.add(parent);
-			}
-		};
-		parent.add(footerNavigator);
 
 		searchForm = searchMessageForm(parent);
 		parent.add(searchForm);
@@ -265,6 +254,17 @@ public class MessagesAdministrationPage extends AdministrationPage {
 
 		form.setDefaultModel(model);
 
+		footerNavigator = new AjaxPagingNavigator("footerPaginator", dataView) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onAjaxEvent(AjaxRequestTarget target) {
+				target.add(parent);
+			}
+		};
+		form.add(footerNavigator);
+		
 		final WebMarkupContainer searchFields = new WebMarkupContainer(
 				"searchFields");
 		searchFields.add(AttributeModifier.replace("style", "display: none;"));

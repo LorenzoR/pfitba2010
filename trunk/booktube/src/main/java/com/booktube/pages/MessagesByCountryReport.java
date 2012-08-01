@@ -4,6 +4,8 @@ import java.util.List;
 
 import java.util.Map;
 
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.jfree.data.general.Dataset;
 import org.jfree.data.general.DefaultPieDataset;
@@ -27,6 +29,9 @@ public class MessagesByCountryReport extends ReportPage {
 		addAgeFilterOption();
 		addGenderFilterOption(allGendersList);
 		addYearFilterOption(allYearsList);
+		
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", ReportsAdministrationPage.class), "Reportes");
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", MessagesByCountryReport.class), new ResourceModel("messagesByCountryReport").getObject());
 		
 		// Especifico Titulo ( y etiquetas, si corresponde)
 		labels = new String[]{"Mensajes por País"};

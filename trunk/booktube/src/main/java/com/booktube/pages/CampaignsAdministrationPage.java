@@ -49,7 +49,7 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 	private static Dialog deleteConfirmationDialog;
 
 	private final DataView<Campaign> dataView;
-	private final AjaxPagingNavigator footerNavigator;
+	private AjaxPagingNavigator footerNavigator;
 	private final WebMarkupContainer searchButton;
 	private final Form<Campaign> searchForm;
 
@@ -80,17 +80,6 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 		group = new CheckGroup<Campaign>("group", new ArrayList<Campaign>());
 		group.add(dataView);
 		group.add(new CheckGroupSelector("groupSelector"));
-
-		footerNavigator = new AjaxPagingNavigator("footerPaginator", dataView) {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onAjaxEvent(AjaxRequestTarget target) {
-				target.add(parent);
-			}
-		};
-		parent.add(footerNavigator);
 
 		searchForm = searchCampaignForm(parent);
 		parent.add(searchForm);
@@ -266,6 +255,17 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 
 		form.setDefaultModel(model);
 
+		footerNavigator = new AjaxPagingNavigator("footerPaginator", dataView) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onAjaxEvent(AjaxRequestTarget target) {
+				target.add(parent);
+			}
+		};
+		form.add(footerNavigator);
+		
 		final WebMarkupContainer searchFields = new WebMarkupContainer(
 				"searchFields");
 		searchFields.add(AttributeModifier.replace("style", "display: none;"));
