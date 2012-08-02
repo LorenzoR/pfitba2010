@@ -26,6 +26,7 @@ import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -37,6 +38,8 @@ import org.odlabs.wiquery.ui.dialog.Dialog;
 import org.odlabs.wiquery.ui.dialog.DialogButton;
 
 import com.booktube.model.Campaign;
+import com.booktube.pages.customComponents.DynamicLabel;
+import com.booktube.pages.customComponents.SuccessDialog;
 import com.booktube.service.CampaignService;
 
 public class CampaignsAdministrationPage extends AdministrationPage {
@@ -45,8 +48,10 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 	@SpringBean
 	CampaignService campaignService;
 
-	private static Dialog deleteDialog;
+	private static SuccessDialog<?> successDialog;
 	private static Dialog deleteConfirmationDialog;
+	
+	private DynamicLabel deleteConfirmationLabel = new DynamicLabel("delete_confirmation_dialog_text", new Model<String>());
 
 	private final DataView<Campaign> dataView;
 	private AjaxPagingNavigator footerNavigator;
@@ -55,7 +60,9 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 
 	private final CheckGroup<Campaign> group;
 
-	private static Long campaignId;
+	//private static Long campaignId;
+	private static Campaign deleteCampaign;
+	private static List<Campaign> deleteCampaigns;
 
 	private Long searchCampaignId;
 	private String searchSubject;
@@ -100,8 +107,8 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 			searchButton.setVisible(false);
 		}
 
-		deleteDialog = deleteDialog(parent);
-		parent.add(deleteDialog);
+		successDialog = new SuccessDialog<WorksAdministrationPage>("success_dialog",  new ResourceModel("campaignDeleted").getObject(), parent);
+		parent.add(successDialog);
 
 		deleteConfirmationDialog = deleteConfirmationDialog();
 		parent.add(deleteConfirmationDialog);
@@ -111,37 +118,13 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 
 	}
 
-	private Dialog deleteDialog(final WebMarkupContainer parent) {
-
-		final Dialog dialog = new Dialog("success_dialog");
-
-		dialog.add(new Label("success_dialog_text", new ResourceModel("campaignDeleted")));
-
-		AjaxDialogButton ok = new AjaxDialogButton("OK") {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onButtonClicked(AjaxRequestTarget target) {
-				//setResponsePage(CampaignsAdministrationPage.class);
-				dialog.close(target);
-				target.add(parent);
-			}
-		};
-
-		dialog.setButtons(ok);
-		//dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
-
-		return dialog;
-
-	}
-
 	private Dialog deleteConfirmationDialog() {
 
 		final Dialog dialog = new Dialog("delete_confirmation_dialog");
 
-		dialog.add(new Label("delete_confirmation_dialog_text",
-				new ResourceModel("deleteCampaignQuestion")));
+//		dialog.add(new Label("delete_confirmation_dialog_text",
+//				new ResourceModel("deleteCampaignQuestion")));
+		dialog.add(deleteConfirmationLabel);
 
 		AjaxDialogButton yesButton = new AjaxDialogButton(new ResourceModel("yes").getObject()) {
 
@@ -150,17 +133,40 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 			@Override
 			protected void onButtonClicked(AjaxRequestTarget target) {
 				System.out.println("Borro mensaje");
-				Campaign campaign = campaignService.getCampaign(campaignId);
-				System.out.println("CAMPAIGN ES : " + campaign);
-				campaignService.deleteCampaign(campaign);
-				// JsScopeUiEvent.quickScope(deleteConfirmationdialog.close().render());
-				JsScope.quickScope(dialog.close().render());
-				// deleteConfirmationdialog.close(target);
-				deleteDialog.open(target);
-				// setResponsePage(MessagesAdministrationPage.class);
+				//Campaign campaign = campaignService.getCampaign(campaignId);
+				System.out.println("CAMPAIGN ES : " + deleteCampaign);
+				
+				if ( deleteCampaign != null ) {
+					campaignService.deleteCampaign(deleteCampaign);
+					deleteCampaign = null;
+					successDialog.setText( new ResourceModel("campaignDeleted").getObject());
+				}
+				else if ( deleteCampaigns != null ) {
+					successDialog.setText( new ResourceModel("campaignsDeleted").getObject());
+					
+					for ( Campaign aCampaign : deleteCampaigns ) {
+						campaignService.deleteCampaign(aCampaign);
+					}
+					
+					deleteCampaigns = null;
+					
+				}
+				
 				dialog.close(target);
+				target.add(successDialog);
+
+				successDialog.open(target);
 				
 				showOrHideTable();
+				
+//				// JsScopeUiEvent.quickScope(deleteConfirmationdialog.close().render());
+//				JsScope.quickScope(dialog.close().render());
+//				// deleteConfirmationdialog.close(target);
+//				deleteDialog.open(target);
+//				// setResponsePage(MessagesAdministrationPage.class);
+//				dialog.close(target);
+//				
+//				showOrHideTable();
 			}
 		};
 
@@ -226,16 +232,13 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 					@Override
 					public void onClick(AjaxRequestTarget target) {
 
-						Campaign campaign = (Campaign) getModelObject();
-						campaignId = campaign.getId();
-						// campaignService.deleteCampaign(campaign);
-						// userService.deleteUser(message);
-						// System.out.println("User " + messageId +
-						// " deleted.");
+						deleteCampaign = (Campaign) getModelObject();
 
-						// setResponsePage(MessagesAdministrationPage.class);
-						// dialog.open(target);
 						deleteConfirmationDialog.open(target);
+						
+						deleteConfirmationLabel.setLabel(new ResourceModel("deleteCampaignQuestion").getObject());
+
+						target.add(deleteConfirmationLabel);
 					}
 
 				});
@@ -298,19 +301,28 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 
 			private static final long serialVersionUID = 1L;
 
+			@SuppressWarnings("unchecked")
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				System.out.println("selected Campaign(s): "
 						+ group.getDefaultModelObjectAsString());
 
-				@SuppressWarnings("unchecked")
-				List<Campaign> removedCampaigns = (List<Campaign>) group.getDefaultModelObject();
+				deleteConfirmationDialog.open(target);
 
-				for (Campaign aCampaign : removedCampaigns) {
-					campaignService.deleteCampaign(aCampaign);
-				}
+				deleteConfirmationLabel
+						.setLabel(new ResourceModel("deleteCampaignsQuestion").getObject());
 
+				target.add(deleteConfirmationLabel);
+				
+				deleteCampaigns = (List<Campaign>) group.getDefaultModelObject();
+				
 				showOrHideTable();
+//
+//				for (Campaign aCampaign : removedCampaigns) {
+//					campaignService.deleteCampaign(aCampaign);
+//				}
+
+//				showOrHideTable();
 				
 //				if (dataView.getItemCount() <= 0) {
 //					this.setVisible(false);
@@ -322,7 +334,7 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 //					feedbackMessage.setVisible(false);
 //				}
 
-				target.add(parent);
+				//target.add(parent);
 
 				// System.out.println("BOOKS: " + books);
 

@@ -8,9 +8,11 @@
 
 <wicket:extend>
 	<div wicket:id="campaignsContainer">	
-		<p wicket:id="success_dialog">
-	    	 <span wicket:id="success_dialog_text">Success dialog goes here</span>
-	    </p>
+		
+		<div wicket:id="success_dialog">
+			<wicket:container wicket:id="text"></wicket:container>
+		</div>
+		
 	    <p wicket:id="delete_confirmation_dialog">
 	    	<span wicket:id="delete_confirmation_dialog_text">Delete confirmation dialog goes here</span>
 	    </p>

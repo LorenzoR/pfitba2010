@@ -76,6 +76,27 @@ public class WritersPage extends BasePage {
 			searchUsername = null;
 		}
 		
+		
+		// parent.add(listWriters("writerList", users));
+		final DataView<User> dataView = writerList("writerList");
+
+		parent.add(dataView);
+		
+		final AjaxPagingNavigator footerNavigator = new AjaxPagingNavigator("footerPaginator", dataView) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onAjaxEvent(AjaxRequestTarget target) {
+				target.appendJavaScript("scrollTo(0, 0)");
+				target.add(parent);			
+			}
+		};
+		parent.add(footerNavigator);
+		
+		final Label feedbackMessage = new Label("feedbackMessage", new ResourceModel("noResults"));
+		parent.add(feedbackMessage);
+		
 		List<String> list = Arrays.asList(new String[] { "A", "B", "C", "D",
 				"E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P",
 				"Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" });
@@ -101,6 +122,17 @@ public class WritersPage extends BasePage {
 							removeLastBreadcrumb();
 						}
 						
+						if ( dataView.getItemCount() > 0 ) {
+							footerNavigator.setVisible(true);
+							//lettersListView.setVisible(true);
+							feedbackMessage.setVisible(false);
+						}
+						else {
+							footerNavigator.setVisible(false);
+							//lettersListView.setVisible(false);
+							feedbackMessage.setVisible(true);
+						}
+						
 						addBreadcrumb(new BookmarkablePageLink<Object>("link", WritersPage.class, pageParameters.set("letter", item.getModelObject())), item.getModelObject());
 						//setBreadcrumbs("Escritores > " + item.getModelObject());
 						//breadcrumbs.setLabel("Escritores > " + item.getModelObject());
@@ -121,25 +153,6 @@ public class WritersPage extends BasePage {
 			}
 		};
 		parent.add(lettersListView);
-		// parent.add(listWriters("writerList", users));
-		DataView<User> dataView = writerList("writerList");
-
-		parent.add(dataView);
-		
-		AjaxPagingNavigator footerNavigator = new AjaxPagingNavigator("footerPaginator", dataView) {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onAjaxEvent(AjaxRequestTarget target) {
-				target.appendJavaScript("scrollTo(0, 0)");
-				target.add(parent);			
-			}
-		};
-		parent.add(footerNavigator);
-		
-		final Label feedbackMessage = new Label("feedbackMessage", new ResourceModel("noResults"));
-		parent.add(feedbackMessage);
 		
 		if ( dataView.getItemCount() > 0 ) {
 			footerNavigator.setVisible(true);

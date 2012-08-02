@@ -21,8 +21,11 @@ public class UserVote implements Serializable {
 		return pk;
 	}
 	
-	public UserVote() {
-		
+	public UserVote() {	
+	}
+	
+	public UserVote(UserVotePk pk) {
+		setPk(pk);
 	}
 	
 	public UserVote(User user, Book book) {

@@ -33,7 +33,7 @@ public class WorksByCategoryReport extends ReportPage {
 		addBreadcrumb(new BookmarkablePageLink<Object>("link", UsersEvolutionReport.class), new ResourceModel("worksByCategoryReport").getObject());
 		
 		// Especifico Titulo ( y etiquetas, si corresponde)
-		labels = new String[]{"Trabajos por Categoría"};
+		labels = new String[]{new ResourceModel("worksByCategoryReport").getObject()};
 		
 		String newTitle = "Booktube - " + new ResourceModel("worksByCategoryReport").getObject(); 
 		super.get("pageTitle").setDefaultModelObject(newTitle);			

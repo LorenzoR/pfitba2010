@@ -1,6 +1,6 @@
 - En el filtro de reportes, el combo list "a�o" no queda con el ultimo valor seleccionado, y aparece una opcion adicional: Seleccione uno !!!!!!!!!-
 
-- En los reportes PIE, hay que hacer que aparezca el % o un numero que representa cantidad.
+----- En los reportes PIE, hay que hacer que aparezca el % o un numero que representa cantidad. (OK)
 
 - Al bajar los reportes, el pdf no tiene los valores del filtro que dan como resultado dicho grafico. Agregar esto al pdf.
 

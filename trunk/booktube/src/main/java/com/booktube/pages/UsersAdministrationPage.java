@@ -59,67 +59,12 @@ public class UsersAdministrationPage extends AdministrationPage {
 	private static Long userId;
 
 	private static User deleteUser;
+	private static List<User> deleteUsers;
 
-	private static String deleteUsername;
-
-	// private Label deleteConfirmationLabel = new Label(
-	// "delete_confirmation_dialog_text", new PropertyModel<String>(this,
-	// "deleteConfirmationText")) {
-	// private static final long serialVersionUID = 1L;
-	//
-	// {
-	// setOutputMarkupId(true);
-	// }
-	// };
-
-	// Model<String> deleteConfirmationModel = new Model<String>() {
-	//
-	// private static final long serialVersionUID = 1L;
-	//
-	// private String text;
-	//
-	// public String getObject() {
-	// return text;
-	// }
-	//
-	// public void setObject(String value) {
-	// this.text = value;
-	// }
-	// };
+	//private static String deleteUsername;
 
 	private DynamicLabel deleteConfirmationLabel = new DynamicLabel(
 			"delete_confirmation_dialog_text", new Model<String>());
-
-	// Model<String> successDialogModel = new Model<String>() {
-	//
-	// private static final long serialVersionUID = 1L;
-	//
-	// private String text;
-	//
-	// public String getObject() {
-	// return text;
-	// }
-	//
-	// public void setObject(String value) {
-	// this.text = value;
-	// }
-	// };
-
-	// private DynamicLabel successDialogLabel = new
-	// DynamicLabel("success_dialog_text");
-
-	// private String deleteConfirmationText;
-	//
-	// private Label successDialogLabel = new Label("success_dialog_text",
-	// new PropertyModel<String>(this, "successDialogText")) {
-	// private static final long serialVersionUID = 1L;
-	//
-	// {
-	// setOutputMarkupId(true);
-	// }
-	// };
-	//
-	// private String successDialogText;
 
 	private Long searchUserId;
 	private String searchUsername;
@@ -146,11 +91,6 @@ public class UsersAdministrationPage extends AdministrationPage {
 		add(parent);
 
 		addBreadcrumb(new BookmarkablePageLink<Object>("link", UsersAdministrationPage.class), new ResourceModel("usersAdministrationPageTitle").getObject());
-		
-		// deleteConfirmationLabel.setOutputMarkupId(true);
-		// successDialogLabel.setOutputMarkupId(true);
-
-//		parent.add(new Label("pageTitle", "Users Administration Page"));
 
 		dataView = writerList("writerList");
 		
@@ -159,7 +99,7 @@ public class UsersAdministrationPage extends AdministrationPage {
 		group.add(new CheckGroupSelector("groupSelector"));
 
 		successDialog = new SuccessDialog<UsersAdministrationPage>(
-				"success_dialog", "Usuario eliminado.", parent);
+				"success_dialog", new ResourceModel("userDeleted").getObject(), parent);
 		parent.add(successDialog);
 
 		deleteConfirmationDialog = deleteConfirmationDialog();
@@ -185,11 +125,9 @@ public class UsersAdministrationPage extends AdministrationPage {
 			footerNavigator.setVisible(false);
 			searchButton.setVisible(false);
 		}
-		
-//		parent.add(feedbackMessage);
 
-		String newTitle = "Booktube - Users Administration";
-		super.get("pageTitle").setDefaultModelObject(newTitle);
+		//String newTitle = "Booktube - Users Administration";
+		//super.get("pageTitle").setDefaultModelObject(newTitle);
 
 	}
 
@@ -240,34 +178,17 @@ public class UsersAdministrationPage extends AdministrationPage {
 
 						deleteConfirmationDialog.open(target);
 
-						deleteUsername = deleteUser.getUsername();
+						//deleteUsername = deleteUser.getUsername();
 
-						deleteConfirmationLabel
-								.setLabel("Esta seguro que desea eliminar el usuario "
-										+ deleteUsername + " ?");
+//						deleteConfirmationLabel
+//								.setLabel("Esta seguro que desea eliminar el usuario "
+//										+ deleteUsername + " ?");
+						deleteConfirmationLabel.setLabel(new ResourceModel("deleteUserQuestion").getObject());
 
 						target.add(deleteConfirmationLabel);
 					}
 
 				});
-				// item.add(new Link<User>("deleteLink", item.getModel()) {
-				// private static final long serialVersionUID =
-				// -7155146615720218460L;
-				//
-				// public void onClick() {
-				//
-				// User user = (User) getModelObject();
-				// Long userId = user.getId();
-				//
-				// userService.deleteUser(user);
-				// System.out.println("User " + userId + " deleted.");
-				//
-				// dialog.open(target);
-				//
-				// //setResponsePage(UsersAdministrationPage.this);
-				// }
-				//
-				// });
 			}
 
 		};
@@ -275,42 +196,11 @@ public class UsersAdministrationPage extends AdministrationPage {
 		return dataView;
 	}
 
-	// private Dialog deleteDialog(final WebMarkupContainer parent) {
-	//
-	// final Dialog dialog = new Dialog("success_dialog");
-	//
-	// dialog.add(successDialogLabel);
-	//
-	// AjaxDialogButton ok = new AjaxDialogButton("OK") {
-	//
-	// private static final long serialVersionUID = 1L;
-	//
-	// @Override
-	// protected void onButtonClicked(AjaxRequestTarget target) {
-	// //setResponsePage(UsersAdministrationPage.class);
-	// dialog.close(target);
-	// target.add(parent);
-	// }
-	// };
-	//
-	// dialog.setButtons(ok);
-	// //dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
-	//
-	// return dialog;
-	//
-	// }
-
 	private Dialog deleteConfirmationDialog() {
 
 		final Dialog dialog = new Dialog("delete_confirmation_dialog");
 
-		// labelText = "original2";
-		// dialog.add(new Label("delete_confirmation_dialog_text",
-		// "Esta seguro que desea eliminar el usuario?"));
 		dialog.add(deleteConfirmationLabel);
-		System.out.println("USERID " + userId);
-		// System.out.println("USER: " + user);
-		// labelText = "original3";
 
 		AjaxDialogButton yesButton = new AjaxDialogButton(new ResourceModel("yes").getObject()) {
 
@@ -322,15 +212,28 @@ public class UsersAdministrationPage extends AdministrationPage {
 				System.out.println("Borro user");
 
 				System.out.println("USER ES : " + deleteUser);
-				userService.deleteUser(deleteUser);
+				
+				if ( deleteUser != null ) {
+					userService.deleteUser(deleteUser);
+					deleteUser = null;
+					successDialog.setText( new ResourceModel("userDeleted").getObject());
+				}
+				else if ( deleteUsers != null ) {
+					successDialog.setText( new ResourceModel("usersDeleted").getObject());
+					
+					userService.deleteUsers(deleteUsers);
+					
+					deleteUsers = null;
+					
+				}
+				//userService.deleteUser(deleteUser);
 
-				successDialog.setText("Usuario eliminado.");
+				//successDialog.setText(new ResourceModel("userDeleted").getObject());
+				
 				target.add(successDialog);
-				// JsScopeUiEvent.quickScope(deleteConfirmationdialog.close().render());
-				// JsScope.quickScope(dialog.close().render());
-				// deleteConfirmationdialog.close(target);
+
 				successDialog.open(target);
-				// setResponsePage(MessagesAdministrationPage.class);
+
 				dialog.close(target);
 				
 				showOrHideTable();
@@ -341,7 +244,6 @@ public class UsersAdministrationPage extends AdministrationPage {
 				JsScope.quickScope(dialog.close().render()));
 
 		dialog.setButtons(noButton, yesButton);
-		// dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close()));
 
 		return dialog;
 
@@ -418,51 +320,27 @@ public class UsersAdministrationPage extends AdministrationPage {
 
 			private static final long serialVersionUID = 1L;
 
+			@SuppressWarnings("unchecked")
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				System.out.println("selected user(s): "
 						+ group.getDefaultModelObjectAsString());
 
-				@SuppressWarnings("unchecked")
-				List<User> removedUsers = (List<User>) group
+				deleteConfirmationDialog.open(target);
+
+				deleteConfirmationLabel
+						.setLabel(new ResourceModel("deleteUsersQuestion").getObject());
+
+				target.add(deleteConfirmationLabel);
+				
+				deleteUsers = (List<User>) group
 						.getDefaultModelObject();
 				
-				userService.deleteUsers(removedUsers);
-				
-//				Collection<User> removedUsers = group.getConvertedInput();
-//				
-//				Iterator<User> iterator = removedUsers.iterator();
-//				
-//				while ( iterator.hasNext() ) {
-//					User deleteUser = iterator.next();
-//					System.out.println("------------- USER: " + deleteUser);
-//					userService.deleteUser(deleteUser);
-//				}
-
-//				for (User aUser : removedUsers) {
-//					userService.deleteUser(aUser);
-//				}
-				
-				
-//				if (dataView.getItemCount() <= 0) {
-//					//this.setVisible(false);
-//					form.setVisible(false);
-//					dataView.setVisible(false);
-//					footerNavigator.setVisible(false);
-//					feedbackMessage.setVisible(true);
-//				} else {
-//					//this.setVisible(true);
-//					form.setVisible(true);
-//					dataView.setVisible(true);
-//					footerNavigator.setVisible(true);
-//					feedbackMessage.setVisible(false);
-//				}
+				//userService.deleteUsers(removedUsers);
 				
 				showOrHideTable();
 
-				target.add(parent);
-
-				// System.out.println("BOOKS: " + books);
+				//target.add(parent);
 
 			}
 
@@ -483,27 +361,16 @@ public class UsersAdministrationPage extends AdministrationPage {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				System.out.println("viewfalse");
-				// dataView.setVisible(false);
-				// footerNavigator.setVisible(false);
 
 				searchFields.add(AttributeModifier.replace("style",
 						"display: block;"));
-				// String bookIdString =
+
 				try {
 					searchUserId = new Long(userId
 							.getDefaultModelObjectAsString());
 				} catch (NumberFormatException ex) {
 					searchUserId = null;
 				}
-
-				// if
-				// (!StringUtils.isBlank(userId.getDefaultModelObjectAsString()))
-				// {
-				// searchUserId = Long.valueOf(userId
-				// .getDefaultModelObjectAsString());
-				// } else {
-				// searchUserId = null;
-				// }
 
 				searchCountry = new String(country
 						.getDefaultModelObjectAsString());
@@ -513,32 +380,9 @@ public class UsersAdministrationPage extends AdministrationPage {
 				searchGender = genderDDC.getModelObject();
 				
 				searchLevel = levelDDC.getModelObject();
-//				if (genderDDC.getDefaultModelObjectAsString().equals("Masculino")) {
-//					searchGender = Gender.MALE;
-//				} else if (gender.getDefaultModelObjectAsString().equals(
-//						"Femenino")) {
-//					searchGender = Gender.FEMALE;
-//				} else {
-//					searchGender = null;
-//				}
-
 				
 				searchHighAge = highAge.getModelObject();
 				searchLowAge = lowAge.getModelObject();
-				
-//				try {
-//					searchLowAge = new Integer(lowAge
-//							.getDefaultModelObjectAsString());
-//				} catch (NumberFormatException ex) {
-//					searchLowAge = null;
-//				}
-//
-//				try {
-//					searchHighAge = new Integer(highAge
-//							.getDefaultModelObjectAsString());
-//				} catch (NumberFormatException ex) {
-//					searchHighAge = null;
-//				}
 
 				if (!StringUtils.isBlank(lowRegistrationDate
 						.getDefaultModelObjectAsString())) {
@@ -649,8 +493,8 @@ public class UsersAdministrationPage extends AdministrationPage {
 	@Override
 	protected void setPageTitle() {
 		// TODO Auto-generated method stub
-		String newTitle = "Booktube - Writers";
-		super.get("pageTitle").setDefaultModelObject(newTitle);
+		//String newTitle = "Booktube - Writers";
+		//super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 
 }

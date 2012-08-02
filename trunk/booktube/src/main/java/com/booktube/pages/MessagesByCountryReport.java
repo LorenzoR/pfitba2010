@@ -34,7 +34,7 @@ public class MessagesByCountryReport extends ReportPage {
 		addBreadcrumb(new BookmarkablePageLink<Object>("link", MessagesByCountryReport.class), new ResourceModel("messagesByCountryReport").getObject());
 		
 		// Especifico Titulo ( y etiquetas, si corresponde)
-		labels = new String[]{"Mensajes por País"};
+		labels = new String[]{new ResourceModel("messagesByCountryReport").getObject()};
 		
 		String newTitle = "Booktube - " + new ResourceModel("messagesByCountryReport").getObject(); 
 		super.get("pageTitle").setDefaultModelObject(newTitle);
