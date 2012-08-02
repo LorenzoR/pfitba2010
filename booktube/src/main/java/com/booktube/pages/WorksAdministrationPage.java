@@ -45,72 +45,13 @@ public class WorksAdministrationPage extends AdministrationPage {
 	private static SuccessDialog<?> successDialog;
 	private static Dialog deleteConfirmationDialog;
 
-	private static Long bookId;
+	//private static Long bookId;
+	//private static String deleteBookTitle;
 
 	private static List<Book> removedBooks = null;
 	private static Book deleteBook = null;
 
-	private static String deleteBookTitle;
-
-//	private Label deleteConfirmationLabel = new Label(
-//			"delete_confirmation_dialog_text", new PropertyModel<String>(this,
-//					"deleteConfirmationText")) {
-//
-//		private static final long serialVersionUID = 1L;
-//
-//		{
-//			setOutputMarkupId(true);
-//		}
-//	};
-
-//	Model<String> deleteConfirmationModel = new Model<String>() {
-//
-//		private static final long serialVersionUID = 1L;
-//		
-//		private String text;
-//		
-//		public String getObject() {
-//			return text;
-//		}
-//		
-//		public void setObject(String value) {
-//			this.text = value;
-//		}
-//	};
-//	
-//	private Label deleteConfirmationLabel = new Label(
-//			"delete_confirmation_dialog_text", deleteConfirmationModel);
-	
 	private DynamicLabel deleteConfirmationLabel = new DynamicLabel("delete_confirmation_dialog_text", new Model<String>());
-//	private DynamicLabel successDialogLabel = new DynamicLabel("success_dialog_text");
-	
-//	Model<String> successDialogModel = new Model<String>() {
-//
-//		private static final long serialVersionUID = 1L;
-//		
-//		private String text;
-//		
-//		public String getObject() {
-//			return text;
-//		}
-//		
-//		public void setObject(String value) {
-//			this.text = value;
-//		}
-//	};
-//	
-//	private Label successDialogLabel = new Label("success_dialog_text", successDialogModel);
-	
-//	private Label successDialogLabel = new Label("success_dialog_text",
-//			new PropertyModel<String>(this, "successDialogText")) {
-//		private static final long serialVersionUID = 1L;
-//
-//		{
-//			setOutputMarkupId(true);
-//		}
-//	};
-
-//	private String successDialogText;
 	
 	private final DataView<Book> dataView;
 	private AjaxPagingNavigator footerNavigator;
@@ -140,11 +81,6 @@ public class WorksAdministrationPage extends AdministrationPage {
 		add(parent);
 
 		addBreadcrumb(new BookmarkablePageLink<Object>("link", WorksAdministrationPage.class), new ResourceModel("worksAdministrationPageTitle").getObject());
-		
-		//deleteConfirmationLabel.setOutputMarkupId(true);
-		//successDialogLabel.setOutputMarkupId(true);
-		
-//		parent.add(new Label("pageTitle", "Works Administration Page"));
 
 		dataView = bookList("bookList");
 
@@ -152,12 +88,6 @@ public class WorksAdministrationPage extends AdministrationPage {
 		group.add(dataView);
 		group.add(new CheckGroupSelector("groupSelector"));
 		
-		//footerNavigator = new PagingNavigator("footerPaginator", dataView);
-		//parent.add(footerNavigator);
-
-		//deleteDialog = deleteDialog(successDialogLabel, WorksAdministrationPage.class);
-//		deleteDialog = deleteDialog(parent);
-//		parent.add(deleteDialog);
 		successDialog = new SuccessDialog<WorksAdministrationPage>("success_dialog",  new ResourceModel("bookDeleted").getObject(), parent);
 		parent.add(successDialog);
 
@@ -222,17 +152,8 @@ public class WorksAdministrationPage extends AdministrationPage {
 				BookmarkablePageLink<Object> titleLink = new BookmarkablePageLink<Object>(
 						"viewLink", ShowBookPage.class, detailsParameter);
 
-				// Link<Object> titleLink = new Link("viewLink") {
-				// public void onClick() {
-				// setResponsePage(new ShowBookPage(book.getId(),
-				// BooksPage.this));
-				// }
-				// };
-
 				titleLink.add(new Label("title", book.getTitle()));
 
-				// bplTitle.add(new Label("title", book.getTitle()));
-				// item.add(bplTitle);
 				item.add(titleLink);
 				parameters.set("author", book.getAuthor().getUsername());
 				parameters.set("type", "author");
@@ -249,31 +170,21 @@ public class WorksAdministrationPage extends AdministrationPage {
 						ShowBookPage.class, detailsParameter));
 
 				item.add(new AjaxLink<Book>("deleteLink", item.getModel()) {
-					private static final long serialVersionUID = -7155146615720218460L;
+					private static final long serialVersionUID = 1L;
 
 					@Override
 					public void onClick(AjaxRequestTarget target) {
 
 						deleteBook = (Book) getModelObject();
 
-//						bookId = book.getId();
-//						// deleteBook = bookService.getBook(bookId);
-//						System.out.println("Book ID " + bookId);
-//						System.out.println("BOOK ES : " + deleteBook);
-
 						deleteConfirmationDialog.open(target);
 
-						deleteBookTitle = deleteBook.getTitle();
+						//deleteBookTitle = deleteBook.getTitle();
 
-						//deleteConfirmationText = "Esta seguro que desea eliminar la obra "
-						//		+ deleteBookTitle + " ?";
-//						deleteConfirmationModel.setObject("Esta seguro que desea eliminar la obra "
+						
+//						deleteConfirmationLabel.setLabel("Esta seguro que desea eliminar la obra "
 //								+ deleteBookTitle + " ?");
-						
-						deleteConfirmationLabel.setLabel("Esta seguro que desea eliminar la obra "
-								+ deleteBookTitle + " ?");
-						
-						//System.out.println("--- " + deleteConfirmationLabel.getLabel());
+						deleteConfirmationLabel.setLabel(new ResourceModel("deleteBookQuestion").getObject());
 
 						target.add(deleteConfirmationLabel);
 					}
@@ -285,54 +196,11 @@ public class WorksAdministrationPage extends AdministrationPage {
 		return dataView;
 	}
 
-//	private Dialog deleteDialog(final WebMarkupContainer parent) {
-//
-//		final Dialog dialog = new Dialog("success_dialog");
-//
-////		dialog.add(successDialogLabel);
-//
-//		AjaxDialogButton ok = new AjaxDialogButton("OK") {
-//
-//			private static final long serialVersionUID = 1L;
-//
-//			@Override
-//			protected void onButtonClicked(AjaxRequestTarget target) {
-//				//setResponsePage(WorksAdministrationPage.class);
-//				System.out.println("CIERRO");
-////				JsScopeUiEvent.quickScope(dialog.close().render());
-////				dialog.close().render();
-////				JsScopeUiEvent.quickScope(dialog.close());
-////				dialog.close(target);
-////				dialog.setCloseOnEscape(true);
-//				//JsScope.quickScope(dialog.close(target));
-//				dialog.close(target);
-//				target.add(parent);
-//				//dialog.close().render();
-//				//deleteDialog.close(target);
-//				//deleteConfirmationDialog.close(target);
-//			}
-//		};
-//
-//		dialog.setButtons(ok);
-//		//dialog.setButtons(new DialogButton("OK", 
-//         //       JsScope.quickScope(dialog.close().render())));
-//		//dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
-//
-//		return dialog;
-//
-//	}
-
 	private Dialog deleteConfirmationDialog() {
 
 		final Dialog dialog = new Dialog("delete_confirmation_dialog");
 
-		// labelText = "original2";
-		// dialog.add(new Label("delete_confirmation_dialog_text",
-		// "Esta seguro que desea eliminar el usuario?"));
 		dialog.add(deleteConfirmationLabel);
-		System.out.println("USERID " + bookId);
-		// System.out.println("USER: " + user);
-		// labelText = "original3";
 
 		AjaxDialogButton yesButton = new AjaxDialogButton(new ResourceModel("yes").getObject()) {
 
@@ -361,32 +229,12 @@ public class WorksAdministrationPage extends AdministrationPage {
 					
 				}
 				
-				
-
-				//successDialogText = "Obra " + deleteBookTitle + " eliminada.";
-				//successDialogLabel.setLabel("Obra " + deleteBookTitle + " eliminada.");
-				//successDialogLabel.getLabel();
-				//System.out.println("==== " + successDialogLabel.getLabel());
-				//target.add(successDialogLabel);
-				
-				// JsScopeUiEvent.quickScope(deleteConfirmationdialog.close().render());
 				dialog.close(target);
 				target.add(successDialog);
-				// deleteConfirmationdialog.close(target);
+
 				successDialog.open(target);
 				
 				showOrHideTable();
-				
-				//JsScope.quickScope(dialog.close().render());
-				//dialog.close().render();
-				// setResponsePage(MessagesAdministrationPage.class);
-				//dialog.close(target);
-				//dialog.close().render();
-				
-				//JsScope.quickScope(dialog.close(target));
-				
-				//JsScope.quickScope("$('#deleeeete__confirmation__dialog2').dialog('close');");
-				//dialog.setVisible(false);
 				
 			}
 		};
@@ -395,7 +243,6 @@ public class WorksAdministrationPage extends AdministrationPage {
 				JsScope.quickScope(dialog.close().render()));
 
 		dialog.setButtons(noButton, yesButton);
-		//dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close()));
 
 		return dialog;
 
@@ -480,44 +327,15 @@ public class WorksAdministrationPage extends AdministrationPage {
 
 				target.add(deleteConfirmationLabel);
 				
-				removedBooks = (List<Book>) group
-						.getDefaultModelObject();
-
-				// removedBooks.remove(books.size()-1);
-				// List<Book> books = bookService.getBooks(0, Integer.MAX_VALUE,
-				// authorString, titleString, tagString, categoryString,
-				// subcategoryString, lowPublishDateString,
-				// highPublishDateString);
-
-				// if (books.size() > 0) {
-				// resultsModel.setObject(books);
-				// } else {
-				// resultsModel.setObject(null);
-				// group.setVisible(false);
-				// }
+				removedBooks = (List<Book>) group.getDefaultModelObject();
 				
 				showOrHideTable();
-				
-//				if (dataView.getItemCount() <= 0) {
-//					this.setVisible(false);
-//					footerNavigator.setVisible(false);
-//					feedbackMessage.setVisible(true);
-//				} else {
-//					this.setVisible(true);
-//					footerNavigator.setVisible(true);
-//					feedbackMessage.setVisible(false);
-//				}
-//
-//				target.add(parent);
-
-				// System.out.println("BOOKS: " + books);
 
 			}
 
 			@Override
 			protected void onError(AjaxRequestTarget target, Form<?> form) {
 				// TODO Auto-generated method stub
-
 			}
 
 		};
@@ -533,7 +351,6 @@ public class WorksAdministrationPage extends AdministrationPage {
 
 				searchFields.add(AttributeModifier.replace("style",
 						"display: block;"));
-				// String bookIdString =
 
 				try {
 					searchBookId = new Long(bookId
@@ -541,15 +358,6 @@ public class WorksAdministrationPage extends AdministrationPage {
 				} catch (NumberFormatException ex) {
 					searchBookId = null;
 				}
-
-				// if
-				// (!StringUtils.isBlank(bookId.getDefaultModelObjectAsString()))
-				// {
-				// searchBookId = Long.valueOf(bookId
-				// .getDefaultModelObjectAsString());
-				// } else {
-				// searchBookId = null;
-				// }
 
 				searchTag = new String(tag.getDefaultModelObjectAsString());
 				searchAuthor = new String(author
@@ -589,30 +397,6 @@ public class WorksAdministrationPage extends AdministrationPage {
 				} else {
 					searchHighPublishDate = null;
 				}
-
-				// System.out.println(bookService.getBook(Long
-				// .valueOf(bookIdString)));
-
-				// List<Book> books = bookService.getBooks(0, Integer.MAX_VALUE,
-				// searchAuthor, searchTitle, searchTag, searchCategory,
-				// searchSubcategory, searchLowPublishDate,
-				// searchHighPublishDate);
-
-				/*
-				 * if (books.size() > 0) {
-				 * 
-				 * resultsModel.setObject(books);
-				 * System.out.println("DETACHABLE: " +
-				 * resultsModel.getObject().toString()); group.setVisible(true);
-				 * checkGroupSelector.setVisible(true);
-				 * bookResultListTable.setVisible(true);
-				 * 
-				 * target.add(parent); } else { resultsModel.setObject(null);
-				 * group.setVisible(false);
-				 * checkGroupSelector.setVisible(false);
-				 * bookResultListTable.setVisible(false);
-				 * System.out.println("NO HAY NADA"); }
-				 */
 
 				if (dataView.getItemCount() <= 0) {
 					deleteBook.setVisible(false);

@@ -37,7 +37,7 @@ public class UsersEvolutionReport extends ReportPage {
 		addBreadcrumb(new BookmarkablePageLink<Object>("link", UsersEvolutionReport.class), new ResourceModel("usersEvolutionReport").getObject());
 		
 		// Especifico Titulo ( y etiquetas, si corresponde)
-		labels = new String[]{"Evolución de Usuarios en el tiempo", "Año", "Usuarios"};
+		labels = new String[]{new ResourceModel("usersEvolutionReport").getObject(), new ResourceModel("year").getObject(), new ResourceModel("users").getObject()};
 		
 //		//Agrego las opciones de filtrado segun que reporte se quiere generar
 //		originFilter = new OriginFilterOption("component");
@@ -70,7 +70,7 @@ public class UsersEvolutionReport extends ReportPage {
 	@Override
 	public Dataset getReportData() {
 		List<?> data = userService.getUserEvolutionByYear(originFilter, ageFilter, customizedMisc);		  
-		final XYSeries serie = new XYSeries("Evolucion de Usuarios en el tiempo");				 
+		final XYSeries serie = new XYSeries(new ResourceModel("usersEvolutionReport").getObject());				 
 		for(Object object : data){
            @SuppressWarnings("unchecked")
            Map<String, Integer> row = (Map<String, Integer>)object;

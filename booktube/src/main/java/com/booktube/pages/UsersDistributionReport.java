@@ -36,7 +36,7 @@ public class UsersDistributionReport extends ReportPage {
 		addBreadcrumb(new BookmarkablePageLink<Object>("link", UsersDistributionReport.class), new ResourceModel("usersDistributionReport").getObject());
 		
 		// Especifico Titulo ( y etiquetas, si corresponde)
-		labels = new String[]{"Distribución de Usuarios por país"};
+		labels = new String[]{new ResourceModel("usersDistributionReport").getObject()};
 		
 		String newTitle = "Booktube - " + new ResourceModel("usersDistributionReport").getObject(); 
 		super.get("pageTitle").setDefaultModelObject(newTitle);		
@@ -47,8 +47,9 @@ public class UsersDistributionReport extends ReportPage {
 		List<?> data = userService.getUserDistributionByCountry(ageFilter, customizedMisc);		
 		DefaultPieDataset result = new DefaultPieDataset();
 		for(Object object : data){
-           Map<?, ?> row = (Map<?, ?>)object;
-		 	result.setValue((String)row.get("country"), (Number)row.get("total"));		           
+           @SuppressWarnings("unchecked")
+           Map<String, Long> row = (Map<String, Long>)object;
+		 	result.setValue( row.get("country"), row.get("total"));		           
         }	
 		return (Dataset)result;
 

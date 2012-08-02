@@ -27,6 +27,7 @@ import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -39,6 +40,8 @@ import org.odlabs.wiquery.ui.dialog.Dialog;
 import org.odlabs.wiquery.ui.dialog.DialogButton;
 
 import com.booktube.model.Message;
+import com.booktube.pages.customComponents.DynamicLabel;
+import com.booktube.pages.customComponents.SuccessDialog;
 import com.booktube.service.MessageService;
 
 public class MessagesAdministrationPage extends AdministrationPage {
@@ -47,9 +50,11 @@ public class MessagesAdministrationPage extends AdministrationPage {
 	@SpringBean
 	MessageService messageService;
 
-	private static Dialog deleteDialog;
+	private static SuccessDialog<?> successDialog;
 	private static Dialog deleteConfirmationDialog;
 
+	private DynamicLabel deleteConfirmationLabel = new DynamicLabel("delete_confirmation_dialog_text", new Model<String>());
+	
 	private final DataView<Message> dataView;
 	private AjaxPagingNavigator footerNavigator;
 	private final WebMarkupContainer searchButton;
@@ -57,7 +62,8 @@ public class MessagesAdministrationPage extends AdministrationPage {
 	
 	private final CheckGroup<Message> group;
 	
-	private Message deleteMessage;
+	private static Message deleteMessage;
+	private static List<Message> deleteMessages;
 
 	private Long searchMessageId;
 	private String searchSubject;
@@ -102,39 +108,14 @@ public class MessagesAdministrationPage extends AdministrationPage {
 			searchButton.setVisible(false);
 		}
 
-		deleteDialog = deleteDialog(parent);
-		parent.add(deleteDialog);
+		successDialog = new SuccessDialog<WorksAdministrationPage>("success_dialog",  new ResourceModel("messageDeleted").getObject(), parent);
+		parent.add(successDialog);
 
 		deleteConfirmationDialog = deleteConfirmationDialog();
 		parent.add(deleteConfirmationDialog);
 
-		String newTitle = "Booktube - Messages Administration";
-		super.get("pageTitle").setDefaultModelObject(newTitle);
-
-	}
-
-	private Dialog deleteDialog(final WebMarkupContainer parent) {
-
-		final Dialog dialog = new Dialog("success_dialog");
-
-		dialog.add(new Label("success_dialog_text", new ResourceModel("messageDeleted")));
-
-		AjaxDialogButton ok = new AjaxDialogButton("OK") {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onButtonClicked(AjaxRequestTarget target) {
-				//setResponsePage(MessagesAdministrationPage.class);
-				dialog.close(target);
-				target.add(parent);
-			}
-		};
-
-		dialog.setButtons(ok);
-		//dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
-
-		return dialog;
+//		String newTitle = "Booktube - Messages Administration";
+//		super.get("pageTitle").setDefaultModelObject(newTitle);
 
 	}
 
@@ -142,8 +123,9 @@ public class MessagesAdministrationPage extends AdministrationPage {
 
 		final Dialog dialog = new Dialog("delete_confirmation_dialog");
 
-		dialog.add(new Label("delete_confirmation_dialog_text",
-				new ResourceModel("deleteMessageQuestion")));
+//		dialog.add(new Label("delete_confirmation_dialog_text",
+//				new ResourceModel("deleteMessageQuestion")));
+		dialog.add(deleteConfirmationLabel);
 
 		AjaxDialogButton yesButton = new AjaxDialogButton(new ResourceModel("yes").getObject()) {
 
@@ -153,15 +135,48 @@ public class MessagesAdministrationPage extends AdministrationPage {
 			protected void onButtonClicked(AjaxRequestTarget target) {
 				System.out.println("Borro mensaje");
 				//Message message = messageService.getMessage(messageId);
-				messageService.deleteMessage(deleteMessage);
-				// JsScopeUiEvent.quickScope(deleteConfirmationdialog.close().render());
-				JsScope.quickScope(dialog.close().render());
-				// deleteConfirmationdialog.close(target);
-				deleteDialog.open(target);
-				// setResponsePage(MessagesAdministrationPage.class);
+				
+				if ( deleteMessage != null ) {
+					messageService.deleteMessage(deleteMessage);
+					deleteMessage = null;
+					successDialog.setText( new ResourceModel("messageDeleted").getObject());
+				}
+				else if ( deleteMessages != null ) {
+					
+					Collections.sort(deleteMessages, Message.getDateComparatorDesc());
+					
+					System.out.println("** REMOVED MSG: " + deleteMessages.toString());
+					
+					
+					for (Message aMessage : deleteMessages) {
+						try {
+							messageService.deleteMessage(aMessage);
+						} catch ( StaleStateException ex ) {
+							System.out.println("Mensaje ya eliminado.");
+						}
+					}
+					
+					deleteMessages = null;
+					successDialog.setText( new ResourceModel("messagesDeleted").getObject());
+					
+				}
+				
 				dialog.close(target);
+				target.add(successDialog);
+
+				successDialog.open(target);
 				
 				showOrHideTable();
+				
+//				messageService.deleteMessage(deleteMessage);
+//				// JsScopeUiEvent.quickScope(deleteConfirmationdialog.close().render());
+//				JsScope.quickScope(dialog.close().render());
+//				// deleteConfirmationdialog.close(target);
+//				successDialog.open(target);
+//				// setResponsePage(MessagesAdministrationPage.class);
+//				dialog.close(target);
+//				
+//				showOrHideTable();
 			}
 		};
 
@@ -226,6 +241,13 @@ public class MessagesAdministrationPage extends AdministrationPage {
 					public void onClick(AjaxRequestTarget target) {
 
 						deleteMessage = (Message) getModelObject();
+						
+						deleteConfirmationDialog.open(target);
+
+						deleteConfirmationLabel.setLabel(new ResourceModel("deleteMessageQuestion").getObject());
+
+						target.add(deleteConfirmationLabel);
+						
 						//messageId = message.getId();
 						// messageService.deleteMessage(message);
 						// userService.deleteUser(message);
@@ -234,7 +256,7 @@ public class MessagesAdministrationPage extends AdministrationPage {
 
 						// setResponsePage(MessagesAdministrationPage.class);
 						// dialog.open(target);
-						deleteConfirmationDialog.open(target);
+						//deleteConfirmationDialog.open(target);
 					}
 
 				});
@@ -296,29 +318,38 @@ public class MessagesAdministrationPage extends AdministrationPage {
 
 			private static final long serialVersionUID = 1L;
 
+			@SuppressWarnings("unchecked")
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				System.out.println("selected Message(s): "
 						+ group.getDefaultModelObjectAsString());
 
-				@SuppressWarnings("unchecked")
-				List<Message> removedMessages = (List<Message>) group
+				deleteConfirmationDialog.open(target);
+
+				deleteConfirmationLabel
+						.setLabel(new ResourceModel("deleteMessagesQuestion").getObject());
+
+				target.add(deleteConfirmationLabel);
+				
+				deleteMessages = (List<Message>) group
 						.getDefaultModelObject();
-
-				Collections.sort(removedMessages, Message.getDateComparatorDesc());
 				
-				System.out.println("** REMOVED MSG: " + removedMessages.toString());
-				
-				
-				for (Message aMessage : removedMessages) {
-					try {
-						messageService.deleteMessage(aMessage);
-					} catch ( StaleStateException ex ) {
-						System.out.println("Mensaje ya eliminado.");
-					}
-				}
-
 				showOrHideTable();
+
+//				Collections.sort(removedMessages, Message.getDateComparatorDesc());
+//				
+//				System.out.println("** REMOVED MSG: " + removedMessages.toString());
+//				
+//				
+//				for (Message aMessage : removedMessages) {
+//					try {
+//						messageService.deleteMessage(aMessage);
+//					} catch ( StaleStateException ex ) {
+//						System.out.println("Mensaje ya eliminado.");
+//					}
+//				}
+
+				
 				
 //				if (dataView.getItemCount() <= 0) {
 //					this.setVisible(false);
@@ -330,7 +361,7 @@ public class MessagesAdministrationPage extends AdministrationPage {
 //					feedbackMessage.setVisible(false);
 //				}
 
-				target.add(parent);
+				//target.add(parent);
 
 				// System.out.println("BOOKS: " + books);
 

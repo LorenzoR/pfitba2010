@@ -33,7 +33,7 @@ public class UsersBySexReport extends ReportPage {
 		addBreadcrumb(new BookmarkablePageLink<Object>("link", UsersBySexReport.class), new ResourceModel("usersBySexReport").getObject());
 		
 		// Especifico Titulo ( y etiquetas, si corresponde)
-		labels = new String[]{"Evolución de Usuarios por Género", "Año", "Usuarios"};
+		labels = new String[]{new ResourceModel("usersBySexReport").getObject(), new ResourceModel("year").getObject(), new ResourceModel("users").getObject()};
 		
 		String newTitle = "Booktube - " + new ResourceModel("usersBySexReport").getObject(); 
 		super.get("pageTitle").setDefaultModelObject(newTitle);
