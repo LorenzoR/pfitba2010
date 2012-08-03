@@ -8,18 +8,11 @@ import org.apache.wicket.util.convert.IConverter;
 
 import com.booktube.model.BookTag;
 
-public class TagSetToString implements IConverter<Set<BookTag>> {
+public class TagSetToStringConverter implements IConverter<Set<BookTag>> {
 
 	private static final long serialVersionUID = 1L;
 
-	public TagSetToString() {
-	}
-
-	public void setLocale(Locale locale) {
-	}
-
-	public Locale getLocale() {
-		return Locale.getDefault();
+	public TagSetToStringConverter() {
 	}
 
 	public Set<BookTag> convertToObject(String value, Locale locale) {

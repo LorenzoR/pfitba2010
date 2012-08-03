@@ -38,9 +38,6 @@ public class ShowBookPage extends BasePage {
 
 	@SpringBean
 	UserService userService;
-
-	/** backwards nav page */
-	// private final Page backPage;
 	
 	private User user = WiaSession.get().getLoggedInUser();
 	private Book book;
@@ -52,14 +49,14 @@ public class ShowBookPage extends BasePage {
 			System.exit(0);
 		}
 		
-		final int currentPage;
+//		final int currentPage;
 		
-		if ( pageParameters.get("currentPage").isEmpty() ) {
-			currentPage = 0;
-		}
-		else {
-			currentPage = pageParameters.get("currentPage").toInt();
-		}
+//		if ( pageParameters.get("currentPage").isEmpty() ) {
+//			currentPage = 0;
+//		}
+//		else {
+//			currentPage = pageParameters.get("currentPage").toInt();
+//		}
 		
 		final Long bookId = pageParameters.get("book").toLong();		
 		
@@ -121,9 +118,9 @@ public class ShowBookPage extends BasePage {
 
 //		parent.add(new ResetRatingLink("reset1", new Model<Rating>(rating1), book));
 
-		PageParameters backPageParameters = new PageParameters();
-		backPageParameters.set("currentPage", currentPage);
-		parent.add(new BookmarkablePageLink<Object>("goBack", BooksPage.class, backPageParameters));
+//		PageParameters backPageParameters = new PageParameters();
+//		backPageParameters.set("currentPage", currentPage);
+//		parent.add(new BookmarkablePageLink<Object>("goBack", BooksPage.class, backPageParameters));
 //		parent.add(new Link("goBack") {
 //			public void onClick() {
 //				setResponsePage(HomePage.class);

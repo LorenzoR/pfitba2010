@@ -27,8 +27,8 @@ import com.booktube.WicketApplication;
 import com.booktube.model.Book;
 import com.booktube.model.Rating;
 import com.booktube.model.User;
-import com.booktube.pages.customComponents.CustomTextField;
-import com.booktube.pages.customConverters.TagSetToString;
+import com.booktube.pages.customComponents.SuccessDialog;
+import com.booktube.pages.customComponents.TagTextField;
 import com.booktube.service.BookService;
 import com.booktube.service.UserService;
 
@@ -42,6 +42,8 @@ public class EditBookPage extends BasePage {
 	@SpringBean
 	UserService userService;
 
+	private SuccessDialog<?> successDialog;
+	
 	private List<User> users = userService.getAllUsers(0, Integer.MAX_VALUE);
 	private final Book book;
 
@@ -69,6 +71,10 @@ public class EditBookPage extends BasePage {
 
 		add(editBookForm(book, currentPage));
 
+		pageParameters.set("currentPage", currentPage);
+		successDialog = new SuccessDialog<BooksPage>("success_dialog", new ResourceModel("editedBook").getObject(), BooksPage.class, pageParameters);
+		add(successDialog);
+		
 		String newTitle = "Booktube - " + new ResourceModel("edit").getObject() + " " + book.getTitle();
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 
@@ -85,8 +91,7 @@ public class EditBookPage extends BasePage {
 		final RequiredTextField<Book> titleField = new RequiredTextField<Book>("title");
 		form.add(titleField);
 		
-		final CustomTextField tagField = new CustomTextField("tags", null,
-				new TagSetToString());
+		final TagTextField tagField = new TagTextField("tags");
 		form.add(tagField);
 
 		final TextArea<Book> text = new TextArea<Book>("text");
@@ -142,11 +147,13 @@ public class EditBookPage extends BasePage {
 				System.out.println("Author: " + book.getAuthor());
 				System.out.println("Text: " + book.getText());
 
+				successDialog.open(target);
+				
 				// Previous page
 				// setResponsePage(backPage);
-				PageParameters pageParameters = new PageParameters();
-				pageParameters.set("currentPage", currentPage);
-				setResponsePage(BooksPage.class, pageParameters);
+//				PageParameters pageParameters = new PageParameters();
+//				pageParameters.set("currentPage", currentPage);
+//				setResponsePage(BooksPage.class, pageParameters);
 
 			}
 

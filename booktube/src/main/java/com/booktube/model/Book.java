@@ -20,6 +20,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -143,6 +144,7 @@ public class Book implements Serializable {
 	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
 	//@JoinTable(name = "BOOK_TAGS", joinColumns = { @JoinColumn(name = "BOOK_ID") }, inverseJoinColumns = { @JoinColumn(name = "text") })
 	@JoinColumn(name = "BOOK_ID")
+	@OrderBy("value")
 	private Set<BookTag> tags;
 
 	/* @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent") */
