@@ -5,6 +5,9 @@
 </head>
 <body>
 <wicket:extend>
+<div wicket:id="success_dialog">
+	<wicket:container wicket:id="text"></wicket:container>
+</div>
 <h3><wicket:message key="editBook">Edit Book</wicket:message> <span wicket:id="bookId"></span></h3>
 <form wicket:id="editBookForm">
 	<p><wicket:message key="author">Author</wicket:message>: <select wicket:id="author"></select></p>

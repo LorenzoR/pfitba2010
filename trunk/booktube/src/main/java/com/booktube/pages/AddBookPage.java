@@ -26,9 +26,8 @@ import com.booktube.WiaSession;
 import com.booktube.model.Book;
 import com.booktube.model.User;
 import com.booktube.pages.customComponents.AbstractAutoCompleteTextField;
-import com.booktube.pages.customComponents.CustomTextField;
+import com.booktube.pages.customComponents.TagTextField;
 import com.booktube.pages.customComponents.SuccessDialog;
-import com.booktube.pages.customConverters.TagSetToString;
 import com.booktube.service.BookService;
 import com.booktube.service.UserService;
 
@@ -147,8 +146,7 @@ public class AddBookPage extends BasePage {
 		// }
 		//
 		// };
-		final CustomTextField tagField = new CustomTextField("tags", null,
-				new TagSetToString());
+		final TagTextField tagField = new TagTextField("tags");
 
 		form.add(tagField);
 
