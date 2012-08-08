@@ -130,10 +130,19 @@ public class User implements Serializable {
 //	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
 //	@JoinTable(name = "USERVOTES", joinColumns = { @JoinColumn(name = "USER_ID", unique = false) }, inverseJoinColumns = { @JoinColumn(name = "BOOK_ID", unique = false) })
 //	private Set<Book> votes;
-	
+    
+    @Basic
+	@Column(name = "SECRET")
+	private String secret;
+    
+    @Basic
+	@Column(name = "IS_ACTIVE", nullable = false)
+	private Boolean isActive;
+
 	public User() {
 		this.registrationDate = Calendar.getInstance().getTime();
 		this.books = new ArrayList<Book>();
+		this.isActive = false;
 		//this.imageURL = "defaultAvatar.png";
 		//this.votes = new HashSet<Book>();
 	}
@@ -333,6 +342,22 @@ public class User implements Serializable {
 
 	public void setImageURL(String imageURL) {
 		this.imageURL = imageURL;
+	}
+	
+	public String getSecret() {
+		return secret;
+	}
+
+	public void setSecret(String secret) {
+		this.secret = secret;
+	}
+
+	public Boolean getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
 	}
 
 //	public Set<Book> getVotes() {
