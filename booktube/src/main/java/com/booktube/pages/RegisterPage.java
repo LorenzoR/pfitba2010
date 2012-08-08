@@ -10,7 +10,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
@@ -33,7 +32,6 @@ import org.apache.wicket.validation.validator.EmailAddressValidator;
 import org.odlabs.wiquery.ui.dialog.Dialog;
 import org.apache.wicket.datetime.PatternDateConverter;
 
-import com.booktube.WicketApplication;
 import com.booktube.model.User;
 import com.booktube.model.User.Gender;
 import com.booktube.model.User.Level;
@@ -122,9 +120,7 @@ public class RegisterPage extends BasePage {
 
 		final DateTextField birthdateField = new DateTextField("birthdate",
 				new PropertyModel<Date>(model, "birthdate"),
-				new PatternDateConverter(WicketApplication.DATE_FORMAT, true));
-
-		form.add(new Label("date_format", WicketApplication.DATE_FORMAT_ES));
+				new PatternDateConverter(new ResourceModel("dateFormat").getObject(), true));
 
 		final PasswordTextField passwordField1 = new PasswordTextField(
 				"password1", new PropertyModel<String>(model, "password"));

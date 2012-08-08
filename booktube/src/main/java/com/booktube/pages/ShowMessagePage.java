@@ -1,5 +1,6 @@
 package com.booktube.pages;
 
+import java.text.DateFormat;
 import java.util.List;
 
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -65,6 +66,7 @@ public class ShowMessagePage extends BasePage {
 		ListView<Message> listview = new ListView<Message>("messageList", messageList) {
 
 			private static final long serialVersionUID = 1L;
+			final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, getLocale());
 
 			protected void populateItem(ListItem<Message> item) {
 				final Message message = (Message) item.getModelObject();
@@ -73,7 +75,7 @@ public class ShowMessagePage extends BasePage {
 				
 				item.add(new Label("subject"));
 				item.add(new Label("sender"));
-				item.add(new Label("date"));
+				item.add(new Label("date", dateFormat.format(message.getDate())));
 				item.add(new Label("text"));
 			}
 		};

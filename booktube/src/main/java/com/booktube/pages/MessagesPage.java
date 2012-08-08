@@ -1,5 +1,6 @@
 package com.booktube.pages;
 
+import java.text.DateFormat;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -86,17 +87,20 @@ public class MessagesPage extends BasePage {
 				final PageParameters parameters = new PageParameters();
 				parameters.set("messageId", message.getId());
 				//item.add(new Label("id"));
+				
+				final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, getLocale());
+				
 				if ( message.isRead() ) {
 					item.add(new Label("subject"));
 					item.add(new Label("receiver"));
 					item.add(new Label("sender"));
-					item.add(new Label("date"));
+					item.add(new Label("date", dateFormat.format(message.getDate())));
 				}
 				else {
 					item.add(new Label("subject", "<b>" + message.getSubject() + "</b>").setEscapeModelStrings(false));
 					item.add(new Label("sender", "<b>" + message.getSender() + "</b>").setEscapeModelStrings(false));
 					item.add(new Label("receiver", "<b>" + message.getReceiver() + "</b>").setEscapeModelStrings(false));
-					item.add(new Label("date", "<b>" + message.getDate() + "</b>").setEscapeModelStrings(false));
+					item.add(new Label("date", "<b>" + dateFormat.format(message.getDate()) + "</b>").setEscapeModelStrings(false));
 				}
 				
 				item.add(new Link<Message>("detailsLink", item.getModel()) {

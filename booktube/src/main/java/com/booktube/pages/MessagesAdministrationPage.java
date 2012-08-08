@@ -1,5 +1,6 @@
 package com.booktube.pages;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -213,7 +214,9 @@ public class MessagesAdministrationPage extends AdministrationPage {
 				item.add(new Label("subject"));
 				item.add(new Label("sender"));
 				item.add(new Label("receiver"));
-				item.add(new Label("date"));
+				
+				final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, getLocale());
+				item.add(new Label("date", dateFormat.format(message.getDate())));
 
 				item.add(new Link<Message>("detailsLink", item.getModel()) {
 					private static final long serialVersionUID = 1L;

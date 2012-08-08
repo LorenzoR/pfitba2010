@@ -1,7 +1,10 @@
 package com.booktube.pages;
 
+import java.text.DateFormat;
+
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -45,22 +48,17 @@ public class ShowBookPage extends BasePage {
 	public ShowBookPage(PageParameters pageParameters) {
 
 		if ( pageParameters.get("book").isEmpty() ) {
-			System.out.println("ERRRORRR");
-			System.exit(0);
+			throw new AbortWithHttpErrorCodeException(404);
 		}
-		
-//		final int currentPage;
-		
-//		if ( pageParameters.get("currentPage").isEmpty() ) {
-//			currentPage = 0;
-//		}
-//		else {
-//			currentPage = pageParameters.get("currentPage").toInt();
-//		}
 		
 		final Long bookId = pageParameters.get("book").toLong();		
 		
 		book = bookService.getBook(bookId);
+		
+		if ( book == null ) {
+			throw new AbortWithHttpErrorCodeException(404);
+		}
+		
 		book.increaseHits();
 		bookService.updateBook(book);
 		
@@ -79,13 +77,15 @@ public class ShowBookPage extends BasePage {
 		String newTitle = "Booktube - " + book.getTitle() + " " + new ResourceModel("by").getObject() + " " + book.getAuthor(); 
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 		
+		final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, getLocale());
+		
 		CompoundPropertyModel<Book> model = new CompoundPropertyModel<Book>(book);
 		parent.setDefaultModel(model);
 		// add(new Label("bookId", book.getId().toString()));
 		parent.add(new Label("title"));
 		parent.add(new Label("author.username"));
 		parent.add(new MultiLineLabel("text"));
-		parent.add(new Label("publishDate"));
+		parent.add(new Label("publishDate", dateFormat.format(book.getPublishDate())));
 		parent.add(new Label("hits"));
 
 		final Rating rating1 = book.getRating();

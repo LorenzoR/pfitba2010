@@ -1,5 +1,6 @@
 package com.booktube.pages;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,10 +83,12 @@ public class ShowCampaignPage extends BasePage {
 				CompoundPropertyModel<Campaign> model = new CompoundPropertyModel<Campaign>(
 						campaign);
 				item.setDefaultModel(model);
+				
+				final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, getLocale());
 
 				item.add(new Label("subject"));
 				item.add(new Label("sender"));
-				item.add(new Label("date"));
+				item.add(new Label("date", dateFormat.format(campaign.getDate())));
 				item.add(new Label("text"));
 				
 				List<CampaignDetail> campaignDetailList = new ArrayList<CampaignDetail>(campaign.getReceiver());

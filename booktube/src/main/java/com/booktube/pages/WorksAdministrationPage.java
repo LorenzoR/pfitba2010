@@ -1,5 +1,6 @@
 package com.booktube.pages;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -162,7 +163,9 @@ public class WorksAdministrationPage extends AdministrationPage {
 				bplAuthor.add(new Label("authorName", book.getAuthor()
 						.getUsername()));
 				item.add(bplAuthor);
-				item.add(new Label("publishDate"));
+				
+				final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, getLocale());
+				item.add(new Label("publishDate", dateFormat.format(book.getPublishDate())));
 
 				item.add(new BookmarkablePageLink<Object>("editLink",
 						EditBookPage.class, detailsParameter));
