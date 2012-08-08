@@ -10,20 +10,16 @@ public class UniqueUsernameValidator extends StringValidator {
 
 	private static final long serialVersionUID = 1L;
 
-	private final String currentUsername;
-
 	@SpringBean
 	UserService userService;
 
-	public UniqueUsernameValidator(String currentUsername) {
-		this.currentUsername = currentUsername;
+	public UniqueUsernameValidator() {
 	}
 
 	@Override
 	protected void onValidate(IValidatable<String> validatable) {
 
-		if (!currentUsername.equals(validatable.getValue())
-				&& userService.usernameExists(validatable.getValue())) {
+		if (userService.usernameExists(validatable.getValue())) {
 			error(validatable);
 		}
 
