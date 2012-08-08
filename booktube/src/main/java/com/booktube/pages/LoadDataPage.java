@@ -151,6 +151,7 @@ public class LoadDataPage extends BasePage {
 			user.setCountry(countries.get(i % countries.size()));
 			user.setCity(cities.get(i % cities.size()));
 			user.setEmail(username + "@mail.com");
+			user.setIsActive(true);
 			userService.insertUser(user);
 			users.add(user);
 
@@ -172,6 +173,7 @@ public class LoadDataPage extends BasePage {
 		this.admin.setCountry("Country 1");
 		this.admin.setCity("City 1");
 		this.admin.setEmail(this.admin.getUsername() + "@mail.com");
+		this.admin.setIsActive(true);
 		
 		User admin2 = new User("admin2", "admin2", "nombreAdmin", "apellidoAdmin",
 				User.Level.ADMIN);
@@ -180,6 +182,7 @@ public class LoadDataPage extends BasePage {
 		admin2.setCountry("Country 1");
 		admin2.setCity("City 1");
 		admin2.setEmail(admin2.getUsername() + "@mail.com");
+		admin2.setIsActive(true);
 		userService.insertUser(admin2);
 		
 		
