@@ -1,6 +1,8 @@
 package com.booktube.pages;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -117,10 +119,11 @@ public class RegisterPage extends BasePage {
 		// DateTextField birthdateField = new DateTextField("birthdateField",
 		// new PropertyModel<Date>(
 		// model, "birthdateField"), new StyleDateConverter("S-", true));
-
+		final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, getLocale());
+		
 		final DateTextField birthdateField = new DateTextField("birthdate",
 				new PropertyModel<Date>(model, "birthdate"),
-				new PatternDateConverter(new ResourceModel("dateFormat").getObject(), true));
+				new PatternDateConverter(((SimpleDateFormat) dateFormat).toPattern(), true));
 
 		final PasswordTextField passwordField1 = new PasswordTextField(
 				"password1", new PropertyModel<String>(model, "password"));
@@ -155,8 +158,8 @@ public class RegisterPage extends BasePage {
 		// passwordField1.setRequired(true);
 		// passwordField2.setRequired(true);
 
-		usernameField.add(new UniqueUsernameValidator(newUser.getUsername()));
-		email.add(new UniqueEmailValidator(newUser.getEmail()));
+		usernameField.add(new UniqueUsernameValidator());
+		email.add(new UniqueEmailValidator());
 
 		birthdateField.add(new BirthdayValidator());
 
@@ -289,12 +292,15 @@ public class RegisterPage extends BasePage {
 				System.out.println("Gender: " + newUser.getGender());
 				System.out.println("Birthdate: " + newUser.getBirthdate());
 
-				System.out.println("IMAGEEE : "
-						+ fileUploadField.getConvertedInput().toString());
+				if (fileUploadField != null
+						&& fileUploadField.getConvertedInput() != null) {
+					System.out.println("IMAGEEE : "
+							+ fileUploadField.getConvertedInput().toString());
+				}
 
-				target.add(parent);
+				//target.add(parent);
 
-				// dialog.open(target);
+				dialog.open(target);
 
 			}
 

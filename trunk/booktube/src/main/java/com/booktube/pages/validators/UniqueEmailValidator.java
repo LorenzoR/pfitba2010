@@ -10,20 +10,16 @@ public class UniqueEmailValidator extends StringValidator {
 
 	private static final long serialVersionUID = 1L;
 
-	private final String currentEmail;
-
 	@SpringBean
 	UserService userService;
 
-	public UniqueEmailValidator(String currentEmail) {
-		this.currentEmail = currentEmail;
+	public UniqueEmailValidator() {
 	}
 
 	@Override
 	protected void onValidate(IValidatable<String> validatable) {
 
-		if (!currentEmail.equals(validatable.getValue())
-				&& userService.emailExists(validatable.getValue())) {
+		if (userService.emailExists(validatable.getValue())) {
 			error(validatable);
 		}
 

@@ -178,8 +178,8 @@ public class EditWriterPage extends BasePage {
 		final TextField<User> cityField = new TextField<User>("city");
 		form.add(cityField);
 
-		usernameField.add(new UniqueUsernameValidator(writer.getUsername()));
-		email.add(new UniqueEmailValidator(writer.getEmail()));
+		usernameField.add(new UniqueUsernameValidator());
+		email.add(new UniqueEmailValidator());
 		birthdateField.add(new BirthdayValidator());
 
 		Image avatar = new Image("avatar", new Model<String>());
