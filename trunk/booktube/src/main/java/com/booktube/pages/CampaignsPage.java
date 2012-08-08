@@ -1,5 +1,6 @@
 package com.booktube.pages;
 
+import java.text.DateFormat;
 import java.util.Iterator;
 
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -85,15 +86,18 @@ public class CampaignsPage extends BasePage {
 				final PageParameters parameters = new PageParameters();
 				parameters.set("campaignId", campaign.getId());
 				//item.add(new Label("id"));
+				
+				final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, getLocale());
+				
 				if ( campaignService.getCampaignDetail(campaign, user).isRead() ) {
 					item.add(new Label("subject"));
 					item.add(new Label("sender"));
-					item.add(new Label("date"));
+					item.add(new Label("date", dateFormat.format(campaign.getDate())));
 				}
 				else {
 					item.add(new Label("subject", "<b>" + campaign.getSubject() + "</b>").setEscapeModelStrings(false));
 					item.add(new Label("sender", "<b>" + campaign.getSender() + "</b>").setEscapeModelStrings(false));
-					item.add(new Label("date", "<b>" + campaign.getDate() + "</b>").setEscapeModelStrings(false));
+					item.add(new Label("date", "<b>" + dateFormat.format(campaign.getDate()) + "</b>").setEscapeModelStrings(false));
 				}
 				
 				item.add(new Link<Campaign>("detailsLink", item.getModel()) {

@@ -1,5 +1,6 @@
 package com.booktube.pages;
 
+import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -39,6 +40,8 @@ public class ShowUserPage extends BasePage {
 		addBreadcrumb(new BookmarkablePageLink<Object>("link", WritersPage.class), new ResourceModel("writersPageTitle").getObject());
 		addBreadcrumb(new BookmarkablePageLink<Object>("link", ShowUserPage.class, pageParameters), showUser.getUsername());
 		
+		final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, getLocale());
+		
 		CompoundPropertyModel<User> model = new CompoundPropertyModel<User>(
 				showUser);
 		parent.setDefaultModel(model);
@@ -51,7 +54,7 @@ public class ShowUserPage extends BasePage {
 		parent.add(new Label("country"));
 		parent.add(new Label("city"));
 		parent.add(new Label("level"));
-		parent.add(new Label("registrationDate"));
+		parent.add(new Label("registrationDate", dateFormat.format(showUser.getRegistrationDate())));
 		parent.add(new Label("age", getAge(showUser.getBirthdate()).toString()));
 
 	}

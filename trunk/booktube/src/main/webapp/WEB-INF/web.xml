@@ -52,6 +52,8 @@
 	<filter-mapping>
 		<filter-name>wicket.booktube</filter-name>
 		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>ERROR</dispatcher>
 	</filter-mapping>
 
 	<!-- Spring context to be available to our webapp if ever there is a need 
@@ -83,5 +85,10 @@
         <url-pattern>/servlet/*</url-pattern>
     </filter-mapping>
  -->
+ 
+ 	<error-page>
+		<error-code>404</error-code>
+		<location>/error404</location>
+	</error-page>
 
 </web-app>
