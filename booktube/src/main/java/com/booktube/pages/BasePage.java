@@ -555,7 +555,8 @@ public abstract class BasePage extends WebPage {
 
 				User user = userService.getUser(userString);
 
-				if (user != null && user.getPassword().equals(passwordString)) {
+				//if (user != null && user.getPassword().equals(passwordString)) {
+				if (user != null && user.getPassword().equals(passwordString) && user.getIsActive() ) {
 					System.out.println("Login OK");
 					WiaSession.get().logInUser(user);
 

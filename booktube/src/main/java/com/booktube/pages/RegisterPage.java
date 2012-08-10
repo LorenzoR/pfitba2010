@@ -1,8 +1,14 @@
 package com.booktube.pages;
 
 import java.io.File;
+
+
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -279,7 +285,20 @@ public class RegisterPage extends BasePage {
 					}
 
 					newUser.setImageURL(imgFilename);
+					
 				}
+				
+				
+				//Para el proceso de registracion
+				try {
+					String secret = userService.generateSecret();					
+					newUser.setSecret(secret);
+				} catch (NoSuchAlgorithmException e) {						
+					e.printStackTrace();
+				} catch (UnsupportedEncodingException e) {						
+					e.printStackTrace();
+				}
+				
 
 				/* Insert user */
 				userService.insertUser(newUser);
@@ -298,10 +317,16 @@ public class RegisterPage extends BasePage {
 							+ fileUploadField.getConvertedInput().toString());
 				}
 
+
+				// Para el proceso de registracion				
+				try {
+					userService.sendRegistrationMail(newUser);
+				} catch (Exception e) {					
+					e.printStackTrace();
+				}
+
 				//target.add(parent);
-
 				dialog.open(target);
-
 			}
 
 			protected void onError(AjaxRequestTarget target, Form<?> form) {
