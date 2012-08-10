@@ -1,7 +1,10 @@
 package com.booktube.service;
 
-import java.util.Date;
+import java.io.UnsupportedEncodingException;
 
+
+import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -11,6 +14,8 @@ import com.booktube.model.User.Level;
 import com.booktube.pages.customComponents.panels.MiscFilterOption;
 import com.booktube.pages.customComponents.panels.AgeFilterOption;
 import com.booktube.pages.customComponents.panels.OriginFilterOption;
+
+
 
 public interface UserService {
 	public boolean usernameExists(String username);
@@ -47,5 +52,13 @@ public interface UserService {
     public List<Object> getWorksByCategory(AgeFilterOption age, MiscFilterOption misc);
     public List<Object> getMessagesBySubject(AgeFilterOption age, MiscFilterOption misc);
     public List<Object> getMessagesByCountry(AgeFilterOption age, MiscFilterOption misc);
+    
+    
+    // Para el proceso de registracion
+    public String generateSecret() throws NoSuchAlgorithmException, UnsupportedEncodingException;    
+	public void saveSecret(long id, String secret) throws Exception;
+	public void sendRegistrationMail(User user) throws Exception;
+	public boolean activateUserAccount(long id, String secret);
+	
     
 }
