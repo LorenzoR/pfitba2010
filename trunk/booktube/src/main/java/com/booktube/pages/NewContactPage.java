@@ -1,7 +1,8 @@
 package com.booktube.pages;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
@@ -14,6 +15,7 @@ import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import com.booktube.WiaSession;
@@ -21,7 +23,6 @@ import com.booktube.model.Message;
 import com.booktube.model.Message.Subject;
 import com.booktube.model.User;
 import com.booktube.model.Message.Type;
-import com.booktube.model.User.Level;
 import com.booktube.pages.customComponents.SuccessDialog;
 import com.booktube.service.MessageService;
 import com.booktube.service.UserService;
@@ -109,10 +110,19 @@ public class NewContactPage extends BasePage {
 
 			private static final long serialVersionUID = 1L;
 
+			@SuppressWarnings("unchecked")
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				
-				List<User> receivers = userService.getUsers(0, Integer.MAX_VALUE, Level.ADMIN);
+				Map<Long, User> receiverMap = messageService.getMessagesByOperator();
+				
+				if ( receiverMap.size() <= 0) {
+					throw new AbortWithHttpErrorCodeException(404);
+				}
+				
+				Entry<Long,User> receiver = (Entry<Long, User>) receiverMap.entrySet().toArray()[0];
+				
+				//List<User> receivers = userService.getUsers(0, Integer.MAX_VALUE, Level.ADMIN);
 				
 				//message.setType(Type.PRIVATE_MESSAGE);
 				//message.setSubject(subject.getDefaultModelObjectAsString());
@@ -120,7 +130,10 @@ public class NewContactPage extends BasePage {
 				
 				System.out.println("+++++++ SUBJECT: " + message.getSubject());
 				
-				messageService.sendMessages(message, receivers);
+				message.setReceiver(receiver.getValue());
+				messageService.insertMessage(message);
+				
+				//messageService.sendMessages(message, receivers);
 				
 				dialog.open(target);
 				

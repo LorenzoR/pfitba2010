@@ -2,6 +2,7 @@ package com.booktube.persistence;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.booktube.model.Message;
 import com.booktube.model.CampaignDetail;
@@ -27,4 +28,5 @@ public interface MessageDao {
     public void setMessageRead(CampaignDetail messageDetail);
     public void sendMessages(Message message, List<User> receivers);
     public List<Message> getMessages(int first, int count, Long messageId, String subject, String sender, String receiver, Date lowDate, Date highDate);
+    public Map<Long, User> getMessagesByOperator();
 }

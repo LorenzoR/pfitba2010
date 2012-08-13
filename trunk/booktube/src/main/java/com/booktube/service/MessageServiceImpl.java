@@ -2,6 +2,7 @@ package com.booktube.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.booktube.model.Message;
 import com.booktube.model.CampaignDetail;
@@ -101,6 +102,10 @@ public class MessageServiceImpl implements MessageService {
 			String subject, String sender, String receiver, Date lowDate,
 			Date highDate) {
 		return itemDao.getMessages(first, count, messageId, subject, sender, receiver, lowDate, highDate);
+	}
+	
+	public Map<Long, User> getMessagesByOperator() {
+		return itemDao.getMessagesByOperator();
 	}
 
 }

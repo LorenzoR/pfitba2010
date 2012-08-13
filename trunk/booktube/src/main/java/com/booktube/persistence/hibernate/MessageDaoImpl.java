@@ -2,16 +2,20 @@ package com.booktube.persistence.hibernate;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import com.booktube.model.Message;
 import com.booktube.model.Message.Type;
+import com.booktube.model.User.Level;
 import com.booktube.model.CampaignDetail;
 import com.booktube.model.User;
 import com.booktube.persistence.MessageDao;
@@ -213,6 +217,34 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 		}
 		
 		return criteria;
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Map<Long, User> getMessagesByOperator() {
+		
+		Map<Long, User> map = new HashMap<Long, User>();
+		
+		 Criteria criteria = getSession().createCriteria(Message.class);
+		 criteria.createCriteria("receiver").add(Restrictions.eq("level", Level.OPERATOR));
+         ProjectionList projectionList = Projections.projectionList();
+         //projectionList.add(Projections.property("name"));
+         projectionList.add(Projections.rowCount(), "count");
+         projectionList.add(Projections.groupProperty("receiver"));
+
+         criteria.setProjection(projectionList);
+         criteria.addOrder(Order.asc("count"));
+         
+         List<Object[]> results = (List<Object[]>) criteria.list();
+         
+         System.out.println("***** LIST: " + results.toString());
+         
+         for (Object[] anObj : results ) {
+        	 System.out.println(anObj[0].toString() + " : " + anObj[1].toString());
+        	 map.put((Long) anObj[0], (User) anObj[1]);
+         }
+         
+         return map;
 		
 	}
 
