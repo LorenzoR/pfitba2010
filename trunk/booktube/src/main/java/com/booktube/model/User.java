@@ -41,7 +41,7 @@ public class User implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
-	public enum Level { ADMIN, USER }
+	public enum Level { ADMIN, OPERATOR, USER }
 	public enum Gender { MALE, FEMALE }
 
 	@Id
