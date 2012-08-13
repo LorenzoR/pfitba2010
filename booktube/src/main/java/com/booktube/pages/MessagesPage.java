@@ -90,7 +90,7 @@ public class MessagesPage extends BasePage {
 				
 				final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, getLocale());
 				
-				if ( message.isRead() ) {
+				if ( message.isRead() || message.getSender().equals(user) ) {
 					item.add(new Label("subject"));
 					item.add(new Label("receiver"));
 					item.add(new Label("sender"));

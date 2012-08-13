@@ -90,6 +90,8 @@ public abstract class BasePage extends WebPage {
 	
 	protected WebMarkupContainer breadcrumbContainer;
 	
+	protected Label welcomeLabel;
+	
 	public BasePage() {
 				
 //		breadcrumbs = new DynamicLabel("breadcrumbs");
@@ -138,7 +140,8 @@ public abstract class BasePage extends WebPage {
 //			editProfile.setVisible(false);
 //		}
 		
-		Label welcomeLabel = new Label("welcome", new StringResourceModel("welcomeMessage", this, new Model<BasePage>(BasePage.this)));
+		welcomeLabel = new Label("welcome", new StringResourceModel("welcomeMessage", this, new Model<BasePage>(BasePage.this)));
+		welcomeLabel.setOutputMarkupId(true);
 		
 		if (WiaSession.get().isAuthenticated()) {
 //			add(new Label("welcome", "Bienvenido "
@@ -264,9 +267,14 @@ public abstract class BasePage extends WebPage {
 				// campaignsLink.setVisible(true);
 				contactLi.setVisible(false);
 				campaignsLi.setVisible(false);
-				newCampaignsLi.setVisible(true);
+				
 				administrationLi.setVisible(true);
 				// contactLink.setVisible(false);
+			}
+			else if (WiaSession.get().getLoggedInUser().getLevel() == Level.OPERATOR) {
+				contactLi.setVisible(false);
+				campaignsLi.setVisible(false);
+				newCampaignsLi.setVisible(true);
 			}
 
 		} else {

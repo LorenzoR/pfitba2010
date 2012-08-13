@@ -74,7 +74,7 @@ public class EditWriterPage extends BasePage {
 
 		addBreadcrumb(new BookmarkablePageLink<Object>("link", EditWriterPage.class), new ResourceModel("edit").getObject() + " " + user.getUsername() );
 		
-		add(new Label("writerId", user.getId().toString()));
+		add(new Label("username", user.getUsername()));
 
 		dialog = new SuccessDialog<EditWriterPage>("success_dialog",
 				new ResourceModel("editedUserDialog").getObject(), backPage);
@@ -175,8 +175,8 @@ public class EditWriterPage extends BasePage {
 		final TextField<User> cityField = new TextField<User>("city");
 		form.add(cityField);
 
-		usernameField.add(new UniqueUsernameValidator());
-		email.add(new UniqueEmailValidator());
+		usernameField.add(new UniqueUsernameValidator(writer.getUsername()));
+		email.add(new UniqueEmailValidator(writer.getEmail()));
 		birthdateField.add(new BirthdayValidator());
 
 		Image avatar = new Image("avatar", new Model<String>());
@@ -254,6 +254,10 @@ public class EditWriterPage extends BasePage {
 
 				System.out.println("user editado");
 
+				target.add(welcomeLabel);
+				
+				WiaSession.get().logInUser(writer);
+				
 				dialog.open(target);
 			}
 			
