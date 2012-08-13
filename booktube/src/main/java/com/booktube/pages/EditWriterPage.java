@@ -34,7 +34,6 @@ import org.apache.wicket.validation.validator.EmailAddressValidator;
 import org.odlabs.wiquery.ui.dialog.Dialog;
 
 import com.booktube.WiaSession;
-import com.booktube.WicketApplication;
 import com.booktube.model.User;
 import com.booktube.model.User.Gender;
 import com.booktube.model.User.Level;
@@ -145,11 +144,9 @@ public class EditWriterPage extends BasePage {
 
 		final DateTextField birthdateField = new DateTextField("birthdate",
 				new PropertyModel<Date>(model, "birthdate"),
-				new PatternDateConverter(WicketApplication.DATE_FORMAT, true));
+				new PatternDateConverter(new ResourceModel("dateFormat").getObject(), true));
 		birthdateField.setRequired(true);
 		form.add(birthdateField);
-
-		form.add(new Label("date_format", WicketApplication.DATE_FORMAT_ES));
 
 		final DropDownChoice<Level> levelDDC = new DropDownChoice<Level>(
 				"level", Arrays.asList(Level.values()),

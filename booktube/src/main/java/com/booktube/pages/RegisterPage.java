@@ -6,9 +6,6 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -125,11 +122,11 @@ public class RegisterPage extends BasePage {
 		// DateTextField birthdateField = new DateTextField("birthdateField",
 		// new PropertyModel<Date>(
 		// model, "birthdateField"), new StyleDateConverter("S-", true));
-		final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, getLocale());
+		//final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, getLocale());
 		
 		final DateTextField birthdateField = new DateTextField("birthdate",
 				new PropertyModel<Date>(model, "birthdate"),
-				new PatternDateConverter(((SimpleDateFormat) dateFormat).toPattern(), true));
+				new PatternDateConverter(new ResourceModel("dateFormat").getObject(), true));
 
 		final PasswordTextField passwordField1 = new PasswordTextField(
 				"password1", new PropertyModel<String>(model, "password"));
