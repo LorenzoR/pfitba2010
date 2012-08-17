@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
@@ -19,7 +20,6 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.odlabs.wiquery.ui.dialog.AjaxDialogButton;
 import org.odlabs.wiquery.ui.dialog.Dialog;
 
 import com.booktube.WiaSession;
@@ -44,6 +44,9 @@ public class AddBookPage extends BasePage {
 	private User user;
 	private static SuccessDialog<?> dialog;
 	private static PageParameters pageParameters = new PageParameters();
+	
+	private Dialog loginErrorDialog;
+	private Dialog loginDialog;
 
 	public AddBookPage() {
 
@@ -51,7 +54,9 @@ public class AddBookPage extends BasePage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
-		addBreadcrumb(new BookmarkablePageLink<Object>("link", AddBookPage.class, pageParameters), new ResourceModel("addBookPageTitle").getObject());
+		addBreadcrumb(new BookmarkablePageLink<Object>("link",
+				AddBookPage.class, pageParameters), new ResourceModel(
+				"addBookPageTitle").getObject());
 
 		user = WiaSession.get().getLoggedInUser();
 
@@ -59,7 +64,7 @@ public class AddBookPage extends BasePage {
 		// "Debe registrarse para poder publicar.");
 		// parent.add(registerMessage);
 
-		final Dialog loginDialog = loginDialog();
+		loginDialog = loginDialog();
 
 		parent.add(loginDialog);
 
@@ -114,8 +119,13 @@ public class AddBookPage extends BasePage {
 		// dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
 
 		dialog = new SuccessDialog<ShowBookPage>("success_dialog",
-				new ResourceModel("newBookDialog").getObject(), ShowBookPage.class, pageParameters);
+				new ResourceModel("newBookDialog").getObject(),
+				ShowBookPage.class, pageParameters);
 		parent.add(dialog);
+		
+		loginErrorDialog = loginErrorDialog();
+
+		parent.add(loginErrorDialog);
 
 	}
 
@@ -160,10 +170,12 @@ public class AddBookPage extends BasePage {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected final List<String> getChoiceList(final String searchTextInput) {
+			protected final List<String> getChoiceList(
+					final String searchTextInput) {
 				List<String> choices = new ArrayList<String>(10);
 
-				for (final String aCategory : bookService.getCategories(0, Integer.MAX_VALUE)) {
+				for (final String aCategory : bookService.getCategories(0,
+						Integer.MAX_VALUE)) {
 
 					if (aCategory.toUpperCase().startsWith(
 							searchTextInput.toUpperCase())) {
@@ -193,7 +205,8 @@ public class AddBookPage extends BasePage {
 			protected List<String> getChoiceList(String searchTextInput) {
 				List<String> choices = new ArrayList<String>(10);
 
-				for (final String aSubcategory : bookService.getSubcategories(0, Integer.MAX_VALUE, null)) {
+				for (final String aSubcategory : bookService.getSubcategories(
+						0, Integer.MAX_VALUE, null)) {
 
 					if (aSubcategory.toUpperCase().startsWith(
 							searchTextInput.toUpperCase())) {
@@ -286,36 +299,19 @@ public class AddBookPage extends BasePage {
 
 		Dialog dialog = new Dialog("login_dialog");
 
-		final Form<Object> form = loginForm("login_dialog_form");
-
-		dialog.add(form);
-
-		AjaxDialogButton ok = new AjaxDialogButton("Login") {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onButtonClicked(AjaxRequestTarget target) {
-				setResponsePage(MessagesAdministrationPage.class);
-
-			}
-		};
-
-		dialog.setButtons(ok);
-		// dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
-
-		return dialog;
-
-	}
-
-	private Form<Object> loginForm(String label) {
-		final Form<Object> form = new Form<Object>(label);
+		//final Form<Object> form = loginForm("login_dialog_form");
+		final Form<Object> form = new Form<Object>("login_dialog_form");
+		
 		final TextField<String> username = new TextField<String>("username",
 				new Model<String>(""));
+		username.setOutputMarkupId(true);
+		username.setRequired(false);
 		final PasswordTextField password = new PasswordTextField("password",
 				new Model<String>(""));
+		password.setOutputMarkupId(true);
+		password.setRequired(false);
 
-		username.setRequired(true);
+		
 
 		/*
 		 * final Label loginMsg = new Label("loginMsg",
@@ -330,48 +326,66 @@ public class AddBookPage extends BasePage {
 
 		form.add(username);
 		form.add(password);
+		
+		dialog.add(form);
 
-		// form.add(new Button("button1", new Model<String>("")) {
-		// private static final long serialVersionUID = 6743737357599494567L;
-		//
-		// @Override
-		// public void onSubmit() {
-		// String userString = username.getDefaultModelObjectAsString();
-		// String passwordString = User.hash(
-		// password.getDefaultModelObjectAsString(), "SHA-1");
-		//
-		// username.setModel(new Model<String>(""));
-		//
-		// System.out.println("User: " + userString + " Pass: "
-		// + passwordString);
-		//
-		// User user = userService.getUser(userString);
-		//
-		// if (user != null && user.getPassword().equals(passwordString)) {
-		// WiaSession.get().logInUser(user);
-		// } else {
-		// // TODO Auto-generated method stub
-		// /* TERMINAR MENSAJE DE LOGIN INCORRECTO */
-		// System.out.println("Login failed!");
-		// info("aaaaaaaaaaaa");
-		// // loginMsg.setVisible(true);
-		// }
-		//
-		// if (!continueToOriginalDestination()) {
-		// setResponsePage(HomePage.class);
-		// }
-		//
-		// // setResponsePage(BasePage.this);
-		//
-		// }
-		// });
+		AjaxButton ok = new AjaxButton("loginDialogButton") {
 
-		return form;
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+				String userString = username.getDefaultModelObjectAsString();
+				String passwordString = User.hash(
+						password.getDefaultModelObjectAsString(), "SHA-1");
+
+				username.setModel(new Model<String>(""));
+
+				System.out.println("User: " + userString + " Pass: "
+						+ passwordString);
+
+				User user = userService.getUser(userString);
+
+				// if (user != null &&
+				// user.getPassword().equals(passwordString)) {
+				if (user != null && user.getPassword().equals(passwordString)
+						&& user.getIsActive()) {
+					System.out.println("Login OK");
+					WiaSession.get().logInUser(user);
+
+					if (!continueToOriginalDestination()) {
+						setResponsePage(AddBookPage.class);
+					}
+
+				} else {
+					System.out.println("Login ERROR");
+					username.setModel(new Model<String>(""));
+					password.setModel(new Model<String>(""));
+					target.add(username);
+					target.add(password);
+					loginErrorDialog.open(target);
+				}
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form) {
+				// TODO Auto-generated method stub
+				
+			}
+		};
+
+		form.add(ok);
+		//dialog.setButtons(ok);
+		// dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
+
+		return dialog;
+
 	}
 
 	@Override
 	protected void setPageTitle() {
-		String newTitle = "Booktube - " + new ResourceModel("addBookPageTitle").getObject();
+		String newTitle = "Booktube - "
+				+ new ResourceModel("addBookPageTitle").getObject();
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 
