@@ -541,7 +541,8 @@ public abstract class BasePage extends WebPage {
 		final PasswordTextField password = new PasswordTextField("passwordLogin",
 				new Model<String>(""));
 
-		username.setRequired(true);
+		password.setRequired(false);
+		username.setRequired(false);
 
 		/*
 		 * final Label loginMsg = new Label("loginMsg",
@@ -637,7 +638,7 @@ public abstract class BasePage extends WebPage {
 		return form;
 	}
 
-	private Dialog loginErrorDialog() {
+	protected Dialog loginErrorDialog() {
 
 		final Dialog dialog = new Dialog("login_error_dialog");
 

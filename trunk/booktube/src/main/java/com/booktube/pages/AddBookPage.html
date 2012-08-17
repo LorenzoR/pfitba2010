@@ -7,12 +7,15 @@
 <wicket:extend>
 <div wicket:id="books">
 
+	<div wicket:id="login_error_dialog"><wicket:message key="wrongLogin">Wrong Login</wicket:message></div>	
+	
 	<div wicket:id="login_dialog">
 	<form wicket:id="login_dialog_form">
-		Username: <input type="text" wicket:id="username" value=""/> <br />
-		Password: <input type="password" wicket:id="password" value=""/> 
-<!-- 		<br /> -->
-<!-- 		<input type="submit" value="Login" wicket:id="button1" /> -->
+		<p>Username: <input type="text" wicket:id="username" value=""/> <br /></p>
+		<p>Password: <input type="password" wicket:id="password" value=""/> </p>
+		
+		<br />
+		<p><input type="submit" value="Login" wicket:id="loginDialogButton" /></p>
 	</form>
 	</div>
 
