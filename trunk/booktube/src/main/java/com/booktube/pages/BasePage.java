@@ -131,6 +131,8 @@ public abstract class BasePage extends WebPage {
 		editProfile.add(editProfileLink);
 		add(editProfile);
 		
+		
+		
 //		if (WiaSession.get().isAuthenticated()) {
 //			add(new Label("welcome", "Bienvenido "
 //					+ WiaSession.get().getLoggedInUser().getUsername() + " | "));
@@ -153,7 +155,7 @@ public abstract class BasePage extends WebPage {
 //			add(new Label("welcome"));
 			loggedUsername = null;
 			editProfile.setVisible(false);
-			welcomeLabel.setVisible(false);
+			welcomeLabel.setVisible(false);			
 		}
 		
 		add(welcomeLabel);
@@ -246,9 +248,17 @@ public abstract class BasePage extends WebPage {
 		BookmarkablePageLink<String> registerLink = new BookmarkablePageLink<String>(
 				"registerPage", RegisterPage.class);
 		add(registerLink);
+		
+		BookmarkablePageLink<String> forgotPasswordLink = new BookmarkablePageLink<String>(
+				"forgotPasswordPage", ForgotPasswordPage.class);
+		add(forgotPasswordLink);
+		
+		WebMarkupContainer forgotPasswordContainer = new WebMarkupContainer("forgotPasswordContainer");
+		forgotPasswordContainer.add(forgotPasswordLink);
+		add(forgotPasswordContainer);
 
 		if (WiaSession.get().isAuthenticated()) {
-
+			forgotPasswordContainer.setVisible(false);
 			contactLi.setVisible(true);
 			campaignsLi.setVisible(true);
 			messagesLi.setVisible(true);
@@ -278,6 +288,7 @@ public abstract class BasePage extends WebPage {
 			}
 
 		} else {
+			forgotPasswordContainer.setVisible(true);
 			messagesLi.add(new Label("unreadMessages", " "));
 			campaignsLi.add(new Label("unreadCampaigns", " "));
 		}
@@ -307,13 +318,14 @@ public abstract class BasePage extends WebPage {
 			// System.out.println("Logueado con username " +
 			// WiaSession.get().getUser().getUsername());
 			loginForm.setVisible(false);
-			registerLink.setVisible(false);
+			registerLink.setVisible(false);			
 
 		} else {
 			// System.out.println("NO esta logueado");
 			// add(new Label("login", "Welcome " +
 			// WiaSession.get().getUser().getUsername()));
 			logoutLink.setVisible(false);
+			
 		}
 
 		loginErrorDialog = loginErrorDialog();

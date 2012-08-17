@@ -113,7 +113,7 @@ div#loginDiv FORM TABLE TR TD{margin: 0px; padding:0px}
 div#loginDiv FORM INPUT.loginButton{width:40px; height:18px;}
 div#loginDiv FORM INPUT.text{width:60px; height:10px;font-size:10px; margin-bottom:4px }
 
-div#loginDiv div#registerLabel{font-size: x-small;}
+div#loginDiv div#registerLabel{font-size: x-small;width:200px}
 div#loginDiv div#welcomeLogoutLabel{font-size: 12px; width:290px; position:absolute; top:25px;left:0px}
 
 div#randomQuote{background-color: #fff; height:60px; width:640px;

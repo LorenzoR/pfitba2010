@@ -1,11 +1,11 @@
 package com.booktube.persistence;
 
 import java.util.Date;
+
 import java.util.Iterator;
 import java.util.List;
-
 import com.booktube.model.Book;
-import com.booktube.model.BookTag;
+
 
 public interface BookDao {
     public Book getBook(Long id);

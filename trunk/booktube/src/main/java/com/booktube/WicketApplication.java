@@ -28,6 +28,7 @@ import com.booktube.pages.CategoryMenu;
 import com.booktube.pages.EditBookPage;
 import com.booktube.pages.EditWriterPage;
 import com.booktube.pages.Error404Page;
+import com.booktube.pages.ForgotPasswordPage;
 import com.booktube.pages.HomePage;
 import com.booktube.pages.RegisterPage;
 import com.booktube.pages.RegistrationConfirmationPage;
@@ -70,6 +71,7 @@ public class WicketApplication extends WebApplication {
 		mountPage("categoryMenu", CategoryMenu.class);
 		mountPage("editUser", EditWriterPage.class);
 		mountPage("confirmation", RegistrationConfirmationPage.class);
+		mountPage("forgot", ForgotPasswordPage.class);
 		mountPage("error404", Error404Page.class);
 		// mount(new QueryStringUrlCodingStrategy("booktube", HomePage.class));
 		// mount(new QueryStringUrlCodingStrategy("writers",

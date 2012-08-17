@@ -1,6 +1,7 @@
 package com.booktube.pages;
 
 import java.io.File;
+
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -22,6 +23,7 @@ import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
@@ -195,6 +197,21 @@ public class EditWriterPage extends BasePage {
 				"imgUpload", (IModel) new Model<FileUpload>());
 		form.add(fileUploadField);
 
+//		final BookmarkablePageLink<String> changePasswordLink = new BookmarkablePageLink<String>("changePasswordLink", ChangePasswordPage.class);
+		
+		Link<User> changePasswordLink = new Link<User>("changePasswordLink") {
+			private static final long serialVersionUID = 1L;
+
+			public void onClick() {
+				final CompoundPropertyModel<User> model = new CompoundPropertyModel<User>(
+						WiaSession.get().getLoggedInUser());
+				setResponsePage(new ChangePasswordPage(model,
+						EditWriterPage.this));
+			}
+
+		};
+		form.add( changePasswordLink);
+		
 		form.add(new AjaxSubmitLink("save") {
 
 			private static final long serialVersionUID = 1L;
