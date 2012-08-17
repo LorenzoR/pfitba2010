@@ -23,9 +23,10 @@ public class Mail {
 		mail.setBody(body);
 		
 		
-		smtp.connect();
-		smtp.login("proyectoBooktube@gmail.com", "hugolorenzorobert");
+		
 		try {
+			smtp.connect();
+			smtp.login("proyectoBooktube@gmail.com", "hugolorenzorobert");
 			smtp.send(mail);
 			Logger.getLogger("helper.Mail").info("se mando un mail a "+dest);
 		} catch (SmtpException e) {

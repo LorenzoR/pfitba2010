@@ -1,11 +1,11 @@
 package com.booktube.service;
 
 import java.util.Date;
+
 import java.util.Iterator;
 import java.util.List;
 
 import com.booktube.model.Book;
-import com.booktube.model.BookTag;
 import com.booktube.persistence.BookDao;
 
 public class BookServiceImpl implements BookService {

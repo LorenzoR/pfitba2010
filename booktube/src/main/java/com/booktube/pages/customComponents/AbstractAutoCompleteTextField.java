@@ -1,6 +1,7 @@
 package com.booktube.pages.customComponents;
 
 import java.util.Iterator;
+
 import java.util.List;
 
 import org.apache.wicket.behavior.SimpleAttributeModifier;
@@ -21,6 +22,7 @@ import org.apache.wicket.model.IModel;
  * @param <CHOICE>
  *            the choice model object type
  */
+@SuppressWarnings({ "deprecation", "rawtypes" })
 public abstract class AbstractAutoCompleteTextField<CHOICE> extends TextField {
 
 	private static final long serialVersionUID = 1L;
@@ -231,6 +233,7 @@ public abstract class AbstractAutoCompleteTextField<CHOICE> extends TextField {
 	 * @param settings
 	 *            the settings to set
 	 */
+	@SuppressWarnings("unchecked")
 	public AbstractAutoCompleteTextField(final String id, final IModel model,
 			final Class<?> type, final IAutoCompleteRenderer renderer,
 			final AutoCompleteSettings settings) {
@@ -361,6 +364,7 @@ public abstract class AbstractAutoCompleteTextField<CHOICE> extends TextField {
 		 * @param settings
 		 *            settings for the auto-complete list
 		 */
+		@SuppressWarnings("unchecked")
 		public AutoCompleteChoiceBehavior(final IAutoCompleteRenderer renderer,
 				final AutoCompleteSettings settings) {
 			super(renderer, settings);

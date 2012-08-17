@@ -1,6 +1,8 @@
 package com.booktube.pages;
 
 import java.util.ArrayList;
+
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
@@ -17,7 +19,6 @@ import com.booktube.model.Campaign;
 import com.booktube.model.Message;
 import com.booktube.model.Message.Type;
 import com.booktube.model.CampaignDetail;
-import com.booktube.model.BookTag;
 import com.booktube.model.Rating;
 import com.booktube.model.User;
 import com.booktube.model.UserVote;
@@ -117,7 +118,7 @@ public class LoadDataPage extends BasePage {
 			int year = randBetween(1900, 2010);
 			int month = randBetween(0, 11);
 			GregorianCalendar gc = new GregorianCalendar(year, month, 1);
-			int day = randBetween(1, gc.getActualMaximum(gc.DAY_OF_MONTH));
+			int day = randBetween(1, gc.getActualMaximum(Calendar.DAY_OF_MONTH));
 			gc.set(year, month, day);
 			Date birthdate = new Date(gc.getTimeInMillis());
 
@@ -135,7 +136,7 @@ public class LoadDataPage extends BasePage {
 
 			month = randBetween(0, 11);
 			gc = new GregorianCalendar(year, month, 1);
-			day = randBetween(1, gc.getActualMaximum(gc.DAY_OF_MONTH));
+			day = randBetween(1, gc.getActualMaximum(Calendar.DAY_OF_MONTH));
 			gc.set(year, month, day);
 			Date registrationDate = new Date(gc.getTimeInMillis());
 

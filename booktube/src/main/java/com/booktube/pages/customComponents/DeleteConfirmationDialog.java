@@ -1,6 +1,7 @@
 package com.booktube.pages.customComponents;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
+
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.component.IRequestablePage;
@@ -9,13 +10,14 @@ import org.odlabs.wiquery.ui.dialog.AjaxDialogButton;
 import org.odlabs.wiquery.ui.dialog.Dialog;
 import org.odlabs.wiquery.ui.dialog.DialogButton;
 
-import com.booktube.persistence.hibernate.AbstractDaoHibernate;
+
 
 public class DeleteConfirmationDialog<C extends IRequestablePage> extends Dialog {
-
+	private static final long serialVersionUID = 1L;
 	private DynamicLabel dynamicLabel;
 	private Object object;
 	
+	@SuppressWarnings("rawtypes")
 	public DeleteConfirmationDialog(String id, String text, final Object service, final Object deletObj, final SuccessDialog successDialog) {
 		super(id);
 

@@ -198,16 +198,36 @@ public class UserServiceImpl implements UserService {
 		
 	}
 	
+	public void sendAccountInformationMail(User user, String newPassword) throws Exception {
+		Long id = user.getId();
+		String username = user.getUsername();
+//		String password = user.getPassword();
+		
+		String receiver = user.getEmail();		
+		String subject = "Informacion de cuenta BookTube";		
+		String bodyMessage = 	"<html><body>Hola, Gracias por elegir Booktube!!<br>" +
+								"Los detalles de su cuenta:<br>" +
+								"User:"+username+"<br>"+"Password:"+newPassword+"<br>"+
+								"<p style='color:red'>Por favor, cambie su password la proxima vez que ingrese, haciendo click en: Editar Perfil -> Cambiar mi contraseña</p></body></html>";
+		
+		Mail.send(receiver, subject, bodyMessage);
+		
+		Logger.getLogger("UserServiceImpl.sendAccountInformationMail()").info("Información de la cuenta para usuario id "+id+" enviada al email "+receiver);
+	}
+
+	public void changeUserPassword(User user, String newPassword) throws Exception {
+		user.setPassword(newPassword);
+		updateUser(user);
+		Logger.getLogger("UserServiceImpl.changeUserPassword()").info("Nueva contraseña es: "+newPassword);
+		return;
+	}
+	
 	public boolean activateUserAccount(long id, String secret) {
 		User user = getUser(id);
 		Logger.getLogger("UserServiceImpl.activateUserAccount()").info("Secreto recibido como parametro: "+secret);
 		Logger.getLogger("UserServiceImpl.activateUserAccount()").info("Secreto recuperado del usuario: "+user.getSecret());
-		Logger.getLogger("UserServiceImpl.activateUserAccount()").info("Igualdad simple: "+user.getSecret()==secret);
-		Logger.getLogger("UserServiceImpl.activateUserAccount()").info("Igualdad por metodo de String: "+(secret.compareToIgnoreCase(user.getSecret()) == 0) );
-		if( secret.compareToIgnoreCase(user.getSecret()) == 0	 ){
-			Logger.getLogger("UserServiceImpl.activateUserAccount()").info("flag isActive antes de activar: "+ user.getIsActive());
-			user.setIsActive(true);
-			Logger.getLogger("UserServiceImpl.activateUserAccount()").info("flag isActive despues de activar: "+ user.getIsActive());
+		if( secret.compareToIgnoreCase(user.getSecret()) == 0	 ){			
+			user.setIsActive(true);			
 			updateUser(user);
 			return true;
 		}
@@ -216,7 +236,7 @@ public class UserServiceImpl implements UserService {
 	
 	//Usada para crear string SHA-1
 	private static String convertToHex(byte[] data) {
-//		Logger.getLogger("UserServiceImpl.convertToHex()").info("llego al metodo el dato: "+data);
+
 		System.out.println("UserServiceImpl.convertToHex(): llego al metodo el dato=["+data+"]");
         StringBuffer buf = new StringBuffer();
         for (int i = 0; i < data.length; i++) {
@@ -230,9 +250,10 @@ public class UserServiceImpl implements UserService {
 	            halfbyte = data[i] & 0x0F;
         	} while(two_halfs++ < 1);
         }
-//        Logger.getLogger("UserServiceImpl.convertToHex()").info("buf.toString(): "+buf.toString());
+
         System.out.println("UserServiceImpl.convertToHex() : buf.toString()=["+buf.toString()+"]");
         return buf.toString();
     }
+	
 	
 }

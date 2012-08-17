@@ -54,10 +54,12 @@ public interface UserService {
     public List<Object> getMessagesByCountry(AgeFilterOption age, MiscFilterOption misc);
     
     
-    // Para el proceso de registracion
+    // Para el proceso de registracion, y para recuperar los datos de la cuenta, y para cambiar la contraseña
     public String generateSecret() throws NoSuchAlgorithmException, UnsupportedEncodingException;    
 	public void saveSecret(long id, String secret) throws Exception;
-	public void sendRegistrationMail(User user) throws Exception;
+	public void sendRegistrationMail(User user) throws Exception;	
+	public void changeUserPassword( User user, String newPassword) throws Exception;
+	public void sendAccountInformationMail(User user, String newPassword) throws Exception;
 	public boolean activateUserAccount(long id, String secret);
 	
     
