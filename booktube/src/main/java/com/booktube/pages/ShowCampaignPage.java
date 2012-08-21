@@ -113,7 +113,7 @@ public class ShowCampaignPage extends BasePage {
 
 		parent.add(listview);
 
-		if (user != null && user.getLevel() != Level.ADMIN) {
+		if (user != null && user.getLevel() != Level.ADMIN && user.getLevel() != Level.OPERATOR) {
 			campaignService.getCampaignDetail(campaign, user).setRead(true);
 			campaignService.updateCampaign(campaign);
 		}

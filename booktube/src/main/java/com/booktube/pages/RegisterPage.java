@@ -37,6 +37,7 @@ import org.apache.wicket.validation.validator.EmailAddressValidator;
 import org.odlabs.wiquery.ui.dialog.Dialog;
 import org.apache.wicket.datetime.PatternDateConverter;
 
+import com.booktube.WiaSession;
 import com.booktube.model.User;
 import com.booktube.model.User.Gender;
 import com.booktube.model.User.Level;
@@ -155,6 +156,19 @@ public class RegisterPage extends BasePage {
 		final FileUploadField fileUploadField = new FileUploadField(
 				"imgUpload", (IModel) new Model<FileUpload>());
 		form.add(fileUploadField);
+		
+		final DropDownChoice<Level> levelDDC = new DropDownChoice<Level>(
+				"level", Arrays.asList(Level.values()),
+				new EnumChoiceRenderer<Level>(this));
+
+		final WebMarkupContainer levelP = new WebMarkupContainer("level_p");
+		levelP.add(levelDDC);
+		form.add(levelP);
+
+		if (WiaSession.get().getLoggedInUser() == null
+				|| !WiaSession.get().getLoggedInUser().isAdmin()) {
+			levelP.setVisible(false);
+		}
 
 		birthdateField.setRequired(true);
 		countrySelect.setRequired(true);
