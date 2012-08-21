@@ -285,10 +285,10 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 		final TextField<Campaign> campaignId = new TextField<Campaign>("id");
 		searchFields.add(campaignId);
 
-		final TextField<Campaign> sender = new TextField<Campaign>("sender");
+		final TextField<String> sender = new TextField<String>("sender", new Model<String>(""));
 		searchFields.add(sender);
 
-		final TextField<Campaign> receiver = new TextField<Campaign>("receiver");
+		final TextField<String> receiver = new TextField<String>("receiver", new Model<String>(""));
 		searchFields.add(receiver);
 
 		final DatePicker<Date> lowCampaignDate = createDatePicker(
