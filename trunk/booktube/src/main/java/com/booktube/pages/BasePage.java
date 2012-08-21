@@ -29,6 +29,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
@@ -106,7 +107,8 @@ public abstract class BasePage extends WebPage {
 //		link.add(new Label("textLink", "Inicio"));
 //		linkList.add(link);
 		breadcrumbsModel.setObject(linkList);
-		addBreadcrumb(new BookmarkablePageLink<Object>("link", HomePage.class), "Inicio");
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", HomePage.class), new ResourceModel(
+				"home").getObject());
 		ListView<BookmarkablePageLink<Object>> breadcrumbs = createBreadcrumbs();
 		breadcrumbContainer = new WebMarkupContainer("breadcrumbsContainer");
 		breadcrumbContainer.setOutputMarkupId(true);
