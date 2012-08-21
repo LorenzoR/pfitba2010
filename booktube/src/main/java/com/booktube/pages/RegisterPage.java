@@ -146,6 +146,7 @@ public class RegisterPage extends BasePage {
 		final DropDownChoice<Gender> genderSelect = new DropDownChoice<Gender>(
 				"gender", Arrays.asList(Gender.values()),
 				new EnumChoiceRenderer<Gender>(this));
+		genderSelect.setRequired(true);
 
 		final TextField<User> cityField = new TextField<User>("city");
 

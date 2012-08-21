@@ -71,7 +71,7 @@ public class User implements Serializable {
 	private String country;
 	
 	@Basic
-	@Column(name = "CITY", nullable = false)
+	@Column(name = "CITY")
 	private String city;
 	
 	@Basic

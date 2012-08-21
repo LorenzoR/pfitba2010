@@ -273,7 +273,7 @@ public class EditWriterPage extends BasePage {
 
 				target.add(welcomeLabel);
 				
-				WiaSession.get().logInUser(writer);
+				//WiaSession.get().logInUser(writer);
 				
 				dialog.open(target);
 			}
