@@ -27,7 +27,9 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import com.booktube.WiaSession;
 import com.booktube.model.User;
+import com.booktube.model.User.Level;
 import com.booktube.service.UserService;
 
 public class WritersPage extends BasePage {
@@ -36,6 +38,8 @@ public class WritersPage extends BasePage {
 
 	@SpringBean
 	UserService userService;
+	
+	private final User loggedUser;
 
 	public static final int WRITERS_PER_PAGE = 5;
 	
@@ -43,6 +47,8 @@ public class WritersPage extends BasePage {
 
 	public WritersPage(final PageParameters pageParameters) {
 
+		loggedUser = WiaSession.get().getLoggedInUser();
+		
 		final WebMarkupContainer parent = new WebMarkupContainer("writers");
 		parent.setOutputMarkupId(true);
 		add(parent);
@@ -222,7 +228,8 @@ public class WritersPage extends BasePage {
 				 * 
 				 * });
 				 */
-				item.add(new Link<User>("editLink", item.getModel()) {
+				
+				Link<User> editLink = new Link<User>("editLink", item.getModel()) {
 					private static final long serialVersionUID = 1L;
 
 					public void onClick() {
@@ -232,8 +239,12 @@ public class WritersPage extends BasePage {
 								WritersPage.this));
 					}
 
-				});
-				item.add(new Link<User>("deleteLink", item.getModel()) {
+				};
+				editLink.setVisible(false);
+				
+				item.add(editLink);
+				
+				Link<User> deleteLink = new Link<User>("deleteLink", item.getModel()) {
 					private static final long serialVersionUID = -7155146615720218460L;
 
 					public void onClick() {
@@ -247,7 +258,18 @@ public class WritersPage extends BasePage {
 						setResponsePage(WritersPage.this);
 					}
 
-				});
+				};
+				deleteLink.setVisible(false);
+				
+				item.add(deleteLink);
+				
+				System.out.println("user es " + user);
+				
+				if ( loggedUser != null && loggedUser.getLevel() == Level.ADMIN ) {
+					deleteLink.setVisible(true);
+					editLink.setVisible(true);
+				}
+				
 			}
 
 		};

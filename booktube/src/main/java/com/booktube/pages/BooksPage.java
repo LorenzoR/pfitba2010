@@ -28,8 +28,11 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
 
+import com.booktube.WiaSession;
 import com.booktube.model.Book;
 import com.booktube.model.BookTag;
+import com.booktube.model.User;
+import com.booktube.model.User.Level;
 import com.booktube.service.BookService;
 import com.booktube.service.UserService;
 
@@ -46,6 +49,8 @@ public class BooksPage extends BasePage {
 	public static final int BOOKS_PER_PAGE = 5;
 
 	private final AjaxPagingNavigator footerNavigator;
+	
+	private User user;
 	
 	private String author = null;
 	private String title = null;
@@ -70,6 +75,8 @@ public class BooksPage extends BasePage {
 	public BooksPage(final PageParameters parameters) {
 
 		addBreadcrumb(new BookmarkablePageLink<Object>("link", BooksPage.class), new ResourceModel("booksPageTitle").getObject());
+		
+		user = WiaSession.get().getLoggedInUser();
 		
 		if (StringUtils.isNotBlank(parameters.get("author").toString())) {
 			author = parameters.get("author").toString();
@@ -225,12 +232,15 @@ public class BooksPage extends BasePage {
 				
 				item.add(new Label("publishDate", dateFormat.format(book.getPublishDate())));
 
-				item.add(new BookmarkablePageLink<Object>("editLink",
-						EditBookPage.class, detailsParameter));
+				BookmarkablePageLink<Object> editLink = new BookmarkablePageLink<Object>("editLink",
+						EditBookPage.class, detailsParameter);
+				editLink.setVisible(false);
+				
+				item.add(editLink);
 				item.add(new BookmarkablePageLink<Object>("detailsLink",
 						ShowBookPage.class, detailsParameter));
 
-				item.add(new Link<Book>("deleteLink", item.getModel()) {
+				Link<Book> deleteLink = new Link<Book>("deleteLink", item.getModel()) {
 
 					private static final long serialVersionUID = 1L;
 
@@ -250,7 +260,37 @@ public class BooksPage extends BasePage {
 						setResponsePage(BooksPage.this);
 					}
 
-				});
+				};
+				deleteLink.setVisible(false);
+				
+				item.add(deleteLink);
+				
+				if ( user != null && ( user.getLevel() == Level.ADMIN || user.getUsername().equals(book.getAuthor().getUsername()) ) ) {
+					deleteLink.setVisible(true);
+					editLink.setVisible(true);
+				}
+				
+//				item.add(new Link<Book>("deleteLink", item.getModel()) {
+//
+//					private static final long serialVersionUID = 1L;
+//
+//					public void onClick() {
+//
+//						Book book = (Book) getModelObject();
+//						Long bookId = book.getId();
+//
+//						// Book bookDelete = bookService.getBook(bookId);
+//
+//						System.out.println("BOOk es : " + book);
+//
+//						// bookService.deleteBook(book);
+//						bookService.deleteBook(book);
+//						System.out.println("Book " + bookId + " deleted.");
+//
+//						setResponsePage(BooksPage.this);
+//					}
+//
+//				});
 			}
 		};
 
