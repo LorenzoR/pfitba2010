@@ -21,6 +21,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -49,6 +50,8 @@ public class EditBookPage extends BasePage {
 	
 	private List<User> users = userService.getAllUsers(0, Integer.MAX_VALUE);
 	private final Book book;
+	
+	private User user;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public EditBookPage(PageParameters pageParameters) {
@@ -61,8 +64,14 @@ public class EditBookPage extends BasePage {
 		} else {
 			currentPage = pageParameters.get("currentPage").toInt();
 		}
+		
+		user = WiaSession.get().getLoggedInUser();
 
 		book = bookService.getBook(bookId);
+		
+		if ( user.getLevel() != Level.ADMIN && !user.getUsername().equals(book.getAuthor().getUsername()) ) {
+			throw new AbortWithHttpErrorCodeException(404);
+		}
 		
 		addBreadcrumb(new BookmarkablePageLink<Object>("link", EditBookPage.class, pageParameters), new ResourceModel("edit").getObject() + " " + book.getTitle());
 
@@ -132,9 +141,18 @@ public class EditBookPage extends BasePage {
 		form.add(subcategory);
 		
 		final TextField<Book> hits = new TextField<Book>("hits");
+		hits.setVisible(false);
 		form.add(hits);
 		
-		form.add(new ResetRatingLink("reset1", new Model<Rating>(book.getRating()), book));
+		//ResetRatingLink resetRatingLink = new ResetRatingLink("reset1", new Model<Rating>(book.getRating()), book);
+		//resetRatingLink.setVisible(false);
+		
+		if ( user.getLevel() == Level.ADMIN ) {
+			//resetRatingLink.setVisible(true);
+			hits.setVisible(true);
+		}
+		
+		//form.add(resetRatingLink);
 		
 		form.add(new AjaxSubmitLink("save") {
 

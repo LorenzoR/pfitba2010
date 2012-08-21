@@ -59,8 +59,8 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 	public List<Message> getAllMessages(int first, int count) {
 		return (List<Message>) getSession().createCriteria(Message.class)
 				.add(Restrictions.eq("type", Type.PRIVATE_MESSAGE))
-				.addOrder(Order.desc("date"))
-				.setFirstResult(first).setMaxResults(count).list();
+				.addOrder(Order.desc("date")).setFirstResult(first)
+				.setMaxResults(count).list();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -73,8 +73,7 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 
 	@SuppressWarnings("unchecked")
 	public List<Message> getAllMessagesTo(User receiver, int first, int count) {
-		return  (List<Message>) getSession()
-				.createCriteria(Message.class)
+		return (List<Message>) getSession().createCriteria(Message.class)
 				.add(Restrictions.eq("type", Type.PRIVATE_MESSAGE))
 				.add(Restrictions.eq("receiver", receiver))
 				.addOrder(Order.desc("date")).setFirstResult(first)
@@ -82,8 +81,8 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 	}
 
 	public int countMessages() {
-		Criteria criteria = getSession().createCriteria(Message.class)
-				.add(Restrictions.eq("type", Type.PRIVATE_MESSAGE));
+		Criteria criteria = getSession().createCriteria(Message.class).add(
+				Restrictions.eq("type", Type.PRIVATE_MESSAGE));
 		criteria.setProjection(Projections.rowCount());
 		return ((Number) criteria.uniqueResult()).intValue();
 	}
@@ -103,10 +102,13 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 	}
 
 	public int countUnreadMessagesTo(User receiver) {
-		Criteria criteria = getSession().createCriteria(Message.class)
+		Criteria criteria = getSession()
+				.createCriteria(Message.class)
 				.add(Restrictions.eq("receiver", receiver))
-				.add(Restrictions.eq("isRead", false))
-				.add(Restrictions.eq("type", Type.PRIVATE_MESSAGE));
+				.add(Restrictions.eq("isRead", false));
+				//.add(Restrictions.or(
+				//		Restrictions.eq("type", Type.PRIVATE_MESSAGE),
+				//		Restrictions.eq("type", Type.ANSWER)));
 		criteria.setProjection(Projections.rowCount());
 		return ((Number) criteria.uniqueResult()).intValue();
 	}
@@ -130,11 +132,12 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 		// Set<MessageDetail> messageDetail = new HashSet<MessageDetail>();
 
 		for (User aUser : receivers) {
-			Message newMessage = new Message(message.getType(), message.getSubject(),
-					message.getText(), message.getSender(), aUser);
-			
+			Message newMessage = new Message(message.getType(),
+					message.getSubject(), message.getText(),
+					message.getSender(), aUser);
+
 			insert(newMessage);
-			
+
 			System.out.println("MESSAGE ID> " + message.getId());
 			System.out.println("NEW MESSAGFE IOD> " + newMessage.getId());
 			// messageDetail.add(new MessageDetail(aUser, message));
@@ -145,18 +148,17 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 		// insert(message);
 	}
 
-	/*public List<Message> getAllCampaigns(int first, int count) {
-		return (List<Message>) getSession().createCriteria(Message.class)
-				.add(Restrictions.eq("type", Type.CAMPAIGN))
-				.setFirstResult(first).setMaxResults(count).list();
-	}
-
-	public int countCampaigns() {
-		Criteria criteria = getSession().createCriteria(Message.class).add(
-				Restrictions.eq("type", Type.CAMPAIGN));
-		criteria.setProjection(Projections.rowCount());
-		return ((Number) criteria.uniqueResult()).intValue();
-	}*/
+	/*
+	 * public List<Message> getAllCampaigns(int first, int count) { return
+	 * (List<Message>) getSession().createCriteria(Message.class)
+	 * .add(Restrictions.eq("type", Type.CAMPAIGN))
+	 * .setFirstResult(first).setMaxResults(count).list(); }
+	 * 
+	 * public int countCampaigns() { Criteria criteria =
+	 * getSession().createCriteria(Message.class).add( Restrictions.eq("type",
+	 * Type.CAMPAIGN)); criteria.setProjection(Projections.rowCount()); return
+	 * ((Number) criteria.uniqueResult()).intValue(); }
+	 */
 
 	public List<Message> getAllMessages(User user, int first, int count) {
 		List<Message> messages = getAllMessagesFrom(user, first, count);
@@ -179,7 +181,8 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 
 	public int getCount(Long messageId, String subject, String sender,
 			String receiver, Date lowDate, Date highDate) {
-		Criteria criteria = createCriteria(messageId, subject, sender, receiver, lowDate, highDate);
+		Criteria criteria = createCriteria(messageId, subject, sender,
+				receiver, lowDate, highDate);
 		criteria.setProjection(Projections.rowCount());
 		return ((Number) criteria.uniqueResult()).intValue();
 	}
@@ -188,16 +191,16 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 	public List<Message> getMessages(int first, int count, Long messageId,
 			String subject, String sender, String receiver, Date lowDate,
 			Date highDate) {
-		return (List<Message>) createCriteria(messageId, subject, sender, receiver, lowDate, highDate).setFirstResult(first)
+		return (List<Message>) createCriteria(messageId, subject, sender,
+				receiver, lowDate, highDate).setFirstResult(first)
 				.setMaxResults(count).list();
 	}
-	
-	private Criteria createCriteria(Long messageId,
-			String subject, String sender, String receiver, Date lowDate,
-			Date highDate) {
-		
+
+	private Criteria createCriteria(Long messageId, String subject,
+			String sender, String receiver, Date lowDate, Date highDate) {
+
 		Criteria criteria = getSession().createCriteria(Message.class);
-		
+
 		if (messageId != null) {
 			criteria.add(Restrictions.eq("id", messageId));
 		}
@@ -205,47 +208,49 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 		if (!StringUtils.isBlank(subject)) {
 			criteria.add(Restrictions.ilike("subject", "%" + subject + "%"));
 		}
-		
+
 		if (StringUtils.isNotBlank(sender)) {
 			criteria.createCriteria("sender").add(
 					Restrictions.eq("username", sender));
 		}
-		
+
 		if (StringUtils.isNotBlank(receiver)) {
 			criteria.createCriteria("receiver").add(
 					Restrictions.eq("username", receiver));
 		}
-		
+
 		return criteria;
-		
+
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public Map<Long, User> getMessagesByOperator() {
-		
-		Map<Long, User> map = new HashMap<Long, User>();
-		
-		 Criteria criteria = getSession().createCriteria(Message.class);
-		 criteria.createCriteria("receiver").add(Restrictions.eq("level", Level.OPERATOR));
-         ProjectionList projectionList = Projections.projectionList();
-         //projectionList.add(Projections.property("name"));
-         projectionList.add(Projections.rowCount(), "count");
-         projectionList.add(Projections.groupProperty("receiver"));
 
-         criteria.setProjection(projectionList);
-         criteria.addOrder(Order.asc("count"));
-         
-         List<Object[]> results = (List<Object[]>) criteria.list();
-         
-         System.out.println("***** LIST: " + results.toString());
-         
-         for (Object[] anObj : results ) {
-        	 System.out.println(anObj[0].toString() + " : " + anObj[1].toString());
-        	 map.put((Long) anObj[0], (User) anObj[1]);
-         }
-         
-         return map;
-		
+		Map<Long, User> map = new HashMap<Long, User>();
+
+		Criteria criteria = getSession().createCriteria(Message.class);
+		criteria.createCriteria("receiver").add(
+				Restrictions.eq("level", Level.OPERATOR));
+		ProjectionList projectionList = Projections.projectionList();
+		// projectionList.add(Projections.property("name"));
+		projectionList.add(Projections.rowCount(), "count");
+		projectionList.add(Projections.groupProperty("receiver"));
+
+		criteria.setProjection(projectionList);
+		criteria.addOrder(Order.asc("count"));
+
+		List<Object[]> results = (List<Object[]>) criteria.list();
+
+		System.out.println("***** LIST: " + results.toString());
+
+		for (Object[] anObj : results) {
+			System.out.println(anObj[0].toString() + " : "
+					+ anObj[1].toString());
+			map.put((Long) anObj[0], (User) anObj[1]);
+		}
+
+		return map;
+
 	}
 
 }
