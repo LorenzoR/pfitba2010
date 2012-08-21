@@ -7,6 +7,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.datetime.PatternDateConverter;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
@@ -23,10 +24,12 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import com.booktube.WiaSession;
 import com.booktube.WicketApplication;
 import com.booktube.model.Book;
 import com.booktube.model.Rating;
 import com.booktube.model.User;
+import com.booktube.model.User.Level;
 import com.booktube.pages.customComponents.SuccessDialog;
 import com.booktube.pages.customComponents.TagTextField;
 import com.booktube.service.BookService;
@@ -47,6 +50,7 @@ public class EditBookPage extends BasePage {
 	private List<User> users = userService.getAllUsers(0, Integer.MAX_VALUE);
 	private final Book book;
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public EditBookPage(PageParameters pageParameters) {
 
 		Long bookId = pageParameters.get("book").toLong();
@@ -72,7 +76,16 @@ public class EditBookPage extends BasePage {
 		add(editBookForm(book, currentPage));
 
 		pageParameters.set("currentPage", currentPage);
-		successDialog = new SuccessDialog<BooksPage>("success_dialog", new ResourceModel("editedBook").getObject(), BooksPage.class, pageParameters);
+		
+		
+		Class<?> targetPage = null;		
+		if( WiaSession.get().getLoggedInUser().getUsername().compareTo(book.getAuthor().getUsername()) == 0 )
+			targetPage = BooksPage.class;
+		else
+			targetPage = WorksAdministrationPage.class;
+			
+//		successDialog = new SuccessDialog<BooksPage>("success_dialog", new ResourceModel("editedBook").getObject(), BooksPage.class, pageParameters);
+		successDialog = new SuccessDialog<WebPage>("success_dialog", new ResourceModel("editedBook").getObject(), (Class)targetPage, pageParameters);
 		add(successDialog);
 		
 		String newTitle = "Booktube - " + new ResourceModel("edit").getObject() + " " + book.getTitle();
