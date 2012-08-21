@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
@@ -65,10 +66,14 @@ public class EditWriterPage extends BasePage {
 	private final String IMG_WIDTH = "116px";
 	private final String IMG_DIR_NAME = "img";
 
+	
+	@SuppressWarnings("unused")
 	public EditWriterPage(IModel<User> model, final WebPage backPage) {
 
 		final User user = (User) model.getObject();
+		Logger.getLogger("EditWriterPage").info("Usuario a modificar:"+user.getUsername());
 
+		
 		if (user == null) {
 			setResponsePage(HomePage.class);
 			return;
@@ -203,8 +208,9 @@ public class EditWriterPage extends BasePage {
 			private static final long serialVersionUID = 1L;
 
 			public void onClick() {
-				final CompoundPropertyModel<User> model = new CompoundPropertyModel<User>(
-						WiaSession.get().getLoggedInUser());
+//				final CompoundPropertyModel<User> model = new CompoundPropertyModel<User>(
+//						WiaSession.get().getLoggedInUser());
+				final CompoundPropertyModel<User> model = new CompoundPropertyModel<User>(writer);
 				setResponsePage(new ChangePasswordPage(model,
 						EditWriterPage.this));
 			}

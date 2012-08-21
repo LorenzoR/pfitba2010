@@ -47,7 +47,7 @@ public class ChangePasswordPage extends BasePage {
 			setResponsePage(HomePage.class);
 			return;
 		}
-		Logger.getLogger("ChangePasswordPage").info("Usuario autenticado:"+user.getUsername());
+		Logger.getLogger("ChangePasswordPage").info("Usuario a modificar:"+user.getUsername());
 
 		final WebMarkupContainer parent = new WebMarkupContainer("changePassword");
 		parent.setOutputMarkupId(true);
@@ -107,7 +107,8 @@ public class ChangePasswordPage extends BasePage {
 
 				target.add(welcomeLabel);
 				
-				WiaSession.get().logInUser(writer);
+				if( WiaSession.get().getLoggedInUser().getUsername().compareToIgnoreCase(writer.getUsername()) == 0 )
+					WiaSession.get().logInUser(writer);
 				
 				dialog.open(target);
 			}
