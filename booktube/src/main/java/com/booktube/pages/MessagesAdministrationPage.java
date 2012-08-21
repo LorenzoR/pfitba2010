@@ -303,10 +303,10 @@ public class MessagesAdministrationPage extends AdministrationPage {
 		final TextField<Message> subject = new TextField<Message>("subject");
 		searchFields.add(subject);
 
-		final TextField<Message> sender = new TextField<Message>("sender");
+		final TextField<String> sender = new TextField<String>("sender", new Model<String>(""));
 		searchFields.add(sender);
 
-		final TextField<Message> receiver = new TextField<Message>("receiver");
+		final TextField<String> receiver = new TextField<String>("receiver", new Model<String>(""));
 		searchFields.add(receiver);
 
 		final DatePicker<Date> lowMessageDate = createDatePicker(
