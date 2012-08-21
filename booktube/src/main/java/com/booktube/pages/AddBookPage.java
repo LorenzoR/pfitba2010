@@ -118,9 +118,9 @@ public class AddBookPage extends BasePage {
 		// dialog.setButtons(ok);
 		// dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
 
-		dialog = new SuccessDialog<ShowBookPage>("success_dialog",
+		dialog = new SuccessDialog<BooksPage>("success_dialog",
 				new ResourceModel("newBookDialog").getObject(),
-				ShowBookPage.class, pageParameters);
+				BooksPage.class, pageParameters);
 		parent.add(dialog);
 		
 		loginErrorDialog = loginErrorDialog();

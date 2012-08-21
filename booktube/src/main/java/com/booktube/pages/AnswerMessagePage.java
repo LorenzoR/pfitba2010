@@ -81,7 +81,9 @@ public class AnswerMessagePage extends BasePage {
 				final Message message = (Message) item.getModelObject();
 				CompoundPropertyModel<Message> model = new CompoundPropertyModel<Message>(message);
 				
-				message.setRead(true);
+				if ( !user.getUsername().equals(message.getSender().getUsername()) ) {
+					message.setRead(true);
+				}
 				messageService.updateMessage(message);
 				
 				item.setDefaultModel(model);
@@ -217,6 +219,7 @@ public class AnswerMessagePage extends BasePage {
 				answer.setSubject("RE: " + message.getSubject());
 				answer.setSender(user);
 				answer.setReceiver(message.getSender());
+				answer.setRead(false);
 				
 				//Set<Message> answers = new HashSet<Message>();
 				//answers.add(answer);

@@ -1,6 +1,7 @@
 package com.booktube.pages;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -23,6 +24,7 @@ import com.booktube.model.Message;
 import com.booktube.model.Message.Subject;
 import com.booktube.model.User;
 import com.booktube.model.Message.Type;
+import com.booktube.model.User.Level;
 import com.booktube.pages.customComponents.SuccessDialog;
 import com.booktube.service.MessageService;
 import com.booktube.service.UserService;
@@ -115,6 +117,15 @@ public class NewContactPage extends BasePage {
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				
 				Map<Long, User> receiverMap = messageService.getMessagesByOperator();
+				
+				// Agrego los operadores que no recivieron ningun mensaje
+				List<User> operators = userService.getUsers(0, Integer.MAX_VALUE, Level.OPERATOR);
+				
+				for ( User anOperator : operators ) {
+					if ( !receiverMap.containsValue(anOperator) ) {
+						receiverMap.put(0L, anOperator);
+					}
+				}
 				
 				if ( receiverMap.size() <= 0) {
 					throw new AbortWithHttpErrorCodeException(404);

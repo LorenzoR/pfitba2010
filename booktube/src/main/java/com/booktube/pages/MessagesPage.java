@@ -90,7 +90,18 @@ public class MessagesPage extends BasePage {
 				
 				final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, getLocale());
 				
-				if ( message.isRead() || message.getSender().equals(user) ) {
+				boolean answerNotRead = false;
+				
+				for ( Message aMessage : message.getAllAnswers() ) {
+					System.out.println(aMessage.getId() + " MESSAGE: " + aMessage);
+					System.out.println("IS READ: " + aMessage.isRead());
+					if ( !aMessage.isRead() ) {
+						answerNotRead = true;
+						break;
+					}
+				}
+				
+				if ( !answerNotRead && ( message.isRead() || message.getSender().equals(user) ) ) {
 					item.add(new Label("subject"));
 					item.add(new Label("receiver"));
 					item.add(new Label("sender"));
@@ -111,14 +122,21 @@ public class MessagesPage extends BasePage {
 					}
 
 				});
-				item.add(new Link<Message>("answerLink", item.getModel()) {
+				
+				Link<Message> answerLink = new Link<Message>("answerLink", item.getModel()) {
 					private static final long serialVersionUID = 1L;
 
 					public void onClick() {
 						setResponsePage(AnswerMessagePage.class, parameters);
 					}
 
-				});
+				};
+				
+				if ( message.getSender().getUsername().equals(user.getUsername()) && message.getAllAnswers().size() < 2 ) {
+					answerLink.setVisible(false);
+				}
+				
+				item.add(answerLink);
 				item.add(new Link<Message>("deleteLink", item.getModel()) {
 					private static final long serialVersionUID = -7155146615720218460L;
 
