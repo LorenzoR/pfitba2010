@@ -190,7 +190,17 @@ public class LoadDataPage extends BasePage {
 		userService.insertUser(user);
 		users.add(user);
 		userService.insertUser(this.admin);
-
+		
+		User operator = new User("operator", "operator", "nombreOperator", "apellidoOperator", User.Level.OPERATOR);
+		operator.setBirthdate(new Date());
+		operator.setGender(Gender.MALE);
+		operator.setCountry("Country 1");
+		operator.setCity("City 1");
+		operator.setEmail(admin2.getUsername() + "@mail.com");
+		operator.setIsActive(true);
+		
+		userService.insertUser(operator);
+		
 	}
 
 	public void addBooks() {

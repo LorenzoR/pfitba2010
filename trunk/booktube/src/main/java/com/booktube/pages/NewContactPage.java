@@ -16,7 +16,6 @@ import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import com.booktube.WiaSession;
@@ -128,7 +127,8 @@ public class NewContactPage extends BasePage {
 				}
 				
 				if ( receiverMap.size() <= 0) {
-					throw new AbortWithHttpErrorCodeException(404);
+					// TODO Auto-generated method stub
+					//throw new AbortWithHttpErrorCodeException(404);
 				}
 				
 				Entry<Long,User> receiver = (Entry<Long, User>) receiverMap.entrySet().toArray()[0];
