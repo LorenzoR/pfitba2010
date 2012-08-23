@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
@@ -129,23 +130,23 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 
 	public void update(User user) {
 		super.update(user);
+		Logger.getLogger("booktube").info("User " + user.getId() + " updated.");
 		// getSession().merge(user);
 		// getSession().flush();
 
 	}
 
 	public Long insert(User user) {
-		/*
-		 * Long id = (Long) getSession().save(user); getSession().flush();
-		 * return id;
-		 */
-		return super.insert(user);
+		Long id = super.insert(user);
+		Logger.getLogger("booktube").info("User " + id + " inserted.");
+		
+		return id;
 	}
 
 	public void delete(User user) {
+		Long id = user.getId();
 		super.delete(user);
-		// getSession().delete(user);
-		// getSession().flush();
+		Logger.getLogger("booktube").info("User " + id + " deleted.");
 	}
 
 	public void deleteUsers(List<User> users) {
@@ -153,7 +154,7 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 
 		while (iterator.hasNext()) {
 			User deleteUser = iterator.next();
-			System.out.println("------------- USER: " + deleteUser);
+
 			getSession().delete(deleteUser);
 			// getSession().clear();
 			getSession().flush();
@@ -333,10 +334,27 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 	@SuppressWarnings("unchecked")
 	public List<Object> getUserDistributionByCountry(AgeFilterOption age,
 			MiscFilterOption misc) {
-		Integer lowerAge = (age.getSelectedMinAge() != FilterOption.listFirstOption) ? Integer
-				.valueOf(age.getSelectedMinAge()) : null;
-		Integer higherAge = (age.getSelectedMaxAge() != FilterOption.listFirstOption) ? Integer
-				.valueOf(age.getSelectedMaxAge()) : null;
+		Integer lowerAge;
+		Integer higherAge;
+
+		try {
+			lowerAge = Integer.valueOf(age.getSelectedMinAge());
+		} catch (NumberFormatException ex) {
+			lowerAge = null;
+		}
+
+		try {
+			higherAge = Integer.valueOf(age.getSelectedMaxAge());
+		} catch (NumberFormatException ex) {
+			higherAge = null;
+		}
+
+		// Integer lowerAge = (age.getSelectedMinAge() !=
+		// FilterOption.listFirstOption) ? Integer
+		// .valueOf(age.getSelectedMinAge()) : null;
+		// Integer higherAge = (age.getSelectedMaxAge() !=
+		// FilterOption.listFirstOption) ? Integer
+		// .valueOf(age.getSelectedMaxAge()) : null;
 
 		Gender gender = null;
 		String registrationYear = null;
@@ -535,8 +553,12 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 			String registrationYear) {
 
 		Criteria criteria = getSession().createCriteria(sourceClass);
-		Criteria authorCriteria = criteria.createCriteria("author");
-		
+		Criteria authorCriteria = null;
+
+		if (sourceClass.equals(Book.class)) {
+			authorCriteria = criteria.createCriteria("author");
+		}
+
 		if (lowerAge != null) {
 			criteria.add(Expression
 					.sql("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 >= "
@@ -549,12 +571,9 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 							+ higherAge));
 		}
 
-		
-		
 		if (gender != null) {
 			if (sourceClass.equals(Book.class)) {
-				authorCriteria.add(
-						Restrictions.eq("gender", gender));
+				authorCriteria.add(Restrictions.eq("gender", gender));
 			} else {
 				criteria.add(Restrictions.eq("gender", gender));
 			}
@@ -580,9 +599,8 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 			}
 
 			if (sourceClass.equals(Book.class)) {
-				authorCriteria.add(
-						Restrictions.between("registrationDate", lowDate,
-								highDate));
+				authorCriteria.add(Restrictions.between("registrationDate",
+						lowDate, highDate));
 			} else {
 				criteria.add(Restrictions.between("registrationDate", lowDate,
 						highDate));
@@ -595,26 +613,26 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 		return criteria;
 	}
 
-//	//NO SE USA??
-//	@SuppressWarnings("unchecked")
-//	private List<Object> getYearAndField() {
-//		ProjectionList projList = Projections.projectionList();
-//
-//		Criteria criteria = getSession().createCriteria(User.class);
-//		projList.add(Projections.property("id"), "id");
-//		projList.add(Projections.sqlProjection("year(birthdate) AS year",
-//				new String[] { "year" }, new Type[] { Hibernate.INTEGER }));
-//
-//		criteria.setProjection(projList);
-//
-//		List<Object> list = criteria.list();
-//
-//		/* ASI SE ITERA SOBRE LA LISTA DE RESULTADOS */
-//		for (Object r : list) {
-//			Object[] row = (Object[]) r;
-//			System.out.println("USER_ID: " + row[0] + "\tYEAR: " + row[1]);
-//		}
-//
-//		return list;
-//	}
+	// //NO SE USA??
+	// @SuppressWarnings("unchecked")
+	// private List<Object> getYearAndField() {
+	// ProjectionList projList = Projections.projectionList();
+	//
+	// Criteria criteria = getSession().createCriteria(User.class);
+	// projList.add(Projections.property("id"), "id");
+	// projList.add(Projections.sqlProjection("year(birthdate) AS year",
+	// new String[] { "year" }, new Type[] { Hibernate.INTEGER }));
+	//
+	// criteria.setProjection(projList);
+	//
+	// List<Object> list = criteria.list();
+	//
+	// /* ASI SE ITERA SOBRE LA LISTA DE RESULTADOS */
+	// for (Object r : list) {
+	// Object[] row = (Object[]) r;
+	// System.out.println("USER_ID: " + row[0] + "\tYEAR: " + row[1]);
+	// }
+	//
+	// return list;
+	// }
 }

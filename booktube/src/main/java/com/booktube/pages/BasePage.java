@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.log4j.Logger;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -92,6 +93,8 @@ public abstract class BasePage extends WebPage {
 	protected WebMarkupContainer breadcrumbContainer;
 	
 	protected Label welcomeLabel;
+	
+	private User user;
 	
 	public BasePage() {
 				
@@ -305,6 +308,7 @@ public abstract class BasePage extends WebPage {
 			private static final long serialVersionUID = -4042618076562731461L;
 
 			public void onClick() {
+				Logger.getLogger("booktube").info("User " + WiaSession.get().getLoggedInUser().getUsername() + " logged out.");
 				WiaSession.get().logInUser(null);
 				setResponsePage(HomePage.class);
 			}
@@ -314,18 +318,11 @@ public abstract class BasePage extends WebPage {
 		add(searchForm);
 		add(logoutLink);
 
-		// loginForm.setVisible(false);
-
 		if (WiaSession.get().isAuthenticated()) {
-			// System.out.println("Logueado con username " +
-			// WiaSession.get().getUser().getUsername());
 			loginForm.setVisible(false);
 			registerLink.setVisible(false);			
 
 		} else {
-			// System.out.println("NO esta logueado");
-			// add(new Label("login", "Welcome " +
-			// WiaSession.get().getUser().getUsername()));
 			logoutLink.setVisible(false);
 			
 		}
@@ -354,10 +351,7 @@ public abstract class BasePage extends WebPage {
 					private static final long serialVersionUID = 1L;
 
 					protected void onEvent(AjaxRequestTarget target) {
-						// add your favorite component.
-						System.out.println("CLICK EN TITLE!!!");
 						selectedRadio = TITLE_SELECTED;
-						System.out.println("selectedRadio es " + selectedRadio);
 					}
 				}));
 		
@@ -367,25 +361,9 @@ public abstract class BasePage extends WebPage {
 					private static final long serialVersionUID = 1L;
 
 					protected void onEvent(AjaxRequestTarget target) {
-						// add your favorite component.
-						System.out.println("CLICK EN AUTHOR!!!");
 						selectedRadio = AUTHOR_SELECTED;
-						System.out.println("selectedRadio es " + selectedRadio);
 					}
 				}));
-
-//		radioGroup.add(new Radio<String>("rating", new Model<String>("rating"))
-//				.add(new AjaxEventBehavior("onclick") {
-//
-//					private static final long serialVersionUID = 1L;
-//
-//					protected void onEvent(AjaxRequestTarget target) {
-//						// add your favorite component.
-//						System.out.println("CLICK EN RATING!!!");
-//						selectedRadio = RATING_SELECTED;
-//						System.out.println("selectedRadio es " + selectedRadio);
-//					}
-//				}));
 
 		radioGroup.add(new Radio<String>("tag", new Model<String>("tag"))
 				.add(new AjaxEventBehavior("onclick") {
@@ -393,21 +371,10 @@ public abstract class BasePage extends WebPage {
 					private static final long serialVersionUID = 1L;
 
 					protected void onEvent(AjaxRequestTarget target) {
-						// add your favorite component.
-						System.out.println("CLICK EN TAG!!!");
 						selectedRadio = TAG_SELECTED;
-						System.out.println("selectedRadio es " + selectedRadio);
 					}
 				}));
 
-		// radioGroup.add(author.add(event));
-
-		/*
-		 * radioGroup.add(new Radio<String>("title", new
-		 * Model<String>("title"))); radioGroup .add(new Radio<String>("rating",
-		 * new Model<String>("rating"))); radioGroup.add(new
-		 * Radio<String>("tag", new Model<String>("tag")));
-		 */
 		form.add(radioGroup);
 
 		final AutoCompleteTextField<String> bookTitle = new AutoCompleteTextField<String>(
@@ -422,25 +389,9 @@ public abstract class BasePage extends WebPage {
 					return emptyList.iterator();
 				}
 
-				System.out.println("RadioGroupValue: "
-						+ radioGroup.getModelObject());
-
 				List<String> choices = new ArrayList<String>(10);
 
-				/*
-				 * if (radioGroup.getValue().equals("author")) { books = null; }
-				 * else if (radioGroup.getValue().equals("rating")) { books =
-				 * null; } else if (radioGroup.getValue().equals("tag")) { books
-				 * = null; } else { books = bookService.getAllBooks(0,
-				 * Integer.MAX_VALUE); }
-				 */
-
-				// List<User> usersTest = new ArrayList<User>();
-				// usersTest.add(new User("test1", "test1", "test1", "test1"));
-
 				if (selectedRadio == AUTHOR_SELECTED) {
-					System.out.println("AUTHOR SELECTED!");
-					System.out.println("selectedRadio es " + selectedRadio);
 					List<User> users = userService.getAllUsers(0,
 							Integer.MAX_VALUE);
 
@@ -469,12 +420,9 @@ public abstract class BasePage extends WebPage {
 					}
 
 				} else {
-					System.out.println("OTRA COSA SELECTED!");
-					System.out.println("selectedRadio es " + selectedRadio);
 					List<String> bookTitles = bookService.getAllTitles();
 
 					for (final String title : bookTitles) {
-//						final String title = book.getTitle();
 
 						if (title.toUpperCase().startsWith(input.toUpperCase())) {
 							choices.add(title);
@@ -502,26 +450,14 @@ public abstract class BasePage extends WebPage {
 
 				bookTitle.setModel(new Model<String>(""));
 
-				System.out.println("Book Title: " + bookTitleString);
-
-				System.out.println("Radio Button: " + radioGroup.getValue());
-
 				if (!continueToOriginalDestination()) {
 					final PageParameters parameters = new PageParameters();
 
 					if (radioGroup.getValue().equals("author")) {
-						// parameters.set("type", "author");
 						parameters.set("author", bookTitleString);
-//					} else if (radioGroup.getValue().equals("rating")) {
-//						// parameters.set("type", "rating");
-//						parameters.set("rating", bookTitleString);
 					} else if (radioGroup.getValue().equals("tag")) {
-						// parameters.set("type", "tag");
 						parameters.set("tag", bookTitleString);
 					} else {
-						System.out.println("Radio Button: "
-								+ radioGroup.getValue());
-						// parameters.set("type", "title");
 						parameters.set("title", bookTitleString);
 					}
 
@@ -573,22 +509,19 @@ public abstract class BasePage extends WebPage {
 
 				username.setModel(new Model<String>(""));
 
-				System.out.println("User: " + userString + " Pass: "
-						+ passwordString);
-
-				User user = userService.getUser(userString);
+				user = userService.getUser(userString);
 
 				//if (user != null && user.getPassword().equals(passwordString)) {
 				if (user != null && user.getPassword().equals(passwordString) && user.getIsActive() ) {
-					System.out.println("Login OK");
 					WiaSession.get().logInUser(user);
+					
+					Logger.getLogger("booktube").info("User " + user.getUsername() + " logged in.");
 
 					if (!continueToOriginalDestination()) {
 						setResponsePage(HomePage.class);
 					}
 
 				} else {
-					System.out.println("Login ERROR");
 					loginErrorDialog.open(target);
 				}
 
@@ -601,41 +534,6 @@ public abstract class BasePage extends WebPage {
 			}
 
 		});
-
-		// form.add(new Button("button1", new Model<String>("")) {
-		// private static final long serialVersionUID = 6743737357599494567L;
-		//
-		// @Override
-		// public void onSubmit() {
-		// String userString = username.getDefaultModelObjectAsString();
-		// String passwordString = User.hash(
-		// password.getDefaultModelObjectAsString(), "SHA-1");
-		//
-		// username.setModel(new Model<String>(""));
-		//
-		// System.out.println("User: " + userString + " Pass: "
-		// + passwordString);
-		//
-		// User user = userService.getUser(userString);
-		//
-		// if (user != null && user.getPassword().equals(passwordString)) {
-		// WiaSession.get().logInUser(user);
-		// } else {
-		// /* TERMINAR MENSAJE DE LOGIN INCORRECTO */
-		// System.out.println("Login failed!");
-		// info("aaaaaaaaaaaa");
-		//
-		// // loginMsg.setVisible(true);
-		// }
-		//
-		// if (!continueToOriginalDestination()) {
-		// setResponsePage(HomePage.class);
-		// }
-		//
-		// // setResponsePage(BasePage.this);
-		//
-		// }
-		// });
 
 		return form;
 	}
@@ -657,7 +555,6 @@ public abstract class BasePage extends WebPage {
 		};
 
 		dialog.setButtons(ok);
-		// dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
 
 		return dialog;
 
@@ -690,7 +587,6 @@ public abstract class BasePage extends WebPage {
 		List<BookmarkablePageLink<Object>> linkList = breadcrumbsModel.getObject();
 		link.add(new Label("textLink", label));
 		linkList.add(link);
-		System.out.println("****** LINK " + link.getPageClass());
 		breadcrumbsModel.setObject(linkList);
 	}
 	

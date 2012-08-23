@@ -36,7 +36,7 @@ public class AbstractDaoHibernate<T> extends HibernateDaoSupport {
 		T persistedObject = load(id);
 
 		if (persistedObject == null) {
-			System.out.println("EXCEPCION!!!");
+			logger.info("Exception!");
 		}
 
 		return persistedObject;

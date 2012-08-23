@@ -99,31 +99,6 @@ public class EditWriterPage extends BasePage {
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 
-	// private Dialog successDialog(final WebPage backPage) {
-	//
-	// Dialog dialog = new Dialog("success_dialog");
-	//
-	// dialog.add(new Label("text", "Usuario editado con exito!"));
-	//
-	// AjaxDialogButton ok = new AjaxDialogButton("OK") {
-	//
-	// private static final long serialVersionUID = 1L;
-	//
-	// @Override
-	// protected void onButtonClicked(AjaxRequestTarget target) {
-	// // do your cancel logic here
-	// System.out.println("BUTTON CLICKED!!");
-	// setResponsePage(backPage);
-	//
-	// }
-	// };
-	//
-	// dialog.setButtons(ok);
-	// dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
-	//
-	// return dialog;
-	// }
-
 	private Form<User> editWriterForm(final User writer, final WebMarkupContainer feedback) {
 		Form<User> form = new Form<User>("editWriterForm");
 
@@ -234,21 +209,15 @@ public class EditWriterPage extends BasePage {
 					String imgPath = ((WebApplication) getApplication())
 							.getServletContext().getRealPath(IMG_DIR_NAME);
 
-					System.out.println("REAL PATH ES " + imgPath);
-
 					final String extension = uploadedFile.getClientFileName()
 							.substring(
 									uploadedFile.getClientFileName()
 											.lastIndexOf('.') + 1);
-					System.out.println("EXTENSION: " + extension);
 
 					final String imgFilename = writer.getUsername() + '.'
 							+ extension;
 
 					String filePath = imgPath + "/" + AVATAR_DIR + imgFilename;
-
-					System.out.println("***** FILENAME> " + imgPath + '/'
-							+ writer.getUsername() + '.' + extension);
 
 					// write to a new file
 					File newFile = new File(filePath);
@@ -260,9 +229,6 @@ public class EditWriterPage extends BasePage {
 					try {
 						newFile.createNewFile();
 						uploadedFile.writeTo(newFile);
-
-						// info("saved file: " +
-						// uploadedFile.getClientFileName());
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -270,16 +236,12 @@ public class EditWriterPage extends BasePage {
 					writer.setImageURL(imgFilename);
 				}
 				else {
-					System.out.println("IMAGE ES NULL");
+					// TODO
 				}
 
 				userService.updateUser(writer);
 
-				System.out.println("user editado");
-
 				target.add(welcomeLabel);
-				
-				//WiaSession.get().logInUser(writer);
 				
 				dialog.open(target);
 			}
@@ -288,7 +250,6 @@ public class EditWriterPage extends BasePage {
 			@Override
 			protected void onError(AjaxRequestTarget target, Form<?> form) {
 				// TODO Auto-generated method stub
-				System.out.println("HAY UN ERROR");
 				target.add(feedback);
 			}
 		});

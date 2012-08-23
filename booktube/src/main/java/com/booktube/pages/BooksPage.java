@@ -232,14 +232,19 @@ public class BooksPage extends BasePage {
 				
 				item.add(new Label("publishDate", dateFormat.format(book.getPublishDate())));
 
+				WebMarkupContainer editLinkContainer = new WebMarkupContainer("editLinkContainer");
 				BookmarkablePageLink<Object> editLink = new BookmarkablePageLink<Object>("editLink",
 						EditBookPage.class, detailsParameter);
-				editLink.setVisible(false);
+				editLinkContainer.add(editLink);
+				editLinkContainer.setVisible(false);
 				
-				item.add(editLink);
+				item.add(editLinkContainer);
 				item.add(new BookmarkablePageLink<Object>("detailsLink",
 						ShowBookPage.class, detailsParameter));
 
+				
+				WebMarkupContainer deleteLinkContainer = new WebMarkupContainer("deleteLinkContainer");
+				
 				Link<Book> deleteLink = new Link<Book>("deleteLink", item.getModel()) {
 
 					private static final long serialVersionUID = 1L;
@@ -247,50 +252,23 @@ public class BooksPage extends BasePage {
 					public void onClick() {
 
 						Book book = (Book) getModelObject();
-						Long bookId = book.getId();
 
-						// Book bookDelete = bookService.getBook(bookId);
-
-						System.out.println("BOOk es : " + book);
-
-						// bookService.deleteBook(book);
 						bookService.deleteBook(book);
-						System.out.println("Book " + bookId + " deleted.");
 
 						setResponsePage(BooksPage.this);
 					}
 
 				};
-				deleteLink.setVisible(false);
+				deleteLinkContainer.add(deleteLink);
+				deleteLinkContainer.setVisible(false);
 				
-				item.add(deleteLink);
+				item.add(deleteLinkContainer);
 				
 				if ( user != null && ( user.getLevel() == Level.ADMIN || user.getUsername().equals(book.getAuthor().getUsername()) ) ) {
-					deleteLink.setVisible(true);
-					editLink.setVisible(true);
+					deleteLinkContainer.setVisible(true);
+					editLinkContainer.setVisible(true);
 				}
 				
-//				item.add(new Link<Book>("deleteLink", item.getModel()) {
-//
-//					private static final long serialVersionUID = 1L;
-//
-//					public void onClick() {
-//
-//						Book book = (Book) getModelObject();
-//						Long bookId = book.getId();
-//
-//						// Book bookDelete = bookService.getBook(bookId);
-//
-//						System.out.println("BOOk es : " + book);
-//
-//						// bookService.deleteBook(book);
-//						bookService.deleteBook(book);
-//						System.out.println("Book " + bookId + " deleted.");
-//
-//						setResponsePage(BooksPage.this);
-//					}
-//
-//				});
 			}
 		};
 

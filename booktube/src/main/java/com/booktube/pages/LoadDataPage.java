@@ -141,7 +141,6 @@ public class LoadDataPage extends BasePage {
 			Date registrationDate = new Date(gc.getTimeInMillis());
 
 			int letter = (i % 26) + 97;
-			System.out.println(i + ": " + (char) i);
 			String username = (char) letter + "user" + i;
 			User user = new User(username, username, "nombre" + i, "apellido"
 					+ i, User.Level.USER);
@@ -204,8 +203,6 @@ public class LoadDataPage extends BasePage {
 	}
 
 	public void addBooks() {
-
-		System.out.println("Adding books");
 
 		long publishDate = System.currentTimeMillis();
 		

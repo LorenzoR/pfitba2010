@@ -1,8 +1,11 @@
 package com.booktube.pages;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.datetime.PatternDateConverter;
@@ -15,9 +18,7 @@ import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
@@ -28,7 +29,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import com.booktube.WiaSession;
 import com.booktube.WicketApplication;
 import com.booktube.model.Book;
-import com.booktube.model.Rating;
 import com.booktube.model.User;
 import com.booktube.model.User.Level;
 import com.booktube.pages.customComponents.SuccessDialog;
@@ -69,7 +69,7 @@ public class EditBookPage extends BasePage {
 
 		book = bookService.getBook(bookId);
 		
-		if ( user.getLevel() != Level.ADMIN && !user.getUsername().equals(book.getAuthor().getUsername()) ) {
+		if ( user == null || ( user.getLevel() != Level.ADMIN && !user.getUsername().equals(book.getAuthor().getUsername()) ) ) {
 			throw new AbortWithHttpErrorCodeException(404);
 		}
 		
@@ -126,9 +126,11 @@ public class EditBookPage extends BasePage {
 		author.setRequired(true);
 		form.add(author);
 		
+		final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, getLocale());
+		
 		final DateTextField publishDate = new DateTextField("publishDate",
 				new PropertyModel<Date>(model, "publishDate"),
-				new PatternDateConverter(WicketApplication.DATE_FORMAT, true));
+				new PatternDateConverter(((SimpleDateFormat) dateFormat).toLocalizedPattern(), true));
 		publishDate.setRequired(true);
 		form.add(publishDate);
 		
@@ -160,38 +162,25 @@ public class EditBookPage extends BasePage {
 
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-				// comments.add(new Comment(new
-				// User(ddc.getDefaultModelObjectAsString()),
-				// editor.getDefaultModelObjectAsString()));
-				// editor.setModel(new Model(""));
-				// target.addComponent(parent);
-				// target.focusComponent(editor);
-				System.out.println("****** NEW BOOK: " + book.getTitle());
-				System.out.println("****** NEW BOOK: " + book.getAuthor());
-				System.out.println("****** NEW BOOK: " + book.getTags().toString());
 
-
+				Logger logger = Logger.getLogger("booktube");
+								
+				book.setAuthor(author.getModelObject());
+				
 				bookService.updateBook(book);
 
-				System.out.println("Book edited.");
-				System.out.println("Title: " + book.getTitle());
-				System.out.println("Author: " + book.getAuthor());
-				System.out.println("Text: " + book.getText());
+				logger.info("Book edited.");
+				logger.info("ID: " + book.getId());
+				logger.info("Title: " + book.getTitle());
+				logger.info("Author: " + book.getAuthor());
 
 				successDialog.open(target);
-				
-				// Previous page
-				// setResponsePage(backPage);
-//				PageParameters pageParameters = new PageParameters();
-//				pageParameters.set("currentPage", currentPage);
-//				setResponsePage(BooksPage.class, pageParameters);
 
 			}
 
 			@Override
 			protected void onError(AjaxRequestTarget target, Form<?> form) {
 				// TODO Auto-generated method stub
-
 			}
 		});
 
@@ -203,38 +192,38 @@ public class EditBookPage extends BasePage {
 		// TODO Auto-generated method stub
 	}
 	
-	/**
-	 * Link to reset the ratings.
-	 */
-	private final class ResetRatingLink extends Link<Rating> {
-		/** For serialization. */
-		private static final long serialVersionUID = 1L;
-		private final Book book;
-
-		/**
-		 * Constructor.
-		 * 
-		 * @param id
-		 *            component id
-		 * @param object
-		 *            the model to reset.
-		 */
-		public ResetRatingLink(String id, IModel<Rating> object, Book book) {
-			super(id, object);
-			this.book = book;
-		}
-
-		/**
-		 * @see Link#onClick()
-		 */
-		@Override
-		public void onClick() {
-			Rating rating = getModelObject();
-			rating.setNrOfVotes(0);
-			rating.setRating(0);
-			rating.setSumOfRatings(0);
-			rating.setBook(book);
-		}
-	}
+//	/**
+//	 * Link to reset the ratings.
+//	 */
+//	private final class ResetRatingLink extends Link<Rating> {
+//		/** For serialization. */
+//		private static final long serialVersionUID = 1L;
+//		private final Book book;
+//
+//		/**
+//		 * Constructor.
+//		 * 
+//		 * @param id
+//		 *            component id
+//		 * @param object
+//		 *            the model to reset.
+//		 */
+//		public ResetRatingLink(String id, IModel<Rating> object, Book book) {
+//			super(id, object);
+//			this.book = book;
+//		}
+//
+//		/**
+//		 * @see Link#onClick()
+//		 */
+//		@Override
+//		public void onClick() {
+//			Rating rating = getModelObject();
+//			rating.setNrOfVotes(0);
+//			rating.setRating(0);
+//			rating.setSumOfRatings(0);
+//			rating.setBook(book);
+//		}
+//	}
 
 }

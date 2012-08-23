@@ -20,11 +20,8 @@ public class TagSetToStringConverter implements IConverter<Set<BookTag>> {
 		Set<BookTag> tagsSet = new HashSet<BookTag>();
 
 		for (String aTag : tags) {
-			//tagsSet.add(new BookTag(aTag, this.book));
 			tagsSet.add(new BookTag(aTag));
 		}
-
-		System.out.println("newTagSET: " + tagsSet.toString());
 
 		return tagsSet;
 	}

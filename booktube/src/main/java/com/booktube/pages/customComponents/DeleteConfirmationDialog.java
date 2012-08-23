@@ -36,17 +36,6 @@ public class DeleteConfirmationDialog<C extends IRequestablePage> extends Dialog
 			@Override
 			protected void onButtonClicked(AjaxRequestTarget target) {
 
-				System.out.println("Borro Boook");
-
-				
-				System.out.println("BOOK ES : " + object.toString());
-				//dao.delete(object);
-				//service.delete(object);
-
-
-//				target.add(successDialog);
-				//successDialog.setText("ESTE SI CAMBIA");
-				//target.add(successDialog);
 				successDialog.open(target);
 
 				dialog.close(target);

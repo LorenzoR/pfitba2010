@@ -25,9 +25,6 @@ public class UserEmailValidator extends StringValidator {
 		User user = userService.getUser(validatable.getValue());		
 		String submittedEmail = emailField.getValue();
 		
-//		System.out.println("Onvalidate(): user email = "+user.getEmail());
-//		System.out.println("Onvalidate(): submitted email = "+ submittedEmail);
-		
 		if( submittedEmail.compareToIgnoreCase(user.getEmail()) != 0 ){		
 			error(validatable);
 		}

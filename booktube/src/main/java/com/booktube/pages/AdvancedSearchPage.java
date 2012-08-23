@@ -180,8 +180,6 @@ public class AdvancedSearchPage extends BasePage {
 
 				if (!StringUtils.isBlank(lowPublishDate
 						.getDefaultModelObjectAsString())) {
-					System.out.println("LowDate: "
-							+ lowPublishDate.getDefaultModelObjectAsString());
 					try {
 						searchLowPublishDate = (Date) formatter
 								.parse(lowPublishDate
@@ -208,45 +206,6 @@ public class AdvancedSearchPage extends BasePage {
 
 				searchLowRating = lowRating.getConvertedInput();
 				searchHighRating = highRating.getConvertedInput();
-//				try {
-//					searchLowRating = new Double(lowRating
-//							.getDefaultModelObjectAsString());
-//				} catch (NumberFormatException ex) {
-//					searchLowRating = null;
-//				}
-//				
-//				try {
-//					searchHighRating = new Double(highRating
-//							.getDefaultModelObjectAsString());
-//				} catch (NumberFormatException ex) {
-//					searchHighRating = null;
-//				}
-				
-				
-				
-				// System.out.println(bookService.getBook(Long
-				// .valueOf(bookIdString)));
-
-				// List<Book> books = bookService.getBooks(0, Integer.MAX_VALUE,
-				// searchAuthor, searchTitle, searchTag, searchCategory,
-				// searchSubcategory, searchLowPublishDate,
-				// searchHighPublishDate);
-
-				/*
-				 * if (books.size() > 0) {
-				 * 
-				 * resultsModel.setObject(books);
-				 * System.out.println("DETACHABLE: " +
-				 * resultsModel.getObject().toString()); group.setVisible(true);
-				 * checkGroupSelector.setVisible(true);
-				 * bookResultListTable.setVisible(true);
-				 * 
-				 * target.add(parent); } else { resultsModel.setObject(null);
-				 * group.setVisible(false);
-				 * checkGroupSelector.setVisible(false);
-				 * bookResultListTable.setVisible(false);
-				 * System.out.println("NO HAY NADA"); }
-				 */
 
 				if (dataView.getItemCount() <= 0) {
 					group.setVisible(false);

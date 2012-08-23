@@ -286,7 +286,6 @@ public class Book implements Serializable {
 	public BookTag addTag(String text) {
 		BookTag tag = new BookTag(text);
 		this.tags.add(tag);
-		System.out.println(this.tags.toString());
 		return tag;
 	}
 

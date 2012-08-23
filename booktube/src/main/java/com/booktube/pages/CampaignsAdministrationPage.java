@@ -133,9 +133,6 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 
 			@Override
 			protected void onButtonClicked(AjaxRequestTarget target) {
-				System.out.println("Borro mensaje");
-				//Campaign campaign = campaignService.getCampaign(campaignId);
-				System.out.println("CAMPAIGN ES : " + deleteCampaign);
 				
 				if ( deleteCampaign != null ) {
 					campaignService.deleteCampaign(deleteCampaign);
@@ -192,20 +189,16 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 
 			protected void populateItem(Item<Campaign> item) {
 				final Campaign campaign = (Campaign) item.getModelObject();
-				//final String receivers = getReceivers(campaign);
-				System.out.println("MESSAGE: " + campaign.getText());
+
 				CompoundPropertyModel<Campaign> model = new CompoundPropertyModel<Campaign>(
 						campaign);
 				item.setDefaultModel(model);
 
 				final PageParameters parameters = new PageParameters();
 				parameters.set("campaignId", campaign.getId());
-				// item.add(new Label("id"));
 				item.add(new Check<Campaign>("checkbox", item.getModel()));
-//				item.add(new Label("id"));
 				item.add(new Label("subject"));
 				item.add(new Label("sender"));
-				//item.add(new Label("receiver", receivers));
 				
 				final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, getLocale());
 				item.add(new Label("date", dateFormat.format(campaign.getDate())));
@@ -223,8 +216,6 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 
 					public void onClick() {
 						setResponsePage(ShowCampaignPage.class, parameters);
-						// setResponsePage(new EditWriterPage(user.getId(),
-						// MessagePage.this));
 					}
 
 				});
@@ -307,8 +298,6 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 			@SuppressWarnings("unchecked")
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-				System.out.println("selected Campaign(s): "
-						+ group.getDefaultModelObjectAsString());
 
 				deleteConfirmationDialog.open(target);
 
@@ -320,26 +309,6 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 				deleteCampaigns = (List<Campaign>) group.getDefaultModelObject();
 				
 				showOrHideTable();
-//
-//				for (Campaign aCampaign : removedCampaigns) {
-//					campaignService.deleteCampaign(aCampaign);
-//				}
-
-//				showOrHideTable();
-				
-//				if (dataView.getItemCount() <= 0) {
-//					this.setVisible(false);
-//					footerNavigator.setVisible(false);
-//					feedbackMessage.setVisible(true);
-//				} else {
-//					this.setVisible(true);
-//					footerNavigator.setVisible(true);
-//					feedbackMessage.setVisible(false);
-//				}
-
-				//target.add(parent);
-
-				// System.out.println("BOOKS: " + books);
 
 			}
 
@@ -378,8 +347,6 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 
 				if (!StringUtils.isBlank(lowCampaignDate
 						.getDefaultModelObjectAsString())) {
-					System.out.println("lowCampaignDate: "
-							+ lowCampaignDate.getDefaultModelObjectAsString());
 					try {
 						searchLowCampaignDate = (Date) formatter
 								.parse(lowCampaignDate

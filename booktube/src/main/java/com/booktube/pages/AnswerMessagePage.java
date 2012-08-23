@@ -93,100 +93,12 @@ public class AnswerMessagePage extends BasePage {
 				item.add(new Label("date"));
 				item.add(new Label("text"));
 				
-//				item.add(new Link<Message>("detailsLink", item.getModel()) {
-//					private static final long serialVersionUID = 1L;
-//
-//					public void onClick() {
-//						//setResponsePage(ShowMessagePage.class, parameters);
-//					}
-//
-//				});
-//				item.add(new Link<Message>("answerLink", item.getModel()) {
-//					private static final long serialVersionUID = 1L;
-//
-//					public void onClick() {
-//						//setResponsePage(AnswerMessagePage.class, parameters);
-//					}
-//
-//				});
-//				item.add(new Link<Message>("editLink", item.getModel()) {
-//					private static final long serialVersionUID = 1L;
-//
-//					public void onClick() {
-//						//setResponsePage(ShowMessagePage.class, parameters);
-//						// setResponsePage(new EditWriterPage(user.getId(),
-//						// MessagePage.this));
-//					}
-//
-//				});
-//				item.add(new Link<Message>("deleteLink", item.getModel()) {
-//					private static final long serialVersionUID = -7155146615720218460L;
-//
-//					public void onClick() {
-//
-//						Message message = (Message) getModelObject();
-//						//Long messageId = message.getId();
-//
-//						messageService.deleteMessage(message);
-//						// System.out.println("User " + messageId +
-//						// " deleted.");
-//
-//						//setResponsePage(MessagesPage.this);
-//					}
-//
-//				});
 			}
 		};
 		
 		parent.add(propertyListView);
 
-		System.out.println("MSG FROM: "
-				+ messageService.countMessagesFrom(user));
-		System.out.println("MSG TO: " + messageService.countMessagesTo(user));
-		System.out.println("UNREAD MSG TO: "
-				+ messageService.countUnreadMessagesTo(user));
-
 	}
-	
-	/*private List<Message> getAnswers() {
-		
-		List<Message> messageList = new ArrayList<Message>();
-		Message auxMessage;
-		
-		System.out.println("DESEPUES MESSAGE: " + message);
-		
-		User sender = message.getSender();
-		System.out.println("SENDER: " + sender.getUsername());
-		User receiver = this.user;
-		User auxUser;
-		
-		Message lastAnswer = message;
-		
-		System.out.println("ANSWERS: " + lastAnswer.getAnswer().toString());
-		
-		do {
-			
-			lastAnswer = message.getAnswer();
-			//Iterator<Message> messageIterator = lastAnswer.getAnswer().iterator();
-			
-			//while ( messageIterator.hasNext() ) {
-			//	lastAnswer = messageIterator.next();
-				System.out.println("ID: " + lastAnswer.getSender().getId());
-				
-				if ( lastAnswer.getSender().getId().equals(receiver.getId()) ) {
-					messageList.add(lastAnswer);
-				}
-			//}
-			
-			auxUser = sender;
-			sender = receiver;
-			receiver = auxUser;
-			
-		}
-		while ( lastAnswer != null );
-		
-		return messageList;
-	}*/
 
 	private Form<Message> answerForm(final WebMarkupContainer parent, final List<Message> messages) {
 		Form<Message> form = new Form<Message>("form");

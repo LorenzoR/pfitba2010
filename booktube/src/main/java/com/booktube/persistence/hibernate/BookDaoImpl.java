@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -16,40 +17,26 @@ import com.booktube.persistence.BookDao;
 
 public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 
-	// public static final SessionFactory SESSION_FACTORY =
-	// WicketApplication.SESSION_FACTORY;
-
 	protected BookDaoImpl() {
 		super(Book.class);
 	}
 
 	public void update(Book book) {
-		// getSession().merge(book);
-		// getSession().flush();
 		super.update(book);
+		Logger.getLogger("booktube").info("Book " + book.getId() + " updated.");
 	}
 
 	public Long insert(Book book) {
-		/*
-		 * System.out.println("COMMENTS: " + book.getComments().toString());
-		 * System.out.println("TAGS: " + book.getTags().toString()); Long
-		 * newBookId = (Long) getSession().save(book); getSession().flush();
-		 * 
-		 * return newBookId;
-		 */
-		return super.insert(book);
+		Long bookId = super.insert(book);
+		Logger.getLogger("booktube").info("Book " + book.getId() + " inserted.");
+		
+		return bookId;
 	}
 
 	public void delete(Book book) {
-		/*
-		 * System.out.println("Borro libro " + book); getSession().delete(book);
-		 * getSession().flush();
-		 */
+		Long bookId = book.getId();
 		super.delete(book);
-		// getSession().refresh(book);
-		// getSession().delete(book);
-		// getSession().flush();
-
+		Logger.getLogger("booktube").info("Book " + bookId + " deleted.");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -144,7 +131,10 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 			String subcategory, Date lowPublishDate, Date highPublishDate, Double lowRating, Double highRating) {
 		return (List<Book>) createCriteria(bookId, author, title, tag,
 				category, subcategory, lowPublishDate, highPublishDate, lowRating, highRating)
-				.setFirstResult(first).setMaxResults(count).list();
+				.addOrder(Order.asc("title"))
+				.setFirstResult(first)
+				.setMaxResults(count)
+				.list();
 	}
 
 	public int getCount(Long bookId, String author, String title, String tag,
@@ -166,12 +156,10 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 		}
 
 		if (lowPublishDate != null) {
-			System.out.println("**LOW " + lowPublishDate);
 			criteria.add(Restrictions.ge("publishDate", lowPublishDate));
 		}
 
 		if (highPublishDate != null) {
-			System.out.println("**HIGH " + highPublishDate);
 			criteria.add(Restrictions.le("publishDate", highPublishDate));
 		}
 
@@ -188,26 +176,22 @@ public class BookDaoImpl extends AbstractDaoHibernate<Book> implements BookDao {
 		}
 
 		if (StringUtils.isNotBlank(author)) {
-			System.out.println("*** author> " + author);
 			criteria.createCriteria("author").add(
 					Restrictions.eq("username", author));
 		}
 
 		if (StringUtils.isNotBlank(tag)) {
-			System.out.println("*** tag> " + tag);
 			criteria.createCriteria("tags").add(Restrictions.eq("value", tag));
 		}
 		
 		Criteria ratingCriteria = criteria.createCriteria("rating");
 		
 		if ( lowRating != null ) {
-			System.out.println("*** lowRating> " + lowRating);
 			ratingCriteria.add(
 					Restrictions.ge("rating", lowRating));
 		}
 		
 		if ( highRating != null ) {
-			System.out.println("*** highRating> " + highRating);
 			ratingCriteria.add(
 					Restrictions.le("rating", highRating));
 		}

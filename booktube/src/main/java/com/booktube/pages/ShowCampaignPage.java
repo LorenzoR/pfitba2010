@@ -11,6 +11,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -38,8 +39,7 @@ public class ShowCampaignPage extends BasePage {
 		user = WiaSession.get().getLoggedInUser();
 		
 		if ( pageParameters.get("campaignId") == null ) {
-			System.out.println("ERRRORRRR");
-			//TODO
+			throw new AbortWithHttpErrorCodeException(404);
 		}
 		else {
 			campaignId = pageParameters.get("campaignId").toLong();
