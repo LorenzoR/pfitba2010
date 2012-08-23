@@ -3,6 +3,7 @@ package com.booktube.pages;
 import java.util.List;
 
 
+
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -28,6 +29,7 @@ import com.booktube.pages.customComponents.AJAXDownload;
 import com.booktube.pages.customComponents.panels.AgeFilterOption;
 import com.booktube.pages.customComponents.panels.DropDownElementPanel;
 import com.booktube.pages.customComponents.panels.FilterOption;
+//import com.booktube.pages.customComponents.panels.FilterOption;
 import com.booktube.pages.customComponents.panels.MiscFilterOption;
 import com.booktube.pages.customComponents.panels.OriginFilterOption;
 import com.booktube.pages.customComponents.panels.ReportFilterPanel;
@@ -197,14 +199,14 @@ public abstract class ReportPage extends AdministrationPage {
 	
 	protected void addGenderFilterOption(List<String> allGendersList){
 		createMiscFilterOption();		
-		allGendersList.add(0,FilterOption.listFirstOption);
+//		allGendersList.add(0,FilterOption.listFirstOption);
 		genderDropDownElement = new DropDownElementPanel("element", "Sexo", "gender", allGendersList);			
 		customizedMisc.addElement(genderDropDownElement);		
 	}
 	
 	protected void addYearFilterOption(List<String> allYearsList){
 		createMiscFilterOption();
-		allYearsList.add(0,FilterOption.listFirstOption);
+//		allYearsList.add(0,FilterOption.listFirstOption);
 		yearsDropDownElement = new DropDownElementPanel("element", "Año", "registration_date", allYearsList);			
 		customizedMisc.addElement(yearsDropDownElement);
 	}

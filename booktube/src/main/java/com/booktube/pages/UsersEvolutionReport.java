@@ -70,7 +70,14 @@ public class UsersEvolutionReport extends ReportPage {
 	@Override
 	public Dataset getReportData() {
 		List<?> data = userService.getUserEvolutionByYear(originFilter, ageFilter, customizedMisc);		  
-		final XYSeries serie = new XYSeries(new ResourceModel("usersEvolutionReport").getObject());				 
+		final XYSeries serie = new XYSeries(new ResourceModel("usersEvolutionReport").getObject());
+		
+		for(Object object : data){
+	           @SuppressWarnings("unchecked")
+	           Map<String, Integer> row = (Map<String, Integer>)object;
+	           System.out.println("("+row.get("year")+","+row.get("total")+")" ); 
+	    }
+		
 		for(Object object : data){
            @SuppressWarnings("unchecked")
            Map<String, Integer> row = (Map<String, Integer>)object;

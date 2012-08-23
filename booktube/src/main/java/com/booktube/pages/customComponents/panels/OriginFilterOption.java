@@ -26,26 +26,40 @@ public class OriginFilterOption extends FilterOption {
 		super(id);
 		
 		allCountriesList = userService.getAllCountries();
-		allCountriesList.add(0, listFirstOption);
-		selectedCountry = allCountriesList.get(0);
+//		allCountriesList.add(0, FilterOption.listFirstOption);
+//		selectedCountry = allCountriesList.get(0);
+		selectedCountry = null;
 		
 		allCitiesList = userService.getAllCities();
-		allCitiesList.add(0, listFirstOption);
-		selectedCity = allCitiesList.get(0);
+//		allCitiesList.add(0, FilterOption.listFirstOption);
+//		selectedCity = allCitiesList.get(0);
+		selectedCountry = null;
 				
-		add(new Label("countryLabel", "País"));				
-		add(new DropDownChoice<String>("country", new PropertyModel<String>(this, "selectedCountry"),allCountriesList));
+		add(new Label("countryLabel", "País"));		
+		DropDownChoice<String> countryDropCombo = new DropDownChoice<String>("country", new PropertyModel<String>(this, "selectedCountry"),allCountriesList);
+		countryDropCombo.setNullValid(true);
+		add(countryDropCombo);
 		
 		
 		add(new Label("cityLabel", "Ciudad"));
-		add(new DropDownChoice<String>("city",  new PropertyModel<String>(this, "selectedCity"), allCitiesList) );
+		DropDownChoice<String> cityDropCombo = new DropDownChoice<String>("city",  new PropertyModel<String>(this, "selectedCity"), allCitiesList); 
+		cityDropCombo.setNullValid(true);
+		add( cityDropCombo );
 	}
 
 	public String getSelectedCountry() {
+//		if( selectedCountry == FilterOption.listFirstOption )
+//			return null;
+//		else
+//			return selectedCountry;
 		return selectedCountry;
 	}
 
 	public String getSelectedCity() {
+//		if( selectedCity == FilterOption.listFirstOption )
+//			return null;
+//		else
+//			return selectedCity;
 		return selectedCity;
 	}
 
