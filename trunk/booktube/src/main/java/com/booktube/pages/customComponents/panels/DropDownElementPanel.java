@@ -16,16 +16,21 @@ public class DropDownElementPanel extends Panel {
 	
 	public DropDownElementPanel(String id, String label, String tableFieldName, List<String>values) {
 		super(id);
-		selectedValue = values.get(0);
+		selectedValue = null;
 		this.tableFieldName = tableFieldName;
 		add(new Label("label", label));
-		add(new DropDownChoice<String>("list",new PropertyModel<String>(this,"selectedValue"), values));
+		DropDownChoice<String> dropCombo = new DropDownChoice<String>("list",new PropertyModel<String>(this,"selectedValue"), values);
+		dropCombo.setNullValid(true);
+		add(dropCombo);
 	}
 
 	public String getTableFieldName(){
 		return tableFieldName;
 	}
 	public String getSelectedValue() {
-		return selectedValue;
+		if( selectedValue == FilterOption.listFirstOption )
+			return null;
+		else 
+			return selectedValue;
 	}
 }

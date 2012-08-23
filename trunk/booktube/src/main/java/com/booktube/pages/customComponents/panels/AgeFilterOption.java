@@ -3,6 +3,7 @@ package com.booktube.pages.customComponents.panels;
 import java.util.List;
 
 
+
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.model.PropertyModel;
@@ -25,20 +26,35 @@ public class AgeFilterOption extends FilterOption {
 	public AgeFilterOption(String id) {		
 		super(id);
 	
-		allAgesList.add(0, listFirstOption);
-		selectedMinAge = allAgesList.get(0);
-		selectedMaxAge = selectedMinAge;
+//		allAgesList.add(0, FilterOption.listFirstOption);
+//		selectedMinAge = allAgesList.get(0);
+//		selectedMaxAge = selectedMinAge;
+		selectedMaxAge = null;
+		selectedMinAge = null;
 		
 		add(new Label("minLabel", "Min"));
-		add(new DropDownChoice<String>("minAge", new PropertyModel<String>(this,"selectedMinAge"),allAgesList));
+		DropDownChoice<String> minAgeDropCombo = new DropDownChoice<String>("minAge", new PropertyModel<String>(this,"selectedMinAge"),allAgesList);
+		minAgeDropCombo.setNullValid(true);
+		add(minAgeDropCombo);
+		
 		add(new Label("maxLabel", "Max"));
-		add(new DropDownChoice<String>("maxAge", new PropertyModel<String>(this,"selectedMaxAge"),allAgesList));
+		DropDownChoice<String> maxAgeDropCombo = new DropDownChoice<String>("maxAge", new PropertyModel<String>(this,"selectedMaxAge"),allAgesList);
+		maxAgeDropCombo.setNullValid(true);
+		add(maxAgeDropCombo);
 	}
 
 	public String getSelectedMinAge() {
+//		if( selectedMinAge == FilterOption.listFirstOption )
+//			return null;
+//		else
+//			return selectedMinAge;
 		return selectedMinAge;
 	}
 	public String getSelectedMaxAge() {
+//		if( selectedMaxAge == FilterOption.listFirstOption )
+//			return null;
+//		else
+//			return selectedMaxAge;
 		return selectedMaxAge;
 	}
 

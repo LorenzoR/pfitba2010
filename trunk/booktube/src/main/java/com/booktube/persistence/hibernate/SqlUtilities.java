@@ -66,7 +66,8 @@ public class SqlUtilities {
 	// la funcion getFieldValue() se encarga
 	private static String generateRestriction(String fieldName, String comparator,  String value) {		
 		StringBuffer restriction = new StringBuffer();
-		if( value != FilterOption.listFirstOption )
+//		if( value != FilterOption.listFirstOption )
+		if( value != null )
 			restriction.append(fieldName+comparator+getFieldValue(value));
 		return restriction.toString();
 	}
@@ -76,10 +77,15 @@ public class SqlUtilities {
 	private static String getFieldValue(String value) {
 		String comillas = "\"";
 		String resp = value;
-		if( value == "Masculino")
+		if( value.compareToIgnoreCase("Masculino") == 0)
 			resp =  String.valueOf(Gender.MALE.ordinal());
-		else if( value == "Femenino" )
+		else if( value.compareToIgnoreCase("Femenino") == 0 )
 			resp = String.valueOf(Gender.FEMALE.ordinal());
+		else if( value.compareToIgnoreCase("Male") == 0)
+			resp =  String.valueOf(Gender.MALE.ordinal());
+		else if( value.compareToIgnoreCase("Female") == 0 )
+			resp = String.valueOf(Gender.FEMALE.ordinal());
+		
 		return comillas+resp+comillas;
 	}
 

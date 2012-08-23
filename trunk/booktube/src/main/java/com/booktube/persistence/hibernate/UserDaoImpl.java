@@ -26,7 +26,6 @@ import com.booktube.model.Book;
 import com.booktube.model.Message;
 import com.booktube.model.User;
 import com.booktube.model.User.Gender;
-import com.booktube.pages.customComponents.panels.FilterOption;
 import com.booktube.pages.customComponents.panels.MiscFilterOption;
 import com.booktube.pages.customComponents.panels.AgeFilterOption;
 import com.booktube.pages.customComponents.panels.DropDownElementPanel;
@@ -311,6 +310,8 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 		String sql = "select year(registration_date) as year, count(user_id) as total from user "
 				+ whereClause + " group by year order by year ASC";
 
+		Logger.getLogger("UserDaoImpl.getUserEvolutionByYear").info("SQL statement=["+sql+"]");
+		
 		SQLQuery query = getSession().createSQLQuery(sql)
 				.addScalar("year", Hibernate.INTEGER)
 				.addScalar("total", Hibernate.INTEGER);
@@ -326,6 +327,7 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 			Map<String, Integer> row = (Map<String, Integer>) aData;
 			row.put("total", row.get("total") + lastUsers);
 			lastUsers = row.get("total");
+			
 		}
 
 		return data;
@@ -334,20 +336,17 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 	@SuppressWarnings("unchecked")
 	public List<Object> getUserDistributionByCountry(AgeFilterOption age,
 			MiscFilterOption misc) {
-		Integer lowerAge;
-		Integer higherAge;
 
-		try {
-			lowerAge = Integer.valueOf(age.getSelectedMinAge());
-		} catch (NumberFormatException ex) {
-			lowerAge = null;
-		}
+//		Integer lowerAge = (age.getSelectedMinAge() != FilterOption.listFirstOption) ? Integer
+//				.valueOf(age.getSelectedMinAge()) : null;
+//		Integer higherAge = (age.getSelectedMaxAge() != FilterOption.listFirstOption) ? Integer
+//				.valueOf(age.getSelectedMaxAge()) : null;
 
-		try {
-			higherAge = Integer.valueOf(age.getSelectedMaxAge());
-		} catch (NumberFormatException ex) {
-			higherAge = null;
-		}
+		Integer lowerAge = (age.getSelectedMinAge() != null ) ? Integer
+				.valueOf(age.getSelectedMinAge()) : null;
+		Integer higherAge = (age.getSelectedMaxAge() != null ) ? Integer
+				.valueOf(age.getSelectedMaxAge()) : null;
+
 
 		// Integer lowerAge = (age.getSelectedMinAge() !=
 		// FilterOption.listFirstOption) ? Integer
@@ -360,15 +359,22 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 		String registrationYear = null;
 		for (DropDownElementPanel element : misc.getElements()) {
 			String value = element.getSelectedValue();
-			if (value != FilterOption.listFirstOption) {
-				if (element.getTableFieldName() == "gender")
-					gender = (value == "Masculino") ? Gender.MALE
-							: Gender.FEMALE;
-				if (element.getTableFieldName() == "registration_date")
+//			if (value != FilterOption.listFirstOption) {
+			if ( value != null ) {
+				if (element.getTableFieldName().compareToIgnoreCase("gender") == 0){
+//					gender = (value == "Masculino") ? Gender.MALE: Gender.FEMALE;
+					if( value.compareToIgnoreCase("Masculino") == 0 || value.compareToIgnoreCase("Male") == 0)
+						gender = Gender.MALE;
+					else if( value.compareToIgnoreCase("Femenino") == 0 || value.compareToIgnoreCase("Female") == 0)
+						gender = Gender.FEMALE;					
+				}					
+					
+				if (element.getTableFieldName().compareToIgnoreCase("registration_date") == 0 )
 					registrationYear = value;
 			}
 		}
-
+		Logger.getLogger("UserDaoImpl.UserDistributionByCountry():").info("gender="+gender+" , registration="+registrationYear+" , lowAge="+lowerAge+" , highAge="+higherAge);
+		
 		Criteria criteria = createFilterCriteria(User.class, gender, lowerAge,
 				higherAge, "", "", registrationYear);
 		criteria.setProjection(
@@ -418,20 +424,31 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 	@SuppressWarnings("unchecked")
 	public List<Object> getWorksByCategory(AgeFilterOption age,
 			MiscFilterOption misc) {
-		Integer lowerAge = (age.getSelectedMinAge() != FilterOption.listFirstOption) ? Integer
+//		Integer lowerAge = (age.getSelectedMinAge() != FilterOption.listFirstOption) ? Integer
+//				.valueOf(age.getSelectedMinAge()) : null;
+//		Integer higherAge = (age.getSelectedMaxAge() != FilterOption.listFirstOption) ? Integer
+//				.valueOf(age.getSelectedMaxAge()) : null;
+				
+		Integer lowerAge = (age.getSelectedMinAge() != null )? Integer
 				.valueOf(age.getSelectedMinAge()) : null;
-		Integer higherAge = (age.getSelectedMaxAge() != FilterOption.listFirstOption) ? Integer
+		Integer higherAge = (age.getSelectedMaxAge() != null )? Integer
 				.valueOf(age.getSelectedMaxAge()) : null;
 
 		Gender gender = null;
 		String registrationYear = null;
 		for (DropDownElementPanel element : misc.getElements()) {
 			String value = element.getSelectedValue();
-			if (value != FilterOption.listFirstOption) {
-				if (element.getTableFieldName() == "gender")
-					gender = (value == "Masculino") ? Gender.MALE
-							: Gender.FEMALE;
-				if (element.getTableFieldName() == "registration_date")
+//			if (value != FilterOption.listFirstOption) {
+			if (value != null ) {
+				if (element.getTableFieldName().compareToIgnoreCase("gender") == 0){
+					gender = (value == "Masculino") ? Gender.MALE : Gender.FEMALE;
+					if( value.compareToIgnoreCase("Masculino") == 0 || value.compareToIgnoreCase("Male") == 0 )
+						gender = Gender.MALE;
+					else
+						gender = Gender.FEMALE;
+				}					
+				
+				if (element.getTableFieldName().compareToIgnoreCase("registration_date") == 0 )
 					registrationYear = value;
 			}
 		}
@@ -452,20 +469,26 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 	@SuppressWarnings("unchecked")
 	public List<Object> getMessagesBySubject(AgeFilterOption age,
 			MiscFilterOption misc) {
-		Integer lowerAge = (age.getSelectedMinAge() != FilterOption.listFirstOption) ? Integer
+		Integer lowerAge = (age.getSelectedMinAge() != null ) ? Integer
 				.valueOf(age.getSelectedMinAge()) : null;
-		Integer higherAge = (age.getSelectedMaxAge() != FilterOption.listFirstOption) ? Integer
+		Integer higherAge = (age.getSelectedMaxAge() != null ) ? Integer
 				.valueOf(age.getSelectedMaxAge()) : null;
 
 		Gender gender = null;
 		String registrationYear = null;
 		for (DropDownElementPanel element : misc.getElements()) {
 			String value = element.getSelectedValue();
-			if (value != FilterOption.listFirstOption) {
-				if (element.getTableFieldName() == "gender")
-					gender = (value == "Masculino") ? Gender.MALE
-							: Gender.FEMALE;
-				if (element.getTableFieldName() == "registration_date")
+//			if (value != FilterOption.listFirstOption) {
+			if (value != null ) {
+				if (element.getTableFieldName().compareToIgnoreCase("gender") == 0){
+					gender = (value == "Masculino") ? Gender.MALE : Gender.FEMALE;
+					if( value.compareToIgnoreCase("Masculino") == 0 || value.compareToIgnoreCase("Male") == 0 )
+						gender = Gender.MALE;
+					else
+						gender = Gender.FEMALE;
+				}					
+				
+				if (element.getTableFieldName().compareToIgnoreCase("registration_date") == 0 )
 					registrationYear = value;
 			}
 		}
@@ -553,12 +576,15 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 			String registrationYear) {
 
 		Criteria criteria = getSession().createCriteria(sourceClass);
+
 		Criteria authorCriteria = null;
+		
 
 		if (sourceClass.equals(Book.class)) {
 			authorCriteria = criteria.createCriteria("author");
 		}
 
+		
 		if (lowerAge != null) {
 			criteria.add(Expression
 					.sql("DATE_FORMAT( FROM_DAYS( TO_DAYS( NOW( ) ) - TO_DAYS( BIRTHDATE ) ) ,  '%Y' ) +0 >= "
