@@ -10,18 +10,43 @@
 </div>
 <h3><wicket:message key="editBook">Edit Book</wicket:message> <span wicket:id="bookId"></span></h3>
 <form wicket:id="editBookForm">
-	<p><wicket:message key="author">Author</wicket:message>: <select wicket:id="author"></select></p>
-	<p><wicket:message key="title">Title</wicket:message>: <input type="text" wicket:id="title" value=""/></p>
-	<p><wicket:message key="category">Category</wicket:message>: <input type="text" wicket:id="category" value=""/></p>
-	<p><wicket:message key="subcategory">Subcategory</wicket:message>: <input type="text" wicket:id="subcategory" value=""/></p>
-	<p><wicket:message key="tags">Tags</wicket:message>: <input type="text" wicket:id="tags" value=""/></p>
-	<p><wicket:message key="publishDate">Publish Date</wicket:message>: 
-		<input type="text" wicket:id="publishDate" value=""/>
-		&nbsp; ( <span wicket:id="date_format"></span> )
-	</p>
-	<p># <wicket:message key="hits">Hits</wicket:message>: <input type="text" wicket:id="hits" value=""/></p>
-<!-- 	<p><wicket:message key="rating">Rating</wicket:message>: <a href="#" wicket:id="reset1"><wicket:message key="resetRating">Reset Rating</wicket:message></a></p> -->
-	<p><textarea wicket:id="text" cols="120" rows="50"></textarea></p>
+	<table>
+		<tr>
+			<td><wicket:message key="author">Author</wicket:message>:</td>
+			<td><select wicket:id="author"></select></td>
+		</tr>
+		<tr>
+			<td><wicket:message key="title">Title</wicket:message>:</td>
+			<td><input type="text" wicket:id="title" value=""/></td>
+		</tr>
+		<tr>
+			<td><wicket:message key="category">Category</wicket:message>:</td>
+			<td><input type="text" wicket:id="category" value=""/></td>
+		</tr>
+		<tr>
+			<td><wicket:message key="subcategory">Subcategory</wicket:message>:</td>
+			<td><input type="text" wicket:id="subcategory" value=""/></td>
+		</tr>
+		<tr>
+			<td><wicket:message key="tags">Tags</wicket:message>:</td>
+			<td><input type="text" wicket:id="tags" value=""/></td>
+		</tr>
+		<tr>
+			<td><wicket:message key="publishDate">Publish Date</wicket:message>:</td>
+			<td>
+				<input type="text" wicket:id="publishDate" value=""/>
+					&nbsp; ( <span wicket:id="date_format"></span> )
+			</td>
+		</tr>
+		<tr>
+			<td># <wicket:message key="hits">Hits</wicket:message>:</td>
+			<td><input type="text" wicket:id="hits" value=""/></td>
+		</tr>
+		<tr>
+			<td><wicket:message key="text">Text</wicket:message>: </td>
+			<td><textarea wicket:id="text" cols="120" rows="25"></textarea></td>
+		</tr>
+	</table>
 	<input type="button" wicket:id="save" value="Edit Book" wicket:message="value:edit"/>
 </form>
 </wicket:extend>

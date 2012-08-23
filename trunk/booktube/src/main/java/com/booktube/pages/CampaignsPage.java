@@ -35,19 +35,13 @@ public class CampaignsPage extends BasePage {
 	
 	public CampaignsPage() {
 		user = WiaSession.get().getLoggedInUser();
-		System.out.println("User : " + user);
-		//User user = new User("username", "firstname", "lastname");
-		//userService.insertUser(user);
-		//WicketApplication.instance().getUserService().insertUser(user);
-		//List<User> users = WicketApplication.instance().getUserService()
-		//List<User> users = userService.getAllUsers(0, Integer.MAX_VALUE);
+
 		final WebMarkupContainer parent = new WebMarkupContainer("campaigns");
 		parent.setOutputMarkupId(true);
 		add(parent);
 
 		addBreadcrumb(new BookmarkablePageLink<Object>("link", CampaignsPage.class), new ResourceModel("campaignsPageTitle").getObject());
 		
-		//parent.add(listWriters("writerList", users));
 		DataView<Campaign> dataView = campaignList("campaignList");
 
 		parent.add(dataView);
@@ -80,12 +74,11 @@ public class CampaignsPage extends BasePage {
 
 			protected void populateItem(Item<Campaign> item) {
 				final Campaign campaign = (Campaign) item.getModelObject();
-				System.out.println("MESSAGE: " + campaign.getText());
+
 				CompoundPropertyModel<Campaign> model = new CompoundPropertyModel<Campaign>(campaign);
 				item.setDefaultModel(model);
 				final PageParameters parameters = new PageParameters();
 				parameters.set("campaignId", campaign.getId());
-				//item.add(new Label("id"));
 				
 				final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, getLocale());
 				
@@ -114,10 +107,8 @@ public class CampaignsPage extends BasePage {
 					public void onClick() {
 
 						Campaign campaign = (Campaign) getModelObject();
-						//Long campaignId = campaign.getId();
 
 						campaignService.deleteCampaign(campaign);
-						//System.out.println("User " + messageId + " deleted.");
 
 						setResponsePage(CampaignsPage.this);
 					}

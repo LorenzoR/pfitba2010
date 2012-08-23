@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -29,10 +30,13 @@ public class CampaignDaoImpl extends AbstractDaoHibernate<Campaign> implements
 	public void updateCampaign(Campaign campaign) {
 		// super.saveOrUpdate(campaign);
 		super.update(campaign);
+		Logger.getLogger("booktube").info("Campaign " + campaign.getId() + " updated.");
 	}
 
 	public void deleteCampaign(Campaign campaign) {
+		Long id = campaign.getId();
 		super.delete(campaign);
+		Logger.getLogger("booktube").info("Campaign " + id + " deleted.");
 	}
 
 	public CampaignDetail getCampaignDetail(Campaign campaign, User receiver) {
@@ -45,6 +49,7 @@ public class CampaignDaoImpl extends AbstractDaoHibernate<Campaign> implements
 
 	public void insertCampaign(Campaign campaign) {
 		super.insert(campaign);
+		Logger.getLogger("booktube").info("Campaign " + campaign.getId() + " inserted.");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -126,13 +131,11 @@ public class CampaignDaoImpl extends AbstractDaoHibernate<Campaign> implements
 		}
 
 		if (StringUtils.isNotBlank(sender)) {
-			System.out.println("*** sender> " + sender);
 			criteria.createCriteria("sender").add(
 					Restrictions.eq("username", sender));
 		}
 
 		if (StringUtils.isNotBlank(receiver)) {
-			System.out.println("*** receiver> " + receiver);
 			criteria.createCriteria("receiver").createCriteria("receiver")
 					.add(Restrictions.eq("username", receiver));
 		}

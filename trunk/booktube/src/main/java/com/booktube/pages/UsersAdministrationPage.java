@@ -56,12 +56,8 @@ public class UsersAdministrationPage extends AdministrationPage {
 	private static SuccessDialog<?> successDialog;
 	private static Dialog deleteConfirmationDialog;
 
-	private static Long userId;
-
 	private static User deleteUser;
 	private static List<User> deleteUsers;
-
-	//private static String deleteUsername;
 
 	private DynamicLabel deleteConfirmationLabel = new DynamicLabel(
 			"delete_confirmation_dialog_text", new Model<String>());
@@ -171,18 +167,10 @@ public class UsersAdministrationPage extends AdministrationPage {
 					@Override
 					public void onClick(AjaxRequestTarget target) {
 
-						// userId = user.getId();
 						deleteUser = user;
-						System.out.println("USERIDDDD " + userId);
-						System.out.println("USER ES : " + deleteUser);
 
 						deleteConfirmationDialog.open(target);
-
-						//deleteUsername = deleteUser.getUsername();
-
-//						deleteConfirmationLabel
-//								.setLabel("Esta seguro que desea eliminar el usuario "
-//										+ deleteUsername + " ?");
+						
 						deleteConfirmationLabel.setLabel(new ResourceModel("deleteUserQuestion").getObject());
 
 						target.add(deleteConfirmationLabel);
@@ -208,10 +196,6 @@ public class UsersAdministrationPage extends AdministrationPage {
 
 			@Override
 			protected void onButtonClicked(AjaxRequestTarget target) {
-
-				System.out.println("Borro user");
-
-				System.out.println("USER ES : " + deleteUser);
 				
 				if ( deleteUser != null ) {
 					userService.deleteUser(deleteUser);
@@ -220,15 +204,10 @@ public class UsersAdministrationPage extends AdministrationPage {
 				}
 				else if ( deleteUsers != null ) {
 					successDialog.setText( new ResourceModel("usersDeleted").getObject());
-					
 					userService.deleteUsers(deleteUsers);
-					
 					deleteUsers = null;
 					
 				}
-				//userService.deleteUser(deleteUser);
-
-				//successDialog.setText(new ResourceModel("userDeleted").getObject());
 				
 				target.add(successDialog);
 
@@ -323,8 +302,6 @@ public class UsersAdministrationPage extends AdministrationPage {
 			@SuppressWarnings("unchecked")
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-				System.out.println("selected user(s): "
-						+ group.getDefaultModelObjectAsString());
 
 				deleteConfirmationDialog.open(target);
 
@@ -336,18 +313,13 @@ public class UsersAdministrationPage extends AdministrationPage {
 				deleteUsers = (List<User>) group
 						.getDefaultModelObject();
 				
-				//userService.deleteUsers(removedUsers);
-				
 				showOrHideTable();
-
-				//target.add(parent);
 
 			}
 
 			@Override
 			protected void onError(AjaxRequestTarget target, Form<?> form) {
 				// TODO Auto-generated method stub
-				System.out.println("ERROR EN SEARCH USER");
 			}
 
 		};
@@ -360,7 +332,6 @@ public class UsersAdministrationPage extends AdministrationPage {
 
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-				System.out.println("viewfalse");
 
 				searchFields.add(AttributeModifier.replace("style",
 						"display: block;"));
@@ -386,9 +357,6 @@ public class UsersAdministrationPage extends AdministrationPage {
 
 				if (!StringUtils.isBlank(lowRegistrationDate
 						.getDefaultModelObjectAsString())) {
-					System.out.println("lowRegistrationDate: "
-							+ lowRegistrationDate
-									.getDefaultModelObjectAsString());
 					try {
 						searchLowRegistrationDate = (Date) formatter
 								.parse(lowRegistrationDate

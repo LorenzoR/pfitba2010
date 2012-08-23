@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
@@ -200,84 +201,25 @@ public class RegisterPage extends BasePage {
 
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-				// comments.add(new Comment(new
-				// User(ddc.getDefaultModelObjectAsString()),
-				// editor.getDefaultModelObjectAsString()));
-				// editor.setModel(new Model(""));
-				// target.addComponent(parent);
-				// target.focusComponent(editor);
-				// System.out.println("ACA 1");
-				// String username =
-				// usernameField.getDefaultModelObjectAsString();
-				// String firstname = firstnameField
-				// .getDefaultModelObjectAsString();
-				// String lastname =
-				// lastnameField.getDefaultModelObjectAsString();
-				// String country =
-				// countrySelect.getDefaultModelObjectAsString();
-				// String gender = genderSelect.getDefaultModelObjectAsString();
-				// String city = cityField.getDefaultModelObjectAsString();
-				// String password = passwordField1
-				// .getDefaultModelObjectAsString();
-
-				String birthdate = birthdateField
-						.getDefaultModelObjectAsString();
-				System.out.println(birthdate);
-
-				// User user = new User(username, password, firstname, lastname,
-				// User.Level.USER);
-
-				// System.out.println("GENDER: " + gender);
-
-				// if ( gender.equals("Masculino") ) {
-				// user.setGender(Gender.MALE);
-				// }
-				// else {
-				// user.setGender(Gender.FEMALE);
-				// }
-				//
-				// if ( StringUtils.isNotBlank(city) ) {
-				// user.setCity(city);
-				// }
-
-				// user.setCountry(country);
-
-				// SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-
-				// try {
-				// newUser.setBirthdate(sdf.parse(birthdate));
-				// } catch (ParseException e) {
-				// // TODO Auto-generated catch block
-				// e.printStackTrace();
-				// }
 
 				newUser.setLevel(Level.USER);
-				// newUser.setPassword(password);
 
 				final FileUpload uploadedFile = fileUploadField.getFileUpload();
 
 				if (uploadedFile != null) {
 
-					// ServletContext context = ((WebApplication)
-					// getApplication()).getServletContext();
 					String imgPath = ((WebApplication) getApplication())
 							.getServletContext().getRealPath(IMG_DIR_NAME);
-
-					System.out.println("REAL PATH ES " + imgPath);
 
 					final String extension = uploadedFile.getClientFileName()
 							.substring(
 									uploadedFile.getClientFileName()
 											.lastIndexOf('.') + 1);
-					System.out.println("EXTENSION: " + extension);
 
 					final String imgFilename = newUser.getUsername() + '.'
 							+ extension;
 
 					String filePath = imgPath + "/" + AVATAR_DIR + imgFilename;
-
-					System.out.println("***** FILENAME> " + imgPath + '/'
-							+ newUser.getUsername() + '.' + extension);
 
 					// write to a new file
 					File newFile = new File(filePath);
@@ -289,9 +231,6 @@ public class RegisterPage extends BasePage {
 					try {
 						newFile.createNewFile();
 						uploadedFile.writeTo(newFile);
-
-						// info("saved file: " +
-						// uploadedFile.getClientFileName());
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -311,24 +250,18 @@ public class RegisterPage extends BasePage {
 					e.printStackTrace();
 				}
 				
-
+				Logger logger = Logger.getLogger("booktube");
+				
 				/* Insert user */
 				userService.insertUser(newUser);
-				System.out.println("User inserted.");
-				System.out.println("Username: " + newUser.getUsername());
-				System.out.println("Firstname: " + newUser.getFirstname());
-				System.out.println("Lastname: " + newUser.getLastname());
-				System.out.println("Country: " + newUser.getCountry());
-				System.out.println("City: " + newUser.getCity());
-				System.out.println("Gender: " + newUser.getGender());
-				System.out.println("Birthdate: " + newUser.getBirthdate());
-
-				if (fileUploadField != null
-						&& fileUploadField.getConvertedInput() != null) {
-					System.out.println("IMAGEEE : "
-							+ fileUploadField.getConvertedInput().toString());
-				}
-
+				logger.info("User inserted.");
+				logger.info("Username: " + newUser.getUsername());
+				logger.info("Firstname: " + newUser.getFirstname());
+				logger.info("Lastname: " + newUser.getLastname());
+				logger.info("Country: " + newUser.getCountry());
+				logger.info("City: " + newUser.getCity());
+				logger.info("Gender: " + newUser.getGender());
+				logger.info("Birthdate: " + newUser.getBirthdate());
 
 				// Para el proceso de registracion				
 				try {

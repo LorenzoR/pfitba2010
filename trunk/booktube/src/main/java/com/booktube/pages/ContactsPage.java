@@ -26,116 +26,84 @@ public class ContactsPage extends BasePage {
 
 	@SpringBean
 	UserService userService;
-	
+
 	User user;
-	
+
 	public ContactsPage() {
 
 		// User user = new User("username", "firstname", "lastname");
 		// userService.insertUser(user);
 		// WicketApplication.instance().getUserService().insertUser(user);
 		// List<User> users = WicketApplication.instance().getUserService()
-		//List<User> users = userService.getAllUsers();
+		// List<User> users = userService.getAllUsers();
 		final WebMarkupContainer parent = new WebMarkupContainer("messages");
 		parent.setOutputMarkupId(true);
 		add(parent);
-		
-		addBreadcrumb(new BookmarkablePageLink<Object>("link", ContactsPage.class), new ResourceModel("contactsPageTitle").getObject());
-		
+
+		addBreadcrumb(new BookmarkablePageLink<Object>("link",
+				ContactsPage.class),
+				new ResourceModel("contactsPageTitle").getObject());
+
 		user = WiaSession.get().getLoggedInUser();
-		
-		List<Message> messagesFrom = messageService.getAllMessagesFrom(user, 0, Integer.MAX_VALUE);
-		List<Message> messagesTo = messageService.getAllMessagesTo(user, 0, Integer.MAX_VALUE);
-		
-		
+
+		List<Message> messagesFrom = messageService.getAllMessagesFrom(user, 0,
+				Integer.MAX_VALUE);
+		List<Message> messagesTo = messageService.getAllMessagesTo(user, 0,
+				Integer.MAX_VALUE);
+
 		parent.add(listMessages("messageFromList", messagesFrom));
 		parent.add(listMessages("messageToList", messagesTo));
-		
-		//List<Message> messagesTo = messageService.getAllMessagesTo(user, 0, Integer.MAX_VALUE);
-		
-		
-		
-		/*user = WiaSession.get().getLoggedInUser();
-		
-		Form<?> form = newContactForm(parent);
-		parent.add(form);
-		
-		Label registerMessage = new Label("registerMessage", "Debe registrarse para poder contactarnos.");
-		parent.add(registerMessage);
-		
-		if (user == null) {
-			form.setVisible(false);
-		} else {
-			registerMessage.setVisible(false);
-		}*/
-		
+
+		// List<Message> messagesTo = messageService.getAllMessagesTo(user, 0,
+		// Integer.MAX_VALUE);
+
+		/*
+		 * user = WiaSession.get().getLoggedInUser();
+		 * 
+		 * Form<?> form = newContactForm(parent); parent.add(form);
+		 * 
+		 * Label registerMessage = new Label("registerMessage",
+		 * "Debe registrarse para poder contactarnos.");
+		 * parent.add(registerMessage);
+		 * 
+		 * if (user == null) { form.setVisible(false); } else {
+		 * registerMessage.setVisible(false); }
+		 */
+
 	}
 
 	PropertyListView<Object> listMessages(String label, List<Message> messages) {
 
-		PropertyListView<Object> messagesPLV = new PropertyListView<Object>(label, messages) {
+		PropertyListView<Object> messagesPLV = new PropertyListView<Object>(
+				label, messages) {
 
 			private static final long serialVersionUID = 1L;
 
 			protected void populateItem(ListItem<Object> item) {
 				Message message = (Message) item.getModelObject();
-				//final PageParameters parameters = new PageParameters();
-				//parameters.put("user", user.getId());
+
 				item.add(new Label("date", message.getDate().toString()));
 				item.add(new Label("subject", message.getSubject()));
 				item.add(new Label("text", message.getText()));
-				
-				//item.add(new PropertyListView<Object>("answers", new ArrayList<Message>(message.getAnswer())) {
-				item.add(new PropertyListView<Object>("answers", new ArrayList<Message>()) {	
+
+
+				item.add(new PropertyListView<Object>("answers",
+						new ArrayList<Message>()) {
 
 					private static final long serialVersionUID = 1L;
 
 					protected void populateItem(ListItem<Object> item) {
 						Message message = (Message) item.getModelObject();
-						//final PageParameters parameters = new PageParameters();
-						//parameters.put("user", user.getId());
+
 						item.add(new Label("date", message.getDate().toString()));
 						item.add(new Label("subject", message.getSubject()));
 						item.add(new Label("text", message.getText()));
-						
-						//item.add(new Label("answer", message.get));
-						/*item.add(new Link<Object>("deleteLink", item.getModel()) {
-							private static final long serialVersionUID = -7155146615720218460L;
 
-							public void onClick() {
-
-								User user = (User) getModelObject();
-								Integer userId = user.getId();
-
-								userService.deleteUser(user);
-								System.out.println("User " + userId + " deleted.");
-
-								setResponsePage(WritersPage.this);
-							}
-
-						});*/
 					}
-					});
-				
-				//item.add(new Label("answer", message.get));
-				/*item.add(new Link<Object>("deleteLink", item.getModel()) {
-					private static final long serialVersionUID = -7155146615720218460L;
-
-					public void onClick() {
-
-						User user = (User) getModelObject();
-						Integer userId = user.getId();
-
-						userService.deleteUser(user);
-						System.out.println("User " + userId + " deleted.");
-
-						setResponsePage(WritersPage.this);
-					}
-
-				});*/
+				});
 			}
 		};
-		
+
 		return messagesPLV;
 
 	}
@@ -143,7 +111,8 @@ public class ContactsPage extends BasePage {
 	@Override
 	protected void setPageTitle() {
 		// TODO Auto-generated method stub
-		String newTitle = "Booktube - " + new ResourceModel("contactsPageTitle").getObject(); 
+		String newTitle = "Booktube - "
+				+ new ResourceModel("contactsPageTitle").getObject();
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 }

@@ -23,9 +23,11 @@
 		<p><wicket:message key="lastname">Lastname</wicket:message>: <span wicket:id="lastname">Lastname goes here</span></p>
 		<p>
 			<a href="#" wicket:id="worksLink"><wicket:message key="viewWorks">View Works</wicket:message></a> | 
-			<a href="#" wicket:id="detailsLink"><wicket:message key="details">Details</wicket:message></a> | 
-			<a href="#" wicket:id="deleteLink"><wicket:message key="delete">Delete</wicket:message></a> | 
-			<a href="#" wicket:id="editLink"><wicket:message key="edit">Edit</wicket:message></a>
+			<a href="#" wicket:id="detailsLink"><wicket:message key="details">Details</wicket:message></a>
+			<span wicket:id="deleteEditContainer">
+			 	 | <a href="#" wicket:id="deleteLink"><wicket:message key="delete">Delete</wicket:message></a> | 
+				<a href="#" wicket:id="editLink"><wicket:message key="edit">Edit</wicket:message></a>
+			</span>
 		</p>
 	</div>
 	

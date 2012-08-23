@@ -30,7 +30,6 @@ public class SuccessDialog<C extends IRequestablePage> extends Dialog {
 			@Override
 			protected void onButtonClicked(AjaxRequestTarget target) {
 				// do your cancel logic here
-				System.out.println("BUTTON CLICKED!!");
 				if (redirect) {
 					setResponsePage(webPage, pageParameters);
 				} else {
@@ -56,7 +55,6 @@ public class SuccessDialog<C extends IRequestablePage> extends Dialog {
 			@Override
 			protected void onButtonClicked(AjaxRequestTarget target) {
 				// do your cancel logic here
-				System.out.println("BUTTON CLICKED!!");
 				if (redirect) {
 					setResponsePage(backPage);
 				} else {
@@ -85,7 +83,6 @@ public class SuccessDialog<C extends IRequestablePage> extends Dialog {
 			@Override
 			protected void onButtonClicked(AjaxRequestTarget target) {
 				// do your cancel logic here
-				System.out.println("BUTTON CLICKED!!");
 				// dialog.close(target);
 				SuccessDialog.this.close(target);
 				target.add(parent);
@@ -102,7 +99,6 @@ public class SuccessDialog<C extends IRequestablePage> extends Dialog {
 
 	public void setText(String text) {
 		dynamicLabel.setLabel(text);
-		// System.out.println("+++++" + dynamicLabel.getLabel());
 	}
 
 	public void setRedirect(boolean redirect) {

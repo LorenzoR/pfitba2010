@@ -103,55 +103,19 @@ public class ShowBookPage extends BasePage {
 			@Override
 			protected void onRated(int rating, AjaxRequestTarget target) {
 				rating1.addRating(rating);
+				
 				if ( user != null) {
-					User newUser = userService.getUser(user.getId());
-					System.out.println("NEW USER: " + newUser);
-					//book.addUserVote(newUser);
 					UserVote userVote = new UserVote(user, book);
-//                	userVote.setBook(book);
-//                	userVote.setUser(user);
 					book.addUserVote(userVote);
 				}
+				
 				bookService.updateBook(book);
 			}
 		});
-
-//		parent.add(new ResetRatingLink("reset1", new Model<Rating>(rating1), book));
-
-//		PageParameters backPageParameters = new PageParameters();
-//		backPageParameters.set("currentPage", currentPage);
-//		parent.add(new BookmarkablePageLink<Object>("goBack", BooksPage.class, backPageParameters));
-//		parent.add(new Link("goBack") {
-//			public void onClick() {
-//				setResponsePage(HomePage.class);
-//			}
-//		});
-
-		//List<Comment> comments = new ArrayList<Comment>(book.getComments());
-
-		//parent.add(commentList("comments", comments));
-
-		//Form<Object> commentForm = commentForm(parent, book, comments);
-
-		//parent.add(commentForm);
-
-		/*Label registerMessage = new Label("registerMessage",
-				"Debe registrarse para poder enviar comentarios.");
-		parent.add(registerMessage);
-*/
-		/*if (user == null) {
-			commentForm.setVisible(false);
-		} else {
-			registerMessage.setVisible(false);
-		}*/
-		
-		//final String currentURL = RequestCycle.get().getUrlRenderer().renderFullUrl(
-		//	    Url.parse(urlFor(ShowBookPage.class,null).toString()));
 		
 		final String url = RequestCycle.get().getUrlRenderer().renderFullUrl(
 				   Url.parse(urlFor(ShowBookPage.class,pageParameters).toString()));
 		
-		//final Model<String> url = Model.of(currentURL);
 		final Comments facebookComments = new Comments("facebookComments", url);
 		parent.add(facebookComments);
 		

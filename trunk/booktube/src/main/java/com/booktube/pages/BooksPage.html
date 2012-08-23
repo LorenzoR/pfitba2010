@@ -53,9 +53,13 @@
 			</span>
 		</p>
 		<p>
-			<a href="#" wicket:id="detailsLink"><wicket:message key="view">View</wicket:message></a> | 
-			<a href="#" wicket:id="deleteLink"><wicket:message key="delete">Delete</wicket:message></a> | 
-			<a href="#" wicket:id="editLink"><wicket:message key="edit">Edit</wicket:message></a>
+			<a href="#" wicket:id="detailsLink"><wicket:message key="view">View</wicket:message></a>
+			<span wicket:id="deleteLinkContainer">
+				 | <a href="#" wicket:id="deleteLink"><wicket:message key="delete">Delete</wicket:message></a>
+			</span>
+			<span wicket:id="editLinkContainer">
+				 | <a href="#" wicket:id="editLink"><wicket:message key="edit">Edit</wicket:message></a>
+			</span>
 		</p>
 	</div>
 	<div wicket:id="feedbackMessage"></div>

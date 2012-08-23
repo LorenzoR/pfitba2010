@@ -122,7 +122,6 @@ public class WritersPage extends BasePage {
 					@Override
 					public void onClick(AjaxRequestTarget target) {
 						searchUsername = item.getModelObject() +"%";
-						System.out.println("{{{{{{{ SearchUserName: " + searchUsername);
 						
 						if ( writerByLetter.get() ) {
 							removeLastBreadcrumb();
@@ -130,26 +129,19 @@ public class WritersPage extends BasePage {
 						
 						if ( dataView.getItemCount() > 0 ) {
 							footerNavigator.setVisible(true);
-							//lettersListView.setVisible(true);
 							feedbackMessage.setVisible(false);
 						}
 						else {
 							footerNavigator.setVisible(false);
-							//lettersListView.setVisible(false);
 							feedbackMessage.setVisible(true);
 						}
 						
 						addBreadcrumb(new BookmarkablePageLink<Object>("link", WritersPage.class, pageParameters.set("letter", item.getModelObject())), item.getModelObject());
-						//setBreadcrumbs("Escritores > " + item.getModelObject());
-						//breadcrumbs.setLabel("Escritores > " + item.getModelObject());
-						//target.add(getBreadcrumbsLabel());
-//						labels.add(item.getModelObject());
-//						links.add(new BookmarkablePageLink<Object>("link", WritersPage.this.getClass()));
+
 						target.add(parent);
 						target.add(breadcrumbContainer);
 						
 						writerByLetter.set(true);
-//						target.add(breadscrumbsLV.get(1));
 					}
 				};
 				
@@ -194,8 +186,6 @@ public class WritersPage extends BasePage {
 				item.add(new Label("firstname"));
 				item.add(new Label("lastname"));
 				
-				System.out.println("IMAGE: " + user.getImageURL());
-				
 				Image avatar = new Image("avatar", new Model<String>());
 				
 				if ( user.getImageURL() == null ) {
@@ -210,8 +200,7 @@ public class WritersPage extends BasePage {
 
 				
 				item.add(avatar);
-				//item.add(new Image("avatar", new Model<String>("img/defaultAvatar.png")));
-				
+	
 				PageParameters worksParameter = new PageParameters();
 				worksParameter.set("author", user.getUsername());
 				worksParameter.set("type", "author");
@@ -221,28 +210,20 @@ public class WritersPage extends BasePage {
 				
 				item.add(new BookmarkablePageLink<Object>("detailsLink",
 						ShowUserPage.class, parameters));
-				/*
-				 * item.add(new Link("detailsLink", item.getModel()) { public
-				 * void onClick() { setResponsePage(ShowUserPage.class,
-				 * parameters); }
-				 * 
-				 * });
-				 */
 				
+				WebMarkupContainer deleteEditContainer = new WebMarkupContainer("deleteEditContainer");
+				deleteEditContainer.setVisible(false);
 				Link<User> editLink = new Link<User>("editLink", item.getModel()) {
 					private static final long serialVersionUID = 1L;
 
 					public void onClick() {
-						// setResponsePage(new EditWriterPage(user.getId(),
-						// WritersPage.this));
 						setResponsePage(new EditWriterPage(model,
 								WritersPage.this));
 					}
 
 				};
-				editLink.setVisible(false);
 				
-				item.add(editLink);
+				deleteEditContainer.add(editLink);
 				
 				Link<User> deleteLink = new Link<User>("deleteLink", item.getModel()) {
 					private static final long serialVersionUID = -7155146615720218460L;
@@ -250,24 +231,20 @@ public class WritersPage extends BasePage {
 					public void onClick() {
 
 						User user = (User) getModelObject();
-						Long userId = user.getId();
 
 						userService.deleteUser(user);
-						System.out.println("User " + userId + " deleted.");
 
 						setResponsePage(WritersPage.this);
 					}
 
 				};
-				deleteLink.setVisible(false);
 				
-				item.add(deleteLink);
+				deleteEditContainer.add(deleteLink);
 				
-				System.out.println("user es " + user);
+				item.add(deleteEditContainer);
 				
 				if ( loggedUser != null && loggedUser.getLevel() == Level.ADMIN ) {
-					deleteLink.setVisible(true);
-					editLink.setVisible(true);
+					deleteEditContainer.setVisible(true);
 				}
 				
 			}

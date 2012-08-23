@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
@@ -30,16 +31,16 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 	public void update(Message message) {
 		getSession().saveOrUpdate(message);
 		getSession().flush();
+		Logger.getLogger("booktube").info("Message " + message.getId() + " updated.");
 		// super.update(message);
 		// getSession().merge(message);
 		// getSession().flush();
 	}
 
 	public void delete(Message message) {
+		Long id = message.getId();
 		super.delete(message);
-		// System.out.println("Borro mensaje " + message);
-		// getSession().delete(message);
-		// getSession().flush();
+		Logger.getLogger("booktube").info("Message " + id + " deleted.");
 	}
 
 	public Message getMessage(Long id) {
@@ -48,11 +49,10 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 	}
 
 	public Long insert(Message message) {
-		/*
-		 * Long id = (Long) getSession().save(message); getSession().flush();
-		 * return id;
-		 */
-		return super.insert(message);
+		Long id = super.insert(message);
+		Logger.getLogger("booktube").info("Message " + id + " inserted.");
+		
+		return id;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -119,17 +119,7 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 		getSession().flush();
 	}
 
-	/*
-	 * public CampaignDetail getMessageDetail(Message message, User receiver) {
-	 * Criteria criteria = getSession().createCriteria(CampaignDetail.class)
-	 * .add(Restrictions.eq("receiver", receiver))
-	 * .add(Restrictions.eq("message", message));
-	 * 
-	 * return (CampaignDetail) criteria.setMaxResults(1).uniqueResult(); }
-	 */
-
 	public void sendMessages(Message message, List<User> receivers) {
-		// Set<MessageDetail> messageDetail = new HashSet<MessageDetail>();
 
 		for (User aUser : receivers) {
 			Message newMessage = new Message(message.getType(),
@@ -138,27 +128,9 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 
 			insert(newMessage);
 
-			System.out.println("MESSAGE ID> " + message.getId());
-			System.out.println("NEW MESSAGFE IOD> " + newMessage.getId());
-			// messageDetail.add(new MessageDetail(aUser, message));
 		}
 
-		// message.setReceiver(messageDetail);
-
-		// insert(message);
 	}
-
-	/*
-	 * public List<Message> getAllCampaigns(int first, int count) { return
-	 * (List<Message>) getSession().createCriteria(Message.class)
-	 * .add(Restrictions.eq("type", Type.CAMPAIGN))
-	 * .setFirstResult(first).setMaxResults(count).list(); }
-	 * 
-	 * public int countCampaigns() { Criteria criteria =
-	 * getSession().createCriteria(Message.class).add( Restrictions.eq("type",
-	 * Type.CAMPAIGN)); criteria.setProjection(Projections.rowCount()); return
-	 * ((Number) criteria.uniqueResult()).intValue(); }
-	 */
 
 	public List<Message> getAllMessages(User user, int first, int count) {
 		List<Message> messages = getAllMessagesFrom(user, first, count);
@@ -241,11 +213,7 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 
 		List<Object[]> results = (List<Object[]>) criteria.list();
 
-		System.out.println("***** LIST: " + results.toString());
-
 		for (Object[] anObj : results) {
-			System.out.println(anObj[0].toString() + " : "
-					+ anObj[1].toString());
 			map.put((Long) anObj[0], (User) anObj[1]);
 		}
 

@@ -75,18 +75,11 @@ public class NewContactPage extends BasePage {
 		} else {
 			registerMessage.setVisible(false);
 		}
-		
-		System.out.println("MSG FROM: " + messageService.countMessagesFrom(user));
-		System.out.println("MSG TO: " + messageService.countMessagesTo(user));
-		System.out.println("UNREAD MSG TO: " + messageService.countUnreadMessagesTo(user));
 
 	}
 
 	private Form<Message> newContactForm(final WebMarkupContainer parent) {
 		
-		/*Message message = new Message(Type.PRIVATE_MESSAGE,subject
-				.getDefaultModelObjectAsString(), editor
-				.getDefaultModelObjectAsString(), user);*/
 		final Message message = new Message(Type.PRIVATE_MESSAGE, user);
 		
 		Form<Message> form = new Form<Message>("form");
@@ -133,77 +126,11 @@ public class NewContactPage extends BasePage {
 				
 				Entry<Long,User> receiver = (Entry<Long, User>) receiverMap.entrySet().toArray()[0];
 				
-				//List<User> receivers = userService.getUsers(0, Integer.MAX_VALUE, Level.ADMIN);
-				
-				//message.setType(Type.PRIVATE_MESSAGE);
-				//message.setSubject(subject.getDefaultModelObjectAsString());
-				//message.setSender(user);
-				
-				System.out.println("+++++++ SUBJECT: " + message.getSubject());
-				
 				message.setReceiver(receiver.getValue());
 				messageService.insertMessage(message);
 				
-				//messageService.sendMessages(message, receivers);
-				
 				dialog.open(target);
 				
-				//Set<MessageDetail> receiverSet = new HashSet<MessageDetail>();
-
-				/*
-				// Si el usuario es Admin
-				if (true) {
-					List<User> users = (List<User>) group
-							.getDefaultModelObject();
-
-					for (User receiver : users) {
-						System.out.println("User: " + receiver);
-						//message.addReceiver(receiver);
-						receiverSet.add(new MessageDetail(receiver, message));
-					}
-				} else {
-					User admin = userService.getUser("admin");
-					receiverSet.add(new MessageDetail(admin, null));
-				}
-
-				System.out.println("Receiver: " + receiverSet.toString());
-				message.setReceiver(receiverSet);
-				messageService.insertMessage(message);
-				*/
-
-				// message.addReceiver(user1);
-
-				// message.addReceiver(user2);
-
-				// messageService.updateMessage(message);
-
-				// comments.add(new Comment(new
-				// User(ddc.getDefaultModelObjectAsString()),
-				// editor.getDefaultModelObjectAsString()));
-				// editor.setModel(new Model(""));
-				// target.addComponent(parent);
-				// target.focusComponent(editor);
-				// System.out.println("ACA 1");
-				/*
-				 * String text = editor.getDefaultModelObjectAsString(); String
-				 * username = user.getUsername(); String title =
-				 * titleField.getDefaultModelObjectAsString();
-				 * 
-				 * //User user = userService.getUser(username); Book book = new
-				 * Book(title, text, user);
-				 * 
-				 * 
-				 * bookService.insertBook(book);
-				 * System.out.println("Book inserted.");
-				 * System.out.println("Title: " + title);
-				 * System.out.println("Author: " + username);
-				 * System.out.println("Text: " + text);
-				 * 
-				 * 
-				 * editor.setModel(new Model("")); titleField.setModel(new
-				 * Model("")); target.addComponent(parent);
-				 * setResponsePage(HomePage.class);
-				 */
 			}
 
 			@Override

@@ -174,7 +174,7 @@ public class UserServiceImpl implements UserService {
 		sha1hash = md.digest();
 		
 //		Logger.getLogger("UserServiceImpl.generateSecret()").info("sha1hash: "+sha1hash);
-		System.out.println("UserServiceImpl.generateSecret() : sha1hash=["+sha1hash+"]");
+//		System.out.println("UserServiceImpl.generateSecret() : sha1hash=["+sha1hash+"]");
 		return convertToHex(sha1hash);
 	}
 	
@@ -237,7 +237,7 @@ public class UserServiceImpl implements UserService {
 	//Usada para crear string SHA-1
 	private static String convertToHex(byte[] data) {
 
-		System.out.println("UserServiceImpl.convertToHex(): llego al metodo el dato=["+data+"]");
+		//System.out.println("UserServiceImpl.convertToHex(): llego al metodo el dato=["+data+"]");
         StringBuffer buf = new StringBuffer();
         for (int i = 0; i < data.length; i++) {
         	int halfbyte = (data[i] >>> 4) & 0x0F;
@@ -251,7 +251,7 @@ public class UserServiceImpl implements UserService {
         	} while(two_halfs++ < 1);
         }
 
-        System.out.println("UserServiceImpl.convertToHex() : buf.toString()=["+buf.toString()+"]");
+        //System.out.println("UserServiceImpl.convertToHex() : buf.toString()=["+buf.toString()+"]");
         return buf.toString();
     }
 	

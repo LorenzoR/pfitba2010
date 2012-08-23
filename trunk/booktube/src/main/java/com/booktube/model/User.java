@@ -306,7 +306,6 @@ public class User implements Serializable {
 			if ( shaM.length() < 40 ) {
 				shaM = '0' + shaM;
 			}
-		    System.out.println("MD5: " + shaM);
 		    
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block

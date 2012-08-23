@@ -3,6 +3,7 @@ package com.booktube.pages;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -95,28 +96,6 @@ public class AddBookPage extends BasePage {
 			form.setVisible(true);
 			registerMessage.setVisible(false);
 		}
-
-		// AjaxDialogButton ok = new AjaxDialogButton("OK") {
-		//
-		// private static final long serialVersionUID = 1L;
-		//
-		// @Override
-		// protected void onButtonClicked(AjaxRequestTarget target) {
-		// // do your cancel logic here
-		// System.out.println("BUTTON CLICKED!!");
-		// setResponsePage(HomePage.class);
-		// if (lastInsertedId != null) {
-		// PageParameters pageParameters = new PageParameters();
-		// pageParameters.set("book", lastInsertedId);
-		// setResponsePage(ShowBookPage.class, pageParameters);
-		// }
-		//
-		// }
-		// };
-		//
-		// dialog = new Dialog("success_dialog");
-		// dialog.setButtons(ok);
-		// dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
 
 		dialog = new SuccessDialog<BooksPage>("success_dialog",
 				new ResourceModel("newBookDialog").getObject(),
@@ -235,45 +214,18 @@ public class AddBookPage extends BasePage {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 
-				System.out.println("--- TITULO: " + newBook.getTitle());
-				System.out.println("--- CATEGORY: " + newBook.getCategory());
-				System.out.println("--- SUBCATEGORY: "
-						+ newBook.getSubCategory());
-				System.out.println("--- TAGS: " + newBook.getTags().toString());
-				// String text = editor.getDefaultModelObjectAsString();
-				// String username = user.getUsername();
-				// String title = titleField.getDefaultModelObjectAsString();
-				// Set<BookTag> tagSet = (Set<BookTag>) tagField
-				// .getDefaultModelObject();
-				// String subcategoryString = subcategory
-				// .getDefaultModelObjectAsString();
-				// String categoryString = category
-				// .getDefaultModelObjectAsString();
-				//
-				// System.out.println("Tags: " + tagSet.toString());
-				//
-				// Book book = new Book(title, text, user);
-				//
-				// Set<String> bookTagSet = new HashSet<String>();
-				//
-				// // for (String aTag : tagSet) {
-				// // //aTag.setBook(book);
-				// // bookTagSet.add(aTag);
-				// // }
-				//
-				// // book.setTags(bookTagSet);
-				// book.setCategory(categoryString);
-				// book.setSubCategory(subcategoryString);
-
+				Logger logger = Logger.getLogger("booktube");
+				
 				/* Insert book */
 				Long lastInsertedId = bookService.insertBook(newBook);
 				pageParameters.set("book", lastInsertedId);
-				System.out.println("Book inserted.");
-				System.out.println("Title: " + newBook.getTitle());
-				System.out.println("Author: " + newBook.getAuthor());
-				System.out.println("Text: " + newBook.getText());
-				System.out.println("Category: " + newBook.getCategory());
-				System.out.println("SubCategory: " + newBook.getSubCategory());
+				logger.info("Book inserted.");
+				logger.info("ID: " + lastInsertedId);
+				logger.info("Title: " + newBook.getTitle());
+				logger.info("Author: " + newBook.getAuthor());
+				logger.info("Text: " + newBook.getText());
+				logger.info("Category: " + newBook.getCategory());
+				logger.info("SubCategory: " + newBook.getSubCategory());
 
 				user.addBook(newBook);
 
@@ -341,24 +293,21 @@ public class AddBookPage extends BasePage {
 
 				username.setModel(new Model<String>(""));
 
-				System.out.println("User: " + userString + " Pass: "
-						+ passwordString);
-
 				User user = userService.getUser(userString);
 
 				// if (user != null &&
 				// user.getPassword().equals(passwordString)) {
 				if (user != null && user.getPassword().equals(passwordString)
 						&& user.getIsActive()) {
-					System.out.println("Login OK");
 					WiaSession.get().logInUser(user);
 
+					Logger.getLogger("booktube").info("User " + user.getUsername() + " logged in.");
+					
 					if (!continueToOriginalDestination()) {
 						setResponsePage(AddBookPage.class);
 					}
 
 				} else {
-					System.out.println("Login ERROR");
 					username.setModel(new Model<String>(""));
 					password.setModel(new Model<String>(""));
 					target.add(username);

@@ -134,8 +134,6 @@ public class MessagesAdministrationPage extends AdministrationPage {
 
 			@Override
 			protected void onButtonClicked(AjaxRequestTarget target) {
-				System.out.println("Borro mensaje");
-				//Message message = messageService.getMessage(messageId);
 				
 				if ( deleteMessage != null ) {
 					messageService.deleteMessage(deleteMessage);
@@ -146,14 +144,10 @@ public class MessagesAdministrationPage extends AdministrationPage {
 					
 					Collections.sort(deleteMessages, Message.getDateComparatorDesc());
 					
-					System.out.println("** REMOVED MSG: " + deleteMessages.toString());
-					
-					
 					for (Message aMessage : deleteMessages) {
 						try {
 							messageService.deleteMessage(aMessage);
 						} catch ( StaleStateException ex ) {
-							System.out.println("Mensaje ya eliminado.");
 						}
 					}
 					
@@ -202,14 +196,13 @@ public class MessagesAdministrationPage extends AdministrationPage {
 
 			protected void populateItem(Item<Message> item) {
 				final Message message = (Message) item.getModelObject();
-				// final String receivers = getReceivers(message);
-				System.out.println("MESSAGE: " + message.getText());
+
 				CompoundPropertyModel<Message> model = new CompoundPropertyModel<Message>(
 						message);
 				item.setDefaultModel(model);
 				final PageParameters parameters = new PageParameters();
 				parameters.set("messageId", message.getId());
-				// item.add(new Label("id"));
+
 				item.add(new Check<Message>("checkbox", item.getModel()));
 				item.add(new Label("subject"));
 				item.add(new Label("sender"));
@@ -231,8 +224,6 @@ public class MessagesAdministrationPage extends AdministrationPage {
 
 					public void onClick() {
 						setResponsePage(ShowMessagePage.class, parameters);
-						// setResponsePage(new EditWriterPage(user.getId(),
-						// MessagePage.this));
 					}
 
 				});
@@ -250,16 +241,6 @@ public class MessagesAdministrationPage extends AdministrationPage {
 						deleteConfirmationLabel.setLabel(new ResourceModel("deleteMessageQuestion").getObject());
 
 						target.add(deleteConfirmationLabel);
-						
-						//messageId = message.getId();
-						// messageService.deleteMessage(message);
-						// userService.deleteUser(message);
-						// System.out.println("User " + messageId +
-						// " deleted.");
-
-						// setResponsePage(MessagesAdministrationPage.class);
-						// dialog.open(target);
-						//deleteConfirmationDialog.open(target);
 					}
 
 				});
@@ -324,8 +305,6 @@ public class MessagesAdministrationPage extends AdministrationPage {
 			@SuppressWarnings("unchecked")
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-				System.out.println("selected Message(s): "
-						+ group.getDefaultModelObjectAsString());
 
 				deleteConfirmationDialog.open(target);
 
@@ -339,41 +318,11 @@ public class MessagesAdministrationPage extends AdministrationPage {
 				
 				showOrHideTable();
 
-//				Collections.sort(removedMessages, Message.getDateComparatorDesc());
-//				
-//				System.out.println("** REMOVED MSG: " + removedMessages.toString());
-//				
-//				
-//				for (Message aMessage : removedMessages) {
-//					try {
-//						messageService.deleteMessage(aMessage);
-//					} catch ( StaleStateException ex ) {
-//						System.out.println("Mensaje ya eliminado.");
-//					}
-//				}
-
-				
-				
-//				if (dataView.getItemCount() <= 0) {
-//					this.setVisible(false);
-//					footerNavigator.setVisible(false);
-//					feedbackMessage.setVisible(true);
-//				} else {
-//					this.setVisible(true);
-//					footerNavigator.setVisible(true);
-//					feedbackMessage.setVisible(false);
-//				}
-
-				//target.add(parent);
-
-				// System.out.println("BOOKS: " + books);
-
 			}
 
 			@Override
 			protected void onError(AjaxRequestTarget target, Form<?> form) {
 				// TODO Auto-generated method stub
-
 			}
 
 		};
@@ -405,8 +354,6 @@ public class MessagesAdministrationPage extends AdministrationPage {
 
 				if (!StringUtils.isBlank(lowMessageDate
 						.getDefaultModelObjectAsString())) {
-					System.out.println("LowDate: "
-							+ lowMessageDate.getDefaultModelObjectAsString());
 					try {
 						searchLowMessageDate = (Date) formatter
 								.parse(lowMessageDate

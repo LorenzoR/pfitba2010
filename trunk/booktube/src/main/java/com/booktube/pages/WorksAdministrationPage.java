@@ -211,10 +211,6 @@ public class WorksAdministrationPage extends AdministrationPage {
 
 			@Override
 			protected void onButtonClicked(AjaxRequestTarget target) {
-
-				System.out.println("Borro Boook");
-
-				System.out.println("USER ES : " + deleteBook);
 				
 				if ( deleteBook != null ) {
 					bookService.deleteBook(deleteBook);
@@ -319,9 +315,6 @@ public class WorksAdministrationPage extends AdministrationPage {
 			@SuppressWarnings("unchecked")
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-				System.out.println("selected book(s): "
-						+ group.getDefaultModelObjectAsString());
-
 				
 				deleteConfirmationDialog.open(target);
 
@@ -375,8 +368,6 @@ public class WorksAdministrationPage extends AdministrationPage {
 				// CAMBIAR DATES 
 				if (!StringUtils.isBlank(lowPublishDate
 						.getDefaultModelObjectAsString())) {
-					System.out.println("LowDate: "
-							+ lowPublishDate.getDefaultModelObjectAsString());
 					try {
 						searchLowPublishDate = (Date) formatter
 								.parse(lowPublishDate

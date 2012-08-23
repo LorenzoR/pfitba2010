@@ -81,20 +81,17 @@ public class MessagesPage extends BasePage {
 
 			protected void populateItem(Item<Message> item) {
 				final Message message = (Message) item.getModelObject();
-				System.out.println("MESSAGE: " + message.getText());
+
 				CompoundPropertyModel<Message> model = new CompoundPropertyModel<Message>(message);
 				item.setDefaultModel(model);
 				final PageParameters parameters = new PageParameters();
 				parameters.set("messageId", message.getId());
-				//item.add(new Label("id"));
 				
 				final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, getLocale());
 				
 				boolean answerNotRead = false;
 				
 				for ( Message aMessage : message.getAllAnswers() ) {
-					System.out.println(aMessage.getId() + " MESSAGE: " + aMessage);
-					System.out.println("IS READ: " + aMessage.isRead());
 					if ( !aMessage.isRead() ) {
 						answerNotRead = true;
 						break;
@@ -143,10 +140,8 @@ public class MessagesPage extends BasePage {
 					public void onClick() {
 
 						Message message = (Message) getModelObject();
-						//Long messageId = message.getId();
 
 						messageService.deleteMessage(message);
-						//System.out.println("User " + messageId + " deleted.");
 
 						setResponsePage(MessagesPage.this);
 					}
