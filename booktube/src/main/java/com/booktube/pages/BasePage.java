@@ -27,7 +27,6 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
@@ -123,9 +122,9 @@ public abstract class BasePage extends WebPage {
 			private static final long serialVersionUID = 1L;
 
 			public void onClick() {
-				final CompoundPropertyModel<User> model = new CompoundPropertyModel<User>(
-						WiaSession.get().getLoggedInUser());
-				setResponsePage(new EditWriterPage(model,
+				PageParameters pageParameters = new PageParameters();
+				pageParameters.set("userId", WiaSession.get().getLoggedInUser().getId());
+				setResponsePage(new EditWriterPage(pageParameters,
 						BasePage.this));
 			}
 

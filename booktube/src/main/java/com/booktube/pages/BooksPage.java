@@ -81,7 +81,7 @@ public class BooksPage extends BasePage {
 		if (StringUtils.isNotBlank(parameters.get("author").toString())) {
 			author = parameters.get("author").toString();
 			parameters.set("author", author);
-			addBreadcrumb(new BookmarkablePageLink<Object>("link", AnswerMessagePage.class, parameters), "Autor " + author);
+			addBreadcrumb(new BookmarkablePageLink<Object>("link", BooksPage.class, parameters), "Autor " + author);
 		}
 
 		if (StringUtils.isNotBlank(parameters.get("tag").toString())) {

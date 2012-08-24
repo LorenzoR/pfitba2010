@@ -155,7 +155,9 @@ public class UsersAdministrationPage extends AdministrationPage {
 					private static final long serialVersionUID = 1L;
 
 					public void onClick() {
-						setResponsePage(new EditWriterPage(model,
+						PageParameters pageParameters = new PageParameters();
+						pageParameters.set("userId", user.getId());
+						setResponsePage(new EditWriterPage(pageParameters,
 								UsersAdministrationPage.this));
 					}
 

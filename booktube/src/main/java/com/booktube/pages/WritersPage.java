@@ -38,71 +38,81 @@ public class WritersPage extends BasePage {
 
 	@SpringBean
 	UserService userService;
-	
+
 	private final User loggedUser;
 
 	public static final int WRITERS_PER_PAGE = 5;
-	
+
 	private static String searchUsername = null;
 
 	public WritersPage(final PageParameters pageParameters) {
 
 		loggedUser = WiaSession.get().getLoggedInUser();
-		
+
 		final WebMarkupContainer parent = new WebMarkupContainer("writers");
 		parent.setOutputMarkupId(true);
 		add(parent);
-		
+
 		final AtomicBoolean writerByLetter = new AtomicBoolean(false);
 
-//		//final DynamicLabel breadcrumbs = new DynamicLabel("breadcrumbs");
-//		//breadcrumbs.setLabel("Escritores >");
-//		final List<BookmarkablePageLink<Object>> links = new ArrayList<BookmarkablePageLink<Object>>();
-//		links.add(new BookmarkablePageLink<Object>("link", HomePage.class));
-//		links.add(new BookmarkablePageLink<Object>("link", this.getClass()));
-//		final List<String> labels = new ArrayList<String>();
-//		labels.add("Inicio");
-//		labels.add("Escritores");
-//		final ListView<?> breadscrumbsLV = setBreadcrumbs(links, labels);
-//		add(breadscrumbsLV);
-//		//parent.add(breadcrumbs);
-		addBreadcrumb(new BookmarkablePageLink<Object>("link", WritersPage.class), new ResourceModel("writersPageTitle").getObject());
-		
-		if ( StringUtils.isNotBlank(pageParameters.get("letter").toString()) ) {
+		// //final DynamicLabel breadcrumbs = new DynamicLabel("breadcrumbs");
+		// //breadcrumbs.setLabel("Escritores >");
+		// final List<BookmarkablePageLink<Object>> links = new
+		// ArrayList<BookmarkablePageLink<Object>>();
+		// links.add(new BookmarkablePageLink<Object>("link", HomePage.class));
+		// links.add(new BookmarkablePageLink<Object>("link", this.getClass()));
+		// final List<String> labels = new ArrayList<String>();
+		// labels.add("Inicio");
+		// labels.add("Escritores");
+		// final ListView<?> breadscrumbsLV = setBreadcrumbs(links, labels);
+		// add(breadscrumbsLV);
+		// //parent.add(breadcrumbs);
+		addBreadcrumb(new BookmarkablePageLink<Object>("link",
+				WritersPage.class),
+				new ResourceModel("writersPageTitle").getObject());
+
+		if (pageParameters != null
+				&& pageParameters.get("letter") != null
+				&& StringUtils.isNotBlank(pageParameters.get("letter")
+						.toString())) {
 			searchUsername = pageParameters.get("letter").toString() + "%";
-			if ( writerByLetter.get() ) {
+			if (writerByLetter.get()) {
 				removeLastBreadcrumb();
 			}
-			
-			addBreadcrumb(new BookmarkablePageLink<Object>("link", WritersPage.class, pageParameters.set("letter", pageParameters.get("letter").toString())), pageParameters.get("letter").toString());
-			
+
+			addBreadcrumb(
+					new BookmarkablePageLink<Object>("link", WritersPage.class,
+							pageParameters.set("letter",
+									pageParameters.get("letter").toString())),
+					pageParameters.get("letter").toString());
+
 			writerByLetter.set(true);
-		}
-		else {
+		} else {
 			searchUsername = null;
 		}
-		
-		
+
 		// parent.add(listWriters("writerList", users));
 		final DataView<User> dataView = writerList("writerList");
 
 		parent.add(dataView);
-		
-		final AjaxPagingNavigator footerNavigator = new AjaxPagingNavigator("footerPaginator", dataView) {
+
+		final AjaxPagingNavigator footerNavigator = new AjaxPagingNavigator(
+				"footerPaginator", dataView) {
 
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onAjaxEvent(AjaxRequestTarget target) {
 				target.appendJavaScript("scrollTo(0, 0)");
-				target.add(parent);			
+				target.add(parent);
 			}
 		};
 		parent.add(footerNavigator);
-		
-		final Label feedbackMessage = new Label("feedbackMessage", new ResourceModel("noResults"));
+
+		final Label feedbackMessage = new Label("feedbackMessage",
+				new ResourceModel("noResults"));
 		parent.add(feedbackMessage);
-		
+
 		List<String> list = Arrays.asList(new String[] { "A", "B", "C", "D",
 				"E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P",
 				"Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" });
@@ -112,52 +122,55 @@ public class WritersPage extends BasePage {
 
 			protected void populateItem(final ListItem<String> item) {
 				// item.add(new Label("label", item.getModel()));
-//				BookmarkablePageLink link = new BookmarkablePageLink("link",
-//						HomePage.class);
-				
+				// BookmarkablePageLink link = new BookmarkablePageLink("link",
+				// HomePage.class);
+
 				AjaxLink<?> link = new AjaxLink<Void>("link") {
 
 					private static final long serialVersionUID = 1L;
 
 					@Override
 					public void onClick(AjaxRequestTarget target) {
-						searchUsername = item.getModelObject() +"%";
-						
-						if ( writerByLetter.get() ) {
+						searchUsername = item.getModelObject() + "%";
+
+						if (writerByLetter.get()) {
 							removeLastBreadcrumb();
 						}
-						
-						if ( dataView.getItemCount() > 0 ) {
+
+						if (dataView.getItemCount() > 0) {
 							footerNavigator.setVisible(true);
 							feedbackMessage.setVisible(false);
-						}
-						else {
+						} else {
 							footerNavigator.setVisible(false);
 							feedbackMessage.setVisible(true);
 						}
-						
-						addBreadcrumb(new BookmarkablePageLink<Object>("link", WritersPage.class, pageParameters.set("letter", item.getModelObject())), item.getModelObject());
+
+						addBreadcrumb(
+								new BookmarkablePageLink<Object>("link",
+										WritersPage.class,
+										pageParameters.set("letter",
+												item.getModelObject())),
+								item.getModelObject());
 
 						target.add(parent);
 						target.add(breadcrumbContainer);
-						
+
 						writerByLetter.set(true);
 					}
 				};
-				
+
 				Label label = new Label("label", item.getModel());
 				link.add(label);
 				item.add(link);
 			}
 		};
 		parent.add(lettersListView);
-		
-		if ( dataView.getItemCount() > 0 ) {
+
+		if (dataView.getItemCount() > 0) {
 			footerNavigator.setVisible(true);
 			lettersListView.setVisible(true);
 			feedbackMessage.setVisible(false);
-		}
-		else {
+		} else {
 			footerNavigator.setVisible(false);
 			lettersListView.setVisible(false);
 			feedbackMessage.setVisible(true);
@@ -185,47 +198,54 @@ public class WritersPage extends BasePage {
 				item.add(new Label("username"));
 				item.add(new Label("firstname"));
 				item.add(new Label("lastname"));
-				
-				Image avatar = new Image("avatar", new Model<String>());
-				
-				if ( user.getImageURL() == null ) {
-					avatar.add(new AttributeModifier("src", new Model<String>("img/defaultAvatar.png")));
-				}
-				else {
-					avatar.add(new AttributeModifier("src", new Model<String>("img/avatar/" + user.getImageURL())));
-				}
-				
-				avatar.add(new AttributeModifier("width", new Model<String>("116px")));
-				avatar.add(new AttributeModifier("height", new Model<String>("116px")));
 
-				
+				Image avatar = new Image("avatar", new Model<String>());
+
+				if (user.getImageURL() == null) {
+					avatar.add(new AttributeModifier("src", new Model<String>(
+							"img/defaultAvatar.png")));
+				} else {
+					avatar.add(new AttributeModifier("src", new Model<String>(
+							"img/avatar/" + user.getImageURL())));
+				}
+
+				avatar.add(new AttributeModifier("width", new Model<String>(
+						"116px")));
+				avatar.add(new AttributeModifier("height", new Model<String>(
+						"116px")));
+
 				item.add(avatar);
-	
+
 				PageParameters worksParameter = new PageParameters();
 				worksParameter.set("author", user.getUsername());
 				worksParameter.set("type", "author");
-				
-				item.add(new BookmarkablePageLink<Object>(
-						"worksLink", BooksPage.class, worksParameter));
-				
+
+				item.add(new BookmarkablePageLink<Object>("worksLink",
+						BooksPage.class, worksParameter));
+
 				item.add(new BookmarkablePageLink<Object>("detailsLink",
 						ShowUserPage.class, parameters));
-				
-				WebMarkupContainer deleteEditContainer = new WebMarkupContainer("deleteEditContainer");
+
+				WebMarkupContainer deleteEditContainer = new WebMarkupContainer(
+						"deleteEditContainer");
 				deleteEditContainer.setVisible(false);
-				Link<User> editLink = new Link<User>("editLink", item.getModel()) {
+				Link<User> editLink = new Link<User>("editLink",
+						item.getModel()) {
 					private static final long serialVersionUID = 1L;
 
 					public void onClick() {
-						setResponsePage(new EditWriterPage(model,
+						PageParameters pageParameters = new PageParameters();
+						pageParameters.set("userId", user.getId());
+						setResponsePage(new EditWriterPage(pageParameters,
 								WritersPage.this));
 					}
 
 				};
-				
+
 				deleteEditContainer.add(editLink);
-				
-				Link<User> deleteLink = new Link<User>("deleteLink", item.getModel()) {
+
+				Link<User> deleteLink = new Link<User>("deleteLink",
+						item.getModel()) {
 					private static final long serialVersionUID = -7155146615720218460L;
 
 					public void onClick() {
@@ -238,15 +258,15 @@ public class WritersPage extends BasePage {
 					}
 
 				};
-				
+
 				deleteEditContainer.add(deleteLink);
-				
+
 				item.add(deleteEditContainer);
-				
-				if ( loggedUser != null && loggedUser.getLevel() == Level.ADMIN ) {
+
+				if (loggedUser != null && loggedUser.getLevel() == Level.ADMIN) {
 					deleteEditContainer.setVisible(true);
 				}
-				
+
 			}
 
 		};
@@ -285,7 +305,8 @@ public class WritersPage extends BasePage {
 
 	@Override
 	protected void setPageTitle() {
-		String newTitle = "Booktube - " + new ResourceModel("writersPageTitle").getObject();
+		String newTitle = "Booktube - "
+				+ new ResourceModel("writersPageTitle").getObject();
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 

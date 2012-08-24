@@ -32,6 +32,8 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.EmailAddressValidator;
 import org.odlabs.wiquery.ui.dialog.Dialog;
@@ -65,12 +67,17 @@ public class EditWriterPage extends BasePage {
 	private final String IMG_HEIGHT = "116px";
 	private final String IMG_WIDTH = "116px";
 	private final String IMG_DIR_NAME = "img";
-
 	
 	@SuppressWarnings("unused")
-	public EditWriterPage(IModel<User> model, final WebPage backPage) {
+	public EditWriterPage(PageParameters pageParameters, final WebPage backPage) {
 
-		final User user = (User) model.getObject();
+		if ( pageParameters.get("userId") == null ) {
+			throw new AbortWithHttpErrorCodeException(404);
+		}
+		
+		Long userId = pageParameters.get("userId").toLong();
+		
+		final User user = userService.getUser(userId);
 		Logger.getLogger("EditWriterPage").info("Usuario a modificar:"+user.getUsername());
 
 		
@@ -79,7 +86,7 @@ public class EditWriterPage extends BasePage {
 			return;
 		}
 
-		addBreadcrumb(new BookmarkablePageLink<Object>("link", EditWriterPage.class), new ResourceModel("edit").getObject() + " " + user.getUsername() );
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", EditWriterPage.class, pageParameters), new ResourceModel("edit").getObject() + " " + user.getUsername() );
 		
 		add(new Label("username", user.getUsername()));
 
@@ -97,6 +104,10 @@ public class EditWriterPage extends BasePage {
 		// goToLastPage();
 		String newTitle = "Booktube - " + new ResourceModel("edit").getObject() + " " + user.getUsername();
 		super.get("pageTitle").setDefaultModelObject(newTitle);
+	}
+	
+	public EditWriterPage(PageParameters pageParameters) {
+		this(pageParameters, new WritersPage(null));
 	}
 
 	private Form<User> editWriterForm(final User writer, final WebMarkupContainer feedback) {
@@ -240,7 +251,7 @@ public class EditWriterPage extends BasePage {
 				}
 
 				userService.updateUser(writer);
-
+				
 				target.add(welcomeLabel);
 				
 				dialog.open(target);
