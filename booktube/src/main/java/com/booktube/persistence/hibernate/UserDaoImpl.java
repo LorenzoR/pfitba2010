@@ -18,6 +18,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.SQLQuery;
 //import org.hibernate.annotations.FetchMode;
 import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -510,7 +511,7 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 			MiscFilterOption misc) {
 
 		String whereClause = SqlUtilities.generateWhereClause(null, age, misc);
-		String sql = "select country, count(message_id) as total from user join message on user_id=sender_id "
+		String sql = "select country, count(message_id) as total from user join message on user.user_id=message.sender_id "
 				+ whereClause + " group by country";
 		SQLQuery query = getSession().createSQLQuery(sql)
 				.addScalar("country", Hibernate.STRING)
@@ -578,12 +579,17 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 		Criteria criteria = getSession().createCriteria(sourceClass);
 
 		Criteria authorCriteria = null;
-		
+		Criteria senderCriteria = null;
 
 		if (sourceClass.equals(Book.class)) {
 			authorCriteria = criteria.createCriteria("author");
 		}
 
+		if( sourceClass.equals(Message.class)){
+			// this.subject es NECESARIO ( subjecto SOLO NO FUNCIONA ), porque estamos realizando una proyeccion sobre el campo subject usando alias(EL problema es el Alias) 
+			criteria.add(Restrictions.not(Restrictions.ilike("this.subject", "%RE:%", MatchMode.START)));			
+			senderCriteria = criteria.createCriteria("sender");						
+		}
 		
 		if (lowerAge != null) {
 			criteria.add(Expression
@@ -600,6 +606,8 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 		if (gender != null) {
 			if (sourceClass.equals(Book.class)) {
 				authorCriteria.add(Restrictions.eq("gender", gender));
+			} else if( sourceClass.equals(Message.class)){
+				senderCriteria.add(Restrictions.eq("gender", gender));
 			} else {
 				criteria.add(Restrictions.eq("gender", gender));
 			}
@@ -627,6 +635,8 @@ public class UserDaoImpl extends AbstractDaoHibernate<User> implements UserDao {
 			if (sourceClass.equals(Book.class)) {
 				authorCriteria.add(Restrictions.between("registrationDate",
 						lowDate, highDate));
+			} else if (sourceClass.equals(Message.class)) {
+				senderCriteria.add(Restrictions.between("registrationDate", lowDate, highDate));
 			} else {
 				criteria.add(Restrictions.between("registrationDate", lowDate,
 						highDate));

@@ -4,6 +4,7 @@ import java.util.List;
 
 
 
+
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -28,8 +29,6 @@ import org.odlabs.wiquery.ui.dialog.Dialog;
 import com.booktube.pages.customComponents.AJAXDownload;
 import com.booktube.pages.customComponents.panels.AgeFilterOption;
 import com.booktube.pages.customComponents.panels.DropDownElementPanel;
-import com.booktube.pages.customComponents.panels.FilterOption;
-//import com.booktube.pages.customComponents.panels.FilterOption;
 import com.booktube.pages.customComponents.panels.MiscFilterOption;
 import com.booktube.pages.customComponents.panels.OriginFilterOption;
 import com.booktube.pages.customComponents.panels.ReportFilterPanel;
@@ -133,10 +132,56 @@ public abstract class ReportPage extends AdministrationPage {
 					
 					public void write(Response output) {					
 						try {
-					          report.writeChartAsPdf(output.getOutputStream(), CHART_WIDTH, CHART_HEIGHT);
+								String details = getFilterDetails(ageFilter, originFilter, customizedMisc);
+					          report.writeChartAsPdf(output.getOutputStream(), CHART_WIDTH, CHART_HEIGHT, details);
 					        } catch (Exception e) {
 					        	e.printStackTrace();
 					        }
+					}
+
+					// FALTA INTERNACIONALIZAR
+					private String getFilterDetails(AgeFilterOption ageFilter,
+							OriginFilterOption originFilter,
+							MiscFilterOption customizedMisc) {
+						StringBuffer resp = new StringBuffer("");						
+						
+						if( ageFilter != null){
+							String min = ageFilter.getSelectedMinAge();
+							String max = ageFilter.getSelectedMaxAge();	
+							
+							if( min != null )
+								resp.append(getSeparator(resp)+ageFilter.getMinAgeLabel()+" = "+min+" años");
+							if( max != null )
+								resp.append(getSeparator(resp)+ageFilter.getMaxAgeLabel()+" = "+max+" años");							
+						}
+						if( originFilter != null ){
+							String city = originFilter.getSelectedCity();
+							String country = originFilter.getSelectedCountry();
+							
+							if( country != null)
+								resp.append(getSeparator(resp)+originFilter.getCountryLabel()+" = "+country);
+							if( city != null )
+								resp.append(getSeparator(resp)+originFilter.getCityLabel()+" = "+city);
+						}
+						if( customizedMisc != null ){
+							List<DropDownElementPanel> list = customizedMisc.getElements();
+							for( DropDownElementPanel elem : list ){								
+								String value = elem.getSelectedValue();
+								if( value  != null )
+									resp.append(getSeparator(resp)+elem.getLabel()+" = "+elem.getSelectedValue()+"  ");
+							}								
+						}
+						if( resp.toString().isEmpty() )
+							resp.append("No se especificaron criterios.");
+						return resp.toString(); 
+						
+					}
+
+					private String getSeparator(StringBuffer buff) {
+						String cad = "";
+						if ( buff.length() > 0 )
+							cad = "  |  ";
+						return cad;
 					}
 			    };
 				return resourceStream;

@@ -63,4 +63,11 @@ public class OriginFilterOption extends FilterOption {
 		return selectedCity;
 	}
 
+	public String getCountryLabel(){
+		return "País";
+	}
+	
+	public String getCityLabel(){
+		return "Ciudad";
+	}
 }
