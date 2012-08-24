@@ -3,6 +3,7 @@ package com.booktube.pages;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -15,6 +16,7 @@ import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -29,6 +31,7 @@ import com.booktube.model.User;
 import com.booktube.pages.customComponents.AbstractAutoCompleteTextField;
 import com.booktube.pages.customComponents.TagTextField;
 import com.booktube.pages.customComponents.SuccessDialog;
+import com.booktube.pages.validators.UniqueBookValidator;
 import com.booktube.service.BookService;
 import com.booktube.service.UserService;
 
@@ -55,6 +58,10 @@ public class AddBookPage extends BasePage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
+		final FeedbackPanel feedback = new FeedbackPanel("feedback");
+		feedback.setOutputMarkupId(true);
+		parent.add(feedback);
+		
 		addBreadcrumb(new BookmarkablePageLink<Object>("link",
 				AddBookPage.class, pageParameters), new ResourceModel(
 				"addBookPageTitle").getObject());
@@ -86,7 +93,7 @@ public class AddBookPage extends BasePage {
 		registerMessage.add(loginLink);
 		parent.add(registerMessage);
 
-		Form<Book> form = addBookForm(parent);
+		Form<Book> form = addBookForm(parent, feedback);
 		parent.add(form);
 
 		if (user == null) {
@@ -108,7 +115,7 @@ public class AddBookPage extends BasePage {
 
 	}
 
-	private Form<Book> addBookForm(final WebMarkupContainer parent) {
+	private Form<Book> addBookForm(final WebMarkupContainer parent, final FeedbackPanel feedback) {
 		Form<Book> form = new Form<Book>("form");
 
 		final Book newBook = new Book(user);
@@ -120,6 +127,7 @@ public class AddBookPage extends BasePage {
 
 		final RequiredTextField<Book> titleField = new RequiredTextField<Book>(
 				"title");
+		titleField.add(new UniqueBookValidator(user.getUsername()));
 
 		form.add(titleField);
 
@@ -187,7 +195,7 @@ public class AddBookPage extends BasePage {
 				for (final String aSubcategory : bookService.getSubcategories(
 						0, Integer.MAX_VALUE, null)) {
 
-					if (aSubcategory.toUpperCase().startsWith(
+					if (StringUtils.isNotBlank(aSubcategory) && aSubcategory.toUpperCase().startsWith(
 							searchTextInput.toUpperCase())) {
 						choices.add(aSubcategory);
 						if (choices.size() == 10) {
@@ -240,7 +248,8 @@ public class AddBookPage extends BasePage {
 
 			@Override
 			protected void onError(AjaxRequestTarget target, Form<?> form) {
-				// TODO Auto-generated method stub
+				target.add(feedback);
+				target.appendJavaScript("scrollTo(0, 0)");
 			}
 		});
 

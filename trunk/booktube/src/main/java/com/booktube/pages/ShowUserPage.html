@@ -6,8 +6,10 @@
 <body>
 <wicket:extend>
 <div wicket:id="userDetails" style="margin-bottom: 1px; padding-left: 2px;">
-        ID: <span wicket:id="id">ID goes here</span>
-        <br />
+        <span wicket:id="idContainer">
+        	ID: <span wicket:id="id">ID goes here</span>
+        	<br />
+        </span>
         <wicket:message key="username">Username</wicket:message>: <span wicket:id="username">Username goes here</span>
         <br />
         <wicket:message key="firstname">Firstname</wicket:message>: <span wicket:id="firstname">Firstname goes here</span>
@@ -18,12 +20,14 @@
         <br />
         <wicket:message key="city">City</wicket:message>: <span wicket:id="city">City goes here</span>
         <br />
-        <wicket:message key="birthDate">Birth Date</wicket:message>: <span wicket:id="birthdate">Birthdate goes here</span> ( <span wicket:id="age">Age goes here</span> )
+        <wicket:message key="birthDate">Birth Date</wicket:message>: <span wicket:id="birthdate">Birthdate goes here</span>
         <br />
         <wicket:message key="gender">Gender</wicket:message>: <span wicket:id="gender">Gender goes here</span>
         <br />
-        <wicket:message key="level">Level</wicket:message>: <span wicket:id="level">Level goes here</span>
-        <br />
+        <span wicket:id="levelContainer">
+        	<wicket:message key="level">Level</wicket:message>: <span wicket:id="level">Level goes here</span>
+        	<br />
+        </span>
         <wicket:message key="registrationDate">Registration Date</wicket:message>: <span wicket:id="registrationDate">Registration Date goes here</span>
         <br />
         
