@@ -91,7 +91,7 @@ public class BooksPage extends BasePage {
 			author = parameters.get("author").toString();
 			parameters.set("author", author);
 			addBreadcrumb(new BookmarkablePageLink<Object>("link",
-					BooksPage.class, parameters), "Autor " + author);
+					BooksPage.class, parameters), new ResourceModel("author").getObject() + " " + author);
 		}
 
 		if (StringUtils.isNotBlank(parameters.get("tag").toString())) {
@@ -109,14 +109,14 @@ public class BooksPage extends BasePage {
 			category = parameters.get("category").toString();
 			parameters.set("category", category);
 			addBreadcrumb(new BookmarkablePageLink<Object>("link",
-					BooksPage.class, parameters), "Categoria " + category);
+					BooksPage.class, parameters), new ResourceModel("category").getObject() + " " + category);
 		}
 
 		if (StringUtils.isNotBlank(parameters.get("subcategory").toString())) {
 			subcategory = parameters.get("subcategory").toString();
 			parameters.set("subcategory", subcategory);
 			addBreadcrumb(new BookmarkablePageLink<Object>("link",
-					BooksPage.class, parameters), "Subcategoria " + subcategory);
+					BooksPage.class, parameters), new ResourceModel("subcategory").getObject() + " " + subcategory);
 		}
 
 		final WebMarkupContainer parent = new WebMarkupContainer("books");

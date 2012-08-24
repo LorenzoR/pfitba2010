@@ -9,7 +9,7 @@
 <body>
 <wicket:extend>
 <div wicket:id="advancedSearch">
-	<h2>Búsqueda Avanzada</h2>
+	<h2><wicket:message key="advancedSearchPageTitle">Advanced Search</wicket:message></h2>
 	
 	<span wicket:id="formFeedback"></span>
 	
@@ -18,33 +18,33 @@
 				<tr>
 					<td><b>ID:</b> </td>
 					<td><input type="text" wicket:id="bookId" value="" /></td>
-					<td><b>Autor:</b></td>
+					<td><b><wicket:message key="author">Author</wicket:message>:</b></td>
 					<td><input type="text" wicket:id="author" value="" /></td>
 				</tr>
 				<tr>
-					<td><b>T&iacute;tulo:</b></td>
+					<td><b><wicket:message key="title">Title</wicket:message>:</b></td>
 					<td><input type="text" wicket:id="title" value="" /></td>
 					<td><b>Tag:</b></td>
 					<td><input type="text" wicket:id="tag" value="" /></td>
 				</tr>
 				<tr>
-					<td><b>Categor&iacute;a:</b></td>
+					<td><b><wicket:message key="category">Category</wicket:message>:</b></td>
 					<td><input type="text" wicket:id="category" value="" /></td>
-					<td><b>Subcategor&iacute;a:</b></td>
+					<td><b><wicket:message key="subcategory">Subcategory</wicket:message>:</b></td>
 					<td><input type="text" wicket:id="subcategory" value="" /></td>
 				</tr>
 				<tr>
 					<td colspan="4">
 						<b>Rating:</b> &nbsp;
-						Desde: <input type="text" wicket:id="lowRating" value="" />
-						Hasta: <input type="text" wicket:id="highRating" value="" />
+						<wicket:message key="from">From</wicket:message>: <input type="text" wicket:id="lowRating" value="" />
+						<wicket:message key="to">To</wicket:message>: <input type="text" wicket:id="highRating" value="" />
 					</td>						
 				</tr>
 				<tr>
 					<td colspan="4">
-						<b>Fecha Publicaci&oacute;n:</b> &nbsp;
-						Desde: <input type="text" wicket:id="lowPublishDate" value="" />
-						Hasta: <input type="text" wicket:id="highPublishDate" value="" />
+						<b><wicket:message key="publishDate">Publish Date</wicket:message>:</b> &nbsp;
+						<wicket:message key="from">From</wicket:message>: <input type="text" wicket:id="lowPublishDate" value="" />
+						<wicket:message key="to">To</wicket:message>: <input type="text" wicket:id="highPublishDate" value="" />
 					</td>						
 				</tr>
 			</table>
@@ -59,10 +59,10 @@
 <table class="dataview">
 	<tbody>
 		<tr>
-			<th class="title">T&iacute;tulo</th>
-			<th class="title">Autor</th>
+			<th class="title"><wicket:message key="title">Title</wicket:message></th>
+			<th class="title"><wicket:message key="author">Author</wicket:message></th>
 			<th class="title">Tags</th>
-			<th class="title">Publicaci&oacute;n</th>
+			<th class="title"><wicket:message key="publishDate">Publish Date</wicket:message></th>
 			<th class="title"></th>
 		</tr>
 		<tr wicket:id="bookList">

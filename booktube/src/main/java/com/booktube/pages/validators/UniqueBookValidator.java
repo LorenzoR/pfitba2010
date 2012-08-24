@@ -31,7 +31,7 @@ public class UniqueBookValidator extends StringValidator {
 		List<Book> books = bookService.findBookByTitle(validatable.getValue(), 0, Integer.MAX_VALUE);
 		
 		for ( Book aBook : books ) {
-			if ( aBook.getAuthor().getUsername().equals(username) ) {
+			if ( aBook.getTitle().equals(validatable.getValue()) && aBook.getAuthor().getUsername().equals(username) ) {
 				error(validatable);
 			}
 		}
