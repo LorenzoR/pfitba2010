@@ -10,8 +10,11 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator;
+import org.apache.wicket.extensions.rating.RatingPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -24,6 +27,8 @@ import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
@@ -31,7 +36,9 @@ import org.apache.wicket.util.string.StringValue;
 import com.booktube.WiaSession;
 import com.booktube.model.Book;
 import com.booktube.model.BookTag;
+import com.booktube.model.Rating;
 import com.booktube.model.User;
+import com.booktube.model.UserVote;
 import com.booktube.model.User.Level;
 import com.booktube.service.BookService;
 import com.booktube.service.UserService;
@@ -49,9 +56,9 @@ public class BooksPage extends BasePage {
 	public static final int BOOKS_PER_PAGE = 5;
 
 	private final AjaxPagingNavigator footerNavigator;
-	
+
 	private User user;
-	
+
 	private String author = null;
 	private String title = null;
 	private String category = null;
@@ -62,7 +69,7 @@ public class BooksPage extends BasePage {
 	private Date highPublishDate = null;
 	private Double lowRating = null;
 	private Double highRating = null;
-	
+
 	final LoadableDetachableModel<List<Book>> resultsModel = new LoadableDetachableModel<List<Book>>() {
 
 		private static final long serialVersionUID = 1L;
@@ -74,49 +81,58 @@ public class BooksPage extends BasePage {
 
 	public BooksPage(final PageParameters parameters) {
 
-		addBreadcrumb(new BookmarkablePageLink<Object>("link", BooksPage.class), new ResourceModel("booksPageTitle").getObject());
-		
+		addBreadcrumb(
+				new BookmarkablePageLink<Object>("link", BooksPage.class),
+				new ResourceModel("booksPageTitle").getObject());
+
 		user = WiaSession.get().getLoggedInUser();
-		
+
 		if (StringUtils.isNotBlank(parameters.get("author").toString())) {
 			author = parameters.get("author").toString();
 			parameters.set("author", author);
-			addBreadcrumb(new BookmarkablePageLink<Object>("link", BooksPage.class, parameters), "Autor " + author);
+			addBreadcrumb(new BookmarkablePageLink<Object>("link",
+					BooksPage.class, parameters), "Autor " + author);
 		}
 
 		if (StringUtils.isNotBlank(parameters.get("tag").toString())) {
 			tag = parameters.get("tag").toString();
 			parameters.set("tag", tag);
-			addBreadcrumb(new BookmarkablePageLink<Object>("link", BooksPage.class, parameters), "Tag " + tag);
+			addBreadcrumb(new BookmarkablePageLink<Object>("link",
+					BooksPage.class, parameters), "Tag " + tag);
 		}
 
 		if (StringUtils.isNotBlank(parameters.get("title").toString())) {
 			title = parameters.get("title").toString();
 		}
-		
+
 		if (StringUtils.isNotBlank(parameters.get("category").toString())) {
 			category = parameters.get("category").toString();
 			parameters.set("category", category);
-			addBreadcrumb(new BookmarkablePageLink<Object>("link", BooksPage.class, parameters), "Categoria " + category);
+			addBreadcrumb(new BookmarkablePageLink<Object>("link",
+					BooksPage.class, parameters), "Categoria " + category);
 		}
-		
+
 		if (StringUtils.isNotBlank(parameters.get("subcategory").toString())) {
 			subcategory = parameters.get("subcategory").toString();
 			parameters.set("subcategory", subcategory);
-			addBreadcrumb(new BookmarkablePageLink<Object>("link", BooksPage.class, parameters), "Subcategoria " + subcategory);
+			addBreadcrumb(new BookmarkablePageLink<Object>("link",
+					BooksPage.class, parameters), "Subcategoria " + subcategory);
 		}
-		
+
 		final WebMarkupContainer parent = new WebMarkupContainer("books");
 		parent.setOutputMarkupId(true);
 		add(parent);
 
-		final WebMarkupContainer categoryMenu = new WebMarkupContainer("categoryButton");
+		final WebMarkupContainer categoryMenu = new WebMarkupContainer(
+				"categoryButton");
 		add(categoryMenu);
-		
-		final String newUrl = RequestCycle.get().getUrlRenderer().renderFullUrl(
-				   Url.parse(urlFor(CategoryMenu.class, null).toString()));
-		Label myScript = new Label("myScript", "url = '"
-				+ newUrl + "';");
+
+		final String newUrl = RequestCycle
+				.get()
+				.getUrlRenderer()
+				.renderFullUrl(
+						Url.parse(urlFor(CategoryMenu.class, null).toString()));
+		Label myScript = new Label("myScript", "url = '" + newUrl + "';");
 		myScript.setEscapeModelStrings(false);
 		add(myScript);
 
@@ -129,7 +145,7 @@ public class BooksPage extends BasePage {
 		}
 
 		parent.add(dataView);
-		
+
 		footerNavigator = new AjaxPagingNavigator("footerPaginator", dataView) {
 
 			private static final long serialVersionUID = 1L;
@@ -141,22 +157,23 @@ public class BooksPage extends BasePage {
 			}
 		};
 		parent.add(footerNavigator);
-		
-		final Label feedbackMessage = new Label("feedbackMessage", new ResourceModel("noResults"));
-//		Label feedbackMessage = new Label("feedbackMessage", "No se encontraron resultados.");
+
+		final Label feedbackMessage = new Label("feedbackMessage",
+				new ResourceModel("noResults"));
+		// Label feedbackMessage = new Label("feedbackMessage",
+		// "No se encontraron resultados.");
 		parent.add(feedbackMessage);
-		
-		if ( dataView.getItemCount() <= 0 ) {
+
+		if (dataView.getItemCount() <= 0) {
 			footerNavigator.setVisible(false);
 			categoryMenu.setVisible(true);
 			feedbackMessage.setVisible(true);
-		}
-		else {
+		} else {
 			footerNavigator.setVisible(true);
 			categoryMenu.setVisible(true);
 			feedbackMessage.setVisible(false);
 		}
-		
+
 	}
 
 	private DataView<Book> bookList(String label) {
@@ -227,25 +244,29 @@ public class BooksPage extends BasePage {
 				bplAuthor.add(new Label("authorName", book.getAuthor()
 						.getUsername()));
 				item.add(bplAuthor);
-				
-				final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, getLocale());
-				
-				item.add(new Label("publishDate", dateFormat.format(book.getPublishDate())));
 
-				WebMarkupContainer editLinkContainer = new WebMarkupContainer("editLinkContainer");
-				BookmarkablePageLink<Object> editLink = new BookmarkablePageLink<Object>("editLink",
-						EditBookPage.class, detailsParameter);
+				final DateFormat dateFormat = DateFormat.getDateTimeInstance(
+						DateFormat.MEDIUM, DateFormat.MEDIUM, getLocale());
+
+				item.add(new Label("publishDate", dateFormat.format(book
+						.getPublishDate())));
+
+				WebMarkupContainer editLinkContainer = new WebMarkupContainer(
+						"editLinkContainer");
+				BookmarkablePageLink<Object> editLink = new BookmarkablePageLink<Object>(
+						"editLink", EditBookPage.class, detailsParameter);
 				editLinkContainer.add(editLink);
 				editLinkContainer.setVisible(false);
-				
+
 				item.add(editLinkContainer);
 				item.add(new BookmarkablePageLink<Object>("detailsLink",
 						ShowBookPage.class, detailsParameter));
 
-				
-				WebMarkupContainer deleteLinkContainer = new WebMarkupContainer("deleteLinkContainer");
-				
-				Link<Book> deleteLink = new Link<Book>("deleteLink", item.getModel()) {
+				WebMarkupContainer deleteLinkContainer = new WebMarkupContainer(
+						"deleteLinkContainer");
+
+				Link<Book> deleteLink = new Link<Book>("deleteLink",
+						item.getModel()) {
 
 					private static final long serialVersionUID = 1L;
 
@@ -261,14 +282,43 @@ public class BooksPage extends BasePage {
 				};
 				deleteLinkContainer.add(deleteLink);
 				deleteLinkContainer.setVisible(false);
-				
+
 				item.add(deleteLinkContainer);
-				
-				if ( user != null && ( user.getLevel() == Level.ADMIN || user.getUsername().equals(book.getAuthor().getUsername()) ) ) {
+
+				final Rating rating1 = book.getRating();
+
+				item.add(new RatingPanel("rating1", new PropertyModel<Integer>(
+						rating1, "rating"), new Model<Integer>(5),
+						new PropertyModel<Integer>(rating1, "nrOfVotes"),
+						new Model<Boolean>(true), true) {
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					protected boolean onIsStarActive(int star) {
+						return rating1.isActive(star);
+					}
+
+					@Override
+					protected void onRated(int rating, AjaxRequestTarget target) {
+						rating1.addRating(rating);
+
+						if (user != null) {
+							UserVote userVote = new UserVote(user, book);
+							book.addUserVote(userVote);
+						}
+
+						bookService.updateBook(book);
+					}
+				});
+
+				if (user != null
+						&& (user.getLevel() == Level.ADMIN || user
+								.getUsername().equals(
+										book.getAuthor().getUsername()))) {
 					deleteLinkContainer.setVisible(true);
 					editLinkContainer.setVisible(true);
 				}
-				
+
 			}
 		};
 
@@ -283,10 +333,9 @@ public class BooksPage extends BasePage {
 		}
 
 		public Iterator<Book> iterator(int first, int count) {
-			return bookService
-					.getBooks(first, count, bookId, author, title, tag,
-							category, subcategory, lowPublishDate,
-							highPublishDate, lowRating, highRating).iterator();
+			return bookService.getBooks(first, count, bookId, author, title,
+					tag, category, subcategory, lowPublishDate,
+					highPublishDate, lowRating, highRating).iterator();
 		}
 
 		public int size() {
@@ -305,7 +354,8 @@ public class BooksPage extends BasePage {
 			// return size;
 			// return bookService.getCount(type, parameter);
 			return bookService.getCount(bookId, author, title, tag, category,
-					subcategory, lowPublishDate, highPublishDate, lowRating, highRating);
+					subcategory, lowPublishDate, highPublishDate, lowRating,
+					highRating);
 		}
 
 		public IModel<Book> model(Book book) {
@@ -321,8 +371,25 @@ public class BooksPage extends BasePage {
 	@Override
 	protected void setPageTitle() {
 		// TODO Auto-generated method stub
-		String newTitle = "Booktube - " + new ResourceModel("booksPageTitle").getObject();
+		String newTitle = "Booktube - "
+				+ new ResourceModel("booksPageTitle").getObject();
 		super.get("pageTitle").setDefaultModelObject(newTitle);
+	}
+
+	/**
+	 * Star image for no selected star
+	 */
+	public static final ResourceReference WICKETSTAR0 = new PackageResourceReference(
+			BooksPage.class, "WicketStar0.png");
+
+	/**
+	 * Star image for selected star
+	 */
+	public static final ResourceReference WICKETSTAR1 = new PackageResourceReference(
+			BooksPage.class, "WicketStar1.png");
+
+	public Boolean getHasVoted() {
+		return true;
 	}
 
 }

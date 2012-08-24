@@ -1,6 +1,5 @@
 package com.booktube.pages.validators;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -8,7 +7,6 @@ import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.validator.StringValidator;
 
 import com.booktube.model.Book;
-import com.booktube.model.User;
 import com.booktube.service.BookService;
 
 public class UniqueBookValidator extends StringValidator {
