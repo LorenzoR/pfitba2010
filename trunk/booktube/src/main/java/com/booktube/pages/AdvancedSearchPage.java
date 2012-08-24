@@ -13,8 +13,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Check;
-import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -49,7 +47,7 @@ public class AdvancedSearchPage extends BasePage {
 	
 	final private DataView<Book> dataView;
 	final private PagingNavigator footerNavigator;
-	final private CheckGroup<Book> group;
+	final private WebMarkupContainer tableContainer;
 	
 	private String searchAuthor = null;
 	private String searchTitle = null;
@@ -80,11 +78,14 @@ public class AdvancedSearchPage extends BasePage {
 		final Form<Book> searchBookForm = searchBookForm(parent, formFeedback);
 		parent.add(searchBookForm);
 		
-		group = new CheckGroup<Book>("group", new ArrayList<Book>());
-		searchBookForm.add(group);
+//		group = new CheckGroup<Book>("group", new ArrayList<Book>());
+//		searchBookForm.add(group);
+		tableContainer = new WebMarkupContainer("tableContainer");
 		
 		dataView = bookList("bookList");
-		group.add(dataView);
+		tableContainer.add(dataView);
+		
+		parent.add(tableContainer);
 		
 		footerNavigator = new PagingNavigator("footerPaginator", dataView);
 		parent.add(footerNavigator);
@@ -208,11 +209,11 @@ public class AdvancedSearchPage extends BasePage {
 				searchHighRating = highRating.getConvertedInput();
 
 				if (dataView.getItemCount() <= 0) {
-					group.setVisible(false);
+					tableContainer.setVisible(false);
 					footerNavigator.setVisible(false);
 					feedbackMessage.setVisible(true);
 				} else {
-					group.setVisible(true);
+					tableContainer.setVisible(true);
 					footerNavigator.setVisible(true);
 					feedbackMessage.setVisible(false);
 				}
@@ -259,8 +260,6 @@ public class AdvancedSearchPage extends BasePage {
 						book);
 
 				item.setDefaultModel(model);
-
-				item.add(new Check<Book>("checkbox", item.getModel()));
 
 				List<BookTag> tagList = null;
 

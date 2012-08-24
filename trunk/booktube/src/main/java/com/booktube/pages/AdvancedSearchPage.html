@@ -48,15 +48,17 @@
 					</td>						
 				</tr>
 			</table>
-			<input type="button" wicket:id="searchBook" value="Search" class="buttons" />
-					
+			<input type="submit" wicket:id="searchBook" value="Search" class="buttons" wicket:message="value:search" />
+			
 			<div wicket:id="feedbackMessage"></div>
-
-<div wicket:id="group">
+			
+			</form>
+					
+			
+<wicket:container wicket:id="tableContainer">
 <table class="dataview">
 	<tbody>
 		<tr>
-			<th class="title"></th>
 			<th class="title">T&iacute;tulo</th>
 			<th class="title">Autor</th>
 			<th class="title">Tags</th>
@@ -64,7 +66,6 @@
 			<th class="title"></th>
 		</tr>
 		<tr wicket:id="bookList">
-			<td class="list"><input type="checkbox" wicket:id="checkbox" /></td>
 			<td class="list">
 				<div><a href="#" wicket:id="viewLink"><span wicket:id="title" class="title">Title goes here</span></a></div>
 			</td>
@@ -84,9 +85,7 @@
 		</tr>
 	</tbody>
 </table>
-</div>
-
-</form>
+</wicket:container>
 
 <div wicket:id="footerPaginator" class="footerPaginator"></div>
 
