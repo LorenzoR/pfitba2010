@@ -57,5 +57,13 @@ public class AgeFilterOption extends FilterOption {
 //			return selectedMaxAge;
 		return selectedMaxAge;
 	}
-
+	
+	//FALTA INTERNACIONALIZAE
+	public String getMinAgeLabel(){
+		return "Edad Mín";
+	}
+	public String getMaxAgeLabel(){
+		return "Edad Máx";
+	}
+	
 }

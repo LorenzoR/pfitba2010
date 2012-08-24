@@ -13,11 +13,13 @@ public class DropDownElementPanel extends Panel {
 	
 	private String selectedValue; 
 	private String tableFieldName;
+	private String label;
 	
 	public DropDownElementPanel(String id, String label, String tableFieldName, List<String>values) {
 		super(id);
 		selectedValue = null;
 		this.tableFieldName = tableFieldName;
+		this.label = label;
 		add(new Label("label", label));
 		DropDownChoice<String> dropCombo = new DropDownChoice<String>("list",new PropertyModel<String>(this,"selectedValue"), values);
 		dropCombo.setNullValid(true);
@@ -27,10 +29,11 @@ public class DropDownElementPanel extends Panel {
 	public String getTableFieldName(){
 		return tableFieldName;
 	}
+	public String getLabel(){
+		return label;
+	}
+	
 	public String getSelectedValue() {
-		if( selectedValue == FilterOption.listFirstOption )
-			return null;
-		else 
 			return selectedValue;
 	}
 }

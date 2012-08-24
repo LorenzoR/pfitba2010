@@ -50,12 +50,22 @@ public class Message implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "MESSAGE_ID")
 	private Long id;
+	
+	
+	
+//	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST,
+//			CascadeType.MERGE, CascadeType.REFRESH})
+//	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
+//	@JoinColumn(name="USER_ID")
+//	private User author;
 
 	@OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
 	@JoinColumn(name = "SENDER_ID")
+	
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User sender;
 
+	
 	/*
 	 * @ManyToMany(cascade = CascadeType.ALL)
 	 * 
