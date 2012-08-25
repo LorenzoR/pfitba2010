@@ -195,7 +195,7 @@ public class LoadDataPage extends BasePage {
 		operator.setGender(Gender.MALE);
 		operator.setCountry("Country 1");
 		operator.setCity("City 1");
-		operator.setEmail(admin2.getUsername() + "@mail.com");
+		operator.setEmail(operator.getUsername() + "@mail.com");
 		operator.setIsActive(true);
 		
 		userService.insertUser(operator);
