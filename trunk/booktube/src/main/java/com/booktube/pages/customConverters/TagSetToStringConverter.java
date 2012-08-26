@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.util.convert.IConverter;
 
 import com.booktube.model.BookTag;
@@ -16,6 +17,11 @@ public class TagSetToStringConverter implements IConverter<Set<BookTag>> {
 	}
 
 	public Set<BookTag> convertToObject(String value, Locale locale) {
+		
+		if ( StringUtils.isEmpty(value) ) {
+			return null;
+		}
+		
 		String tags[] = value.split(" ");
 		Set<BookTag> tagsSet = new HashSet<BookTag>();
 

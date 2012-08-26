@@ -19,7 +19,8 @@
 		
 		<h3 class="pageTitle"><wicket:message key="worksAdministrationPageTitle">Works Administration Page Title</wicket:message></h3>
 		
-		<h2><a href="#" wicket:id="searchBookLink" onclick="return false;" class="searchLink">Buscar</a></h2>
+		<input type="button" wicket:id="searchBookLink" value="Search" wicket:message="value:search" class="buttons"/>
+<!-- 		<h2><a href="#" wicket:id="searchBookLink" onclick="return false;" class="searchLink">Buscar</a></h2> -->
 			<form id="searchBookFormId" wicket:id="searchBookForm" class="searchForm">
 				<div id="searchFields" wicket:id="searchFields" class="searchFields">
 					<table class="searchview">
@@ -49,7 +50,7 @@
 							</td>						
 						</tr>
 					</table>
-					<input type="button" wicket:id="searchBook" value="Search" wicket:message="value:serach" class="buttons" />
+					<input type="submit" wicket:id="searchBook" value="Search" wicket:message="value:serach" class="buttons" />
 					
 					<div wicket:id="feedbackMessage"></div>
 								

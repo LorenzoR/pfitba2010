@@ -219,14 +219,14 @@ public class MessagesAdministrationPage extends AdministrationPage {
 					}
 
 				});
-				item.add(new Link<Message>("editLink", item.getModel()) {
-					private static final long serialVersionUID = 1L;
-
-					public void onClick() {
-						setResponsePage(ShowMessagePage.class, parameters);
-					}
-
-				});
+//				item.add(new Link<Message>("editLink", item.getModel()) {
+//					private static final long serialVersionUID = 1L;
+//
+//					public void onClick() {
+//						setResponsePage(ShowMessagePage.class, parameters);
+//					}
+//
+//				});
 				item.add(new AjaxLink<Message>("deleteLink", item.getModel()) {
 
 					private static final long serialVersionUID = 1L;

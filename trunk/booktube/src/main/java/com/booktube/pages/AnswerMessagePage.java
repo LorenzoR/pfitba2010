@@ -48,7 +48,7 @@ public class AnswerMessagePage extends BasePage {
 		parent.setOutputMarkupId(true);
 		add(parent);
 
-		addBreadcrumb(new BookmarkablePageLink<Object>("link", AnswerMessagePage.class), new ResourceModel("answerMessagePageTitle").getObject());
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", AnswerMessagePage.class, pageParameters), new ResourceModel("answerMessagePageTitle").getObject());
 		
 		Long messageId = pageParameters.get("messageId").toLong();
 		message = messageService.getMessage(messageId);

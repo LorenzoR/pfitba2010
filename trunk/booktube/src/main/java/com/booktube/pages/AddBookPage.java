@@ -127,7 +127,10 @@ public class AddBookPage extends BasePage {
 
 		final RequiredTextField<Book> titleField = new RequiredTextField<Book>(
 				"title");
-		titleField.add(new UniqueBookValidator(user.getUsername()));
+		
+		if ( user != null ) {
+			titleField.add(new UniqueBookValidator(user.getUsername()));
+		}
 
 		form.add(titleField);
 

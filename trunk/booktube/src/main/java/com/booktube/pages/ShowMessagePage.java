@@ -82,8 +82,11 @@ public class ShowMessagePage extends BasePage {
 		
 		parent.add(listview);
 		
-		message.setRead(true);
-		messageService.updateMessage(message);
+		
+		if ( !message.getSender().getUsername().equals(user.getUsername())) {
+			message.setRead(true);
+			messageService.updateMessage(message);
+		}
 		
 
 	}

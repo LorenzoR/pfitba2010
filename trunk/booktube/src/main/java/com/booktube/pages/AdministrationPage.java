@@ -10,6 +10,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.odlabs.wiquery.core.effects.Effect;
 import org.odlabs.wiquery.core.events.Event;
@@ -19,6 +20,8 @@ import org.odlabs.wiquery.core.javascript.JsScope;
 import org.odlabs.wiquery.core.javascript.JsStatement;
 import org.odlabs.wiquery.ui.datepicker.DatePicker;
 
+import com.booktube.WiaSession;
+import com.booktube.model.User.Level;
 import com.booktube.pages.customComponents.panels.LeftMenuPanel;
 import com.booktube.service.BookService;
 import com.booktube.service.UserService;
@@ -33,36 +36,47 @@ public class AdministrationPage extends BasePage {
 	UserService userService;
 
 	protected static final int ITEMS_PER_PAGE = 10;
-	
+
 	final protected String dateFormat = "dd/mm/yy";
 	final protected DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-	
-	//final protected Label feedbackMessage = new Label("feedbackMessage", "<h2>No se encontraron resultados.</h2>");
-	final protected Label feedbackMessage = new Label("feedbackMessage", new ResourceModel("noResults"));
-	
+
+	// final protected Label feedbackMessage = new Label("feedbackMessage",
+	// "<h2>No se encontraron resultados.</h2>");
+	final protected Label feedbackMessage = new Label("feedbackMessage",
+			new ResourceModel("noResults"));
+
 	public AdministrationPage() {
-			super();
-			
-			feedbackMessage.setEscapeModelStrings(false);
-			
-			final TransparentWebMarkupContainer parent = new TransparentWebMarkupContainer("adminContainer");
-			
-			parent.setOutputMarkupId(true);
-			add(parent);
-			
-			parent.add(new LeftMenuPanel("leftPaneDiv"));
-			
-			addBreadcrumb(new BookmarkablePageLink<Object>("link", AdministrationPage.class), new ResourceModel("administrationPageTitle").getObject());
-			
+		super();
+
+		if (WiaSession.get().getLoggedInUser() == null
+				|| WiaSession.get().getLoggedInUser().getLevel() != Level.ADMIN) {
+			throw new AbortWithHttpErrorCodeException(404);
 		}
+
+		feedbackMessage.setEscapeModelStrings(false);
+
+		final TransparentWebMarkupContainer parent = new TransparentWebMarkupContainer(
+				"adminContainer");
+
+		parent.setOutputMarkupId(true);
+		add(parent);
+
+		parent.add(new LeftMenuPanel("leftPaneDiv"));
+
+		addBreadcrumb(new BookmarkablePageLink<Object>("link",
+				AdministrationPage.class), new ResourceModel(
+				"administrationPageTitle").getObject());
+
+	}
 
 	@Override
 	protected void setPageTitle() {
 		// TODO Auto-generated method stub
-		String newTitle = "Booktube - " + new ResourceModel("administrationPageTitle").getObject(); 
+		String newTitle = "Booktube - "
+				+ new ResourceModel("administrationPageTitle").getObject();
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
-	
+
 	protected DatePicker<Date> createDatePicker(String label, String dateFormat) {
 		final DatePicker<Date> datePicker = new DatePicker<Date>(label,
 				new Model<Date>(), Date.class);
@@ -89,30 +103,30 @@ public class AdministrationPage extends BasePage {
 
 		return button;
 	}
-	
-//	protected Dialog deleteDialog(Label label, final Class responsePage) {
-//
-//		Dialog dialog = new Dialog("success_dialog");
-//
-//		//dialog.add(successDialogLabel);
-//		dialog.add(label);
-//		
-//		AjaxDialogButton ok = new AjaxDialogButton("OK") {
-//
-//			private static final long serialVersionUID = 1L;
-//
-//			@Override
-//			protected void onButtonClicked(AjaxRequestTarget target) {
-//				//setResponsePage(WorksAdministrationPage.class);
-//				setResponsePage(responsePage);
-//			}
-//		};
-//
-//		dialog.setButtons(ok);
-//		dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
-//
-//		return dialog;
-//
-//	}
-		
+
+	// protected Dialog deleteDialog(Label label, final Class responsePage) {
+	//
+	// Dialog dialog = new Dialog("success_dialog");
+	//
+	// //dialog.add(successDialogLabel);
+	// dialog.add(label);
+	//
+	// AjaxDialogButton ok = new AjaxDialogButton("OK") {
+	//
+	// private static final long serialVersionUID = 1L;
+	//
+	// @Override
+	// protected void onButtonClicked(AjaxRequestTarget target) {
+	// //setResponsePage(WorksAdministrationPage.class);
+	// setResponsePage(responsePage);
+	// }
+	// };
+	//
+	// dialog.setButtons(ok);
+	// dialog.setCloseEvent(JsScopeUiEvent.quickScope(dialog.close().render()));
+	//
+	// return dialog;
+	//
+	// }
+
 }
