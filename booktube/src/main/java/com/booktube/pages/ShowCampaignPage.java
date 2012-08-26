@@ -38,7 +38,7 @@ public class ShowCampaignPage extends BasePage {
 		
 		user = WiaSession.get().getLoggedInUser();
 		
-		if ( pageParameters.get("campaignId") == null ) {
+		if ( user == null || pageParameters.get("campaignId") == null ) {
 			throw new AbortWithHttpErrorCodeException(404);
 		}
 		else {

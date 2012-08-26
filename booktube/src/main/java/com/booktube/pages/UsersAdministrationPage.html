@@ -19,10 +19,13 @@
 	    
 	    <h3 class="pageTitle"><wicket:message key="usersAdministrationPageTitle">Users Administration Page Title</wicket:message></h3>
 	    
-		<h2>
-			<a href="#" wicket:id="searchUserLink" onclick="return false;" class="searchLink"><wicket:message key="search">Search</wicket:message></a>
-			<a href="#" wicket:id="createUser" class="searchLink"><wicket:message key="createUser">Create User</wicket:message></a>
-		</h2>
+	    <input type="button" wicket:id="searchUserLink" value="Search" wicket:message="value:search" class="buttons"/>
+	    <input type="button" wicket:id="createUser" value="Search" wicket:message="value:createUser" class="buttons"/>
+	    
+<!-- 		<h2> -->
+<!-- 			<a href="#" wicket:id="searchUserLink" onclick="return false;" class="searchLink"><wicket:message key="search">Search</wicket:message></a> -->
+<!-- 			<a href="#" wicket:id="createUser" class="searchLink"><wicket:message key="createUser">Create User</wicket:message></a> -->
+<!-- 		</h2> -->
 			<form id="searchUserFormId" wicket:id="searchUserForm" class="searchForm">
 				<div id="searchFields" wicket:id="searchFields">
 					<table class="searchview">
@@ -64,7 +67,7 @@
 						
 					</table>
 				
-					<input type="button" wicket:id="searchUser" value="Buscar" wicket:message="value:search" class="buttons"/>
+					<input type="submit" wicket:id="searchUser" value="Buscar" wicket:message="value:search" class="buttons"/>
 					
 					<div wicket:id="feedbackMessage"></div>
 				

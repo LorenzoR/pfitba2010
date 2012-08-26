@@ -211,14 +211,14 @@ public class CampaignsAdministrationPage extends AdministrationPage {
 					}
 
 				});
-				item.add(new Link<Campaign>("editLink", item.getModel()) {
-					private static final long serialVersionUID = 1L;
-
-					public void onClick() {
-						setResponsePage(ShowCampaignPage.class, parameters);
-					}
-
-				});
+//				item.add(new Link<Campaign>("editLink", item.getModel()) {
+//					private static final long serialVersionUID = 1L;
+//
+//					public void onClick() {
+//						setResponsePage(ShowCampaignPage.class, parameters);
+//					}
+//
+//				});
 				item.add(new AjaxLink<Campaign>("deleteLink", item.getModel()) {
 
 					private static final long serialVersionUID = 1L;

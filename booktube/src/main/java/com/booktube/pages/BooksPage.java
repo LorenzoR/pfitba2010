@@ -53,7 +53,7 @@ public class BooksPage extends BasePage {
 	@SpringBean
 	UserService userService;
 
-	public static final int BOOKS_PER_PAGE = 5;
+	public static final int BOOKS_PER_PAGE = 10;
 
 	private final AjaxPagingNavigator footerNavigator;
 

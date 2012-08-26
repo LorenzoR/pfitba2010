@@ -10,6 +10,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.datetime.PatternDateConverter;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -121,20 +122,26 @@ public class EditBookPage extends BasePage {
 		text.setRequired(true);
 		form.add(text);
 
+		final WebMarkupContainer authorContainer = new WebMarkupContainer("authorContainer");
+		authorContainer.setVisible(false);
+		
 		final DropDownChoice<User> author = new DropDownChoice<User>("author",
 				new Model<User>(book.getAuthor()), users);
 		author.setRequired(true);
-		form.add(author);
+		authorContainer.add(author);
+		form.add(authorContainer);
 		
-		final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, getLocale());
+		if ( user.getLevel() == Level.ADMIN ) {
+			authorContainer.setVisible(true);
+		}
+		
+		final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM, getLocale());
 		
 		final DateTextField publishDate = new DateTextField("publishDate",
 				new PropertyModel<Date>(model, "publishDate"),
-				new PatternDateConverter(((SimpleDateFormat) dateFormat).toLocalizedPattern(), true));
+				new PatternDateConverter(new ResourceModel("dateFormat").getObject(), true));
 		publishDate.setRequired(true);
 		form.add(publishDate);
-		
-		form.add(new Label("date_format", WicketApplication.DATE_FORMAT_ES));
 
 		final RequiredTextField<Book> category = new RequiredTextField<Book>("category");
 		form.add(category);
