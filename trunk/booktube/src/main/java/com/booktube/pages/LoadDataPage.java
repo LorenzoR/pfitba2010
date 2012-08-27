@@ -50,6 +50,7 @@ public class LoadDataPage extends BasePage {
 	CampaignService campaignService;
 
 	private List<User> users = new ArrayList<User>();
+	private List<User> operators = new ArrayList<User>();
 	private User admin;
 
 	public LoadDataPage() {
@@ -197,7 +198,17 @@ public class LoadDataPage extends BasePage {
 		operator.setCity("City 1");
 		operator.setEmail(operator.getUsername() + "@mail.com");
 		operator.setIsActive(true);
+		this.operators.add(operator);		
+		userService.insertUser(operator);
 		
+		operator = new User("operator2", "operator2", "nombreOperator2", "apellidoOperator2", User.Level.OPERATOR);
+		operator.setBirthdate(new Date());
+		operator.setGender(Gender.MALE);
+		operator.setCountry("Country 1");
+		operator.setCity("City 1");
+		operator.setEmail(operator.getUsername() + "@mail.com");
+		operator.setIsActive(true);
+		this.operators.add(operator);		
 		userService.insertUser(operator);
 		
 	}
@@ -299,7 +310,7 @@ public class LoadDataPage extends BasePage {
 			String subject = "subject " + i;
 			User sender = users.get(randomGenerator.nextInt(CANT_USERS + 1));
 
-			User receiver = users.get(randomGenerator.nextInt(CANT_USERS + 1));
+			User receiver = operators.get(randomGenerator.nextInt(operators.size()));
 
 			Message message = new Message(Type.PRIVATE_MESSAGE, subject,
 					"text " + i, sender, receiver);
