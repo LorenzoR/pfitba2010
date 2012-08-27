@@ -2,7 +2,6 @@ package com.booktube.pages;
 
 import java.io.File;
 
-
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 
@@ -59,8 +58,12 @@ public class RegisterPage extends BasePage {
 
 	private final String AVATAR_DIR = "avatar/";
 	private final String IMG_DIR_NAME = "img";
-	
+
+	private User user;
+
 	public RegisterPage() {
+
+		user = WiaSession.get().getLoggedInUser();
 
 		final WebMarkupContainer parent = new WebMarkupContainer("register");
 		parent.setOutputMarkupId(true);
@@ -70,8 +73,10 @@ public class RegisterPage extends BasePage {
 		feedback.setOutputMarkupId(true);
 		parent.add(feedback);
 
-		addBreadcrumb(new BookmarkablePageLink<Object>("link", RegisterPage.class), new ResourceModel("registerPageTitle").getObject());
-		
+		addBreadcrumb(new BookmarkablePageLink<Object>("link",
+				RegisterPage.class),
+				new ResourceModel("registerPageTitle").getObject());
+
 		// parent.add(new FeedbackPanel("feedback").setOutputMarkupId(true));
 
 		parent.add(registerForm(parent, feedback));
@@ -124,11 +129,13 @@ public class RegisterPage extends BasePage {
 		// DateTextField birthdateField = new DateTextField("birthdateField",
 		// new PropertyModel<Date>(
 		// model, "birthdateField"), new StyleDateConverter("S-", true));
-		//final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, getLocale());
-		
+		// final DateFormat dateFormat =
+		// DateFormat.getDateInstance(DateFormat.MEDIUM, getLocale());
+
 		final DateTextField birthdateField = new DateTextField("birthdate",
 				new PropertyModel<Date>(model, "birthdate"),
-				new PatternDateConverter(new ResourceModel("dateFormat").getObject(), true));
+				new PatternDateConverter(
+						new ResourceModel("dateFormat").getObject(), true));
 
 		final PasswordTextField passwordField1 = new PasswordTextField(
 				"password1", new PropertyModel<String>(model, "password"));
@@ -158,7 +165,7 @@ public class RegisterPage extends BasePage {
 		final FileUploadField fileUploadField = new FileUploadField(
 				"imgUpload", (IModel) new Model<FileUpload>());
 		form.add(fileUploadField);
-		
+
 		final DropDownChoice<Level> levelDDC = new DropDownChoice<Level>(
 				"level", Arrays.asList(Level.values()),
 				new EnumChoiceRenderer<Level>(this));
@@ -202,7 +209,11 @@ public class RegisterPage extends BasePage {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 
-				newUser.setLevel(Level.USER);
+				if (user != null && user.getLevel() == Level.ADMIN) {
+					newUser.setLevel(levelDDC.getModelObject());
+				} else {
+					newUser.setLevel(Level.USER);
+				}
 
 				final FileUpload uploadedFile = fileUploadField.getFileUpload();
 
@@ -236,22 +247,25 @@ public class RegisterPage extends BasePage {
 					}
 
 					newUser.setImageURL(imgFilename);
-					
+
 				}
-				
-				
-				//Para el proceso de registracion
-				try {
-					String secret = userService.generateSecret();					
-					newUser.setSecret(secret);
-				} catch (NoSuchAlgorithmException e) {						
-					e.printStackTrace();
-				} catch (UnsupportedEncodingException e) {						
-					e.printStackTrace();
+
+				// Para el proceso de registracion
+				if (user == null || user.getLevel() != Level.ADMIN) {
+					try {
+						String secret = userService.generateSecret();
+						newUser.setSecret(secret);
+					} catch (NoSuchAlgorithmException e) {
+						e.printStackTrace();
+					} catch (UnsupportedEncodingException e) {
+						e.printStackTrace();
+					}
+				} else {
+					newUser.setIsActive(true);
 				}
-				
+
 				Logger logger = Logger.getLogger("booktube");
-				
+
 				/* Insert user */
 				userService.insertUser(newUser);
 				logger.info("User inserted.");
@@ -263,14 +277,16 @@ public class RegisterPage extends BasePage {
 				logger.info("Gender: " + newUser.getGender());
 				logger.info("Birthdate: " + newUser.getBirthdate());
 
-				// Para el proceso de registracion				
-				try {
-					userService.sendRegistrationMail(newUser);
-				} catch (Exception e) {					
-					e.printStackTrace();
+				// Para el proceso de registracion
+				if (user == null || user.getLevel() != Level.ADMIN) {
+					try {
+						userService.sendRegistrationMail(newUser);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 
-				//target.add(parent);
+				// target.add(parent);
 				dialog.open(target);
 			}
 
@@ -284,7 +300,8 @@ public class RegisterPage extends BasePage {
 
 	@Override
 	protected void setPageTitle() {
-		String newTitle = "Booktube - " + new ResourceModel("registerPageTitle").getObject();
+		String newTitle = "Booktube - "
+				+ new ResourceModel("registerPageTitle").getObject();
 		super.get("pageTitle").setDefaultModelObject(newTitle);
 	}
 
