@@ -1,7 +1,5 @@
 package com.booktube.pages;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -28,7 +26,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import com.booktube.WiaSession;
-import com.booktube.WicketApplication;
 import com.booktube.model.Book;
 import com.booktube.model.User;
 import com.booktube.model.User.Level;
@@ -135,7 +132,7 @@ public class EditBookPage extends BasePage {
 			authorContainer.setVisible(true);
 		}
 		
-		final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM, getLocale());
+		//final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM, getLocale());
 		
 		final DateTextField publishDate = new DateTextField("publishDate",
 				new PropertyModel<Date>(model, "publishDate"),
