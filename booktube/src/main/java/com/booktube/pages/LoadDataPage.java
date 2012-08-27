@@ -303,7 +303,7 @@ public class LoadDataPage extends BasePage {
 
 	public void addMessages() {
 
-		Long time = 0L;
+		Long time = 1220000000000L;
 
 		for (int i = 0; i < CANT_MSG; i++) {
 
@@ -314,7 +314,7 @@ public class LoadDataPage extends BasePage {
 
 			Message message = new Message(Type.PRIVATE_MESSAGE, subject,
 					"text " + i, sender, receiver);
-			message.setDate(new Date(time += 100000));
+			message.setDate(new Date(time += 1000000000));
 
 			// messageService.insertMessage(message);
 

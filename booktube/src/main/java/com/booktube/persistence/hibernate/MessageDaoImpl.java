@@ -190,6 +190,14 @@ public class MessageDaoImpl extends AbstractDaoHibernate<Message> implements
 			criteria.createCriteria("receiver").add(
 					Restrictions.eq("username", receiver));
 		}
+		
+		if (lowDate != null) {
+			criteria.add(Restrictions.ge("date", lowDate));
+		}
+
+		if (highDate != null) {
+			criteria.add(Restrictions.le("date", highDate));
+		}
 
 		return criteria;
 
