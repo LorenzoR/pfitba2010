@@ -5,6 +5,8 @@ import java.util.List;
 
 
 
+
+import org.apache.log4j.Logger;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -18,8 +20,8 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.resource.ContextRelativeResource;
-import org.apache.wicket.request.resource.IResource;
-import org.apache.wicket.request.resource.ResourceReference;
+//import org.apache.wicket.request.resource.IResource;
+//import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.resource.AbstractResourceStreamWriter;
 import org.apache.wicket.util.resource.IResourceStream;
 
@@ -87,7 +89,10 @@ public abstract class ReportPage extends AdministrationPage {
 		reportFilter = new ReportFilterPanel("reportFilterPanel");
 		form.add(reportFilter);
 				
-		reportImage = new Image("reportImage", new ContextRelativeResource("/img/blankReport.png"));		
+//		reportImage = new Image("reportImage", new ContextRelativeResource("/img/blankReport.png"));
+		reportImage = new Image("reportImage", new ContextRelativeResource("/img/report.png"));
+		reportImage.setVisible(false);
+		
 		parent.add(reportImage);		
 		
 				
@@ -98,22 +103,28 @@ public abstract class ReportPage extends AdministrationPage {
 			public void onSubmit() {
 			    String filename = "src/main/webapp/img/report.png";
 			    chartCreated = true;
+			    Logger.getLogger("ReportPage.Form.Button.onSubmit()").info("Se ingresó en onSubmit()");
 			    try {
+			    	Logger.getLogger("ReportPage.Form.Button.onSubmit()").info("Se ingresó al try, antes de llamar a getReportType(), en onSubmit()");
 			    	report = getReportType();
+			    	Logger.getLogger("ReportPage.Form.Button.onSubmit()").info("Se generó el reporte, en onSubmit()");
 			        report.saveReportAsPNG(filename, CHART_WIDTH, CHART_HEIGHT);			        
+			        Logger.getLogger("ReportPage.Form.Button.onSubmit()").info("Despues de salvar el reporte como PNG y guardarlo en la clase Report, en onSubmit()");
 			    } catch (Exception e) {
 			        e.printStackTrace();
 			    }		
 			    
-			    reportImage.setImageResourceReference(new ResourceReference(getReportClass(), "report.png") {
-					private static final long serialVersionUID = 7995864723435899261L;
-
-					@Override
-					public IResource getResource() {						
-						return new ContextRelativeResource("/img/report.png");
-					}
-				});
+//			    reportImage.setImageResourceReference(new ResourceReference(getReportClass(), "report.png") {
+//					private static final long serialVersionUID = 7995864723435899261L;
+//
+//					@Override
+//					public IResource getResource() {						
+//						return new ContextRelativeResource("/img/report.png");
+//					}
+//				});
 			    reportImage.add(new AttributeModifier("class", new Model<String>("reportImage")));
+			    reportImage.setVisible(true);
+			    
 			}
 		});
 		

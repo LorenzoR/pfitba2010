@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import java.io.Serializable;
 
 
+import org.apache.log4j.Logger;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.general.Dataset;
@@ -37,6 +38,7 @@ public abstract class Report implements Serializable {
 	}
 
 	public void saveReportAsPNG( String filename, int width, int height) throws IOException{
+		Logger.getLogger("Report.saveReportAsPNG()").info("Entre en el metodo para salver imagen");
 		ChartUtilities.saveChartAsPNG(new File(filename), chart, width, height);
 	}
 	

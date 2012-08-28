@@ -5,6 +5,7 @@ import java.util.List;
 
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -60,6 +61,7 @@ public class UsersEvolutionReport extends ReportPage {
 	}
 	
 	public Report getReportType(){
+		Logger.getLogger("UsersEvolutionReport.getUserEvolutionByYear:getReportType()").info("Se llamó al metodo, y se comenzó a ejecutar.");
 		return  new LineReport(getReportData(), labels);
 	}
 	
