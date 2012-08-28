@@ -15,6 +15,7 @@ import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.resource.ContextRelativeResource;
 import org.apache.wicket.request.resource.IResource;
@@ -150,9 +151,9 @@ public abstract class ReportPage extends AdministrationPage {
 							String max = ageFilter.getSelectedMaxAge();	
 							
 							if( min != null )
-								resp.append(getSeparator(resp)+ageFilter.getMinAgeLabel()+" = "+min+" años");
+								resp.append(getSeparator(resp)+ageFilter.getMinAgeLabel()+" = "+min+" " + new ResourceModel("years").getObject());
 							if( max != null )
-								resp.append(getSeparator(resp)+ageFilter.getMaxAgeLabel()+" = "+max+" años");							
+								resp.append(getSeparator(resp)+ageFilter.getMaxAgeLabel()+" = "+max+" " + new ResourceModel("years").getObject());							
 						}
 						if( originFilter != null ){
 							String city = originFilter.getSelectedCity();
@@ -245,14 +246,14 @@ public abstract class ReportPage extends AdministrationPage {
 	protected void addGenderFilterOption(List<String> allGendersList){
 		createMiscFilterOption();		
 //		allGendersList.add(0,FilterOption.listFirstOption);
-		genderDropDownElement = new DropDownElementPanel("element", "Sexo", "gender", allGendersList);			
+		genderDropDownElement = new DropDownElementPanel("element", new ResourceModel("gender").getObject(), "gender", allGendersList);			
 		customizedMisc.addElement(genderDropDownElement);		
 	}
 	
 	protected void addYearFilterOption(List<String> allYearsList){
 		createMiscFilterOption();
 //		allYearsList.add(0,FilterOption.listFirstOption);
-		yearsDropDownElement = new DropDownElementPanel("element", "Año", "registration_date", allYearsList);			
+		yearsDropDownElement = new DropDownElementPanel("element", new ResourceModel("year").getObject(), "registration_date", allYearsList);			
 		customizedMisc.addElement(yearsDropDownElement);
 	}
 	

@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import com.booktube.service.UserService;
@@ -35,13 +36,13 @@ public class OriginFilterOption extends FilterOption {
 //		selectedCity = allCitiesList.get(0);
 		selectedCountry = null;
 				
-		add(new Label("countryLabel", "País"));		
+		add(new Label("countryLabel", new ResourceModel("country").getObject()));		
 		DropDownChoice<String> countryDropCombo = new DropDownChoice<String>("country", new PropertyModel<String>(this, "selectedCountry"),allCountriesList);
 		countryDropCombo.setNullValid(true);
 		add(countryDropCombo);
 		
 		
-		add(new Label("cityLabel", "Ciudad"));
+		add(new Label("cityLabel", new ResourceModel("city").getObject()));
 		DropDownChoice<String> cityDropCombo = new DropDownChoice<String>("city",  new PropertyModel<String>(this, "selectedCity"), allCitiesList); 
 		cityDropCombo.setNullValid(true);
 		add( cityDropCombo );
@@ -64,10 +65,10 @@ public class OriginFilterOption extends FilterOption {
 	}
 
 	public String getCountryLabel(){
-		return "País";
+		return new ResourceModel("country").getObject();
 	}
 	
 	public String getCityLabel(){
-		return "Ciudad";
+		return new ResourceModel("city").getObject();
 	}
 }

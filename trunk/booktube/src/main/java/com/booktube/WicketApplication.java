@@ -10,6 +10,7 @@ import javax.servlet.ServletContext;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.ConverterLocator;
+import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 
@@ -191,6 +192,11 @@ public class WicketApplication extends WebApplication {
 	@Override
 	public Session newSession(Request request, Response response) {
 		return new WiaSession(request);
+	}
+	
+	@Override
+	public RuntimeConfigurationType getConfigurationType() {
+		return RuntimeConfigurationType.DEPLOYMENT;
 	}
 
 }
