@@ -129,12 +129,12 @@ public class ShowBookPage extends BasePage {
 
 		final Comments facebookComments = new Comments("facebookComments", url);
 		parent.add(facebookComments);
-
+System.out.println("URL ES " + url);
 		final IModel<String> twitterUrl = Model
-				.of("https://github.com/tfreier/wicketstuff-core/tree/master/jdk-1.5-parent/twitter-parent");
-		final IModel<String> via = Model.of("tfreier");
+				.of("http://www.booktube.com");
+		final IModel<String> via = Model.of("Booktube1");
 		final IModel<String> text = Model
-				.of("just testing #twitter widgets for #wicket.");
+				.of("Leyendo " + book.getTitle());
 
 		final TweetButton tweetButton = new TweetButton("tweetButton",
 				twitterUrl, text, via);

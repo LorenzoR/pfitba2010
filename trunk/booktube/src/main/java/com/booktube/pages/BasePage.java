@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import org.apache.log4j.Logger;
@@ -740,6 +741,26 @@ public abstract class BasePage extends WebPage {
 						"Henry Miller" } };
 
 		return quoteArray;
+	}
+	
+	protected List<String> getCountries() {
+
+        List<String> countries = new ArrayList<String>();
+
+        String[] isoCountries = Locale.getISOCountries();
+        for (String country : isoCountries) {
+            Locale locale = new Locale(getLocale().getLanguage(), country);
+ 
+            String name = locale.getDisplayCountry();
+ 
+            if (!"".equals(name)) {
+                countries.add(name);
+            }
+        }
+        
+        Collections.sort(countries);
+        
+        return countries;
 	}
 
 }

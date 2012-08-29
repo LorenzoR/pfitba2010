@@ -4,7 +4,6 @@ import java.io.File;
 
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.apache.wicket.AttributeModifier;
@@ -159,9 +158,8 @@ public class EditWriterPage extends BasePage {
 				new EnumChoiceRenderer<Gender>(this));
 		form.add(genderSelect);
 
-		List<String> countryList = userService.getAllCountries();
 		final DropDownChoice<String> countrySelect = new DropDownChoice<String>(
-				"country", countryList);
+				"country", getCountries());
 		countrySelect.setRequired(true);
 		form.add(countrySelect);
 
