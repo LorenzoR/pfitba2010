@@ -90,7 +90,8 @@ public abstract class ReportPage extends AdministrationPage {
 		form.add(reportFilter);
 				
 //		reportImage = new Image("reportImage", new ContextRelativeResource("/img/blankReport.png"));
-		reportImage = new Image("reportImage", new ContextRelativeResource("/img/report.png"));
+		
+		reportImage = new Image("reportImage", new ContextRelativeResource("img/report.png"));
 		reportImage.setVisible(false);
 		
 		parent.add(reportImage);		

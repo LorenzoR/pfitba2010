@@ -5,7 +5,7 @@ HTML {
 }
 
 BODY {
-	MARGIN: 0px; FONT-FAMILY: "Lucida Grande", "Lucida Sans Unicode", "Segoe UI", Helvetica, Sans-serif; BACKGROUND: url(/img/pagebg.jpg) #ffffff repeat-x; COLOR: #666666;
+	MARGIN: 0px; FONT-FAMILY: "Lucida Grande", "Lucida Sans Unicode", "Segoe UI", Helvetica, Sans-serif; BACKGROUND: url(img/pagebg.jpg) #ffffff repeat-x; COLOR: #666666;
 	width:930px; margin: 0px auto; text-align: center; font-size: 0.8em;
 }/*background:#EAEAEA url(img/pagebg.jpg) repeat-y top center*/
 
@@ -29,7 +29,7 @@ input[type="text"], input[type="password"], textarea {
     padding: 3px 4px 3px 4px;  
     border: solid 1px #E5E5E5;  
     outline: 0;    
-    background: #FFFFFF url('/img/bg_form.png') left top repeat-x;  
+    background: #FFFFFF url('img/bg_form.png') left top repeat-x;  
     background: -webkit-gradient(linear, left top, left 14, from(#FFFFFF), color-stop(4%, #EEEEEE), to(#FFFFFF));  
     background: -moz-linear-gradient(top, #FFFFFF, #EEEEEE 0px, #FFFFFF 14px);  
     box-shadow: rgba(0,0,0, 0.1) 0px 0px 8px;  
@@ -132,7 +132,7 @@ DIV#searchbox FORM INPUT.searchField { width:150px; height:12px;
 DIV#searchbox FORM INPUT.searchButton{width:40px; height:22px;}
 
 DIV#mainmenubg {
-	POSITION: absolute; WIDTH: 930px; BACKGROUND: url(/img/mainmenubg.png); HEIGHT: 41px; TOP: 101px; 
+	POSITION: absolute; WIDTH: 930px; BACKGROUND: url(img/mainmenubg.png); HEIGHT: 41px; TOP: 101px; 
 }
 DIV#mainmenu {
 	Z-INDEX: 0; POSITION: absolute; WIDTH: 930px; HEIGHT: 41px; TOP: 101px; LEFT:100px; 
@@ -147,13 +147,13 @@ DIV#mainmenu UL LI A {
 	MIN-WIDTH: 30px; DISPLAY: block; HEIGHT: 24px; COLOR: #666; TEXT-DECORATION: none
 }
 DIV#mainmenu UL LI A:hover {
-	BACKGROUND: url(/img/mainmenuhover.png) no-repeat 50% 8px; HEIGHT: 42px; COLOR: #ef9203
+	BACKGROUND: url(img/mainmenuhover.png) no-repeat 50% 8px; HEIGHT: 42px; COLOR: #ef9203
 }
 DIV#mainmenu UL LI A.selected {
-	BACKGROUND: url(/img/mainmenusel.png) no-repeat 50% 8px; HEIGHT: 42px; COLOR: #000
+	BACKGROUND: url(img/mainmenusel.png) no-repeat 50% 8px; HEIGHT: 42px; COLOR: #000
 }
 DIV#mainmenu UL LI A.selected:hover {
-	BACKGROUND: url(/img/mainmenuhover.png) no-repeat 50% 8px; HEIGHT: 42px; COLOR: #ef9203
+	BACKGROUND: url(img/mainmenuhover.png) no-repeat 50% 8px; HEIGHT: 42px; COLOR: #ef9203
 }
 
 
@@ -198,7 +198,7 @@ DIV#navpath {
 	LINE-HEIGHT: 18px; PADDING-TOP: 1px
 }
 DIV#navpath SPAN {
-	PADDING-BOTTOM: 0px; PADDING-LEFT: 12px; PADDING-RIGHT: 1px; BACKGROUND: url(/img/pathsep.png) no-repeat 4px 50%; COLOR: #ccc; FONT-SIZE: 11px; PADDING-TOP: 0px
+	PADDING-BOTTOM: 0px; PADDING-LEFT: 12px; PADDING-RIGHT: 1px; BACKGROUND: url(img/pathsep.png) no-repeat 4px 50%; COLOR: #ccc; FONT-SIZE: 11px; PADDING-TOP: 0px
 }
 DIV#navpath SPAN A {
 	PADDING-BOTTOM: 1px; PADDING-LEFT: 4px; PADDING-RIGHT: 4px; COLOR: #666; TEXT-DECORATION: none; PADDING-TOP: 1px
@@ -267,7 +267,7 @@ TABLE.dataview{
 	border: 1px solid #e0e0e0;
 		
 /* 	background-color:#e8f7ff;	 */
-	BACKGROUND: url(/img/pagebg.png) #f9f9f9 no-repeat;
+	BACKGROUND: url(img/pagebg.png) #f9f9f9 no-repeat;
 	text-align:left;
 	color: #333;
 	
@@ -310,7 +310,7 @@ TABLE.searchview{
 	border-spacing: 0px; /*Equivalente a cellspacing=0 ... HTML5 desaconseja este atributo para el tag table en el html*/	
 	padding: 5px 15px 15px 15px;
 	border: 1px solid #e0e0e0;		
-	BACKGROUND: url(/img/pagebg.png) #fafafa no-repeat;
+	BACKGROUND: url(img/pagebg.png) #fafafa no-repeat;
 	text-align:left;
 
 	-moz-border-radius: 4px;  
@@ -361,7 +361,7 @@ TABLE.bookResultListTable{
 /* FOOTER */
 
 #footer {
-	PADDING-BOTTOM: 30px; MARGIN: 0px; BACKGROUND: url(/img/pagebg.png) no-repeat 0px 1px; HEIGHT: 25px; BORDER-TOP: #999 1px solid; clear:both;
+	PADDING-BOTTOM: 30px; MARGIN: 0px; BACKGROUND: url(img/pagebg.png) no-repeat 0px 1px; HEIGHT: 25px; BORDER-TOP: #999 1px solid; clear:both;
 }
 #footer DIV#footermenu {
 	MARGIN-TOP: 25px; FLOAT: left; COLOR: #a0a0a0; FONT-SIZE: 11px
