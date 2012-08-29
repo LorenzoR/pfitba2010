@@ -30,7 +30,7 @@ public class WorksByCategoryReport extends ReportPage {
 		addYearFilterOption(allYearsList);
 		
 		addBreadcrumb(new BookmarkablePageLink<Object>("link", ReportsAdministrationPage.class), new ResourceModel("reportsPageTitle").getObject());
-		addBreadcrumb(new BookmarkablePageLink<Object>("link", UsersEvolutionReport.class), new ResourceModel("worksByCategoryReport").getObject());
+		addBreadcrumb(new BookmarkablePageLink<Object>("link", WorksByCategoryReport.class), new ResourceModel("worksByCategoryReport").getObject());
 		
 		// Especifico Titulo ( y etiquetas, si corresponde)
 		labels = new String[]{new ResourceModel("worksByCategoryReport").getObject()};
