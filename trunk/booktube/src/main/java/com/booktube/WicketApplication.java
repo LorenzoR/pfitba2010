@@ -1,12 +1,14 @@
 package com.booktube;
 
 import java.text.DateFormat;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 import javax.servlet.ServletContext;
+
 
 import org.apache.wicket.Application;
 import org.apache.wicket.ConverterLocator;
@@ -68,6 +70,8 @@ public class WicketApplication extends WebApplication {
 
 		getMarkupSettings().setStripWicketTags(true);
 		// mountBookmarkablePage("books", BooksPage.class);
+		
+				
 		mountPage("books", BooksPage.class);
 		mountPage("booktube", HomePage.class);
 		mountPage("writers", WritersPage.class);
@@ -198,5 +202,5 @@ public class WicketApplication extends WebApplication {
 	public RuntimeConfigurationType getConfigurationType() {
 		return RuntimeConfigurationType.DEPLOYMENT;
 	}
-
+	
 }
